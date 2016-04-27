@@ -1,3 +1,5 @@
 gitSpy/*
 server/logs/*
 server/config/*
+.DS_Store
+node_modules/
