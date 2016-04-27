@@ -3,8 +3,8 @@ import { combineReducers } from 'redux'
 // import visibilityFilter from './visibilityFilter'
 
 const gitApp = combineReducers({
-  // todos,
+  // todos
   // visibilityFilter
-})
+});
 
 export default gitApp
