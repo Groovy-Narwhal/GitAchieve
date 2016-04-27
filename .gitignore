@@ -1,7 +1,13 @@
+# GitSpy
 gitSpy/*
+
+# Server data
 server/logs/*
 server/config/*
-.DS_Store
-node_modules/*
 server/npm-debug.log
+
+.DS_Store
 dist/*
+
+# Dependency directories
+node_modules/*
