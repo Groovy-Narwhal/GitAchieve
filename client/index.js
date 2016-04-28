@@ -3,7 +3,7 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
-import gitApp from './reducers'
+import gitApp from './reducers/Reducer'
 import App from './components/App'
 
 let store = createStore(gitApp)

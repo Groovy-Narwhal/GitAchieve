@@ -1,13 +1,14 @@
 var webpack = require('webpack');
+var path = require('path');
 
 module.exports = {
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'inline-source-map',
   entry: [
     'webpack-hot-middleware/client',
     './client/index.js'
   ],
   output: {
-    path: require('path').resolve('./dist'),
+    path: path.resolve('./dist'),
     filename: 'bundle.js',
     publicPath: '/'
   },
