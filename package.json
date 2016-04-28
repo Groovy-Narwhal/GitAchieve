@@ -11,7 +11,7 @@
     "url": "https://github.com/msmith9393/GitAchieve.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "nodemon server/server.js --ignore components"
   },
   "author": "Adam Isom, Alex Nitta, Inje Byeo, & Megan Smith",
   "license": "ISC",
