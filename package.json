@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
+    "pg": "^4.5.5",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "react-redux": "^4.4.5",
