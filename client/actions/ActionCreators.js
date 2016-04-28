@@ -1,8 +1,10 @@
+import * as types from './actionTypes'
+
 export default actions = {
-  addTodo(text) {
+  incrementScore(num) {
     return {
-      type: 'ADD_TODO',
-      text
+      type: types.INCREMENT_SCORE,
+      num
     }
   }
 }
