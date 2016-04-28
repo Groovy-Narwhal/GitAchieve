@@ -1,16 +1,16 @@
-const score = (state = {}, action) => {
+const token = (state = {}, action) => {
   switch (action.type) {
-    case 'INCREMENT_SCORE':
+    case 'ADD_TOKEN':
       // return Object.assign({}, state, {
       //   score: action.num
       // })
       return {
         ...state,
-        score: action.num
+        token: [1]
       }
     default:
       return state;
   }
 }
 
-export default score
+export default token

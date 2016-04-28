@@ -4,7 +4,7 @@ import { incrementScore } from '../actions/actionCreators'
 
 let showScore = ({dispatch, onClick}) => {
   function handleClick() {
-    console.log('Hello from showScore');
+    store.dispatch(incrementScore(1));
   }
   return (
     <div>
@@ -14,6 +14,6 @@ let showScore = ({dispatch, onClick}) => {
   )
 }
 
-showScore = connect()(showScore)
+// showScore = connect()(showScore)
 
 export default showScore
