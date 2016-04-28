@@ -1,4 +1,4 @@
-export default function score(state = {}, action) {
+const score = (state = 0, action) => {
   switch (action.type) {
     case 'INCREMENT_SCORE':
       return Object.assign({}, state, {
@@ -9,6 +9,4 @@ export default function score(state = {}, action) {
   }
 }
 
-
-
- reducers
+export default score

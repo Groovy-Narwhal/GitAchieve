@@ -1,9 +1,10 @@
 import React from 'react'
-import actions from './actions/actionCreators'
+import Score from './score'
 
 const App = () => (
   <div>
     <h2>Hello World</h2>
+    <Score />
   </div>
 )
 
