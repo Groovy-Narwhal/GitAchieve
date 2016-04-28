@@ -64,4 +64,4 @@ exports.retrieveAchievements = function(req, res) {
 exports.addAchievements = function(req, res) {
   var query = {_id: req.params.id};
   // TODO: fill this out with Postgres findOne query
-};
+}; 
