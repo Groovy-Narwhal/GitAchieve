@@ -7,7 +7,6 @@ const finalCreateStore = compose(
   applyMiddleware(logger())
 )(createStore);
 
-
 const configureStore = initialState => {
   const store = finalCreateStore(reducers, initialState, 
     window.devToolsExtension ? window.devToolsExtension() : undefined

@@ -10,43 +10,31 @@ class App extends Component {
     super(props);
   }
   render() {
+    console.log('APP PROPS', this.props)
     return (
       <div>
         <header>
-          Links WOO:
-          {' '}
-          <Link to="/">Home</Link>
-          {' '}
-          <Link to="/v1/users">Users</Link>
+          <div>Welcome, msmith9393!</div>
+          <ScoreBoard score={this.props.score} />
+          <div>
+            Links:
+            {' '}
+            <Link to="/">Home</Link>
+            {' '}
+            <Link to="/repos">Repos</Link>
+            {' '}
+            <Link to="/repos">Orgs</Link>
+            {' '}
+            <Link to="/logout">Logout</Link>
+            {' '}
+            <Link to="/login">Login</Link>
+          </div>
         </header>
-        <div>
-          <button onClick={() => browserHistory.push('/v1/users')}>Go to /v1/users</button>
-        </div>
-        <ScoreBoard addToken={this.props.actions.addToken} />
-        <div style={{ marginTop: '1.5em' }}>{this.props.children}</div>
+        <div>{this.props.children}</div>
       </div>
     )
   }
 }
-
-// import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-// import { bindActionCreators } from 'redux';
-// import ScoreBoard from './../containers/ScoreBoard';
-
-// class App extends Component {
-//   render() {
-//     const {
-//       actions
-//     } = this.props;
-//     return (
-//       <div>
-//         <h1>GitAchieve</h1>
-//         <ScoreBoard addToken={actions.addToken} />
-//       </div>
-//     )
-//   }
-// }
 
 const mapStateToProps = state => {
   return state;
