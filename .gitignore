@@ -7,7 +7,7 @@ server/config/github.config.js
 
 # Concatenated and minified code
 dist/*
- 
+
 .DS_Store
 
 # Dependency directories
