@@ -27,7 +27,7 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output
 app.use(webpackHotMiddleware(compiler));
 app.use(express.static('./dist'));
 app.use('/', function(req, res) {
-  res.sendFile(path.resolve('../client/index.html'));
+  res.sendFile(path.resolve('./client/index.html'));
 });
 app.use('/static', express.static(__dirname + '/../client'));
 
