@@ -7,8 +7,9 @@ export const incrementScore = (num) => {
   }
 }
 
-export const addToken = () => {
+export const addToken = (token) => {
   return {
-    type: types.ADD_TOKEN
+    type: types.ADD_TOKEN,
+    token
   }
 }

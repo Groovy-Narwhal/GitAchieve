@@ -2,9 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { incrementScore } from '../actions/actionCreators'
 
-let showScore = ({dispatch, onClick}) => {
+let showScore = (props) => {
+  console.log('Props', props)
   function handleClick() {
-    store.dispatch(incrementScore(1));
+    // store.dispatch(incrementScore(1));
   }
   return (
     <div>

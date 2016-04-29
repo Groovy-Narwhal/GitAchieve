@@ -1,4 +1,4 @@
-const token = (state = {}, action) => {
+const tokens = (state = [], action) => {
   switch (action.type) {
     case 'ADD_TOKEN':
       // return Object.assign({}, state, {
@@ -13,4 +13,4 @@ const token = (state = {}, action) => {
   }
 }
 
-export default token
+export default tokens

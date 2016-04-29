@@ -3,12 +3,12 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
-import combinedReducers from './reducers/combineReducers.js'
+import reducers from './reducers/combineReducers.js'
 import App from './components/app'
 
 
 export default function configureStore(initialState) {
-  const store = createStore(combinedReducers, initialState, 
+  const store = createStore(reducers, initialState, 
     window.devToolsExtension ? window.devToolsExtension() : undefined
   );
   return store;

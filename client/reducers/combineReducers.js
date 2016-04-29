@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux'
 import { score } from './scoreReducer'
-import { token } from './tokenReducer'
+import { tokens } from './tokensReducer'
 
-const combinedReducers = combineReducers({
+const reducers = combineReducers({
   score,
-  token
+  tokens
 })
 
-export default combinedReducers
+export default reducers
