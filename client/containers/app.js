@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import ScoreBoard from './../containers/ScoreBoard'
-import actions from './../actions/actionCreators'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import ScoreBoard from './../containers/ScoreBoard';
+import actions from './../actions/actionCreators';
 
 class App extends Component {
   render() {
@@ -28,4 +28,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App);

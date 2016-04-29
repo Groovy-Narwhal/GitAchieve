@@ -1,11 +1,11 @@
-import React from 'react'
-import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
-import logger from 'redux-logger'
-import reducers from './../reducers/combineReducers'
+import React from 'react';
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
+import logger from 'redux-logger';
+import reducers from './../reducers/combineReducers';
 
 const finalCreateStore = compose(
   applyMiddleware(logger())
-)(createStore)
+)(createStore);
 
 const configureStore = initialState => {
   const store = finalCreateStore(reducers, initialState, 
@@ -14,4 +14,4 @@ const configureStore = initialState => {
   return store;
 }
 
-export default configureStore
+export default configureStore;

@@ -1,20 +1,20 @@
-import 'babel-polyfill'
-import React from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
-import App from './containers/app'
-import configureStore from './store/store'
+import 'babel-polyfill';
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import App from './containers/app';
+import configureStore from './store/store';
 
 let initialState = {
   score: 0,
   tokens: [],
-}
+};
 
-let store = configureStore(initialState)
+let store = configureStore(initialState);
 
 render(
   <Provider store={store}>
     <App />
   </Provider>,
   document.getElementById('root')
-)
+);

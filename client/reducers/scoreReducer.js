@@ -1,6 +1,6 @@
-let getScore = (score) => {
+const getScore = (score) => {
   return score + 10;
-}
+};
 
 export default (score = 0, action) => {
   switch (action.type) {
@@ -9,4 +9,4 @@ export default (score = 0, action) => {
     default:
       return score;
   }
-}
+};

@@ -5,4 +5,4 @@ export default (tokens = [], action) => {
     default:
       return tokens;
   }
-}
+};

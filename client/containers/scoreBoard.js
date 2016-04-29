@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 export default class ScoreBoard extends Component {
   constructor(props, context) {
@@ -32,4 +32,4 @@ export default class ScoreBoard extends Component {
       </div>
     )
   }
-}
+};
