@@ -6,6 +6,9 @@ server/logs/*
 server/config/*
 server/npm-debug.log
 
+# Concatenated and minified code
+dist/*
+
 .DS_Store
 dist/*
 
