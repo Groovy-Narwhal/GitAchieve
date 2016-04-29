@@ -4,9 +4,9 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { App, DashBoard } from './containers/index';
-import { Login } from './componenets/index'
-import configureStore from './store/store'
+import { App, DashBoard, ScoreBoard } from './containers/index';
+import { Login } from './components/index';
+import configureStore from './store/store';
 
 const initialState = {
   score: 0,

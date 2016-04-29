@@ -16,7 +16,6 @@
   "author": "Adam Isom, Alex Nitta, Inje Yeo, & Megan Smith",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.15.0",
     "express": "^4.13.4",
     "massive": "^2.2.0",
     "pg": "^4.5.5",
