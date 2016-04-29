@@ -1,2 +1,2 @@
 # GitAchieve
-A website to gamify Git.
+A webapp to promote positive Git behavior through friendly competition.
