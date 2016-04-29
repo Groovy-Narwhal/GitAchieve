@@ -1,3 +1,6 @@
+-- *** NOTE *** - this schema is in MySQL syntax, which doesn't work with Postgres. There are several
+-- key differences. This is for reference only when building up the actual Postgres schemas.
+
 -- ---
 -- Globals
 -- ---

@@ -1,3 +1,6 @@
+<!-- *** NOTE *** - this schema is in MySQL syntax, which doesn't work with Postgres. There are several
+key differences. This is for reference only when building up the actual Postgres schemas. -->
+
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
 <!-- Active URL: http://ondras.zarovi.cz/sql/demo/ -->
