@@ -7,7 +7,7 @@ import configureStore from './store/store'
 
 let initialState = {
   score: 0,
-  tokens: ['badge'],
+  tokens: [],
 }
 
 let store = configureStore(initialState)
