@@ -1,9 +1,21 @@
 import React from 'react'
-import { createStore, applyMiddleware, compose } from 'redux'
-import reducers from './../reducers/combineReducers'
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux'
+import logger from 'redux-logger'
+import score from './../reducers/scoreReducer'
+import tokens from './../reducers/tokensReducer'
+
+
+let reducers = combineReducers({
+  score,
+  tokens
+})
+
+const finalCreateStore = compose(
+  applyMiddleware(logger())
+)(createStore)
 
 const configureStore = (initialState) => {
-  const store = createStore(reducers, initialState, 
+  const store = finalCreateStore(tokens, initialState, 
     window.devToolsExtension ? window.devToolsExtension() : undefined
   );
   return store;

@@ -15,7 +15,7 @@
     "url": "https://github.com/msmith9393/GitAchieve.git"
   },
   "scripts": {
-    "serve": "nodemon server/server.js --ignore client/components"
+    "serve": "nodemon server/server.js --ignore client/containers"
   },
   "author": "Adam Isom, Alex Nitta, Inje Byeo, & Megan Smith",
   "license": "ISC",

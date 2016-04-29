@@ -1,13 +1,17 @@
-const score = (state = 0, action) => {
+let getScore = (state) => {
+  return state.score + 10
+}
+
+export default function score(state = 0, action) {
   switch (action.type) {
     case 'INCREMENT_SCORE':
-      // return Object.assign({}, state, {
-      //   score: action.num
-      // })
-      return state + 1
+      // return getScore(state)
+      return Object.assign({}, state, {
+        score: getScore(state)
+      })
     default:
       return state;
   }
 }
 
-export default score
+// export default score
