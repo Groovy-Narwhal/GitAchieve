@@ -4,10 +4,7 @@ const score = (state = 0, action) => {
       // return Object.assign({}, state, {
       //   score: action.num
       // })
-      return {
-        ...state,
-        score: action.num
-      }
+      return state + 1
     default:
       return state;
   }

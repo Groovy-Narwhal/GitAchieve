@@ -4,3 +4,4 @@ server/config/*
 .DS_Store
 node_modules/*
 server/npm-debug.log
+dist/*
