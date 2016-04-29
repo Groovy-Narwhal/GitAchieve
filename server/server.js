@@ -10,7 +10,9 @@ var passportGH = require('passport-github');
 var morgan = require('morgan');
 var logger = require('logger');
 var fs = require('fs');
+var http = require('http');
 var router = express.Router();
+var db = require('./db/database.js');
 
 // Routers
 var userRouter = require('./routers/userRouter.js');
@@ -19,6 +21,13 @@ var orgRouter = require('./routers/orgRouter.js');
 // Initiate server
 var app = express();
 var compiler = webpack(config);
+
+http.createServer(app).listen(8080);
+
+
+// test database
+db.createUserTable();
+
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));

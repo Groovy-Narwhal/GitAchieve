@@ -37,50 +37,47 @@
     <type label="SET" length="1" sql="SET" quote=""/>
     <type label="Bit" length="0" sql="bit" quote=""/>
   </group>
-</datatypes><table x="258" y="316" name="users">
+</datatypes><table x="302" y="299" name="users">
 <row name="id" null="1" autoincrement="1">
 <datatype>INTEGER</datatype>
 <default>NULL</default></row>
 <row name="username" null="0" autoincrement="0">
 <datatype>VARCHAR(100)</datatype>
-<default>'default-username'</default><comment>GitHub username</comment>
+<default>'UsersDefaultUsername'</default><comment>GitHub username</comment>
 </row>
-<row name="email" null="1" autoincrement="0">
+<row name="email" null="0" autoincrement="0">
 <datatype>VARCHAR(100)</datatype>
-<default>'default@email.com'</default></row>
-<row name="avatar url" null="1" autoincrement="0">
+<default>'UsersDefaultEmail'</default></row>
+<row name="avatar url" null="0" autoincrement="0">
 <datatype>VARCHAR(255)</datatype>
-<default>NULL</default><comment>URL of image for user</comment>
+<default>'UsersDefaulAvatarUrl'</default><comment>URL of image for user</comment>
 </row>
 <row name="score" null="0" autoincrement="0">
-<datatype>INTEGER(20)</datatype>
-<default>0</default></row>
-<row name="commits" null="0" autoincrement="0">
-<datatype>INT(10)</datatype>
+<datatype>INTEGER</datatype>
 <default>0</default></row>
 <row name="pull requests" null="0" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
+<datatype>INTEGER</datatype>
 <default>0</default></row>
 <row name="merge conflicts" null="0" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
+<datatype>INTEGER</datatype>
 <default>0</default></row>
 <row name="merge resolutions" null="0" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
+<datatype>INTEGER</datatype>
 <default>0</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 </table>
-<table x="592" y="316" name="orgs">
-<row name="id" null="1" autoincrement="1">
+<table x="743" y="130" name="orgs">
+<row name="id" null="0" autoincrement="1">
 <datatype>INTEGER</datatype>
-<default>NULL</default></row>
+<default>0</default></row>
 <row name="orgname" null="0" autoincrement="0">
 <datatype>VARCHAR(100)</datatype>
-<default>'default-org'</default></row>
-<row name="avatar url" null="1" autoincrement="0">
+<default>'OrgsDefaultOrgname'</default></row>
+<row name="avatar url" null="0" autoincrement="0">
 <datatype>VARCHAR(255)</datatype>
-<default>NULL</default><comment>URL of image for group</comment>
+<default>'OrgsDefaultAvatarUrl'</default><comment>URL of image for group</comment>
 </row>
 <row name="score" null="0" autoincrement="0">
 <datatype>INTEGER(20)</datatype>
@@ -101,37 +98,96 @@
 <part>id</part>
 </key>
 </table>
-<table x="430" y="315" name="users-orgs">
-<row name="id" null="1" autoincrement="1">
+<table x="523" y="137" name="users-orgs">
+<row name="id" null="0" autoincrement="1">
 <datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="user id" null="0" autoincrement="0">
-<datatype>INTEGER(0)</datatype>
+<default>0</default></row>
+<row name="user id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
 <default>NULL</default><relation table="users" row="id" />
 </row>
-<row name="org id" null="0" autoincrement="0">
+<row name="org id" null="1" autoincrement="0">
 <datatype>INTEGER</datatype>
-<default>0</default><relation table="orgs" row="id" />
+<default>NULL</default><relation table="orgs" row="id" />
 </row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
 <comment>Join table to establish which users are in each org</comment>
 </table>
-<table x="438" y="432" name="friends">
-<row name="id" null="1" autoincrement="1">
+<table x="573" y="252" name="users-users">
+<row name="id" null="0" autoincrement="1">
 <datatype>INTEGER</datatype>
-<default>NULL</default></row>
+<default>0</default></row>
 <row name="primary" null="1" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
+<datatype>INTEGER</datatype>
 <default>NULL</default><relation table="users" row="id" />
 </row>
 <row name="secondary" null="1" autoincrement="0">
-<datatype>INT(10)</datatype>
-<default>NULL</default></row>
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
 <row name="confirmed" null="0" autoincrement="0">
+<datatype>VARCHAR(5)</datatype>
+<default>'FALSE'</default><comment>TRUE if game session was accepted by secondary user</comment>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="528" y="460" name="commits">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="sha" null="1" autoincrement="0">
+<datatype>VARCHAR(40)</datatype>
+<default>NULL</default><comment>Unique hash for a commit</comment>
+</row>
+<row name="author id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="commiter id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="stats additions" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="stats deletions" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="stats total" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="708" y="388" name="pull requests">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="user id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="head sha" null="1" autoincrement="0">
+<datatype>VARCHAR(40)</datatype>
+<default>NULL</default><comment>Hash at head of commit</comment>
+</row>
+<row name="number" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="state" null="1" autoincrement="0">
 <datatype>VARCHAR(10)</datatype>
-<default>'FALSE'</default></row>
+<default>NULL</default></row>
+<row name="title" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>'PullRequestDefaultTitle'</default></row>
+<row name="milestone url" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>'PullRequestDefaultMilestoneUrl'</default></row>
 <key type="PRIMARY" name="">
 <part>id</part>
 </key>
