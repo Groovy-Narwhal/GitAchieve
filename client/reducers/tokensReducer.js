@@ -1,8 +1,8 @@
-export default (state = [], action) => {
+export default (tokens = [], action) => {
   switch (action.type) {
     case 'ADD_TOKEN':
-      return [...state, action.token];
+      return [...tokens, action.token];
     default:
-      return state;
+      return tokens;
   }
 }

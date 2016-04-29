@@ -1,12 +1,12 @@
-let getScore = (state) => {
-  return state.score + 10;
+let getScore = (score) => {
+  return score + 10;
 }
 
-export default (state = 0, action) => {
+export default (score = 0, action) => {
   switch (action.type) {
     case 'INCREMENT_SCORE':
-      return getScore(state);
+      return getScore(score);
     default:
-      return state;
+      return score;
   }
 }
