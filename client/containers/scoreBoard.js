@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-export default class ScoreBoard extends Component {
+class ScoreBoard extends Component {
   constructor(props, context) {
     super(props, context)
     this.state = {
@@ -33,3 +33,5 @@ export default class ScoreBoard extends Component {
     )
   }
 };
+
+export default ScoreBoard;
