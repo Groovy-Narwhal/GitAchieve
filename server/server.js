@@ -36,7 +36,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/orgs', orgRouter);
 
 // Serve static files
-app.use('/dist', express.static(__dirname + '/../dist'));
+app.use('/static', express.static(__dirname + '/../client'));
 app.get('/', function(req, res) {
   res.sendFile(path.resolve(__dirname + '/../client/index.html'));
 });
