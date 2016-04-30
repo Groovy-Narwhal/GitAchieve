@@ -27,6 +27,7 @@ describe('test setup', function() {
   });
 });
 
+/********************************************************
 // Test if it loads React
 describe('load react', function() {
   it('should load react front-end', () => {
@@ -42,3 +43,4 @@ describe('load Postgres', () => {
   })
   // TODO: write tests here. Ex. 'it should post data to the database', 'it should grab data from the database'
 });
+********************************************************/
