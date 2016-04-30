@@ -17,7 +17,7 @@ var db = require('./db/database.js');
 // Routers
 var userRouter = require('./routers/userRouter.js');
 var orgRouter = require('./routers/orgRouter.js');
-
+var githubConfig = require('./config/github.config.js')
 // Initiate server
 var app = express();
 
@@ -32,8 +32,14 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output
 app.use(webpackHotMiddleware(compiler));
 
 app.get('/api/v1/users/', function(req, res) {
-  console.log('HELLO');
-  res.send('HELLO');
+  // var gh = new github({
+  //   token: githubConfig.token
+  // });
+  // var groovy = gh.getOrganization('Groovy-Narwhal');
+  // groovy.getRepos(function(err, repos) {
+  //   console.log(repos)
+  // })
+  // var user = gh.getUser('msmith9393');
 });
 
 // Use routers for specific paths
