@@ -5,8 +5,6 @@ var webpack = require('webpack');
 var webpackDevMiddleware = require('webpack-dev-middleware');
 var webpackHotMiddleware = require('webpack-hot-middleware');
 var bodyParser = require('body-parser');
-var passport = require('passport');
-var passportGH = require('passport-github');
 var morgan = require('morgan');
 var logger = require('logger');
 var fs = require('fs');
@@ -21,6 +19,8 @@ var githubConfig = require('./config/github.config.js')
 // Initiate server
 var app = express();
 
+
+// Compile Webpack and middleware
 var compiler = webpack(config);
 
 
@@ -31,25 +31,13 @@ app.use(morgan('dev'));
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
 
-app.get('/api/v1/users/', function(req, res) {
-  // var gh = new github({
-  //   token: githubConfig.token
-  // });
-  // var groovy = gh.getOrganization('Groovy-Narwhal');
-  // groovy.getRepos(function(err, repos) {
-  //   console.log(repos)
-  // })
-  // var user = gh.getUser('msmith9393');
-});
-
 // Use routers for specific paths
 app.use('/api/v1/users', userRouter); 
 app.use('/api/v1/orgs', orgRouter);
 
-// Serve static files
 app.use('/static', express.static(__dirname + '/../client'));
 app.get('/', function(req, res) {
-  res.sendFile(path.resolve(__dirname + '/../client/index.html'));
+  res.sendFile(path.resolve('./client/index.html'));
 });
 
 // @todo: make sure this works -
@@ -58,6 +46,7 @@ app.get('/', function(req, res) {
 
 // Run server listening on the local environment
 const port = process.env.PORT || 8000;
+
 console.log('Listening in on ', port);
 app.listen(port);
 
