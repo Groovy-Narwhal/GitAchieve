@@ -28,6 +28,7 @@ exports.addOne = function(req, res) {
 };
 
 // '/:username'
+// ** Currently not working - it is not passing in a specific username **
 exports.retrieveOne = function(req, res) {
   console.log('req.params', req.params);
   var queryUser = req.params.username;
