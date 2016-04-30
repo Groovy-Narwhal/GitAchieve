@@ -29,7 +29,7 @@ exports.addOne = function(req, res) {
 
 // '/:username'
 exports.retrieveOne = function(req, res) {
-  console.log('req.params', req.params)
+  console.log('req.params', req.params);
   var queryUser = req.params.username;
   db.run('SELECT * FROM users WHERE username=($1)', [queryUser], function(error, response) {
     if (error) {
@@ -88,17 +88,3 @@ exports.addAchievements = function(req, res) {
   var query = {_id: req.params.id};
   // TODO: fill this out with Postgres findOne query
 }; 
-
-// for adding sample data to test the database
-exports.addSampleData = function(req, res) {
-  db.users.insert({
-    userid: 1,
-    username: 'groovynarwhal',
-    email: 'unicornwhale@gmail.com'
-  }, function(err, res) {
-    if (err) {
-      console.error(err);
-    }
-    console.log('res in addSampleData: ', res);
-  });
-};

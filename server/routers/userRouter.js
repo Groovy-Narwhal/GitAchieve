@@ -26,9 +26,5 @@ userRouter.route('/:username/stats')
 userRouter.route('/:username/achievements')
   .get(userController.retrieveAchievements)
   .post(userController.addAchievements);
-
-// for development use only - adds one sample user to the users table
-userRouter.route('/addSampleData')
-  .get(userController.addSampleData);
   
 module.exports = userRouter;
