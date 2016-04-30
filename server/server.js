@@ -31,6 +31,11 @@ app.use(morgan('dev'));
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
 
+app.get('/api/v1/users/', function(req, res) {
+  console.log('HELLO');
+  res.send('HELLO');
+});
+
 // Use routers for specific paths
 app.use('/api/v1/users', userRouter); 
 app.use('/api/v1/orgs', orgRouter);
