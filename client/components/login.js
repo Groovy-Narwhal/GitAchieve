@@ -13,6 +13,12 @@ const Login = () => (
 )
 export default Login;
 
+<<<<<<< cc4229eeb18c9c813821930fe4bbdb07a7fefc24
 // <div>
 //   <button onClick={() => browserHistory.push('/about')}>Learn about the team</button>
 // </div>
+||||||| merged common ancestors
+export default Login;
+=======
+export default Login;
+>>>>>>> (fix) Understand how to pass down state :)

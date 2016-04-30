@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 
-const ScoreBoard = ({ score }) => (
-  <div>Score: {score} </div>
-)
+const ScoreBoard = ({ score }) => {
+  return <div>Score: {score} </div>
+}
 
-export default ScoreBoard;
 
 
 // class ScoreBoard extends Component {
@@ -40,3 +39,6 @@ export default ScoreBoard;
 //     )
 //   }
 // };
+
+
+export default ScoreBoard;
