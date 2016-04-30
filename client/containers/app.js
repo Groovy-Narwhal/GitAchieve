@@ -13,7 +13,7 @@ class App extends Component {
     return (
       <div>
         <header>
-          Links:
+          Links WOO:
           {' '}
           <Link to="/">Home</Link>
           {' '}
