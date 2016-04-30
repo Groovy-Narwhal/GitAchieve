@@ -1,0 +1,198 @@
+<!-- *** NOTE *** - this schema is in MySQL syntax, which doesn't work with Postgres. There are several
+key differences. This is for reference only when building up the actual Postgres schemas. -->
+
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
+<!-- Active URL: http://ondras.zarovi.cz/sql/demo/ -->
+<sql>
+<datatypes db="mysql">
+  <group label="Numeric" color="rgb(238,238,170)">
+    <type label="Integer" length="0" sql="INTEGER" quote=""/>
+    <type label="TINYINT" length="0" sql="TINYINT" quote=""/>
+    <type label="SMALLINT" length="0" sql="SMALLINT" quote=""/>
+    <type label="MEDIUMINT" length="0" sql="MEDIUMINT" quote=""/>
+    <type label="INT" length="0" sql="INT" quote=""/>
+    <type label="BIGINT" length="0" sql="BIGINT" quote=""/>
+    <type label="Decimal" length="1" sql="DECIMAL" re="DEC" quote=""/>
+    <type label="Single precision" length="0" sql="FLOAT" quote=""/>
+    <type label="Double precision" length="0" sql="DOUBLE" re="DOUBLE" quote=""/>
+  </group>
+
+  <group label="Character" color="rgb(255,200,200)">
+    <type label="Char" length="1" sql="CHAR" quote="'"/>
+    <type label="Varchar" length="1" sql="VARCHAR" quote="'"/>
+    <type label="Text" length="0" sql="MEDIUMTEXT" re="TEXT" quote="'"/>
+    <type label="Binary" length="1" sql="BINARY" quote="'"/>
+    <type label="Varbinary" length="1" sql="VARBINARY" quote="'"/>
+    <type label="BLOB" length="0" sql="BLOB" re="BLOB" quote="'"/>
+  </group>
+
+  <group label="Date &amp; Time" color="rgb(200,255,200)">
+    <type label="Date" length="0" sql="DATE" quote="'"/>
+    <type label="Time" length="0" sql="TIME" quote="'"/>
+    <type label="Datetime" length="0" sql="DATETIME" quote="'"/>
+    <type label="Year" length="0" sql="YEAR" quote=""/>
+    <type label="Timestamp" length="0" sql="TIMESTAMP" quote="'"/>
+  </group>
+  
+  <group label="Miscellaneous" color="rgb(200,200,255)">
+    <type label="ENUM" length="1" sql="ENUM" quote=""/>
+    <type label="SET" length="1" sql="SET" quote=""/>
+    <type label="Bit" length="0" sql="bit" quote=""/>
+  </group>
+</datatypes><table x="302" y="299" name="users">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="username" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>'UsersDefaultUsername'</default><comment>GitHub username</comment>
+</row>
+<row name="email" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>'UsersDefaultEmail'</default></row>
+<row name="avatar url" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>'UsersDefaulAvatarUrl'</default><comment>URL of image for user</comment>
+</row>
+<row name="score" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="pull requests" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="merge conflicts" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="merge resolutions" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="743" y="130" name="orgs">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="orgname" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>'OrgsDefaultOrgname'</default></row>
+<row name="avatar url" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>'OrgsDefaultAvatarUrl'</default><comment>URL of image for group</comment>
+</row>
+<row name="score" null="0" autoincrement="0">
+<datatype>INTEGER(20)</datatype>
+<default>0</default></row>
+<row name="commits" null="0" autoincrement="0">
+<datatype>INTEGER(10)</datatype>
+<default>0</default></row>
+<row name="pull requests" null="0" autoincrement="0">
+<datatype>INTEGER(10)</datatype>
+<default>0</default></row>
+<row name="merge conflicts" null="0" autoincrement="0">
+<datatype>INTEGER(10)</datatype>
+<default>0</default></row>
+<row name="merge resolutions" null="0" autoincrement="0">
+<datatype>INTEGER(10)</datatype>
+<default>0</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="523" y="137" name="users-orgs">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="user id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="org id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="orgs" row="id" />
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+<comment>Join table to establish which users are in each org</comment>
+</table>
+<table x="573" y="252" name="users-users">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="primary" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="secondary" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="confirmed" null="0" autoincrement="0">
+<datatype>VARCHAR(5)</datatype>
+<default>'FALSE'</default><comment>TRUE if game session was accepted by secondary user</comment>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="528" y="460" name="commits">
+<row name="id" null="1" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="sha" null="1" autoincrement="0">
+<datatype>VARCHAR(40)</datatype>
+<default>NULL</default><comment>Unique hash for a commit</comment>
+</row>
+<row name="author id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="commiter id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="stats additions" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="stats deletions" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="stats total" null="0" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="708" y="388" name="pull requests">
+<row name="id" null="0" autoincrement="1">
+<datatype>INTEGER</datatype>
+<default>0</default></row>
+<row name="user id" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default><relation table="users" row="id" />
+</row>
+<row name="head sha" null="1" autoincrement="0">
+<datatype>VARCHAR(40)</datatype>
+<default>NULL</default><comment>Hash at head of commit</comment>
+</row>
+<row name="number" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default></row>
+<row name="state" null="1" autoincrement="0">
+<datatype>VARCHAR(10)</datatype>
+<default>NULL</default></row>
+<row name="title" null="0" autoincrement="0">
+<datatype>VARCHAR(100)</datatype>
+<default>'PullRequestDefaultTitle'</default></row>
+<row name="milestone url" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>'PullRequestDefaultMilestoneUrl'</default></row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+</sql>

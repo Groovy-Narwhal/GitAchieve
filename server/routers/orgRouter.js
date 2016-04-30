@@ -1,6 +1,8 @@
 var orgRouter = require('express').Router();
 var orgController = require('../controllers/orgController.js');
 
+// the following routes start from /api/v1/orgs
+
 orgRouter.route('/:orgname')
   .get(orgController.retrieveOne);
 

@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path: path.resolve('./dist'),
     filename: 'bundle.js',
-    publicPath: '/'
+    publicPath: '/dist/'
   },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -22,8 +22,9 @@ module.exports = {
       {
         test: /\.js$/,
         loaders: [ 'babel-loader' ],
-        exclude: /node_modules/
+        // only include js files from the client folder to avoid errors with server
+        include: path.join(__dirname, 'client')
       }
     ]
   }
-}
+};

@@ -1,6 +1,8 @@
 var userRouter = require('express').Router();
 var userController = require('./../controllers/userController.js');
 
+// the following routes start from /api/v1/users
+
 userRouter.route('/')
   .get(userController.retrieve)
   .post(userController.addOne);
@@ -24,5 +26,5 @@ userRouter.route('/:username/stats')
 userRouter.route('/:username/achievements')
   .get(userController.retrieveAchievements)
   .post(userController.addAchievements);
-
+  
 module.exports = userRouter;

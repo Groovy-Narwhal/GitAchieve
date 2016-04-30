@@ -10,7 +10,9 @@ var passportGH = require('passport-github');
 var morgan = require('morgan');
 var logger = require('logger');
 var fs = require('fs');
+var http = require('http');
 var router = express.Router();
+var db = require('./db/database.js');
 
 // Routers
 var userRouter = require('./routers/userRouter.js');
@@ -18,22 +20,30 @@ var orgRouter = require('./routers/orgRouter.js');
 
 // Initiate server
 var app = express();
+
 var compiler = webpack(config);
 
+
 // Middleware
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(morgan('dev'));
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
-app.use(express.static('./dist'));
-app.use('/', function(req, res) {
-  res.sendFile(path.resolve('./client/index.html'));
-});
-app.use('/static', express.static(__dirname + '/../client'));
 
 // Use routers for specific paths
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/orgname', orgRouter);
+app.use('/api/v1/users', userRouter); 
+app.use('/api/v1/orgs', orgRouter);
+
+// Serve static files
+app.use('/static', express.static(__dirname + '/../client'));
+app.get('/', function(req, res) {
+  res.sendFile(path.resolve(__dirname + '/../client/index.html'));
+});
+
+// @todo: make sure this works -
+// it should serve static assets (CSS, images, etc)
+// app.use('/assets', express.static(__dirname + '../client/assets/'));
 
 // Run server listening on the local environment
 const port = process.env.PORT || 8000;
