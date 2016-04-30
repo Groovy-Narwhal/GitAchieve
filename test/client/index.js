@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { shallow, mount, render } from 'enzyme';
 import Index from '../../client/index.js';
 
+// Test if Mocha Chai works
 describe('test setup', function() {
   it('should work', function() {
     expect(true).to.be.true;
@@ -12,6 +13,7 @@ describe('test setup', function() {
   });
 });
 
+// Test if it loads React
 describe('load react', function() {
   it('should load react index.js', function() {
     expect(Index).to.exist;
