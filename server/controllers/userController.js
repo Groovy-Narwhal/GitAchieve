@@ -1,14 +1,39 @@
 var User = require('../models/User.js');
+var db = require('../db/database.js');
 
 // '/'
 exports.retrieve = function(req, res) {
-  var query = {_id: req.params.id};
-  // TODO: fill this out with Postgres findOne query
+  var dbQuery = db.run('SELECT * FROM users', function(err, res) {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('db response in retrieve: ', res);
+      return res; 
+    }
+  });
+  console.log('in retrieve, dbQuery: ', dbQuery);
+  res.status(200);
+  res.json(dbQuery);
+    
 };
 
 exports.addOne = function(req, res) {
   var query = {_id: req.params.id};
-  // TODO: fill this out with Postgres findOne query
+  // db.run('INSERT INTO users ')
+};
+
+// for adding sample data to test the database
+exports.addSampleData = function(req, res) {
+  db.users.insert({
+    userid: 1,
+    username: 'groovynarwhal',
+    email: 'unicornwhale@gmail.com'
+  }, function(err, res){
+    if (err) {
+      console.error(err);
+    }
+    console.log('Added sample data');
+  });
 };
 
 // '/:username'

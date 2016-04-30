@@ -23,20 +23,26 @@ var app = express();
 
 var compiler = webpack(config);
 
+
 // Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
 app.use(webpackHotMiddleware(compiler));
-app.use(express.static('./dist'));
-app.use('/', function(req, res) {
-  res.sendFile(path.resolve('./client/index.html'));
-});
-app.use('/static', express.static(__dirname + '/../client'));
 
 // Use routers for specific paths
-app.use('/api/v1/users', userRouter);
-app.use('/api/v1/orgname', orgRouter);
+app.use('/api/v1/users', userRouter); 
+app.use('/api/v1/orgs', orgRouter);
+
+// Serve static files
+app.use('/dist', express.static(__dirname + '/../dist'));
+app.get('/', function(req, res) {
+  res.sendFile(path.resolve(__dirname + '/../client/index.html'));
+});
+
+// @todo: make sure this works -
+// it should serve static assets (CSS, images, etc)
+// app.use('/assets', express.static(__dirname + '../client/assets/'));
 
 // Run server listening on the local environment
 const port = process.env.PORT || 8000;

@@ -1,4 +1,4 @@
-var User = require('../models/User.js');
+var Org = require('../models/Org.js');
 
 // '/:orgname'
 exports.retrieveOne = function(req, res) {
