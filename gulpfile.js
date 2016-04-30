@@ -9,6 +9,7 @@ var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var mocha = require('gulp-mocha');
 var util = require('gulp-util');
+var shell = require('gulp-shell');
 var webpack = require('webpack-stream');
 var mochaPhantomJs = require('gulp-mocha-phantomjs');
 
@@ -20,10 +21,9 @@ gulp.task('lint', function() {
 });
 
 // Test Task
-gulp.task('test', function() {
-  return gulp.src('test/client/index.html')
-    .pipe(mochaPhantomJs());
-});
+gulp.task('test', shell.task([
+    'mocha test/client/.setup.js test/client/index.js'
+]));
 
 // Build Task
 gulp.task('build', function() {
