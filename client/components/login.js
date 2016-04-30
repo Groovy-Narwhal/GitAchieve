@@ -12,3 +12,7 @@ const Login = () => (
   </div>
 )
 export default Login;
+
+// <div>
+//   <button onClick={() => browserHistory.push('/about')}>Learn about the team</button>
+// </div>
