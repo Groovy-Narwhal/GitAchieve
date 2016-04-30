@@ -7,6 +7,11 @@ module.exports = {
     'webpack-hot-middleware/client',
     './client/index.js'
   ],
+  externals: {
+    'cheerio': 'window',
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true
+  },
   output: {
     path: path.resolve('./dist'),
     filename: 'bundle.js',
