@@ -4,7 +4,7 @@ const ScoreBoard = ({ score }) => {
   return <div>Score: {score} </div>
 }
 
-export default ScoreBoard;
+
 
 // class ScoreBoard extends Component {
 //   constructor(props, context) {
@@ -39,3 +39,6 @@ export default ScoreBoard;
 //     )
 //   }
 // };
+
+
+export default ScoreBoard;
