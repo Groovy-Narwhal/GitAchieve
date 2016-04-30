@@ -22,8 +22,10 @@ module.exports = {
       {
         test: /\.js$/,
         loaders: [ 'babel-loader' ],
-        exclude: /node_modules/
+        // exclude: /node_modules/,
+        // only include js files from the client folder to avoid errors with server
+        include: path.join(__dirname, 'client')
       }
     ]
   }
-}
+};

@@ -1,45 +1,43 @@
 var User = require('../models/User.js');
 var db = require('../db/database.js');
 
-// '/'
+// GET at /api/v1/users
 exports.retrieve = function(req, res) {
-  var dbQuery = db.run('SELECT * FROM users', function(err, res) {
-    if (err) {
-      console.error(err);
+  db.run('SELECT * FROM users', function(error, response) {
+    if (error) {
+      console.error(error);
     } else {
-      console.log('db response in retrieve: ', res);
-      return res; 
+      res.send(response);
     }
-  });
-  console.log('in retrieve, dbQuery: ', dbQuery);
-  res.status(200);
-  res.json(dbQuery);
-    
+  }); 
 };
 
+// POST at /api/v1/users
 exports.addOne = function(req, res) {
-  var query = {_id: req.params.id};
-  // db.run('INSERT INTO users ')
-};
-
-// for adding sample data to test the database
-exports.addSampleData = function(req, res) {
-  db.users.insert({
-    userid: 1,
-    username: 'groovynarwhal',
-    email: 'unicornwhale@gmail.com'
-  }, function(err, res){
-    if (err) {
-      console.error(err);
+  var addUser = req.body.username;
+  var addEmail = req.body.email;
+  db.run('INSERT INTO users (username, email) VALUES ($1, $2)', [addUser, addEmail], function(error, response) {
+    if (error) {
+      console.error(error);
+    } else {
+      var message = 'User created with username: ' + addUser + ' and email: ' + addEmail;
+      res.status(201);
+      res.send(message);
     }
-    console.log('Added sample data');
   });
 };
 
 // '/:username'
 exports.retrieveOne = function(req, res) {
-  var query = {_id: req.params.id};
-  // TODO: fill this out with Postgres findOne query
+  console.log('req.params', req.params)
+  var queryUser = req.params.username;
+  db.run('SELECT * FROM users WHERE username=($1)', [queryUser], function(error, response) {
+    if (error) {
+      console.error(error);
+    } else {
+      res.send(response);
+    }    
+  });
 };
 
 exports.updateOne = function(req, res) {
@@ -90,3 +88,17 @@ exports.addAchievements = function(req, res) {
   var query = {_id: req.params.id};
   // TODO: fill this out with Postgres findOne query
 }; 
+
+// for adding sample data to test the database
+exports.addSampleData = function(req, res) {
+  db.users.insert({
+    userid: 1,
+    username: 'groovynarwhal',
+    email: 'unicornwhale@gmail.com'
+  }, function(err, res) {
+    if (err) {
+      console.error(err);
+    }
+    console.log('res in addSampleData: ', res);
+  });
+};

@@ -7,10 +7,6 @@ userRouter.route('/')
   .get(userController.retrieve)
   .post(userController.addOne);
 
-// for development use only
-userRouter.route('/addSampleData')
-  .get(userController.addSampleData);
-
 userRouter.route('/:username')
   .get(userController.retrieveOne)
   .patch(userController.updateOne)
@@ -31,4 +27,8 @@ userRouter.route('/:username/achievements')
   .get(userController.retrieveAchievements)
   .post(userController.addAchievements);
 
+// for development use only - adds one sample user to the users table
+userRouter.route('/addSampleData')
+  .get(userController.addSampleData);
+  
 module.exports = userRouter;
