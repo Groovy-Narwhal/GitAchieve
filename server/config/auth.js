@@ -4,12 +4,13 @@ var cookieparser = require('cookie-parser');
 var passport = require('passport');
 var Strategy = require('passport-github2').Strategy;
 var keys = require('./github.config.js');
-var app 
 
 // require users from database
 
 module.exports = function(app) {
+
   app.use(cookieparser());
+  
   app.use(session({
     secret: 'groovy-narwhal',
     resave: false,
@@ -32,19 +33,25 @@ module.exports = function(app) {
   });
   
   var callbackHost = (PORT === 8000) ? 'http://localhost:8000' ? 'http://www.gitachieve.com';
+
   passport.use(new Strategy({
     clientId: keys.id,
     clientSecret: keys.secret,
-    callbackURL: callbackHost + '/login/github_callback'
-  }, function(accessToken, refreshToken, profile, cb) {
-    return cb(null, profile);
-  }));
-};
+    callbackURL: callbackHost + '/login/github/callback'
+    }, function(accessToken, refreshToken, profile, cb) {
+      // TODO: Add user to the database!
+      process.nextTick(function() {
+        return cb(null, profile);
+      });
+    }
+  });
 
-
-// GITHUB LOGIN
+  // GITHUB LOGIN
   app.get('/login/github',
-    passport.authenticate('github', {scope: ['user:email','read:org', 'public_repo']}));
+    passport.authenticate('github'),
+    function(req, res) {
+      res.redirect('/users')
+    });
 
   app.get('/login/github_callback',
     passport.authenticate('github', {failureRedirect: '/'}),
