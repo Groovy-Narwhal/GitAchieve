@@ -4,8 +4,9 @@ var cookieparser = require('cookie-parser');
 var passport = require('passport');
 var Strategy = require('passport-github2').Strategy;
 var keys = require('./github.config.js');
+var session = require('express-session');
 
-// require users from database
+// TODO: require users from database!
 
 module.exports = function(app) {
 
@@ -32,56 +33,60 @@ module.exports = function(app) {
     }
   });
   
-  var callbackHost = (PORT === 8000) ? 'http://localhost:8000' ? 'http://www.gitachieve.com';
+  var callbackHost = (PORT === 8000) ? 'http://localhost:8000' : 'http://www.gitachieve.com';
 
   passport.use(new Strategy({
-    clientId: keys.id,
+    clientID: keys.id,
     clientSecret: keys.secret,
     callbackURL: callbackHost + '/login/github/callback'
-    }, function(accessToken, refreshToken, profile, cb) {
-      // TODO: Add user to the database!
+  },
+    function(accessToken, refreshToken, profile, cb) {
       process.nextTick(function() {
+        console.log('This is your Token: ', accessToken);
+        // TODO: Add user to the database!
         return cb(null, profile);
       });
     }
-  });
+  ));
 
   // GITHUB LOGIN
   app.get('/login/github',
-    passport.authenticate('github'),
-    function(req, res) {
-      res.redirect('/users')
-    });
+    passport.authenticate('github', {scope: ['user:email']}),
+      function(req, res) {
+      // The request will be redirected to GitHub for authentication so this function will not be called
+    }
+  );
 
-  app.get('/login/github_callback',
+  app.get('/login/github/callback',
     passport.authenticate('github', {failureRedirect: '/'}),
     function(req, res) {
-      // Successful authentication, create cookie, redirect home.
       res.cookie('githubId', req.user.id);
       res.cookie('githubName', req.user.login);
       res.redirect('/');
-    });
-
-  function checkPermission (req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    } else {
-      res.redirect('/github/failure');
     }
-  }
+  );
 
-  app.get('/github/profile', checkPermission, function (req, res) {
-    res.send(req.user);
-  });
-
-  app.get('/github/failure', function (req, res) {
-    res.send("Authentication failed.");
-  });
-
-  app.get('/logout', function(req, res){
+  app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
   });
+
+  app.get('/github/profile', checkAuth, function(req, res) {
+    res.send(req.user);
+  });
+
+  app.get('/github/failure', function(req, res) {
+    res.send('Authentication failed');
+  });
+
+};
+
+function checkAuth(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    res.redirect('/github/failure');
+  }
 };
 
 

@@ -32,8 +32,8 @@ app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output
 app.use(webpackHotMiddleware(compiler));
 
 // Use routers for specific paths
-app.use('/api/v1/users', userRouter); 
-app.use('/api/v1/orgs', orgRouter);
+// app.use('/api/v1/users', userRouter); 
+// app.use('/api/v1/orgs', orgRouter);
 
 app.use('/static', express.static(__dirname + '/../client'));
 app.get('/', function(req, res) {
@@ -46,6 +46,8 @@ app.get('/', function(req, res) {
 
 // Run server listening on the local environment
 const port = process.env.PORT || 8000;
+
+require('./config/auth.js')(app);
 
 console.log('Listening in on ', port);
 app.listen(port);
