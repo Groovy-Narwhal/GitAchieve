@@ -15,8 +15,8 @@ var mochaPhantomJs = require('gulp-mocha-phantomjs');
 
 // Lint Task
 gulp.task('lint', function() {
-    return gulp.src('./*.js')
-        .pipe(jshint())
+    return gulp.src(['./client/**/*.js', './server/**/*.js'], {base: '.'})
+        .pipe(jshint({esnext: true}))
         .pipe(jshint.reporter('default'));
 });
 
@@ -32,13 +32,6 @@ gulp.task('build', function() {
     .pipe(gulp.dest('dist/'));
 });
 
-// Compile Our Sass // Commented out for now since Sass is not integrated yet.
-// gulp.task('sass', function() {
-//     return gulp.src('scss/*.scss')
-//         .pipe(sass())
-//         .pipe(gulp.dest('dist/css'));
-// });
-
 // Concatenate & Minify JS Task
 gulp.task('scripts', function() {
     return gulp.src('server/**/*.js')
@@ -51,9 +44,17 @@ gulp.task('scripts', function() {
 
 // Watch Files For Changes
 gulp.task('watch', function() {
-    gulp.watch(['./*.js', 'test/**'], ['lint', 'scripts', 'test']);
+    gulp.watch(['./*.js', 'test/**'], ['lint', 'test']);
     // gulp.watch('scss/*.scss', ['sass']);
 });
 
 // Default Task
 gulp.task('default', ['lint', 'test', 'watch']);
+
+
+// Compile Our Sass // Commented out for now since Sass is not integrated yet.
+// gulp.task('sass', function() {
+//     return gulp.src('scss/*.scss')
+//         .pipe(sass())
+//         .pipe(gulp.dest('dist/css'));
+// });
