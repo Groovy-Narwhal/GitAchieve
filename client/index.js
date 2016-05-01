@@ -1,25 +1,28 @@
-import 'babel-polyfill'
-import React from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware, compose } from 'redux'
-import reducers from './reducers/combineReducers.js'
-import App from './components/app'
+import 'babel-polyfill';
+import React from 'react';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { syncHistoryWithStore } from 'react-router-redux';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { App, DashBoard } from './containers/index';
+import configureStore from './store/store';
 
+const initialState = {
+  score: 0,
+  tokens: [],
+};
 
-export default function configureStore(initialState) {
-  const store = createStore(reducers, initialState, 
-    window.devToolsExtension ? window.devToolsExtension() : undefined
-  );
-  return store;
-}
-// let store = createStore(combineReducers)
+const store = configureStore(initialState);
 
-// console.log('STORE', store.getState())
+const history = syncHistoryWithStore(browserHistory, store);
 
 render(
-  <Provider store={configureStore({})}>
-    <App />
+  <Provider store={store}>
+    <Router history={history}>
+      <Route path='/' component={App}>
+        <Route path="v1/users" component={DashBoard} />
+      </Route>
+    </Router>
   </Provider>,
   document.getElementById('root')
-)
+);

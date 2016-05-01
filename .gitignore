@@ -1,6 +1,16 @@
+# GitSpy
 gitSpy/*
+
+# Server data
 server/logs/*
 server/config/*
-.DS_Store
-node_modules/*
 server/npm-debug.log
+
+# Concatenated and minified code
+dist/*
+
+.DS_Store
+dist/*
+
+# Dependency directories
+node_modules/*

@@ -1,16 +1,8 @@
-const tokens = (state = [], action) => {
+export default (tokens = [], action) => {
   switch (action.type) {
     case 'ADD_TOKEN':
-      // return Object.assign({}, state, {
-      //   score: action.num
-      // })
-      return {
-        ...state,
-        token: [1]
-      }
+      return [...tokens, action.token];
     default:
-      return state;
+      return tokens;
   }
-}
-
-export default tokens
+};

@@ -1,10 +1,11 @@
-import { combineReducers } from 'redux'
-import { score } from './scoreReducer'
-import { tokens } from './tokensReducer'
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
+import score from './scoreReducer';
+import tokens from './tokensReducer';
 
-const reducers = combineReducers({
+
+export default combineReducers({
   score,
-  tokens
-})
-
-export default reducers
+  tokens,
+  routing: routerReducer
+});
