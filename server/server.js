@@ -1,39 +1,27 @@
 var express = require('express');
 var path = require('path');
-var config = require('../webpack.config.js');
-var webpack = require('webpack');
-var webpackDevMiddleware = require('webpack-dev-middleware');
-var webpackHotMiddleware = require('webpack-hot-middleware');
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
-var logger = require('logger');
-var fs = require('fs');
-var http = require('http');
+// var logger = require('logger');
+// var fs = require('fs');
+// var http = require('http');
 var router = express.Router();
 var db = require('./db/database.js');
+const port = process.env.PORT || 8000;
+
+// Initiate server
+var app = express();
+
+// Passport Authentication and Middleware
+require('./config/auth.js')(app);
+require('./config/middleware.js')(app);
 
 // Routers
 var userRouter = require('./routers/userRouter.js');
 var orgRouter = require('./routers/orgRouter.js');
-var githubConfig = require('./config/github.config.js')
-// Initiate server
-var app = express();
-
-
-// Compile Webpack and middleware
-var compiler = webpack(config);
-
-
-// Middleware
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(morgan('dev'));
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
-app.use(webpackHotMiddleware(compiler));
+var githubConfig = require('./config/github.config.js');
 
 // Use routers for specific paths
-// app.use('/api/v1/users', userRouter); 
-// app.use('/api/v1/orgs', orgRouter);
+app.use('/api/v1/users', userRouter); 
+app.use('/api/v1/orgs', orgRouter);
 
 app.use('/static', express.static(__dirname + '/../client'));
 app.get('/', function(req, res) {
@@ -45,10 +33,6 @@ app.get('/', function(req, res) {
 // app.use('/assets', express.static(__dirname + '../client/assets/'));
 
 // Run server listening on the local environment
-const port = process.env.PORT || 8000;
-
-require('./config/auth.js')(app);
-
 console.log('Listening in on ', port);
 app.listen(port);
 
