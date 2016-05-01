@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/msmith9393/GitAchieve.git"
+    "url": "https://github.com/Groovy-Narwhal/GitAchieve.git"
   },
   "directories": {
     "test": "tests"
@@ -19,10 +19,6 @@
     "express": "^4.13.4",
     "massive": "^2.2.0",
     "pg": "^4.5.5",
-    "logger": "0.0.1",
-    "morgan": "^1.7.0",
-    "passport": "^0.3.2",
-    "passport-github2": "^0.1.10",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "react-redux": "^4.4.5",
@@ -44,7 +40,6 @@
     "body-parser": "^1.15.0",
     "chai": "^3.5.0",
     "enzyme": "^2.2.0",
-    "cookie-parser": "^1.4.1",
     "eslint": "^2.8.0",
     "eslint-config-airbnb": "^8.0.0",
     "eslint-plugin-import": "^1.6.0",
@@ -64,7 +59,11 @@
     "immutable": "^3.8.1",
     "jsdom": "^8.0.1",
     "jshint": "^2.8.0",
+    "logger": "0.0.1",
     "mocha": "^2.4.5",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-github": "^1.1.0",
     "react-addons-test-utils": "^15.0.1",
     "webpack": "^1.13.0",
     "webpack-dev-middleware": "^1.6.1",
