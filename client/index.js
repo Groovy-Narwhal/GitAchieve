@@ -12,7 +12,9 @@ import { requireAuthentication } from './components/authenticatedComponent';
 const initialState = {
   score: 0,
   tokens: [],
-  isAuthenticated: true
+  isAuthenticated: true,
+  token: null,
+  username: 'msmith9393'
 };
 
 const store = configureStore(initialState);
