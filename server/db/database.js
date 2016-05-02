@@ -15,12 +15,13 @@ var userSchema = fs.readFileSync(__dirname + '/user_schema.sql', 'utf8', functio
 });
 
 
+
 // if the users table is empty, build it
 db.run('select * from users', function(err, users) {
   if (err) {
     console.error(err);
   } else {
-    if (!users) {
+    if (users.length === 0) {
       console.log('building users table');
       db.run(userSchema, function(error, res) {
         if (error) {
