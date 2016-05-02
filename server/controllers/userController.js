@@ -1,5 +1,4 @@
-var User = require('../models/User.js');
-var db = require('../db/database.js');
+const db = require('../db/database.js');
 
 // GET at /api/v1/users
 exports.retrieve = function(req, res) {

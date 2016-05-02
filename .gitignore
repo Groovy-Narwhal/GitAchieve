@@ -10,7 +10,6 @@ server/npm-debug.log
 dist/*
 
 .DS_Store
-dist/*
 
 # Dependency directories
 node_modules/*

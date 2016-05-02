@@ -1,7 +1,7 @@
 import React from 'react';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import logger from 'redux-logger';
-import reducers from './../reducers/combineReducers';
+import reducers from './../reducers/rootReducer';
 
 const finalCreateStore = compose(
   applyMiddleware(logger())

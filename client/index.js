@@ -4,12 +4,12 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { App, DashBoard } from './containers/index';
+import { App, DashBoard, ScoreBoard, Login } from './components/index';
 import configureStore from './store/store';
 
 const initialState = {
   score: 0,
-  tokens: [],
+  tokens: []
 };
 
 const store = configureStore(initialState);
@@ -20,7 +20,7 @@ render(
   <Provider store={store}>
     <Router history={history}>
       <Route path='/' component={App}>
-        <Route path="v1/users" component={DashBoard} />
+        <IndexRoute component={DashBoard} />
       </Route>
     </Router>
   </Provider>,

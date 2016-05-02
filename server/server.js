@@ -1,64 +1,34 @@
-var express = require('express');
-var path = require('path');
-var config = require('../webpack.config.js');
-var webpack = require('webpack');
-var webpackDevMiddleware = require('webpack-dev-middleware');
-var webpackHotMiddleware = require('webpack-hot-middleware');
-var bodyParser = require('body-parser');
-var passport = require('passport');
-var passportGH = require('passport-github');
-var morgan = require('morgan');
-var logger = require('logger');
-var fs = require('fs');
-var http = require('http');
-var router = express.Router();
-var db = require('./db/database.js');
+const express = require('express');
+const path = require('path');
+const http = require('http');
+const router = express.Router();
+const db = require('./db/database.js');
+
+// Initiate server
+const app = express();
+
+// Passport Authentication and Middleware
+require('./helpers/auth.js')(app);
+require('./helpers/middleware.js')(app);
 
 // Routers
-var userRouter = require('./routers/userRouter.js');
-var orgRouter = require('./routers/orgRouter.js');
-var githubConfig = require('./config/github.config.js')
-// Initiate server
-var app = express();
-
-var compiler = webpack(config);
-
-
-// Middleware
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(morgan('dev'));
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
-app.use(webpackHotMiddleware(compiler));
-
-app.get('/api/v1/users/', function(req, res) {
-  // var gh = new github({
-  //   token: githubConfig.token
-  // });
-  // var groovy = gh.getOrganization('Groovy-Narwhal');
-  // groovy.getRepos(function(err, repos) {
-  //   console.log(repos)
-  // })
-  // var user = gh.getUser('msmith9393');
-});
+const userRouter = require('./routers/userRouter.js');
+const orgRouter = require('./routers/orgRouter.js');
 
 // Use routers for specific paths
 app.use('/api/v1/users', userRouter); 
 app.use('/api/v1/orgs', orgRouter);
 
-// Serve static files
 app.use('/static', express.static(__dirname + '/../client'));
-app.get('/', function(req, res) {
-  res.sendFile(path.resolve(__dirname + '/../client/index.html'));
-});
 
-// @todo: make sure this works -
-// it should serve static assets (CSS, images, etc)
-// app.use('/assets', express.static(__dirname + '../client/assets/'));
+app.get('/', function(req, res) {
+  res.sendFile(path.resolve('./client/index.html'));
+});
 
 // Run server listening on the local environment
 const port = process.env.PORT || 8000;
-console.log('Listening in on ', port);
-app.listen(port);
+const server = http.createServer(app);
+server.listen(port);
+console.log('Server listening in on ', port);
 
 module.exports = app;
