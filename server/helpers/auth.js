@@ -38,7 +38,7 @@ module.exports = function(app) {
   passport.use(new Strategy({
     clientID: keys.id,
     clientSecret: keys.secret,
-    callbackURL: callbackHost + '/login/github/callback'
+    callbackURL: callbackHost + '/signin/github/callback'
   },
     function(accessToken, refreshToken, profile, cb) {
       process.nextTick(function() {
@@ -50,14 +50,14 @@ module.exports = function(app) {
   ));
 
   // GITHUB LOGIN
-  app.get('/login/github',
+  app.get('/signin/github',
     passport.authenticate('github', {scope: ['user:email']}),
       function(req, res) {
       // The request will be redirected to GitHub for authentication so this function will not be called
     }
   );
 
-  app.get('/login/github/callback',
+  app.get('/signin/github/callback',
     passport.authenticate('github', {failureRedirect: '/'}),
     function(req, res) {
       res.cookie('githubId', req.user.id);
@@ -66,7 +66,7 @@ module.exports = function(app) {
     }
   );
 
-  app.get('/logout', function(req, res) {
+  app.get('/signout', function(req, res) {
     req.logout();
     res.redirect('/');
   });

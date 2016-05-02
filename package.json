@@ -16,6 +16,7 @@
   "author": "Adam Isom, Alex Nitta, Inje Yeo, & Megan Smith",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.11.0",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
@@ -28,7 +29,8 @@
     "react-router-redux": "^4.0.4",
     "redux": "^3.5.2",
     "redux-actions": "^0.9.1",
-    "redux-logger": "^2.6.1"
+    "redux-logger": "^2.6.1",
+    "redux-thunk": "^2.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.7.7",
