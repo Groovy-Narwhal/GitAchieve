@@ -22,6 +22,7 @@ render(
     <Router history={history}>
       <Route path='/' component={App}>
         <IndexRoute component={DashBoard} />
+        <Route path="signin" component={Login} />
       </Route>
     </Router>
   </Provider>,

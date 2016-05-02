@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 
 class Header extends Component {
   renderLinks() {
-
     if (!this.props.authenticated) {
       return <li>
         <Link to="/signin">Sign In</Link>
@@ -37,7 +36,6 @@ class Header extends Component {
 }
 
 function mapStateToProps(state) {
-  console.log('STATEAUTH', state.auth.authenticated);
   return {
     authenticated: state.auth.authenticated
   };
