@@ -7,7 +7,11 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { App, DashBoard, ScoreBoard, Login } from './components/index';
 import configureStore from './store/store';
 
-const initialState = {};
+const initialState = {
+  auth: {
+    authenticated: false
+  }
+};
 
 const store = configureStore(initialState);
 
