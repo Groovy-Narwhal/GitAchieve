@@ -10,13 +10,12 @@ var db = require('./db/database.js');
 var app = express();
 
 // Passport Authentication and Middleware
-require('./config/auth.js')(app);
-require('./config/middleware.js')(app);
+require('./helpers/auth.js')(app);
+require('./helpers/middleware.js')(app);
 
 // Routers
 var userRouter = require('./routers/userRouter.js');
 var orgRouter = require('./routers/orgRouter.js');
-var githubConfig = require('./config/github.config.js');
 
 // Use routers for specific paths
 app.use('/api/v1/users', userRouter); 

@@ -9,7 +9,7 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 
  - ![](https://avatars.githubusercontent.com/u/10492144?v=3&s=48)[**Adam Isom**](https://github.com/adamrgisom)
 
- - ![Megan Smith](https://avatars.githubusercontent.com/u/15220759?v=3&s=48)[**Megan Smith**](https://github.com/msmith9393)
+ - ![](https://avatars.githubusercontent.com/u/15220759?v=3&s=48)[**Megan Smith**](https://github.com/msmith9393)
 
 ## Table of Contents
 1. [How to get started](#how-to-get-started)

@@ -3,7 +3,7 @@ var PORT = process.env.PORT || 8080;
 var cookieparser = require('cookie-parser');
 var passport = require('passport');
 var Strategy = require('passport-github2').Strategy;
-var keys = require('./github.config.js');
+var keys = require('./../config/github.config.js');
 var session = require('express-session');
 
 // TODO: require users from database!

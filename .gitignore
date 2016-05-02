@@ -3,7 +3,7 @@ gitSpy/*
 
 # Server data
 server/logs/*
-server/config/github.config.js
+server/config/*
 server/npm-debug.log
 
 # Concatenated and minified code

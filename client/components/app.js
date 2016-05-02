@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link, browserHistory } from 'react-router'
-import ScoreBoard from './../containers/scoreBoard';
+import ScoreBoard from './scoreBoard';
 import actions from './../actions/actionCreators';
 
 class App extends Component {

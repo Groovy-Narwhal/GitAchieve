@@ -11,7 +11,7 @@
     "test": "tests"
   },
   "scripts": {
-    "serve": "nodemon server/server.js --ignore client/containers"
+    "serve": "nodemon server/server.js --ignore client/components"
   },
   "author": "Adam Isom, Alex Nitta, Inje Yeo, & Megan Smith",
   "license": "ISC",
