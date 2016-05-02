@@ -3,7 +3,7 @@ A webapp to promote positive Git behavior through friendly competition.
 See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 
 ## Team
- - ![](https://avatars.githubusercontent.com/u/4149515?v=3&s=48)[**Inje Yeo**](https://github.com/byeo)
+ - ![](https://avatars.githubusercontent.com/u/4149515?v=3&s=48)[**Inje Yeo**](https://github.com/byeo630)
 
  - ![](https://avatars.githubusercontent.com/u/15864056?v=3&s=48)[**Alex Nitta**](https://github.com/alexnitta)
 
