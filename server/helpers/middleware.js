@@ -1,14 +1,14 @@
-var config = require('./../../webpack.config.js');
-var webpack = require('webpack');
-var webpackDevMiddleware = require('webpack-dev-middleware');
-var webpackHotMiddleware = require('webpack-hot-middleware');
-var bodyParser = require('body-parser');
-var morgan = require('morgan');
+const config = require('./../../webpack.config.js');
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackHotMiddleware = require('webpack-hot-middleware');
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 
 module.exports = function(app) {
   // Compile Webpack and middleware
-  var compiler = webpack(config);
+  const compiler = webpack(config);
 
   // Middleware
   app.use(bodyParser.json()); // for parsing application/json

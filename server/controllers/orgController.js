@@ -1,5 +1,3 @@
-var Org = require('../models/Org.js');
-
 // '/:orgname'
 exports.retrieveOne = function(req, res) {
   var query = {_id: req.params.id};

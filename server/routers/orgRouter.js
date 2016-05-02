@@ -1,5 +1,5 @@
-var orgRouter = require('express').Router();
-var orgController = require('../controllers/orgController.js');
+const orgRouter = require('express').Router();
+const orgController = require('../controllers/orgController.js');
 
 // the following routes start from /api/v1/orgs
 

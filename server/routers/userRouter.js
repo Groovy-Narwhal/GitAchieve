@@ -1,5 +1,5 @@
-var userRouter = require('express').Router();
-var userController = require('./../controllers/userController.js');
+const userRouter = require('express').Router();
+const userController = require('./../controllers/userController.js');
 
 // the following routes start from /api/v1/users
 
