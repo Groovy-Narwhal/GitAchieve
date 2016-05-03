@@ -25,7 +25,7 @@ const UserCommitChart = () => {
   var margin = {top: 20, right: 40, bottom: 30, left: 20},
       width = 960 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom,
-      barWidth = Math.floor(width / 19) - 1;
+      barWidth = Math.floor(width / 7) - 1;
 
   var x = d3.scale.linear()
       .range([barWidth / 2, width - barWidth / 2]);
@@ -43,19 +43,34 @@ const UserCommitChart = () => {
   var commitCounts = svg.append('g')
       .attr('class', 'commitCounts');
 
+  // TODO: take out hardcoded value and replace it with a variable
   d3.json("https://api.github.com/repos/Groovy-Narwhal/GitAchieve/stats/commit_activity", (error, data) => {
-    const currentWeekCommits = data[data.length - 1]
+    const currentWeekCommits = data[data.length - 1];
+    x.domain([0, 7]);
+    y.domain([0, d3.max(currentWeekCommits.days, (d) => { return d; })]);
+    let i = 0;
     if (error) {
       console.log('There was an error retrieving commit data: ', error);
     }
-    console.log('This is the d3 json data: ', currentWeekCommits);
     var commitsMax = d3.max(currentWeekCommits.days)
-    console.log(commitsMax);
-    var commitCount = commitCounts.selectAll('.commitCount')
-        .data(d3.range(commitsMax, 0))
+    var commitCount = commitCounts.selectAll('.commit-count')
+        .data(currentWeekCommits.days)
       .enter().append('g')
-        .attr('class', 'commitCount')
-        .attr('transform', (commitCount) => (`translate(${x(commitCount)}, 0)`));
+        .attr('class', 'commit-count')
+        .attr('transform', (commitCount) => (`translate(${x(i++)}, 0)`));
+
+    i = 0;
+    
+    commitCount.selectAll('rect')
+        .data((d) => { return [d]})
+      .enter().append('rect')
+        .attr('x', (d) => { return -barWidth / 2 })
+        .attr('width', barWidth)
+        .attr('y', y)
+        .attr('height', (value) => { console.log('The height value: ', height - y(value)); return height - y(value) })
+        .text((d) => (d.toString()));
+
+    i = 0;
   });
 };
 
