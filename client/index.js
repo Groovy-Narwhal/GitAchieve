@@ -19,7 +19,6 @@ const store = configureStore(initialState);
 const history = syncHistoryWithStore(browserHistory, store);
 
 const token = localStorage.getItem('token');
-console.log('TOKEN', token)
 if (token) {
   store.dispatch({ type: types.AUTH_USER })
 }

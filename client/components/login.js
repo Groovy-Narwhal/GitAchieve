@@ -6,7 +6,6 @@ import actions from './../actions/index';
 
 export default class Login extends Component {
   handleSignIn() {
-    console.log('WHAT UP', this.props.actions);
     this.props.actions.signInUser()
   }
   render() {
