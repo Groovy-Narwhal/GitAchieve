@@ -5,7 +5,11 @@ import { connect } from 'react-redux';
 
 export function requireAuthentication(Component) {
 
-  class AuthenticatedComponent extends React.Component {
+  class AuthenticatedComponent extends Component {
+    constructor(props) {
+      super(props);
+    }
+
     static contextTypes = {
       router: React.PropTypes.object
     }

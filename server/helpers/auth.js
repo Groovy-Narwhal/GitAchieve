@@ -1,17 +1,22 @@
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 
-const cookieparser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const Strategy = require('passport-github2').Strategy;
 const keys = require('./../config/github.config.js');
 const session = require('express-session');
+const cors = require('cors');
 
 // TODO: require users from database!
 
 module.exports = function(app) {
+  app.use(cookieParser());
+  app.use(cors());
 
-  app.use(cookieparser());
-  
+  var corsOptions = {
+    origin: 'http://127.0.0.1:8000'
+  };
+
   app.use(session({
     secret: 'groovy-narwhal',
     resave: false,
@@ -33,36 +38,39 @@ module.exports = function(app) {
     }
   });
   
-  var callbackHost = (PORT === 8000) ? 'http://localhost:8000' : 'http://www.gitachieve.com';
+  var callbackHost = (PORT === 8000) ? 'http://127.0.0.1:8000' : 'http://www.gitachieve.com';
 
-  passport.use(new Strategy({
+
+  var gh = new Strategy({
     clientID: keys.id,
     clientSecret: keys.secret,
-    callbackURL: callbackHost + '/signin/github/callback'
+    callbackURL: callbackHost + '/auth/github_oauth/callback'
   },
-    function(accessToken, refreshToken, profile, cb) {
-      process.nextTick(function() {
-        console.log('This is your Token: ', accessToken);
-        // TODO: Add user to the database!
-        return cb(null, profile);
-      });
-    }
-  ));
+  function(accessToken, refreshToken, profile, cb) {
+    console.log('HELLO FROM PASSPORT');
+    process.nextTick(function() {
+      console.log('This is your Token: ', accessToken);
+      // TODO: Add user to the database!
+      return cb(null, profile);
+    })
+  });
+  // console.log(gh);
+  passport.use(gh);
 
   // GITHUB LOGIN
-  app.get('/signin/github',
-    passport.authenticate('github', {scope: ['user:email']}),
+  app.get('/auth/github_oauth',
+    passport.authenticate('github', { scope: [ 'user:email' ] }),
       function(req, res) {
-        console.log('HELLO FROM ME')
       // The request will be redirected to GitHub for authentication so this function will not be called
     }
   );
 
-  app.get('/signin/github/callback',
-    passport.authenticate('github', {failureRedirect: '/'}),
+  app.get('/auth/github_oauth/callback',
+    passport.authenticate('github', {failureRedirect: '/signin'}),
     function(req, res) {
-      res.cookie('githubId', req.user.id);
-      res.cookie('githubName', req.user.login);
+      console.log('RESPONSEE-------------------', req.user.id);
+      // res.cookie('githubId', req.user.id);
+      // res.cookie('githubName', req.user.login);
       res.redirect('/');
     }
   );
@@ -72,7 +80,7 @@ module.exports = function(app) {
     res.redirect('/');
   });
 
-  app.get('/github/profile', checkAuth, function(req, res) {
+  app.get('github/succes', checkAuth, function(req, res) {
     res.send(req.user);
   });
 

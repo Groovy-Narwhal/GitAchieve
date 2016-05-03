@@ -6,6 +6,9 @@ import Header from './header';
 // import actions from './../actions/actionCreators';
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <div>
