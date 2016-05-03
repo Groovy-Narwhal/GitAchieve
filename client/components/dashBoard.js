@@ -8,7 +8,7 @@ import commitChart from './commitChart';
 class DashBoard extends Component {
   componentDidMount() {
     // This instantiates a new d3 commit graph
-    commitChart.UserCommitChart();
+    commitChart.CommitChart();
   }
   render() {
     const {
