@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
-// import { Link, browserHistory } from 'react-router'
+// import { Link, browserHistory } from 'react-router';
 import Header from './header';
 // import actions from './../actions/actionCreators';
 

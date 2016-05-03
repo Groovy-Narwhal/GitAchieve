@@ -6,6 +6,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { App, DashBoard, ScoreBoard, Login } from './components/index';
 import configureStore from './store/store';
+import * as types from './actions/actionTypes';
 
 const initialState = {
   auth: {
@@ -16,6 +17,12 @@ const initialState = {
 const store = configureStore(initialState);
 
 const history = syncHistoryWithStore(browserHistory, store);
+
+const token = localStorage.getItem('token');
+console.log('TOKEN', token)
+if (token) {
+  store.dispatch({ type: types.AUTH_USER })
+}
 
 render(
   <Provider store={store}>

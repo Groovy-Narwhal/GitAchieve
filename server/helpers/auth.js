@@ -53,6 +53,7 @@ module.exports = function(app) {
   app.get('/signin/github',
     passport.authenticate('github', {scope: ['user:email']}),
       function(req, res) {
+        console.log('HELLO FROM ME')
       // The request will be redirected to GitHub for authentication so this function will not be called
     }
   );

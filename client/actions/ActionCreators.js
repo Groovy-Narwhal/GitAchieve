@@ -1,8 +1,5 @@
-import axios from 'axios';
-import { browserHistory } from 'react-router';
 import * as types from './actionTypes';
 
-const ROOT_URL = 'http://localhost:8000';
 
 export default {
   incrementStore: num => {
@@ -16,11 +13,15 @@ export default {
       type: types.ADD_TOKEN,
       token
     }
+  },
+  authUser: () => {
+    return {
+      type: types.AUTH_USER
+    }
+  },
+  unAuthUser: () => {
+    return {
+      type: types.UNAUTH_USER
+    }
   }
-}
-
-export function signinUser() {
-  // return (dispatch) {
-    
-  // }
-}
+};
