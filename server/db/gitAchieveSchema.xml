@@ -1,198 +1,1796 @@
-<!-- *** NOTE *** - this schema is in MySQL syntax, which doesn't work with Postgres. There are several
-key differences. This is for reference only when building up the actual Postgres schemas. -->
-
-<?xml version="1.0" encoding="utf-8" ?>
-<!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
-<!-- Active URL: http://ondras.zarovi.cz/sql/demo/ -->
-<sql>
-<datatypes db="mysql">
-  <group label="Numeric" color="rgb(238,238,170)">
-    <type label="Integer" length="0" sql="INTEGER" quote=""/>
-    <type label="TINYINT" length="0" sql="TINYINT" quote=""/>
-    <type label="SMALLINT" length="0" sql="SMALLINT" quote=""/>
-    <type label="MEDIUMINT" length="0" sql="MEDIUMINT" quote=""/>
-    <type label="INT" length="0" sql="INT" quote=""/>
-    <type label="BIGINT" length="0" sql="BIGINT" quote=""/>
-    <type label="Decimal" length="1" sql="DECIMAL" re="DEC" quote=""/>
-    <type label="Single precision" length="0" sql="FLOAT" quote=""/>
-    <type label="Double precision" length="0" sql="DOUBLE" re="DOUBLE" quote=""/>
-  </group>
-
-  <group label="Character" color="rgb(255,200,200)">
-    <type label="Char" length="1" sql="CHAR" quote="'"/>
-    <type label="Varchar" length="1" sql="VARCHAR" quote="'"/>
-    <type label="Text" length="0" sql="MEDIUMTEXT" re="TEXT" quote="'"/>
-    <type label="Binary" length="1" sql="BINARY" quote="'"/>
-    <type label="Varbinary" length="1" sql="VARBINARY" quote="'"/>
-    <type label="BLOB" length="0" sql="BLOB" re="BLOB" quote="'"/>
-  </group>
-
-  <group label="Date &amp; Time" color="rgb(200,255,200)">
-    <type label="Date" length="0" sql="DATE" quote="'"/>
-    <type label="Time" length="0" sql="TIME" quote="'"/>
-    <type label="Datetime" length="0" sql="DATETIME" quote="'"/>
-    <type label="Year" length="0" sql="YEAR" quote=""/>
-    <type label="Timestamp" length="0" sql="TIMESTAMP" quote="'"/>
-  </group>
-  
-  <group label="Miscellaneous" color="rgb(200,200,255)">
-    <type label="ENUM" length="1" sql="ENUM" quote=""/>
-    <type label="SET" length="1" sql="SET" quote=""/>
-    <type label="Bit" length="0" sql="bit" quote=""/>
-  </group>
-</datatypes><table x="302" y="299" name="users">
-<row name="id" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="username" null="0" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>'UsersDefaultUsername'</default><comment>GitHub username</comment>
-</row>
-<row name="email" null="0" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>'UsersDefaultEmail'</default></row>
-<row name="avatar url" null="0" autoincrement="0">
-<datatype>VARCHAR(255)</datatype>
-<default>'UsersDefaulAvatarUrl'</default><comment>URL of image for user</comment>
-</row>
-<row name="score" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="pull requests" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="merge conflicts" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="merge resolutions" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="743" y="130" name="orgs">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="orgname" null="0" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>'OrgsDefaultOrgname'</default></row>
-<row name="avatar url" null="0" autoincrement="0">
-<datatype>VARCHAR(255)</datatype>
-<default>'OrgsDefaultAvatarUrl'</default><comment>URL of image for group</comment>
-</row>
-<row name="score" null="0" autoincrement="0">
-<datatype>INTEGER(20)</datatype>
-<default>0</default></row>
-<row name="commits" null="0" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
-<default>0</default></row>
-<row name="pull requests" null="0" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
-<default>0</default></row>
-<row name="merge conflicts" null="0" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
-<default>0</default></row>
-<row name="merge resolutions" null="0" autoincrement="0">
-<datatype>INTEGER(10)</datatype>
-<default>0</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="523" y="137" name="users-orgs">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="user id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="users" row="id" />
-</row>
-<row name="org id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="orgs" row="id" />
-</row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-<comment>Join table to establish which users are in each org</comment>
-</table>
-<table x="573" y="252" name="users-users">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="primary" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="users" row="id" />
-</row>
-<row name="secondary" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="users" row="id" />
-</row>
-<row name="confirmed" null="0" autoincrement="0">
-<datatype>VARCHAR(5)</datatype>
-<default>'FALSE'</default><comment>TRUE if game session was accepted by secondary user</comment>
-</row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="528" y="460" name="commits">
-<row name="id" null="1" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="sha" null="1" autoincrement="0">
-<datatype>VARCHAR(40)</datatype>
-<default>NULL</default><comment>Unique hash for a commit</comment>
-</row>
-<row name="author id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="users" row="id" />
-</row>
-<row name="commiter id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="users" row="id" />
-</row>
-<row name="stats additions" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="stats deletions" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="stats total" null="0" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-<table x="708" y="388" name="pull requests">
-<row name="id" null="0" autoincrement="1">
-<datatype>INTEGER</datatype>
-<default>0</default></row>
-<row name="user id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default><relation table="users" row="id" />
-</row>
-<row name="head sha" null="1" autoincrement="0">
-<datatype>VARCHAR(40)</datatype>
-<default>NULL</default><comment>Hash at head of commit</comment>
-</row>
-<row name="number" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
-<default>NULL</default></row>
-<row name="state" null="1" autoincrement="0">
-<datatype>VARCHAR(10)</datatype>
-<default>NULL</default></row>
-<row name="title" null="0" autoincrement="0">
-<datatype>VARCHAR(100)</datatype>
-<default>'PullRequestDefaultTitle'</default></row>
-<row name="milestone url" null="0" autoincrement="0">
-<datatype>VARCHAR(255)</datatype>
-<default>'PullRequestDefaultMilestoneUrl'</default></row>
-<key type="PRIMARY" name="">
-<part>id</part>
-</key>
-</table>
-</sql>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<DatabaseModel VersionId="2.3">
+    <Name>GitAchieve - Edit Me</Name>
+    <Description></Description>
+    <DatabaseEngine>
+        <Name>postgresql</Name>
+        <Version>9.x</Version>
+    </DatabaseEngine>
+    <Counters>
+        <Counter>
+            <Name>table</Name>
+            <Value>22</Value>
+            <Prefix>t</Prefix>
+        </Counter>
+        <Counter>
+            <Name>column</Name>
+            <Value>145</Value>
+            <Prefix>c</Prefix>
+        </Counter>
+        <Counter>
+            <Name>index</Name>
+            <Value>1</Value>
+            <Prefix>i</Prefix>
+        </Counter>
+        <Counter>
+            <Name>reference</Name>
+            <Value>34</Value>
+            <Prefix>r</Prefix>
+        </Counter>
+        <Counter>
+            <Name>table_check</Name>
+            <Value>0</Value>
+            <Prefix>tc</Prefix>
+        </Counter>
+        <Counter>
+            <Name>alternate_key</Name>
+            <Value>2</Value>
+            <Prefix>a</Prefix>
+        </Counter>
+        <Counter>
+            <Name>sequence</Name>
+            <Value>2</Value>
+            <Prefix>s</Prefix>
+        </Counter>
+        <Counter>
+            <Name>note</Name>
+            <Value>1</Value>
+            <Prefix>n</Prefix>
+        </Counter>
+        <Counter>
+            <Name>view</Name>
+            <Value>0</Value>
+            <Prefix>v</Prefix>
+        </Counter>
+        <Counter>
+            <Name>view_column</Name>
+            <Value>0</Value>
+            <Prefix>vc</Prefix>
+        </Counter>
+        <Counter>
+            <Name>area</Name>
+            <Value>0</Value>
+            <Prefix>ar</Prefix>
+        </Counter>
+        <Counter>
+            <Name>text</Name>
+            <Value>0</Value>
+            <Prefix>tx</Prefix>
+        </Counter>
+        <Counter>
+            <Name>tableDisplay</Name>
+            <Value>21</Value>
+            <Prefix>td</Prefix>
+        </Counter>
+        <Counter>
+            <Name>referenceDisplay</Name>
+            <Value>33</Value>
+            <Prefix>rd</Prefix>
+        </Counter>
+        <Counter>
+            <Name>viewDisplay</Name>
+            <Value>0</Value>
+            <Prefix>vd</Prefix>
+        </Counter>
+    </Counters>
+    <AdditionalSQLBeforeCreate></AdditionalSQLBeforeCreate>
+    <AdditionalSQLAfterCreate></AdditionalSQLAfterCreate>
+    <AdditionalSQLBeforeDrop></AdditionalSQLBeforeDrop>
+    <AdditionalSQLAfterDrop></AdditionalSQLAfterDrop>
+    <Tables>
+        <Table Id="t7">
+            <Name>users</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c25">
+                    <Name>id</Name>
+                    <Type>int</Type>
+                    <Description>GitHub user id</Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c28">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c26">
+                    <Name>username</Name>
+                    <Type>varchar(100)</Type>
+                    <Description>GitHub username</Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue>default</DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c27">
+                    <Name>email</Name>
+                    <Type>varchar(100)</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c75">
+                    <Name>avatar_url</Name>
+                    <Type>varchar(200)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c126">
+                    <Name>followers</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c127">
+                    <Name>following</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c122">
+                    <Name>score</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c128">
+                    <Name>longest_streak</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c130">
+                    <Name>current_streak</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c131">
+                    <Name>contributions_past_year</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c123">
+                    <Name>commits_count</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c124">
+                    <Name>repos_count</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c125">
+                    <Name>pull_requests_count</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c25</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t8">
+            <Name>pull_requests</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c30">
+                    <Name>id</Name>
+                    <Type>int</Type>
+                    <Description>GitHub pull request ID</Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c31">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c40">
+                    <Name>user_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c33">
+                    <Name>state</Name>
+                    <Type>varchar(10)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c34">
+                    <Name>diff_url</Name>
+                    <Type>varchar(200)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c42">
+                    <Name>created_at</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c43">
+                    <Name>closed_at</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c44">
+                    <Name>milestone</Name>
+                    <Type>varchar(100)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c45">
+                    <Name>base_ref</Name>
+                    <Type>varchar(50)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c46">
+                    <Name>base_repo_watchers_count</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c47">
+                    <Name>base_repo_stargazers_count</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c30</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t9">
+            <Name>orgs</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c48">
+                    <Name>id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties>
+                        <Property>
+                            <Name>auto_increment</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
+                </Column>
+                <Column Id="c85">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c49">
+                    <Name>orgname</Name>
+                    <Type>varchar(100)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c132">
+                    <Name>followers</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c133">
+                    <Name>following</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c134">
+                    <Name>score</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c48</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t10">
+            <Name>users_orgs</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c50">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties>
+                        <Property>
+                            <Name>auto_increment</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
+                </Column>
+                <Column Id="c51">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c71">
+                    <Name>user_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c53">
+                    <Name>org_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c50</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t11">
+            <Name>users_users</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c54">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties>
+                        <Property>
+                            <Name>auto_increment</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
+                </Column>
+                <Column Id="c55">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c56">
+                    <Name>primary_user_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c57">
+                    <Name>secondary_user_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c136">
+                    <Name>confirmed_at</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c54</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t12">
+            <Name>commits</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c58">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c63">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c60">
+                    <Name>sha</Name>
+                    <Type>varchar(40)</Type>
+                    <Description>It's possible, but very unlikely, for two commits to have the same SHA.</Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c59">
+                    <Name>commit_message</Name>
+                    <Type>varchar(100)</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c62">
+                    <Name>commit_author_date</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c61">
+                    <Name>user_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c58</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t13">
+            <Name>repos</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c101">
+                    <Name>id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c84">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c88">
+                    <Name>created_at</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c78">
+                    <Name>watchers_count</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c79">
+                    <Name>stargazers_count</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c80">
+                    <Name>forks_count</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c101</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t14">
+            <Name>users_repos</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c81">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c83">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c91">
+                    <Name>repo_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c94">
+                    <Name>user_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c81</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t15">
+            <Name>commits_repos</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c95">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c96">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c99">
+                    <Name>commit_id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c102">
+                    <Name>repo_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c95</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t16">
+            <Name>branches</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c104">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c107">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c105">
+                    <Name>sha</Name>
+                    <Type>varchar(40)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c106">
+                    <Name>name</Name>
+                    <Type>varchar(100)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c104</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t17">
+            <Name>repos_branches</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c110">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c111">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c108">
+                    <Name>repo_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c109">
+                    <Name>branch_id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c110</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t21">
+            <Name>stats</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c137">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c138">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c139">
+                    <Name>author_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c140">
+                    <Name>total</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c141">
+                    <Name>weeks</Name>
+                    <Type>text</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c137</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t22">
+            <Name>repos_stats</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c142">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c143">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c144">
+                    <Name>repo_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c145">
+                    <Name>stats_id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c142</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+    </Tables>
+    <Views/>
+    <References>
+        <Reference Id="r11">
+            <Name>pull_requests_users</Name>
+            <Description></Description>
+            <PKTable>t7</PKTable>
+            <FKTable>t8</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c25</PKColumn>
+                    <FKColumn>c40</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r15">
+            <Name>commits_users</Name>
+            <Description></Description>
+            <PKTable>t7</PKTable>
+            <FKTable>t12</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c25</PKColumn>
+                    <FKColumn>c61</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r17">
+            <Name>users_users_users</Name>
+            <Description></Description>
+            <PKTable>t7</PKTable>
+            <FKTable>t11</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c25</PKColumn>
+                    <FKColumn>c56</FKColumn>
+                </ReferenceColumn>
+                <ReferenceColumn>
+                    <PKColumn>c25</PKColumn>
+                    <FKColumn>c57</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r20">
+            <Name>users_orgs_users</Name>
+            <Description></Description>
+            <PKTable>t7</PKTable>
+            <FKTable>t10</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c25</PKColumn>
+                    <FKColumn>c71</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r21">
+            <Name>users_orgs_orgs</Name>
+            <Description></Description>
+            <PKTable>t9</PKTable>
+            <FKTable>t10</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c49</PKColumn>
+                    <FKColumn>c53</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r23">
+            <Name>users_repos_repos</Name>
+            <Description></Description>
+            <PKTable>t13</PKTable>
+            <FKTable>t14</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c101</PKColumn>
+                    <FKColumn>c91</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r26">
+            <Name>users_repos_users</Name>
+            <Description></Description>
+            <PKTable>t7</PKTable>
+            <FKTable>t14</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c25</PKColumn>
+                    <FKColumn>c94</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r28">
+            <Name>commits_repos_commits</Name>
+            <Description></Description>
+            <PKTable>t12</PKTable>
+            <FKTable>t15</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c58</PKColumn>
+                    <FKColumn>c99</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r30">
+            <Name>commits_repos_repos</Name>
+            <Description></Description>
+            <PKTable>t13</PKTable>
+            <FKTable>t15</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c101</PKColumn>
+                    <FKColumn>c102</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r31">
+            <Name>repos_branches_repos</Name>
+            <Description></Description>
+            <PKTable>t13</PKTable>
+            <FKTable>t17</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c101</PKColumn>
+                    <FKColumn>c108</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r32">
+            <Name>repos_branches_branches</Name>
+            <Description></Description>
+            <PKTable>t16</PKTable>
+            <FKTable>t17</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c104</PKColumn>
+                    <FKColumn>c109</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r33">
+            <Name>repos_stats_repos</Name>
+            <Description></Description>
+            <PKTable>t13</PKTable>
+            <FKTable>t22</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c101</PKColumn>
+                    <FKColumn>c144</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r34">
+            <Name>repos_stats_stats</Name>
+            <Description></Description>
+            <PKTable>t21</PKTable>
+            <FKTable>t22</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c137</PKColumn>
+                    <FKColumn>c145</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+    </References>
+    <Sequences/>
+    <Notes/>
+    <Areas/>
+    <Texts/>
+    <TableDisplays>
+        <TableDisplay Id="td6">
+            <X>3924.5</X>
+            <Y>4293.5</Y>
+            <Width>236.0</Width>
+            <Height>231.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t7</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td7">
+            <X>4258.5</X>
+            <Y>4297.5</Y>
+            <Width>264.0</Width>
+            <Height>202.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t8</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td8">
+            <X>3934.5</X>
+            <Y>4828.5</Y>
+            <Width>175.0</Width>
+            <Height>116.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t9</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td9">
+            <X>3950.5</X>
+            <Y>4679.5</Y>
+            <Width>171.0</Width>
+            <Height>102.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t10</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td10">
+            <X>3967.5</X>
+            <Y>4539.5</Y>
+            <Width>209.0</Width>
+            <Height>116.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t11</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td11">
+            <X>4237.5</X>
+            <Y>4522.5</Y>
+            <Width>226.0</Width>
+            <Height>130.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t12</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td12">
+            <X>4166.5</X>
+            <Y>4795.5</Y>
+            <Width>198.0</Width>
+            <Height>118.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t13</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td13">
+            <X>4173.5</X>
+            <Y>4670.5</Y>
+            <Width>162.0</Width>
+            <Height>87.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t14</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td14">
+            <X>4401.5</X>
+            <Y>4668.5</Y>
+            <Width>177.0</Width>
+            <Height>87.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t15</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td15">
+            <X>4409.5</X>
+            <Y>4895.5</Y>
+            <Width>169.0</Width>
+            <Height>87.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t16</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td16">
+            <X>4407.5</X>
+            <Y>4769.5</Y>
+            <Width>169.0</Width>
+            <Height>87.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t17</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td20">
+            <X>4174.5</X>
+            <Y>5078.5</Y>
+            <Width>156.0</Width>
+            <Height>102.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t21</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td21">
+            <X>4177.5</X>
+            <Y>4952.5</Y>
+            <Width>157.0</Width>
+            <Height>87.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t22</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+    </TableDisplays>
+    <ViewDisplays/>
+    <ReferenceDisplays>
+        <ReferenceDisplay Id="rd10">
+            <Color>#000000</Color>
+            <Type>Horizontal_4CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4110.5</X>
+                    <Y>4384.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4236.5</X>
+                    <Y>4384.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4236.5</X>
+                    <Y>4357.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4290.5</X>
+                    <Y>4357.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td6</PkTableDisplay>
+            <FkTableDisplay>td7</FkTableDisplay>
+            <Reference>r11</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd14">
+            <Color>#000000</Color>
+            <Type>Vertical_4CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4110.5</X>
+                    <Y>4322.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4110.5</X>
+                    <Y>4434.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4247.5</X>
+                    <Y>4434.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4247.5</X>
+                    <Y>4532.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td6</PkTableDisplay>
+            <FkTableDisplay>td11</FkTableDisplay>
+            <Reference>r15</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd16">
+            <Color>#000000</Color>
+            <Type>Vertical_4CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>3961.5</X>
+                    <Y>4357.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3961.5</X>
+                    <Y>4486.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3977.5</X>
+                    <Y>4486.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3977.5</X>
+                    <Y>4595.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td6</PkTableDisplay>
+            <FkTableDisplay>td10</FkTableDisplay>
+            <Reference>r17</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd19">
+            <Color>#000000</Color>
+            <Type>Vertical_4CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>3935.5</X>
+                    <Y>4355.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3935.5</X>
+                    <Y>4650.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3960.5</X>
+                    <Y>4650.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3960.5</X>
+                    <Y>4740.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td6</PkTableDisplay>
+            <FkTableDisplay>td9</FkTableDisplay>
+            <Reference>r20</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd20">
+            <Color>#000000</Color>
+            <Type>Vertical_4CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>3946.5</X>
+                    <Y>4859.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3946.5</X>
+                    <Y>4803.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3967.5</X>
+                    <Y>4803.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3967.5</X>
+                    <Y>4734.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td8</PkTableDisplay>
+            <FkTableDisplay>td9</FkTableDisplay>
+            <Reference>r21</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd22">
+            <Color>#000000</Color>
+            <Type>Vertical_4CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4176.5</X>
+                    <Y>4828.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4176.5</X>
+                    <Y>4777.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4217.5</X>
+                    <Y>4777.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4217.5</X>
+                    <Y>4705.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td12</PkTableDisplay>
+            <FkTableDisplay>td13</FkTableDisplay>
+            <Reference>r23</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd25">
+            <Color>#000000</Color>
+            <Type>Cross_3CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4110.5</X>
+                    <Y>4446.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4183.5</X>
+                    <Y>4446.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4183.5</X>
+                    <Y>4680.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td6</PkTableDisplay>
+            <FkTableDisplay>td13</FkTableDisplay>
+            <Reference>r26</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd27">
+            <Color>#000000</Color>
+            <Type>Cross_3CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4369.5</X>
+                    <Y>4603.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4369.5</X>
+                    <Y>4713.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4442.5</X>
+                    <Y>4713.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td11</PkTableDisplay>
+            <FkTableDisplay>td14</FkTableDisplay>
+            <Reference>r28</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd29">
+            <Color>#000000</Color>
+            <Type>Cross_3CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4354.5</X>
+                    <Y>4811.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4354.5</X>
+                    <Y>4745.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4449.5</X>
+                    <Y>4745.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td12</PkTableDisplay>
+            <FkTableDisplay>td14</FkTableDisplay>
+            <Reference>r30</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd30">
+            <Color>#000000</Color>
+            <Type>Horizontal_2CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4333.5</X>
+                    <Y>4836.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4443.5</X>
+                    <Y>4836.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td12</PkTableDisplay>
+            <FkTableDisplay>td16</FkTableDisplay>
+            <Reference>r31</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd31">
+            <Color>#000000</Color>
+            <Type>Vertical_2CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4489.5</X>
+                    <Y>4905.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4489.5</X>
+                    <Y>4804.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td15</PkTableDisplay>
+            <FkTableDisplay>td16</FkTableDisplay>
+            <Reference>r32</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd32">
+            <Color>#000000</Color>
+            <Type>Vertical_2CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4209.5</X>
+                    <Y>4867.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4209.5</X>
+                    <Y>4999.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td12</PkTableDisplay>
+            <FkTableDisplay>td21</FkTableDisplay>
+            <Reference>r33</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd33">
+            <Color>#000000</Color>
+            <Type>Vertical_2CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4216.5</X>
+                    <Y>5095.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4216.5</X>
+                    <Y>5007.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td20</PkTableDisplay>
+            <FkTableDisplay>td21</FkTableDisplay>
+            <Reference>r34</Reference>
+        </ReferenceDisplay>
+    </ReferenceDisplays>
+    <Properties>
+        <Property>
+            <Name>pdf-printer-paper-size</Name>
+            <Value>A4</Value>
+        </Property>
+        <Property>
+            <Name>pdf-printer-margin-top</Name>
+            <Value>10</Value>
+        </Property>
+        <Property>
+            <Name>pdf-printer-margin-bottom</Name>
+            <Value>10</Value>
+        </Property>
+        <Property>
+            <Name>pdf-printer-margin-left</Name>
+            <Value>10</Value>
+        </Property>
+        <Property>
+            <Name>pdf-printer-margin-right</Name>
+            <Value>10</Value>
+        </Property>
+        <Property>
+            <Name>pdf-printer-page-orientation</Name>
+            <Value>landscape</Value>
+        </Property>
+        <Property>
+            <Name>pdf-printer-show-pages</Name>
+            <Value>false</Value>
+        </Property>
+        <Property>
+            <Name>pdf-printer-include-footer</Name>
+            <Value>true</Value>
+        </Property>
+    </Properties>
+    <DefaultAdditionalProperties>
+        <Types>
+            <Name>table</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>column</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>alternate_key</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>index</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>table_check</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>trigger</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>reference</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>view</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>sequence</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>procedure</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>all</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>view_column</Name>
+            <Properties/>
+        </Types>
+        <Types>
+            <Name>primary_key</Name>
+            <Properties/>
+        </Types>
+    </DefaultAdditionalProperties>
+</DatabaseModel>
