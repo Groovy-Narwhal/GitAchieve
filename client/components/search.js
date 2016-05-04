@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/actionCreators';
+import utils from '../utils/utils.js';
 
 class Search extends Component {
   constructor(props) {
@@ -9,6 +10,9 @@ class Search extends Component {
     this.state = {
       searchInput: ''
     }
+  }
+  componentDidMount() {
+    // this.submitHandler = utils.utils.debounce(submitHandler);
   }
   submitHandler(e) {
     e.preventDefault();
