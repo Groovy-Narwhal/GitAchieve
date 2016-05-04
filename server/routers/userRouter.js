@@ -4,16 +4,17 @@ const userController = require('./../controllers/userController.js');
 // the following routes start from /api/v1/users
 
 userRouter.route('/')
-  .get(userController.retrieve)
-  .post(userController.addOne);
+  .get(userController.retrieveAllUsers)
+  .post(userController.addUser);
 
 userRouter.route('/:id')
-  .get(userController.retrieveOne)
-  .patch(userController.updateOne)
-  .delete(userController.deleteOne);
+  .get(userController.retrieveUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
 
 userRouter.route('/:id/repos')
-  .get(userController.retrieveRepos);
+  .get(userController.retrieveRepos)
+  .post(userController.addRepo);
 
 userRouter.route('/:id/friends')
   .get(userController.retrieveFriends)

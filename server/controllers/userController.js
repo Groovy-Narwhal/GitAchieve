@@ -1,7 +1,7 @@
 const db = require('../db/database.js');
 
 // GET at /api/v1/users
-exports.retrieve = function(req, res) {
+exports.retrieveAllUsers = function(req, res) {
   db.run('SELECT * FROM users', function(err, data) {
     if (err) {
       res.status(500).send(err);
@@ -13,7 +13,7 @@ exports.retrieve = function(req, res) {
 };
 
 // POST at /api/v1/users
-exports.addOne = function(req, res) {  
+exports.addUser = function(req, res) {  
   var timestamp = new Date();
   db.run('INSERT INTO users (username, email, id, created_ga) VALUES ($1, $2, $3, $4)', [req.body.username, req.body.email, req.body.id, timestamp], function(err, data) {
     if (err) {
@@ -28,27 +28,20 @@ exports.addOne = function(req, res) {
 };
 
 // GET at '/api/v1/users/:id'
-exports.retrieveOne = function(req, res) {
+exports.retrieveUser = function(req, res) {
   var queryId = req.params.id;
   db.run('SELECT * FROM users WHERE id=($1)', [queryId], function(err, data) {
     if (err) {
       console.error(err);
       res.status(500).send(err);
     } else {
-      // if there is no matching user
-      if (data.length === 0) {
-        // send 404
-        res.send(404);
-      } else {
-        // otherwise, send matching user
-        res.send(data);
-      }
+      res.send(data);
     }    
   });
 };
 
 // PATCH at '/api/v1/users/:id'
-exports.updateOne = function(req, res) {
+exports.updateUser = function(req, res) {
   var queryId = req.params.id;
 
   // first, find the user by id
@@ -103,16 +96,65 @@ exports.updateOne = function(req, res) {
 };
 
 // DELETE at '/api/v1/users/:id'
-exports.deleteOne = function(req, res) {
-  var query = {_id: req.params.id};
-  // TODO: fill this out with Postgres findOne query
+exports.deleteUser = function(req, res) {
+  var queryId = req.params.id;
+  db.users.destroy({id: queryId}, function(err, data) {
+    if (err) {
+      res.send(500);
+    } else {
+      res.send(data);
+    }
+  });
 };
 
-// '/api/v1/users/:id/repos'
+// GET at '/api/v1/users/:id/repos'
 exports.retrieveRepos = function(req, res) {
-  var query = {_id: req.params.id};
-  // TODO: fill this out with Postgres findOne query
+  var queryId = req.params.id;
+  // this Inner Join will return all the repos for a given user id
+  // the breakdown: SELECT [fields from target table] FROM [join table var1] INNER JOIN [target table var2] ON [var2.privateKey] = var2.foreignKey1 WHERE var2.foreignKey2 = queryId
+  db.run('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count FROM users_repos ur INNER JOIN repos r ON r.id = ur.repo_id WHERE ur.user_id =($1)', 
+    [queryId], 
+    function(err, data) {
+      if (err) {
+        res.status(500).send(err);
+        console.error(err);
+      } else {
+        res.send(data);
+      }
+    }); 
 };
+
+// POST at '/api/v1/users/:id/repos'
+exports.addRepo = function(req, res) {
+  var queryId = req.params.id;
+  var timestamp = new Date();
+  db.run(
+    // add repo to the repos table
+    'INSERT INTO repos (id, created_ga, created_at, watchers_count, stargazers_count, forks_count) VALUES ($1, $2, $3, $4, $5, $6)', 
+    [req.body.id, timestamp, req.body.created_at, req.body.watchers_count, req.body.stargazers_count, req.body.forks_count], 
+    function(err, data) {
+      if (err) {
+        console.error(err);
+        res.status(500).send(err);
+      } else {
+        // if repo addition was successful, add corresponding entry in join table
+        db.run(
+        'INSERT INTO users_repos (created_ga, repo_id, user_id) VALUES ($1, $2, $3)', 
+        [timestamp, req.body.id, queryId], 
+        function(err, data) {
+          if (err) {
+            console.error(err);
+            res.status(500).send(err);
+          } else {
+            console.log('Repo created with id: ' + req.body.id);
+            res.status(201);
+            res.send(req.body);
+          }
+        });
+      }
+    });
+};
+
 
 // '/api/v1/users/:id/friends'
 exports.retrieveFriends = function(req, res) {
