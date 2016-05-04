@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import actions from './../actions/actionCreators';
 import d3 from 'd3';
 import commitChart from './commitChart';
+import SearchResults from './searchResults';
 
 class DashBoard extends Component {
   componentDidMount() {
@@ -19,6 +20,7 @@ class DashBoard extends Component {
       <div>
         <h1>Dash Board</h1>
         <div id="commit-charts"></div>
+        <SearchResults />
       </div>
     )
   }
