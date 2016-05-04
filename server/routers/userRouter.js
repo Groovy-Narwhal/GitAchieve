@@ -7,23 +7,23 @@ userRouter.route('/')
   .get(userController.retrieve)
   .post(userController.addOne);
 
-userRouter.route('/:username')
+userRouter.route('/:id')
   .get(userController.retrieveOne)
   .patch(userController.updateOne)
   .delete(userController.deleteOne);
 
-userRouter.route('/:username/repos')
+userRouter.route('/:id/repos')
   .get(userController.retrieveRepos);
 
-userRouter.route('/:username/friends')
+userRouter.route('/:id/friends')
   .get(userController.retrieveFriends)
   .post(userController.addFriend);
 
-userRouter.route('/:username/stats')
+userRouter.route('/:id/stats')
   .get(userController.retrieveStats)
   .post(userController.addStats);
 
-userRouter.route('/:username/achievements')
+userRouter.route('/:id/achievements')
   .get(userController.retrieveAchievements)
   .post(userController.addAchievements);
   
