@@ -42,15 +42,16 @@ module.exports = function(app) {
     const username = profile._json.login;
     const email = profile._json.email;
     const id = profile._json.id;
-    db.run('INSERT INTO users (username, email, userid) VALUES ($1, $2, $3)', [username, email, id],
-      function(err, data) {
-        if (err) {
-          console.log('Error', err);
-        } else {
-          console.log('User created with username: ' + username + ' and email: ' + email);
-        }
-      });
-    return cb(null, profile._json);
+    // db.run('SELECT * FROM users WHERE userid=($1)', [id], function(err, data) {
+    //   if (err) {
+    //     console.log('Error', err);
+    //   } else {
+    //     console.log('DATA', data);
+    //   }
+    // });
+
+    return cb(null, profile._json);  
+    
   }));
 
   // GITHUB LOGIN
