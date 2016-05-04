@@ -8,8 +8,9 @@ import { App, DashBoard, ScoreBoard, Login } from './components/index';
 import configureStore from './store/store';
 
 const initialState = {
-  score: 0,
-  tokens: []
+  auth: {
+    authenticated: false
+  }
 };
 
 const store = configureStore(initialState);
@@ -21,6 +22,7 @@ render(
     <Router history={history}>
       <Route path='/' component={App}>
         <IndexRoute component={DashBoard} />
+        <Route path="signin" component={Login} />
       </Route>
     </Router>
   </Provider>,
