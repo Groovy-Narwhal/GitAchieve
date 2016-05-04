@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
+import * as actions from './../actions/index';
+import { bindActionCreators } from 'redux';
 
 class Header extends Component {
+  handleSignOut() {
+    this.props.actions.signoutUser();
+    browserHistory.push('/')
+  }
   renderLinks() {
     if (!this.props.authenticated) {
-      return <li>
-        <Link to="/signin">Sign In</Link>
-      </li>
+      return null;
     } else {
       return [
-        <li key={1}>
-          <Link to="/repos">Repos</Link>
+        <li key={1} onClick={() => browserHistory.push('/repos')}>
+          Repos
         </li>,
-        <li key={2}>
-          <Link to="/orgs">Organizations</Link>
+        <li key={2} onClick={() => browserHistory.push('/orgs')}>
+          Orgs
         </li>,
-        <li key={3}>
-          <Link to="/signout">Sign Out</Link>
+        <li key={3} onClick={this.handleSignOut.bind(this)}>
+          Sign Out
         </li>
       ];
     }
@@ -26,7 +30,7 @@ class Header extends Component {
   render() {
     return (
       <nav>
-        <Link to="/">GitAchieve</Link>
+        <h2 onClick={() => browserHistory.push('/')}>GitAchieve</h2>
         <ul>
           {this.renderLinks()}
         </ul>
@@ -35,10 +39,16 @@ class Header extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
+const mapStateToProps = state => (
+  {
     authenticated: state.auth.authenticated
-  };
-}
+  }
+)
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = dispatch => (
+  {
+    actions: bindActionCreators(actions, dispatch)
+  }
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

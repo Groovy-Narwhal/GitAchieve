@@ -8,5 +8,5 @@ export default combineReducers({
   score,
   tokens,
   routing: routerReducer,
-  auth: authReducer
+  auth: authReducer,
 });
