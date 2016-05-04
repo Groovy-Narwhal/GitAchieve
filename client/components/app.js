@@ -6,9 +6,7 @@ import * as actions from './../actions/index';
 
 class App extends Component {
   componentWillMount() {
-    if (document.cookie) {
-      this.props.actions.signinUser();
-    }
+    this.props.actions.signinUser();
   }
 
   render() {

@@ -39,11 +39,19 @@ module.exports = function(app) {
   },
   function(accessToken, refreshToken, profile, cb) {
     // TODO: Add user to the database!
-    var username = profile._json.login;
-    var email = profile._json.email;
-    var id = profile._json.id;
-    // db.run('INSERT INTO users (username, email, id, created_ga) VALUES ($1, $2, $3, $4)', [])
-    return cb(null, profile._json);
+    const username = profile._json.login;
+    const email = profile._json.email;
+    const id = profile._json.id;
+    // db.run('SELECT * FROM users WHERE userid=($1)', [id], function(err, data) {
+    //   if (err) {
+    //     console.log('Error', err);
+    //   } else {
+    //     console.log('DATA', data);
+    //   }
+    // });
+
+    return cb(null, profile._json);  
+    
   }));
 
   // GITHUB LOGIN
