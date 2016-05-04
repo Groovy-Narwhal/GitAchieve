@@ -39,19 +39,29 @@ module.exports = function(app) {
   },
   function(accessToken, refreshToken, profile, cb) {
     // TODO: Add user to the database!
+    const id = profile._json.id;
+    const created_ga = new Date();
     const username = profile._json.login;
     const email = profile._json.email;
-    const id = profile._json.id;
-    // db.run('SELECT * FROM users WHERE userid=($1)', [id], function(err, data) {
-    //   if (err) {
-    //     console.log('Error', err);
-    //   } else {
-    //     console.log('DATA', data);
-    //   }
-    // });
-
-    return cb(null, profile._json);  
-    
+    const avatar_url = profile._json.avatar_url;
+    const followers = profile._json.followers;
+    const following = profile._json.following;
+    db.run('SELECT * FROM users WHERE id=($1)', [id], function(err, data) {
+      if (err) {
+        console.error('ERROR in SELECT in auth', err);
+      } else {
+        if (data.length === 0) {
+          db.run('INSERT INTO users (id, created_ga, username, email, avatar_url, followers, following) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id, created_ga, username, email, avatar_url, followers, following], function(err, data) {
+            if (err) {
+              console.log('Error in INSERT in auth', err); 
+            } else {
+              console.log('Inserted user in database');
+            }
+          });
+        }
+        return cb(null, data);
+      }    
+    });
   }));
 
   // GITHUB LOGIN
