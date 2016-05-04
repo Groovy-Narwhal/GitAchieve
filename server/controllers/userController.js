@@ -131,8 +131,8 @@ exports.retrieveRepos = function(req, res) {
   // SELECT [fields from target table] 
   // FROM [join table x] 
   // INNER JOIN [target table y] 
-  // ON [y.privateKey] = y.foreignKey1 
-  // WHERE y.foreignKey2 = queryId
+  // ON [y.privateKey] = [y.foreignKey1]
+  // WHERE [y.foreignKey2] = [queryId]
   db.run(
     ('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
     'FROM users_repos ur ' +
@@ -188,7 +188,46 @@ exports.addRepo = function(req, res) {
 // GET at '/api/v1/users/:id/friends'
 exports.retrieveFriends = function(req, res) {
   var queryId = req.params.id;
+  // this Inner Join will return all the friends for a given user id
+  // the breakdown: 
+  // SELECT [fields from target table] 
+  // FROM [join table x] 
+  // INNER JOIN [target table y] 
+  // ON [y.privateKey] = [y.foreignKey1]
+  // WHERE [y.foreignKey2] = [queryId]
   
+  // db.run(
+  //   ('SELECT uu.secondary_user_id ' + 
+  //   'FROM users_users uu ' +
+  //   'WHERE uu.primary_user_id =($1) ' +
+  //   'AND uu.confirmed_at !=($2) '), 
+  //   [queryId, null], 
+  //   function(err, data) {
+  //     if (err) {
+  //       res.status(500).send(err);
+  //       console.error(err);
+  //     } else {
+  //       res.send(data);
+  //     }
+  //   }); 
+  
+  // this will select all the secondary users associated with a primary user
+  db.run(
+    ('SELECT u.id, u.username, u.email ' + 
+    'FROM users_users uu ' +
+    'INNER JOIN users u ' +
+    'ON u.id = uu.secondary_user_id ' +
+    'WHERE uu.confirmed_at IS NOT NULL ' +
+    'AND uu.primary_user_id =($1)'), 
+    [queryId],
+    function(err, data) {
+      if (err) {
+        res.status(500).send(err);
+        console.error(err);
+      } else {
+        res.send(data);
+      }
+    }); 
 };
 
 // POST at '/api/v1/users/:id/friends'
