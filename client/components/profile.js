@@ -1,0 +1,46 @@
+import React from 'react';
+
+// note: centering with flexbox with classes is NOT ideal practice
+// for React components because it makes them less reusable
+
+var imgStyle = {
+  width: '200px',
+  height: '200px'
+}
+
+var flexStyle = {
+  flexContainer: {
+    width: '200px',
+    //  May need vendor prefixing
+    display: 'flex'
+  },
+
+  row: {
+    display: 'inline-block',
+    margin: '0 auto'
+  },
+
+  flexItem: {
+    fontFamily: 'monospace'
+  }
+}
+
+
+const Profile = () =>
+(
+  <div>
+    <img src={'https://avatars.githubusercontent.com/u/4149515'} style={imgStyle} />
+
+    <div style={flexStyle.flexContainer}>
+      <div style={flexStyle.row}>
+        <span style={flexStyle.flexItem}> Inje Yeo </span>
+      </div>
+      <div style={flexStyle.row}>
+        <span style={flexStyle.flexItem}> 230-Score </span>
+      </div>
+    </div>
+
+  </div>
+);
+
+module.exports = Profile;
