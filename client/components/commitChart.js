@@ -1,3 +1,5 @@
+
+
 exports.CommitChart = () => {
 
   // get the data
@@ -23,12 +25,13 @@ exports.CommitChart = () => {
 
 
     // set dimensions
-    var margin = {top: 20, right: 40, bottom: 30, left: 20}; //?
-    var w = 600 - margin.left - margin.right;
-    var h = 320 - margin.top - margin.bottom;
+    var margin = {top: 20, right: 40, bottom: 30, left: 20};
     var pad = 20;
-    var left_pad = 100; //TEMPORARY
-    var barWidth = Math.floor(w / 7) - 1; // ADJUST WITH PADDING HERE
+    var w = 600 - 2*pad; //margin.left - margin.right;
+    var h = 320 - 2*pad; //margin.top - margin.bottom;
+    // var left_pad = 0;
+    var barWidth = Math.floor(w/7) - 10; // ADJUST WITH PADDING HERE
+    console.log('barWidth:', barWidth);
 
     // create container / svg
     var svg = d3.select("#commit-charts")
@@ -39,7 +42,7 @@ exports.CommitChart = () => {
     // set the scales
     var x = d3.scale.ordinal()
       .domain(week)
-      .rangePoints( [left_pad, w-pad] );
+      .rangeRoundBands( [pad*2, w] );//Points( [pad, w-pad] );
     var y = d3.scale.linear()
       .domain(
         [d3.max( currentWeekCommits.days,
@@ -51,10 +54,10 @@ exports.CommitChart = () => {
     var xAxis = d3.svg.axis().scale(x).orient("bottom");
     var yAxis = d3.svg.axis().scale(y).orient("left");
 
-    // draw the axes
+    // draw the axes (first is the x axis, second is the y axis)
     svg.append("g")
       .attr("class", "axis")
-      .attr("transform", "translate(0, " + (h-pad) + ")")
+      .attr("transform", "translate(0, " + (h-2*pad) + ")")
       .style({
         fill: 'none',
         stroke: '#333'
@@ -62,7 +65,7 @@ exports.CommitChart = () => {
       .call(xAxis);
     svg.append("g")
       .attr("class", "axis")
-      .attr("transform", "translate(" + (left_pad-pad) + ", 0)")
+      .attr("transform", "translate(" + (pad+10) + ", 0)")
       .style({
         fill: 'none',
         stroke: '#333'
