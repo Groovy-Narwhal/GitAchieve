@@ -4,8 +4,13 @@ import { bindActionCreators } from 'redux';
 import actions from './../actions/actionCreators';
 
 class SearchResults extends Component {
+  compete(e, result) {
+    e.preventDefault();
+    console.log('This is e: ', e);
+    console.log('This is this: ', this);
+    console.log('This is result: ', result);
+  }
   render() {
-    console.log(this.props);
     if (this.props.searchResults.length !== 0) {
       var searchResults = this.props.searchResults[0].items;
       return (
@@ -15,7 +20,7 @@ class SearchResults extends Component {
               <div key={result.id} className="search-result-container">
                 <img className="user-avatar-1" src={result.avatar_url} />
                 <a href={result.url}>{result.login}</a>
-                <p>{result.score}</p>
+                <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
               </div>
             )
           })}
