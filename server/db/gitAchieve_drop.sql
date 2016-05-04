@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-04 00:05:03.831
+-- Last modification date: 2016-05-04 03:54:38.167
 
 -- foreign keys
 ALTER TABLE IF EXISTS commits_repos
@@ -70,6 +70,9 @@ DROP TABLE IF EXISTS users_orgs;
 DROP TABLE IF EXISTS users_repos;
 
 DROP TABLE IF EXISTS users_users;
+
+-- sequences
+DROP SEQUENCE IF EXISTS Sequence_3;
 
 -- End of file.
 

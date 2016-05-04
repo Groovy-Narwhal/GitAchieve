@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DatabaseModel VersionId="2.3">
-    <Name>GitAchieve - Edit Me</Name>
+    <Name>GitAchieve - Master</Name>
     <Description></Description>
     <DatabaseEngine>
         <Name>postgresql</Name>
@@ -39,7 +39,7 @@
         </Counter>
         <Counter>
             <Name>sequence</Name>
-            <Value>2</Value>
+            <Value>3</Value>
             <Prefix>s</Prefix>
         </Counter>
         <Counter>
@@ -132,7 +132,7 @@
                     <Name>avatar_url</Name>
                     <Type>varchar(200)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -141,7 +141,7 @@
                     <Name>followers</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -150,7 +150,7 @@
                     <Name>following</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -159,7 +159,7 @@
                     <Name>score</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -168,7 +168,7 @@
                     <Name>longest_streak</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -177,7 +177,7 @@
                     <Name>current_streak</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -186,7 +186,7 @@
                     <Name>contributions_past_year</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -195,7 +195,7 @@
                     <Name>commits_count</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -204,7 +204,7 @@
                     <Name>repos_count</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -213,7 +213,7 @@
                     <Name>pull_requests_count</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -267,7 +267,7 @@
                     <Name>state</Name>
                     <Type>varchar(10)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -276,7 +276,7 @@
                     <Name>diff_url</Name>
                     <Type>varchar(200)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -285,7 +285,7 @@
                     <Name>created_at</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -294,7 +294,7 @@
                     <Name>closed_at</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -303,7 +303,7 @@
                     <Name>milestone</Name>
                     <Type>varchar(100)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -312,7 +312,7 @@
                     <Name>base_ref</Name>
                     <Type>varchar(50)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -321,7 +321,7 @@
                     <Name>base_repo_watchers_count</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -330,7 +330,7 @@
                     <Name>base_repo_stargazers_count</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -380,7 +380,7 @@
                     <Name>orgname</Name>
                     <Type>varchar(100)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -389,7 +389,7 @@
                     <Name>followers</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -398,7 +398,7 @@
                     <Name>following</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -407,7 +407,7 @@
                     <Name>score</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -432,7 +432,7 @@
             <Columns>
                 <Column Id="c50">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -491,7 +491,7 @@
             <Columns>
                 <Column Id="c54">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -559,7 +559,7 @@
             <Columns>
                 <Column Id="c58">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -579,7 +579,7 @@
                     <Name>sha</Name>
                     <Type>varchar(40)</Type>
                     <Description>It's possible, but very unlikely, for two commits to have the same SHA.</Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -597,7 +597,7 @@
                     <Name>commit_author_date</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -651,7 +651,7 @@
                     <Name>created_at</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -660,7 +660,7 @@
                     <Name>watchers_count</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -669,7 +669,7 @@
                     <Name>stargazers_count</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -678,7 +678,7 @@
                     <Name>forks_count</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -703,7 +703,7 @@
             <Columns>
                 <Column Id="c81">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -757,7 +757,7 @@
             <Columns>
                 <Column Id="c95">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -811,7 +811,7 @@
             <Columns>
                 <Column Id="c104">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -831,7 +831,7 @@
                     <Name>sha</Name>
                     <Type>varchar(40)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -840,7 +840,7 @@
                     <Name>name</Name>
                     <Type>varchar(100)</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -865,7 +865,7 @@
             <Columns>
                 <Column Id="c110">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -919,7 +919,7 @@
             <Columns>
                 <Column Id="c137">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -939,7 +939,7 @@
                     <Name>author_id</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -948,7 +948,7 @@
                     <Name>total</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -957,7 +957,7 @@
                     <Name>weeks</Name>
                     <Type>text</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -982,7 +982,7 @@
             <Columns>
                 <Column Id="c142">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -1300,7 +1300,22 @@
             <Properties/>
         </Reference>
     </References>
-    <Sequences/>
+    <Sequences>
+        <Sequence Id="s3">
+            <Name>Sequence_3</Name>
+            <Description></Description>
+            <StartWith></StartWith>
+            <IncrementBy></IncrementBy>
+            <MinValue></MinValue>
+            <MaxValue></MaxValue>
+            <Cycle>false</Cycle>
+            <Cache></Cache>
+            <UseCache>false</UseCache>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Sequence>
+    </Sequences>
     <Notes/>
     <Areas/>
     <Texts/>

@@ -1,10 +1,10 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-04 00:05:03.831
+-- Last modification date: 2016-05-04 03:54:38.167
 
 -- tables
 -- Table: branches
 CREATE TABLE branches (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     sha varchar(40)  NULL,
     name varchar(100)  NULL,
@@ -13,7 +13,7 @@ CREATE TABLE branches (
 
 -- Table: commits
 CREATE TABLE commits (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     sha varchar(40)  NULL,
     commit_message varchar(100)  NULL,
@@ -24,7 +24,7 @@ CREATE TABLE commits (
 
 -- Table: commits_repos
 CREATE TABLE commits_repos (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     commit_id_ga int  NOT NULL,
     repo_id int  NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE repos (
 
 -- Table: repos_branches
 CREATE TABLE repos_branches (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     repo_id int  NOT NULL,
     branch_id_ga int  NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE repos_branches (
 
 -- Table: repos_stats
 CREATE TABLE repos_stats (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     repo_id int  NOT NULL,
     stats_id_ga int  NOT NULL,
@@ -89,7 +89,7 @@ CREATE TABLE repos_stats (
 
 -- Table: stats
 CREATE TABLE stats (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     author_id int  NULL,
     total int  NULL,
@@ -118,7 +118,7 @@ CREATE TABLE users (
 
 -- Table: users_orgs
 CREATE TABLE users_orgs (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     user_id int  NOT NULL,
     org_id int  NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE users_orgs (
 
 -- Table: users_repos
 CREATE TABLE users_repos (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     repo_id int  NOT NULL,
     user_id int  NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE users_repos (
 
 -- Table: users_users
 CREATE TABLE users_users (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     confirmed_at timestamp  NULL,
     primary_user_id int  NOT NULL,
@@ -255,6 +255,14 @@ ALTER TABLE users_users ADD CONSTRAINT users_users_users2
     REFERENCES users (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
+;
+
+-- sequences
+-- Sequence: Sequence_3
+CREATE SEQUENCE Sequence_3
+      NO MINVALUE
+      NO MAXVALUE
+      NO CYCLE
 ;
 
 -- End of file.

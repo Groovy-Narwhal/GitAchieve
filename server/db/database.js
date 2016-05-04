@@ -20,7 +20,7 @@ fs.readFile(__dirname + '/user_schema_test.sql', 'utf8', function (err, data) {
         console.error(err);
       } else {
         // if the users table does not exist, drop all tables
-        if (users[0].exists === false) {
+        if (users[0].exists === false) { // set this to true to drop all tables on server start
           console.log('Users table does not exist; dropping tables');
           // read the drop tables file
           fs.readFile(__dirname + '/gitAchieve_drop.sql', 'utf8', function(err, data) {
