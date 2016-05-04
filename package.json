@@ -11,7 +11,9 @@
     "test": "tests"
   },
   "scripts": {
-    "serve": "nodemon server/server.js --ignore client/components"
+    "serve": "nodemon server/server.js --ignore client/components",
+    "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js 'test/**/*.js'",
+    "test:watch": "npm run test -- --watch"
   },
   "author": "Adam Isom, Alex Nitta, Inje Yeo, & Megan Smith",
   "license": "ISC",
@@ -45,6 +47,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "body-parser": "^1.15.0",
     "chai": "^3.5.0",
+    "chai-jquery": "^2.0.0",
     "enzyme": "^2.2.0",
     "eslint": "^2.8.0",
     "eslint-config-airbnb": "^8.0.0",
@@ -63,6 +66,7 @@
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
     "immutable": "^3.8.1",
+    "jquery": "^2.2.3",
     "jsdom": "^8.0.1",
     "jshint": "^2.8.0",
     "logger": "0.0.1",

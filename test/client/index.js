@@ -2,7 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow, mount, render } from 'enzyme';
 // TODO: import React and create tests for the front end
-  // import Index from '../../client/index.js';
+import App from '../../client/components/app.js';
 // TODO: load in the database and test
   // Connect to Postgres
 
@@ -27,14 +27,23 @@ describe('test setup', function() {
   });
 });
 
-/********************************************************
-// Test if it loads React
-describe('load react', function() {
-  it('should load react front-end', () => {
-    expect(Index).to.exist;
+// if logging in works
+// components exist
+// make sure actions dont directly mutate store
+// actions that are updating state work
+// we can access the state from a certain component
+
+/* Front-end Tests */
+describe('load app component', function() {
+  it('should load react app', () => {
+    // const wrapper = mount(<App />);
+    // expect(App).to.exist;
   })
   // TODO: write tests here.
 });
+
+/********************************************************
+// Test if it loads React
 
 // Tests the database
 describe('load Postgres', () => {
