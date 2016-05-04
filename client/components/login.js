@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import * as actions from './../actions/index';
-import { reduxForm } from 'redux-form';
-
 
 export default class Login extends Component {
 
