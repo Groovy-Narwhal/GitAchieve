@@ -8,8 +8,8 @@ const db = require('./db/database.js');
 const app = express();
 
 // Passport Authentication and Middleware
-require('./helpers/auth.js')(app);
 require('./helpers/middleware.js')(app);
+require('./helpers/auth.js')(app);
 
 // Routers
 const userRouter = require('./routers/userRouter.js');

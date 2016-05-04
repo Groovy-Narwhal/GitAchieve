@@ -1,17 +1,16 @@
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
+const callbackHost = (PORT === 8000) ? 'http://127.0.0.1:8000' : 'http://www.gitachieve.com';
 
-const cookieparser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const Strategy = require('passport-github2').Strategy;
 const keys = require('./../config/github.config.js');
 const session = require('express-session');
 
-// TODO: require users from database!
+const db = require('../db/database.js');
 
 module.exports = function(app) {
-
-  app.use(cookieparser());
-  
+  app.use(cookieParser());
   app.use(session({
     secret: 'groovy-narwhal',
     resave: false,
@@ -33,43 +32,32 @@ module.exports = function(app) {
     }
   });
   
-  var callbackHost = (PORT === 8000) ? 'http://localhost:8000' : 'http://www.gitachieve.com';
-
   passport.use(new Strategy({
     clientID: keys.id,
     clientSecret: keys.secret,
-    callbackURL: callbackHost + '/signin/github/callback'
+    callbackURL: callbackHost + '/auth/github_oauth/callback'
   },
-    function(accessToken, refreshToken, profile, cb) {
-      process.nextTick(function() {
-        console.log('This is your Token: ', accessToken);
-        // TODO: Add user to the database!
-        return cb(null, profile);
-      });
-    }
-  ));
+  function(accessToken, refreshToken, profile, cb) {
+    // TODO: Add user to the database!
+    var username = profile._json.login;
+    var email = profile._json.email;
+    var id = profile._json.id;
+    // db.run('INSERT INTO users (username, email, id, created_ga) VALUES ($1, $2, $3, $4)', [])
+    return cb(null, profile._json);
+  }));
 
   // GITHUB LOGIN
-  app.get('/signin/github',
-    passport.authenticate('github', {scope: ['user:email']}),
-      function(req, res) {
-      // The request will be redirected to GitHub for authentication so this function will not be called
-    }
-  );
+  app.get('/auth/github_oauth',
+    passport.authenticate('github',
+      { scope: [ 'user:email' ]
+    }));
 
-  app.get('/signin/github/callback',
-    passport.authenticate('github', {failureRedirect: '/'}),
-    function(req, res) {
-      res.cookie('githubId', req.user.id);
-      res.cookie('githubName', req.user.login);
+  app.get('/auth/github_oauth/callback',
+    passport.authenticate('github', {
+      failureRedirect: '/github/failure'
+    }), function(req, res, next) {
       res.redirect('/');
-    }
-  );
-
-  app.get('/signout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-  });
+    });
 
   app.get('/github/profile', checkAuth, function(req, res) {
     res.send(req.user);
@@ -77,6 +65,11 @@ module.exports = function(app) {
 
   app.get('/github/failure', function(req, res) {
     res.send('Authentication failed');
+  });
+
+  app.get('/signout', function(req, res) {
+    req.session.destroy();
+    res.redirect('/');
   });
 
 };
@@ -88,5 +81,3 @@ function checkAuth(req, res, next) {
     res.redirect('/github/failure');
   }
 };
-
-
