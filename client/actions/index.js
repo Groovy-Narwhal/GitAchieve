@@ -29,6 +29,7 @@ export function signinUser() {
     // Submit email/password to the server
     axios.get(`${ROOT_URL}/github/profile`)
       .then(response => {
+        console.log('RESPONSE SUCCESS')
         // - Update state to indicate user is authenticated
         dispatch({ type: types.AUTH_USER });
         // - Save the JWT token
