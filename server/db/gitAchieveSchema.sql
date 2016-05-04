@@ -1,152 +1,269 @@
--- *** NOTE *** - this schema is in MySQL syntax, which doesn't work with Postgres. There are several
--- key differences. This is for reference only when building up the actual Postgres schemas.
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2016-05-04 03:54:38.167
 
--- ---
--- Globals
--- ---
-
--- SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
--- SET FOREIGN_KEY_CHECKS=0;
-
--- ---
--- Table 'users'
--- 
--- ---
-
-DROP TABLE IF EXISTS `users`;
-    
-CREATE TABLE `users` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `username` VARCHAR(100) NOT NULL DEFAULT 'UsersDefaultUsername' COMMENT 'GitHub username',
-  `email` VARCHAR(100) NOT NULL DEFAULT 'UsersDefaultEmail',
-  `avatar url` VARCHAR(255) NOT NULL DEFAULT 'UsersDefaulAvatarUrl' COMMENT 'URL of image for user',
-  `score` INTEGER NOT NULL DEFAULT 0,
-  `pull requests` INTEGER NOT NULL DEFAULT 0,
-  `merge conflicts` INTEGER NOT NULL DEFAULT 0,
-  `merge resolutions` INTEGER NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+-- tables
+-- Table: branches
+CREATE TABLE branches (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    sha varchar(40)  NULL,
+    name varchar(100)  NULL,
+    CONSTRAINT branches_pk PRIMARY KEY (id_ga)
 );
 
--- ---
--- Table 'orgs'
--- 
--- ---
-
-DROP TABLE IF EXISTS `orgs`;
-    
-CREATE TABLE `orgs` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT DEFAULT 0,
-  `orgname` VARCHAR(100) NOT NULL DEFAULT 'OrgsDefaultOrgname',
-  `avatar url` VARCHAR(255) NOT NULL DEFAULT 'OrgsDefaultAvatarUrl' COMMENT 'URL of image for group',
-  `score` INTEGER(20) NOT NULL DEFAULT 0,
-  `commits` INTEGER(10) NOT NULL DEFAULT 0,
-  `pull requests` INTEGER(10) NOT NULL DEFAULT 0,
-  `merge conflicts` INTEGER(10) NOT NULL DEFAULT 0,
-  `merge resolutions` INTEGER(10) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+-- Table: commits
+CREATE TABLE commits (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    sha varchar(40)  NULL,
+    commit_message varchar(100)  NULL,
+    commit_author_date timestamp  NULL,
+    user_id int  NOT NULL,
+    CONSTRAINT commits_pk PRIMARY KEY (id_ga)
 );
 
--- ---
--- Table 'users-orgs'
--- Join table to establish which users are in each org
--- ---
-
-DROP TABLE IF EXISTS `users-orgs`;
-    
-CREATE TABLE `users-orgs` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT DEFAULT 0,
-  `user id` INTEGER NULL DEFAULT NULL,
-  `org id` INTEGER NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) COMMENT 'Join table to establish which users are in each org';
-
--- ---
--- Table 'users-users'
--- 
--- ---
-
-DROP TABLE IF EXISTS `users-users`;
-    
-CREATE TABLE `users-users` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT DEFAULT 0,
-  `primary` INTEGER NULL DEFAULT NULL,
-  `secondary` INTEGER NULL DEFAULT NULL,
-  `confirmed` VARCHAR(5) NOT NULL DEFAULT 'FALSE' COMMENT 'TRUE if game session was accepted by secondary user',
-  PRIMARY KEY (`id`)
+-- Table: commits_repos
+CREATE TABLE commits_repos (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    commit_id_ga int  NOT NULL,
+    repo_id int  NOT NULL,
+    CONSTRAINT commits_repos_pk PRIMARY KEY (id_ga)
 );
 
--- ---
--- Table 'commits'
--- 
--- ---
-
-DROP TABLE IF EXISTS `commits`;
-    
-CREATE TABLE `commits` (
-  `id` INTEGER NULL AUTO_INCREMENT DEFAULT NULL,
-  `sha` VARCHAR(40) NULL DEFAULT NULL COMMENT 'Unique hash for a commit',
-  `author id` INTEGER NULL DEFAULT NULL,
-  `commiter id` INTEGER NULL DEFAULT NULL,
-  `stats additions` INTEGER NOT NULL DEFAULT 0,
-  `stats deletions` INTEGER NOT NULL DEFAULT 0,
-  `stats total` INTEGER NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
+-- Table: orgs
+CREATE TABLE orgs (
+    id int  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    orgname varchar(100)  NULL,
+    followers int  NULL,
+    following int  NULL,
+    score int  NULL,
+    CONSTRAINT orgs_pk PRIMARY KEY (id)
 );
 
--- ---
--- Table 'pull requests'
--- 
--- ---
-
-DROP TABLE IF EXISTS `pull requests`;
-    
-CREATE TABLE `pull requests` (
-  `id` INTEGER NOT NULL AUTO_INCREMENT DEFAULT 0,
-  `user id` INTEGER NULL DEFAULT NULL,
-  `head sha` VARCHAR(40) NULL DEFAULT NULL COMMENT 'Hash at head of commit',
-  `number` INTEGER NULL DEFAULT NULL,
-  `state` VARCHAR(10) NULL DEFAULT NULL,
-  `title` VARCHAR(100) NOT NULL DEFAULT 'PullRequestDefaultTitle',
-  `milestone url` VARCHAR(255) NOT NULL DEFAULT 'PullRequestDefaultMilestoneUrl',
-  PRIMARY KEY (`id`)
+-- Table: pull_requests
+CREATE TABLE pull_requests (
+    id int  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    user_id int  NOT NULL,
+    state varchar(10)  NULL,
+    diff_url varchar(200)  NULL,
+    created_at timestamp  NULL,
+    closed_at timestamp  NULL,
+    milestone varchar(100)  NULL,
+    base_ref varchar(50)  NULL,
+    base_repo_watchers_count int  NULL,
+    base_repo_stargazers_count int  NULL,
+    CONSTRAINT pull_requests_pk PRIMARY KEY (id)
 );
 
--- ---
--- Foreign Keys 
--- ---
+-- Table: repos
+CREATE TABLE repos (
+    id int  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    created_at timestamp  NULL,
+    watchers_count int  NULL,
+    stargazers_count int  NULL,
+    forks_count int  NULL,
+    CONSTRAINT repos_pk PRIMARY KEY (id)
+);
 
-ALTER TABLE `users-orgs` ADD FOREIGN KEY (user id) REFERENCES `users` (`id`);
-ALTER TABLE `users-orgs` ADD FOREIGN KEY (org id) REFERENCES `orgs` (`id`);
-ALTER TABLE `users-users` ADD FOREIGN KEY (primary) REFERENCES `users` (`id`);
-ALTER TABLE `users-users` ADD FOREIGN KEY (secondary) REFERENCES `users` (`id`);
-ALTER TABLE `commits` ADD FOREIGN KEY (author id) REFERENCES `users` (`id`);
-ALTER TABLE `commits` ADD FOREIGN KEY (commiter id) REFERENCES `users` (`id`);
-ALTER TABLE `pull requests` ADD FOREIGN KEY (user id) REFERENCES `users` (`id`);
+-- Table: repos_branches
+CREATE TABLE repos_branches (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    repo_id int  NOT NULL,
+    branch_id_ga int  NOT NULL,
+    CONSTRAINT repos_branches_pk PRIMARY KEY (id_ga)
+);
 
--- ---
--- Table Properties
--- ---
+-- Table: repos_stats
+CREATE TABLE repos_stats (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    repo_id int  NOT NULL,
+    stats_id_ga int  NOT NULL,
+    CONSTRAINT repos_stats_pk PRIMARY KEY (id_ga)
+);
 
--- ALTER TABLE `users` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `orgs` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `users-orgs` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `users-users` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `commits` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `pull requests` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- Table: stats
+CREATE TABLE stats (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    author_id int  NULL,
+    total int  NULL,
+    weeks text  NULL,
+    CONSTRAINT stats_pk PRIMARY KEY (id_ga)
+);
 
--- ---
--- Test Data
--- ---
+-- Table: users
+CREATE TABLE users (
+    id int  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    username varchar(100)  NULL,
+    email varchar(100)  NULL,
+    avatar_url varchar(200)  NULL,
+    followers int  NULL,
+    following int  NULL,
+    score int  NULL,
+    longest_streak int  NULL,
+    current_streak int  NULL,
+    contributions_past_year int  NULL,
+    commits_count int  NULL,
+    repos_count int  NULL,
+    pull_requests_count int  NULL,
+    CONSTRAINT users_pk PRIMARY KEY (id)
+);
 
--- INSERT INTO `users` (`id`,`username`,`email`,`avatar url`,`score`,`pull requests`,`merge conflicts`,`merge resolutions`) VALUES
--- ('','','','','','','','');
--- INSERT INTO `orgs` (`id`,`orgname`,`avatar url`,`score`,`commits`,`pull requests`,`merge conflicts`,`merge resolutions`) VALUES
--- ('','','','','','','','');
--- INSERT INTO `users-orgs` (`id`,`user id`,`org id`) VALUES
--- ('','','');
--- INSERT INTO `users-users` (`id`,`primary`,`secondary`,`confirmed`) VALUES
--- ('','','','');
--- INSERT INTO `commits` (`id`,`sha`,`author id`,`commiter id`,`stats additions`,`stats deletions`,`stats total`) VALUES
--- ('','','','','','','');
--- INSERT INTO `pull requests` (`id`,`user id`,`head sha`,`number`,`state`,`title`,`milestone url`) VALUES
--- ('','','','','','','');
+-- Table: users_orgs
+CREATE TABLE users_orgs (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    user_id int  NOT NULL,
+    org_id int  NOT NULL,
+    CONSTRAINT users_orgs_pk PRIMARY KEY (id_ga)
+);
+
+-- Table: users_repos
+CREATE TABLE users_repos (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    repo_id int  NOT NULL,
+    user_id int  NOT NULL,
+    CONSTRAINT users_repos_pk PRIMARY KEY (id_ga)
+);
+
+-- Table: users_users
+CREATE TABLE users_users (
+    id_ga serial  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    confirmed_at timestamp  NULL,
+    primary_user_id int  NOT NULL,
+    secondary_user_id int  NOT NULL,
+    CONSTRAINT users_users_pk PRIMARY KEY (id_ga)
+);
+
+-- foreign keys
+-- Reference: commits_repos_commits (table: commits_repos)
+ALTER TABLE commits_repos ADD CONSTRAINT commits_repos_commits
+    FOREIGN KEY (commit_id_ga)
+    REFERENCES commits (id_ga)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: commits_repos_repos (table: commits_repos)
+ALTER TABLE commits_repos ADD CONSTRAINT commits_repos_repos
+    FOREIGN KEY (repo_id)
+    REFERENCES repos (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: commits_users (table: commits)
+ALTER TABLE commits ADD CONSTRAINT commits_users
+    FOREIGN KEY (user_id)
+    REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: pull_requests_users (table: pull_requests)
+ALTER TABLE pull_requests ADD CONSTRAINT pull_requests_users
+    FOREIGN KEY (user_id)
+    REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: repos_branches_branches (table: repos_branches)
+ALTER TABLE repos_branches ADD CONSTRAINT repos_branches_branches
+    FOREIGN KEY (branch_id_ga)
+    REFERENCES branches (id_ga)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: repos_branches_repos (table: repos_branches)
+ALTER TABLE repos_branches ADD CONSTRAINT repos_branches_repos
+    FOREIGN KEY (repo_id)
+    REFERENCES repos (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: repos_stats_repos (table: repos_stats)
+ALTER TABLE repos_stats ADD CONSTRAINT repos_stats_repos
+    FOREIGN KEY (repo_id)
+    REFERENCES repos (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: repos_stats_stats (table: repos_stats)
+ALTER TABLE repos_stats ADD CONSTRAINT repos_stats_stats
+    FOREIGN KEY (stats_id_ga)
+    REFERENCES stats (id_ga)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_orgs_orgs (table: users_orgs)
+ALTER TABLE users_orgs ADD CONSTRAINT users_orgs_orgs
+    FOREIGN KEY (org_id)
+    REFERENCES orgs (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_orgs_users (table: users_orgs)
+ALTER TABLE users_orgs ADD CONSTRAINT users_orgs_users
+    FOREIGN KEY (user_id)
+    REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_repos_repos (table: users_repos)
+ALTER TABLE users_repos ADD CONSTRAINT users_repos_repos
+    FOREIGN KEY (repo_id)
+    REFERENCES repos (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_repos_users (table: users_repos)
+ALTER TABLE users_repos ADD CONSTRAINT users_repos_users
+    FOREIGN KEY (user_id)
+    REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_users_users1 (table: users_users)
+ALTER TABLE users_users ADD CONSTRAINT users_users_users1
+    FOREIGN KEY (primary_user_id)
+    REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_users_users2 (table: users_users)
+ALTER TABLE users_users ADD CONSTRAINT users_users_users2
+    FOREIGN KEY (secondary_user_id)
+    REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- sequences
+-- Sequence: Sequence_3
+CREATE SEQUENCE Sequence_3
+      NO MINVALUE
+      NO MAXVALUE
+      NO CYCLE
+;
+
+-- End of file.
+

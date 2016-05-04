@@ -7,42 +7,57 @@ const connectionString = 'postgres://localhost:5432/gitachieve';
 const db = massive.connectSync({connectionString: connectionString});
 
 // workaround for the built-in Massive function that is supposed to create a method from the .sql 
-// files - see line 32 and https://massive-js.readthedocs.io/en/latest/functions/
-const userSchema = fs.readFileSync(__dirname + '/user_schema.sql', 'utf8', function (err, data) {
-  if (err) {
-    console.error(err);
-  }
-});
+// files - see  https://massive-js.readthedocs.io/en/latest/functions/
 
-
-
-// if the users table is empty, build it
-db.run('select * from users', function(err, users) {
+// read the schema test file - this will tell us if the users table exists
+fs.readFile(__dirname + '/user_schema_test.sql', 'utf8', function (err, data) {
   if (err) {
     console.error(err);
   } else {
-    if (users.length === 0) {
-      console.log('building users table');
-      db.run(userSchema, function(error, res) {
-        if (error) {
-          console.error('Error in userSchema, ', error);
+    // run the test file
+    db.run(data, function(err, users) {
+      if (err) {
+        console.error(err);
+      } else {
+        // if the users table does not exist, drop all tables
+        if (users[0].exists === false) { // set this to true to drop all tables on server start
+          console.log('Users table does not exist; dropping tables');
+          // read the drop tables file
+          fs.readFile(__dirname + '/gitAchieve_drop.sql', 'utf8', function(err, data) {
+            if (err) {
+              console.error(err);
+            } else {
+              // run the drop tables file
+              db.run(data, function(err, data) {
+                if (err) {
+                  console.error(err);
+                } else {
+                  console.log('Tables dropped successfully');
+                  //once tables are dropped, read the schema file
+                  fs.readFile(__dirname + '/gitAchieveSchema.sql', 'utf8', function(err, data) {
+                    if (err) {
+                      console.error(err);
+                    } else {
+                      // run the schema file to build the empty database
+                      db.run(data, function(err, data) {
+                        if (err) {
+                          console.error(err);
+                        } else {
+                          console.log('Empty database built from gitAchieveSchema');
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
         } else {
-          console.log('Created users table from userSchema');
+          // if the users table exists, show this message and do nothing else
+          console.log('Users table exists, not dropping tables');
         }
-      });
-    
-    // this version should read the user_schema.sql file within this folder
-    // and make it into a method on the db instance
-    // ** this is not working, it seems to load after the run command is called
-    
-    // db.user_schema(function(error, response) {
-    //   if (error) {
-    //     console.error('Error in user_schema, ', error);
-    //   } else {
-    //     console.log('Created table from user_schema');
-    //   }
-    // });
-    }
+      }
+    });
   }
 });
 

@@ -4,26 +4,27 @@ const userController = require('./../controllers/userController.js');
 // the following routes start from /api/v1/users
 
 userRouter.route('/')
-  .get(userController.retrieve)
-  .post(userController.addOne);
+  .get(userController.retrieveAllUsers)
+  .post(userController.addUser);
 
-userRouter.route('/:username')
-  .get(userController.retrieveOne)
-  .patch(userController.updateOne)
-  .delete(userController.deleteOne);
+userRouter.route('/:id')
+  .get(userController.retrieveUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
 
-userRouter.route('/:username/repos')
-  .get(userController.retrieveRepos);
+userRouter.route('/:id/repos')
+  .get(userController.retrieveRepos)
+  .post(userController.addRepo);
 
-userRouter.route('/:username/friends')
+userRouter.route('/:id/friends')
   .get(userController.retrieveFriends)
   .post(userController.addFriend);
 
-userRouter.route('/:username/stats')
+userRouter.route('/:id/stats')
   .get(userController.retrieveStats)
   .post(userController.addStats);
 
-userRouter.route('/:username/achievements')
+userRouter.route('/:id/achievements')
   .get(userController.retrieveAchievements)
   .post(userController.addAchievements);
   
