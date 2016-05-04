@@ -34,7 +34,7 @@ export function signinUser() {
         // - Save the JWT token
         localStorage.setItem('token', 'MEGAN');
         // - redirect to the route '/users'
-        browserHistory.push('/users');
+        browserHistory.push('/');
       })
       .catch(() => {
         console.log('error');

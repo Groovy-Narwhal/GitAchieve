@@ -15,14 +15,14 @@ var mochaPhantomJs = require('gulp-mocha-phantomjs');
 
 // Lint Task
 gulp.task('lint', function() {
-    return gulp.src(['./client/**/*.js', './server/**/*.js'], {base: '.'})
-        .pipe(jshint({esnext: true}))
-        .pipe(jshint.reporter('default'));
+  return gulp.src(['./client/**/*.js', './server/**/*.js'], {base: '.'})
+    .pipe(jshint({esnext: true}))
+    .pipe(jshint.reporter('default'));
 });
 
 // Test Task
 gulp.task('test', shell.task([
-    'mocha test/client/.setup.js test/client/index.js'
+  'mocha test/client/.setup.js test/client/index.js'
 ]));
 
 // Build Task
@@ -34,18 +34,18 @@ gulp.task('build', function() {
 
 // Concatenate & Minify JS Task
 gulp.task('scripts', function() {
-    return gulp.src('server/**/*.js')
-        .pipe(concat('all.js'))
-        .pipe(gulp.dest('dist'))
-        .pipe(rename('all.min.js'))
-        .pipe(uglify())
-        .pipe(gulp.dest('dist/js'));
+  return gulp.src('server/**/*.js')
+    .pipe(concat('all.js'))
+    .pipe(gulp.dest('dist'))
+    .pipe(rename('all.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('dist/js'));
 });
 
 // Watch Files For Changes
 gulp.task('watch', function() {
-    gulp.watch(['./*.js', 'test/**'], ['lint', 'test']);
-    // gulp.watch('scss/*.scss', ['sass']);
+  gulp.watch(['./*.js', 'test/**'], ['lint', 'test']);
+  // gulp.watch('scss/*.scss', ['sass']);
 });
 
 // Default Task
@@ -54,7 +54,7 @@ gulp.task('default', ['lint', 'test', 'watch']);
 
 // Compile Our Sass // Commented out for now since Sass is not integrated yet.
 // gulp.task('sass', function() {
-//     return gulp.src('scss/*.scss')
-//         .pipe(sass())
-//         .pipe(gulp.dest('dist/css'));
+//   return gulp.src('scss/*.scss')
+//    .pipe(sass())
+//    .pipe(gulp.dest('dist/css'));
 // });

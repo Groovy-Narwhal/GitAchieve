@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
-export default function(ComposedComponent) {
+export default ComposedComponent => {
   class Authentication extends Component {
 
     static contextTypes = {
@@ -11,13 +11,13 @@ export default function(ComposedComponent) {
 
     componentWillMount() {
       if (!this.props.authenticated) {
-        browserHistory.push('/login');
+        browserHistory.push('/signin');
       }
     }
 
     componentWillUpdate(nextProps) {
       if (!nextProps.authenticated) {
-        browserHistory.push('/login');
+        browserHistory.push('/signin');
       }
     }
 
@@ -26,9 +26,10 @@ export default function(ComposedComponent) {
     }
   }
 
-  mapStateToProps = (state) => (
+  const mapStateToProps = state => (
     { authenticated: state.auth.authenticated }
-  )
+  );
+  
 
   return connect(mapStateToProps)(Authentication);
 }
