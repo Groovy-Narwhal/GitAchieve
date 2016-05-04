@@ -7,27 +7,28 @@ exports.CommitChart = () => {
     if (error) {
       console.log('There was an error retrieving commit data: ', error);
     }
-
-    // set dimensions
-    var w = 600;
-    var h = 320;
-    var pad = 20;
-    var left_pad = 100; //TEMPORARY
-    var barWidth = Math.floor(w / 7) - 1; // ADJUST WITH PADDING HERE
-
-    // set the values for the graph's x-axis
-    var week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    // Data = all of the weeks of the past year and how many commits are in each week
     // set placeholders for received data
     var currentWeekCommits;
     var commitsPairedWithDays = [];
-
-    // Data = all of the weeks of the past year and how many commits are in each week
     // Grab the last week's commit data
     // It looks like this: {total: 35, days: [5, 9, 19, 2, 0, 0, 0]}
+    // days of the week will be used for the graph's x-axis
+    var week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     currentWeekCommits = data[data.length - 1];
     for (var i = 0; i < 7; i++) {
       commitsPairedWithDays.push([ week[i], currentWeekCommits.days[i] ]);
     }
+
+
+
+    // set dimensions
+    var margin = {top: 20, right: 40, bottom: 30, left: 20}; //?
+    var w = 600 - margin.left - margin.right;
+    var h = 320 - margin.top - margin.bottom;
+    var pad = 20;
+    var left_pad = 100; //TEMPORARY
+    var barWidth = Math.floor(w / 7) - 1; // ADJUST WITH PADDING HERE
 
     // create container / svg
     var svg = d3.select("#commit-charts")
@@ -44,7 +45,7 @@ exports.CommitChart = () => {
         [d3.max( currentWeekCommits.days,
           (d) => { return d; })
         , 0])
-      .range( [h, 0] );
+      .range( [pad, h-pad*2] );
 
     // set the axes
     var xAxis = d3.svg.axis().scale(x).orient("bottom");
@@ -62,6 +63,10 @@ exports.CommitChart = () => {
     svg.append("g")
       .attr("class", "axis")
       .attr("transform", "translate(" + (left_pad-pad) + ", 0)")
+      .style({
+        fill: 'none',
+        stroke: '#333'
+      })
       .call(yAxis);
 
     // the stage is set -- add the data
@@ -71,92 +76,8 @@ exports.CommitChart = () => {
       .enter()
         .append('rect')
           .attr('x', (d) => x(d[0]) )
-          .attr('y', (d) => h - y(d[1]) )
+          .attr('y', (d) => y(d[1]) )
           .attr('width', barWidth )
-          .attr('height', (d) => y(d[1]) );
+          .attr('height', (d) => y(0) - y(d[1]) );
   });
 };
-
-
-// commitCount.selectAll('rect')
-//       .data((d) => {return [d]})
-//     .enter().append('rect')
-//       .attr('x', (d) => {return -barWidth / 2})
-//       .attr('width', barWidth)
-//       .attr('y', y)
-//       .attr('height', (value) => (height - y(value)))
-//       .text((d) => (d.toString()));
-
-
-
-
-
-
-  //   .append('g')
-  //     .attr('transform', `translate(${margin.left}, ${margin.top})`)
-  //     .attr('class', 'commit-chart');
-
-  // // Create the container that holds all of the bars in the bar graph
-  // var commitCounts = svg.append('g')
-  //     .attr('class', 'commitCounts');
-
-
-
-  //     commitCount.selectAll('rect')
-  //         .data((d) => {return [d]})
-  //       .enter().append('rect')
-  //         .attr('x', (d) => {return -barWidth / 2})
-  //         .attr('width', barWidth)
-  //         .attr('y', y)
-  //         .attr('height', (value) => (height - y(value)))
-  //         .text((d) => (d.toString()));
-
-
-
-
-  //     svg.selectAll('circle')
-  //       .data(commitData)
-  //       .enter()
-  //         .append('circle')
-  //           .attr('cx', function(d) {
-  //             return x(d[0]);
-  //           })
-  //           .attr('cy', function(d) {
-  //             return y(d[1]);
-  //           });
-
-  // y.domain([0, d3.max(currentWeekCommits.days, (d) => {return d;})]);
-  // var commitsMax = d3.max(currentWeekCommits.days)
-  // let i = 0;
-  // var commitCount = commitCounts.selectAll('.commit-count')
-  //     .data(currentWeekCommits.days)
-  //   .enter().append('g')
-  //     .attr('class', 'commit-count')
-  //     .attr('transform', (commitCount) =>
-  //       ("translate(" + '300px' + ", 0)") );
-  //       // (commitCount) => (`translate(${x(i++)}, 0)`));
-  // i = 0;
-  // commitCount.selectAll('rect')
-  //     .data((d) => {return [d]})
-  //   .enter().append('rect')
-  //     .attr('x', (d) => {return -barWidth / 2})
-  //     .attr('width', barWidth)
-  //     .attr('y', y)
-  //     .attr('height', (value) => (height - y(value)))
-  //     .text((d) => (d.toString()));
-
-  //   // axes
-  //   var xAxis = d3.svg.axis().scale(x).orient("bottom");
-
-  //   // draw the axes and ticks
-  //   svg.append("g")
-  //     .attr("class", "axis")
-  //     .attr("transform", "translate(0, " + (height-20) + ")")
-  //     .call(xAxis)
-  //     .style({'fill': 'red', 'shapeRendering': 'crispEdges'});
-
-  //   // GRAPH text: Commit count
-  //   commitCount.append('text')
-  //       .attr('y', height - 4)
-  //       .attr('class', 'commit-count-num')
-  //       .text((commits) => (commits));
