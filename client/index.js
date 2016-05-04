@@ -4,18 +4,12 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { App, DashBoard, ScoreBoard, Login, Signout } from './components/index';
+import { App, Login, Signout, About, DashBoard } from './components/index';
 import RequireAuth from './components/requireAuth';
 import configureStore from './store/store';
 import * as types from './actions/actionTypes';
 
-const initialState = {
-  auth: {
-    authenticated: false
-  }
-};
-
-const store = configureStore(initialState);
+const store = configureStore();
 
 const history = syncHistoryWithStore(browserHistory, store);
 
@@ -31,6 +25,7 @@ render(
       <Route path='/' component={App}>
         <IndexRoute component={Login} />
         <Route path="/signout" component={Signout} />
+        <Route path="/about" component={About} />
         <Route path="/users" component={RequireAuth(DashBoard)} />
       </Route>
     </Router>

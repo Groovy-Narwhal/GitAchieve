@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 
 export default function(ComposedComponent) {
   class Authentication extends Component {
-    constructor(props) {
-      super(props);
-    }
 
     static contextTypes = {
       router: React.PropTypes.object

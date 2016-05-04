@@ -10,5 +10,5 @@ export default combineReducers({
   tokens,
   form,
   routing: routerReducer,
-  auth: authReducer
+  auth: authReducer,
 });

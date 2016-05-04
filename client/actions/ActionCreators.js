@@ -1,6 +1,5 @@
 import * as types from './actionTypes';
 
-
 export default {
   incrementStore: num => {
     return {

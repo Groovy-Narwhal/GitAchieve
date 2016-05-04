@@ -10,6 +10,7 @@ class DashBoard extends Component {
     // This instantiates a new d3 commit graph
     commitChart.CommitChart();
   }
+
   render() {
     const {
       actions
@@ -23,7 +24,7 @@ class DashBoard extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state) => {
   return state;
 }
 
