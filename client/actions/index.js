@@ -32,7 +32,7 @@ export function signinUser() {
         // - Update state to indicate user is authenticated
         dispatch({ type: types.AUTH_USER });
         // - Save the JWT token
-        localStorage.setItem('token', 'MEGAN');
+        localStorage.setItem('token', response.data.token);
         // - redirect to the route '/users'
         browserHistory.push('/');
       })

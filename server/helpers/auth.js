@@ -59,7 +59,7 @@ module.exports = function(app) {
             }
           });
         }
-        return cb(null, data);
+        return cb(null, {data: data, token: accessToken});
       }    
     });
   }));
