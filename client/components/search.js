@@ -4,7 +4,10 @@ export default class Search extends Component {
   render() {
     return (
       <div>
-        <input type="search" />
+        <form onSubmit={this.submitHandler}>
+          <input type="search" placeholder="search repos" />
+          <input type="submit" />
+        </form>
       </div>
     )
   }
