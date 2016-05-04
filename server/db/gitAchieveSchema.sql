@@ -1,13 +1,13 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-03 20:28:04.283
+-- Last modification date: 2016-05-04 00:05:03.831
 
 -- tables
 -- Table: branches
 CREATE TABLE branches (
     id_ga int  NOT NULL,
     created_ga timestamp  NOT NULL,
-    sha varchar(40)  NOT NULL,
-    name varchar(100)  NOT NULL,
+    sha varchar(40)  NULL,
+    name varchar(100)  NULL,
     CONSTRAINT branches_pk PRIMARY KEY (id_ga)
 );
 
@@ -15,9 +15,9 @@ CREATE TABLE branches (
 CREATE TABLE commits (
     id_ga int  NOT NULL,
     created_ga timestamp  NOT NULL,
-    sha varchar(40)  NOT NULL,
+    sha varchar(40)  NULL,
     commit_message varchar(100)  NULL,
-    commit_author_date timestamp  NOT NULL,
+    commit_author_date timestamp  NULL,
     user_id int  NOT NULL,
     CONSTRAINT commits_pk PRIMARY KEY (id_ga)
 );
@@ -35,10 +35,10 @@ CREATE TABLE commits_repos (
 CREATE TABLE orgs (
     id int  NOT NULL,
     created_ga timestamp  NOT NULL,
-    orgname varchar(100)  NOT NULL,
-    followers int  NOT NULL,
-    following int  NOT NULL,
-    score int  NOT NULL,
+    orgname varchar(100)  NULL,
+    followers int  NULL,
+    following int  NULL,
+    score int  NULL,
     CONSTRAINT orgs_pk PRIMARY KEY (id)
 );
 
@@ -47,14 +47,14 @@ CREATE TABLE pull_requests (
     id int  NOT NULL,
     created_ga timestamp  NOT NULL,
     user_id int  NOT NULL,
-    state varchar(10)  NOT NULL,
-    diff_url varchar(200)  NOT NULL,
-    created_at timestamp  NOT NULL,
-    closed_at timestamp  NOT NULL,
-    milestone varchar(100)  NOT NULL,
-    base_ref varchar(50)  NOT NULL,
-    base_repo_watchers_count int  NOT NULL,
-    base_repo_stargazers_count int  NOT NULL,
+    state varchar(10)  NULL,
+    diff_url varchar(200)  NULL,
+    created_at timestamp  NULL,
+    closed_at timestamp  NULL,
+    milestone varchar(100)  NULL,
+    base_ref varchar(50)  NULL,
+    base_repo_watchers_count int  NULL,
+    base_repo_stargazers_count int  NULL,
     CONSTRAINT pull_requests_pk PRIMARY KEY (id)
 );
 
@@ -62,10 +62,10 @@ CREATE TABLE pull_requests (
 CREATE TABLE repos (
     id int  NOT NULL,
     created_ga timestamp  NOT NULL,
-    created_at timestamp  NOT NULL,
-    watchers_count int  NOT NULL,
-    stargazers_count int  NOT NULL,
-    forks_count int  NOT NULL,
+    created_at timestamp  NULL,
+    watchers_count int  NULL,
+    stargazers_count int  NULL,
+    forks_count int  NULL,
     CONSTRAINT repos_pk PRIMARY KEY (id)
 );
 
@@ -91,9 +91,9 @@ CREATE TABLE repos_stats (
 CREATE TABLE stats (
     id_ga int  NOT NULL,
     created_ga timestamp  NOT NULL,
-    author_id int  NOT NULL,
-    total int  NOT NULL,
-    weeks text  NOT NULL,
+    author_id int  NULL,
+    total int  NULL,
+    weeks text  NULL,
     CONSTRAINT stats_pk PRIMARY KEY (id_ga)
 );
 
@@ -101,18 +101,18 @@ CREATE TABLE stats (
 CREATE TABLE users (
     id int  NOT NULL,
     created_ga timestamp  NOT NULL,
-    username varchar(100)  NULL DEFAULT default,
+    username varchar(100)  NULL,
     email varchar(100)  NULL,
-    avatar_url varchar(200)  NOT NULL,
-    followers int  NOT NULL,
-    following int  NOT NULL,
-    score int  NOT NULL,
-    longest_streak int  NOT NULL,
-    current_streak int  NOT NULL,
-    contributions_past_year int  NOT NULL,
-    commits_count int  NOT NULL,
-    repos_count int  NOT NULL,
-    pull_requests_count int  NOT NULL,
+    avatar_url varchar(200)  NULL,
+    followers int  NULL,
+    following int  NULL,
+    score int  NULL,
+    longest_streak int  NULL,
+    current_streak int  NULL,
+    contributions_past_year int  NULL,
+    commits_count int  NULL,
+    repos_count int  NULL,
+    pull_requests_count int  NULL,
     CONSTRAINT users_pk PRIMARY KEY (id)
 );
 
@@ -138,9 +138,9 @@ CREATE TABLE users_repos (
 CREATE TABLE users_users (
     id_ga int  NOT NULL,
     created_ga timestamp  NOT NULL,
-    primary_user_id int  NULL,
-    secondary_user_id int  NULL,
     confirmed_at timestamp  NULL,
+    primary_user_id int  NOT NULL,
+    secondary_user_id int  NOT NULL,
     CONSTRAINT users_users_pk PRIMARY KEY (id_ga)
 );
 
@@ -212,7 +212,7 @@ ALTER TABLE repos_stats ADD CONSTRAINT repos_stats_stats
 -- Reference: users_orgs_orgs (table: users_orgs)
 ALTER TABLE users_orgs ADD CONSTRAINT users_orgs_orgs
     FOREIGN KEY (org_id)
-    REFERENCES orgs (orgname)  
+    REFERENCES orgs (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
@@ -241,10 +241,18 @@ ALTER TABLE users_repos ADD CONSTRAINT users_repos_users
     INITIALLY IMMEDIATE
 ;
 
--- Reference: users_users_users (table: users_users)
-ALTER TABLE users_users ADD CONSTRAINT users_users_users
-    FOREIGN KEY (primary_user_id, secondary_user_id)
-    REFERENCES users (id, id)  
+-- Reference: users_users_users1 (table: users_users)
+ALTER TABLE users_users ADD CONSTRAINT users_users_users1
+    FOREIGN KEY (primary_user_id)
+    REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_users_users2 (table: users_users)
+ALTER TABLE users_users ADD CONSTRAINT users_users_users2
+    FOREIGN KEY (secondary_user_id)
+    REFERENCES users (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;

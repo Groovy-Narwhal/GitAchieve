@@ -12,14 +12,13 @@ exports.retrieve = function(req, res) {
 };
 
 // POST at /api/v1/users
-exports.addOne = function(req, res) {
-  var addUser = req.body.username;
-  var addEmail = req.body.email;
-  db.run('INSERT INTO users (username, email) VALUES ($1, $2)', [addUser, addEmail], function(error, response) {
+exports.addOne = function(req, res) {  
+  var timestamp = new Date();
+  db.run('INSERT INTO users (username, email, id, created_ga) VALUES ($1, $2, $3, $4)', [req.body.username, req.body.email, req.body.id, timestamp], function(error, response) {
     if (error) {
       console.error(error);
     } else {
-      var message = 'User created with username: ' + addUser + ' and email: ' + addEmail;
+      var message = 'User created with username: ' + req.body.username + ' and email: ' + req.body.id;
       res.status(201);
       res.send(message);
     }
