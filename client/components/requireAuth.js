@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { pushState } from 'react-router-redux';
-// import { Login } from './login';
 
-export function requireAuthentication(Component) {
-
-  class AuthenticatedComponent extends Component {
+export default function(ComposedComponent) {
+  class Authentication extends Component {
     constructor(props) {
       super(props);
     }
@@ -27,16 +24,13 @@ export function requireAuthentication(Component) {
     }
 
     render() {
-      return (
-        <Component {...this.props} />
-      )
+      return <ComposedComponent {...this.props} />
     }
   }
 
-  const mapStateToProps = (state) => ({
-    authenticated: state.auth.authenticated
-  });
+  function mapStateToProps(state) {
+    return { authenticated: state.auth.authenticated };
+  }
 
-  return connect(mapStateToProps)(AuthenticatedComponent);
-
+  return connect(mapStateToProps)(Authentication);
 }

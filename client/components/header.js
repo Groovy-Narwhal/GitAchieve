@@ -5,9 +5,7 @@ import { Link } from 'react-router';
 class Header extends Component {
   renderLinks() {
     if (!this.props.authenticated) {
-      return <li>
-        <Link to="/signin">Sign In</Link>
-      </li>
+      return null;
     } else {
       return [
         <li key={1}>
@@ -35,10 +33,10 @@ class Header extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
+const mapStateToProps = state => (
+  {
     authenticated: state.auth.authenticated
-  };
-}
+  }
+)
 
 export default connect(mapStateToProps)(Header);

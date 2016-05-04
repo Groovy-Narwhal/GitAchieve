@@ -11,12 +11,15 @@ const cors = require('cors');
 
 module.exports = function(app) {
   app.use(cookieParser());
-  app.use(cors());
-
+  // app.use(function(req, res, next) {
+  //   res.header("Access-Control-Allow-Origin", "*");
+  //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  //   next();
+  // });
   var corsOptions = {
-    origin: 'http://127.0.0.1:8000'
+    origin: false
   };
-
+  app.use(cors(corsOptions));
   app.use(session({
     secret: 'groovy-narwhal',
     resave: false,
@@ -40,22 +43,18 @@ module.exports = function(app) {
   
   var callbackHost = (PORT === 8000) ? 'http://127.0.0.1:8000' : 'http://www.gitachieve.com';
 
-
-  var gh = new Strategy({
+  passport.use(new Strategy({
     clientID: keys.id,
     clientSecret: keys.secret,
     callbackURL: callbackHost + '/auth/github_oauth/callback'
   },
   function(accessToken, refreshToken, profile, cb) {
-    console.log('HELLO FROM PASSPORT');
     process.nextTick(function() {
       console.log('This is your Token: ', accessToken);
       // TODO: Add user to the database!
-      return cb(null, profile);
+      return cb(null, profile._json);
     })
-  });
-  // console.log(gh);
-  passport.use(gh);
+  }));
 
   // GITHUB LOGIN
   app.get('/auth/github_oauth',
@@ -66,11 +65,11 @@ module.exports = function(app) {
   );
 
   app.get('/auth/github_oauth/callback',
-    passport.authenticate('github', {failureRedirect: '/signin'}),
+    passport.authenticate('github', {failureRedirect: '/github/failure'}),
     function(req, res) {
-      console.log('RESPONSEE-------------------', req.user.id);
-      // res.cookie('githubId', req.user.id);
-      // res.cookie('githubName', req.user.login);
+      res.header("Access-Control-Allow-Origin", "*");
+      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+      console.log('REQUSER', req.user)
       res.redirect('/');
     }
   );
@@ -80,7 +79,7 @@ module.exports = function(app) {
     res.redirect('/');
   });
 
-  app.get('github/succes', checkAuth, function(req, res) {
+  app.get('/github/profile', checkAuth, function(req, res) {
     res.send(req.user);
   });
 
@@ -97,5 +96,3 @@ function checkAuth(req, res, next) {
     res.redirect('/github/failure');
   }
 };
-
-

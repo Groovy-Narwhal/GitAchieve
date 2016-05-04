@@ -7,12 +7,6 @@ const db = require('./db/database.js');
 // Initiate server
 const app = express();
 
-app.all('/*', function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Controll-Allow-Header', 'Context-Type,X-Requested-With');
-  next();
-});
-
 // Passport Authentication and Middleware
 require('./helpers/middleware.js')(app);
 require('./helpers/auth.js')(app);
