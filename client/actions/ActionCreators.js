@@ -21,6 +21,10 @@ export default {
   unAuthUser: () => {
     return {
       type: types.UNAUTH_USER
+  addCompetitor: competitor => {
+    return {
+      type: types.ADD_COMPETITOR,
+      competitor
     }
   }
 };
