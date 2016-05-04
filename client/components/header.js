@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 
 class Header extends Component {
   handleSignOut() {
-    // console.log(actions);
     this.props.actions.signoutUser();
     browserHistory.push('/')
   }

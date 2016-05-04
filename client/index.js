@@ -23,10 +23,9 @@ render(
   <Provider store={store}>
     <Router history={history}>
       <Route path='/' component={App}>
-        <IndexRoute component={Login} />
-        <Route path="/signout" component={Signout} />
+        <IndexRoute component={RequireAuth(Dashboard)} />
+        <Route path="/users" component={Login} />
         <Route path="/about" component={About} />
-        <Route path="/users" component={RequireAuth(DashBoard)} />
       </Route>
     </Router>
   </Provider>,

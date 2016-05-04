@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 
 export default function(ComposedComponent) {
   class Authentication extends Component {
@@ -10,13 +11,13 @@ export default function(ComposedComponent) {
 
     componentWillMount() {
       if (!this.props.authenticated) {
-        this.context.router.push('/');
+        browserHistory.push('/login');
       }
     }
 
     componentWillUpdate(nextProps) {
       if (!nextProps.authenticated) {
-        this.context.router.push('/');
+        browserHistory.push('/login');
       }
     }
 
@@ -25,9 +26,9 @@ export default function(ComposedComponent) {
     }
   }
 
-  function mapStateToProps(state) {
-    return { authenticated: state.auth.authenticated };
-  }
+  mapStateToProps = (state) => (
+    { authenticated: state.auth.authenticated }
+  )
 
   return connect(mapStateToProps)(Authentication);
 }
