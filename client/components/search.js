@@ -16,9 +16,10 @@ class Search extends Component {
   }
   submitHandler(e) {
     e.preventDefault();
+    this.props.actions.inputSearch(this.state.searchInput);
     fetch(`https://api.github.com/search/users?q=${this.state.searchInput}`)
       .then((res) => res.json())
-      .then((user) => this.props.actions.addCompetitor(user));
+      .then((users) => this.props.actions.querySearch(users));
   }
   typeSearch(e) {
     this.setState({searchInput: e.target.value});

@@ -21,10 +21,18 @@ export default {
   unAuthUser: () => {
     return {
       type: types.UNAUTH_USER
-  addCompetitor: competitor => {
+    }
+  },
+  querySearch: searchResults => {
     return {
-      type: types.ADD_COMPETITOR,
-      competitor
+      type: types.QUERY_SEARCH,
+      searchResults
+    }
+  },
+  inputSearch: searchInput => {
+    return {
+      type: types.INPUT_SEARCH,
+      searchInput
     }
   }
 };

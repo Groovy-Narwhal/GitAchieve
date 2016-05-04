@@ -5,7 +5,8 @@ import tokens from './tokensReducer';
 import authReducer from './authReducer';
 import userReducer from './userReducer';
 import {reducer as formReducer} from 'redux-form';
-import competitors from './competitorReducer';
+import searchResults from './searchResultsReducer';
+import searchInput from './searchInputReducer';
 
 export default combineReducers({
   score,
@@ -13,5 +14,6 @@ export default combineReducers({
   routing: routerReducer,
   auth: authReducer,
   user: userReducer,
-  competitors
+  searchResults,
+  searchInput
 });
