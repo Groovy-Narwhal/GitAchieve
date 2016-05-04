@@ -5,21 +5,12 @@ const passport = require('passport');
 const Strategy = require('passport-github2').Strategy;
 const keys = require('./../config/github.config.js');
 const session = require('express-session');
-const cors = require('cors');
+// const cors = require('cors');
 
 // TODO: require users from database!
 
 module.exports = function(app) {
   app.use(cookieParser());
-  // app.use(function(req, res, next) {
-  //   res.header("Access-Control-Allow-Origin", "*");
-  //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  //   next();
-  // });
-  var corsOptions = {
-    origin: false
-  };
-  app.use(cors(corsOptions));
   app.use(session({
     secret: 'groovy-narwhal',
     resave: false,
@@ -50,7 +41,6 @@ module.exports = function(app) {
   },
   function(accessToken, refreshToken, profile, cb) {
     process.nextTick(function() {
-      console.log('This is your Token: ', accessToken);
       // TODO: Add user to the database!
       return cb(null, profile._json);
     })
@@ -67,8 +57,6 @@ module.exports = function(app) {
   app.get('/auth/github_oauth/callback',
     passport.authenticate('github', {failureRedirect: '/github/failure'}),
     function(req, res) {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       console.log('REQUSER', req.user)
       res.redirect('/');
     }
