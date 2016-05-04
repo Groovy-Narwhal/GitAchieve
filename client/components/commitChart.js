@@ -22,8 +22,6 @@ exports.CommitChart = () => {
       commitsPairedWithDays.push([ week[i], currentWeekCommits.days[i] ]);
     }
 
-
-
     // set dimensions
     var margin = {top: 20, right: 40, bottom: 30, left: 20};
     var pad = 20;
@@ -82,5 +80,22 @@ exports.CommitChart = () => {
           .attr('y', (d) => y(d[1]) )
           .attr('width', barWidth )
           .attr('height', (d) => y(0) - y(d[1]) );
+
+    // and finally add text labels for # of commits (when greater than 0)
+    svg.append('g')
+      .selectAll('text')
+      .data(commitsPairedWithDays)
+      .enter()
+        .append('text')
+        .attr('x', (d) => { return  x(d[0]) + barWidth/2 - 5; } )
+        .attr('y', (d) => {
+          return y(d[1]) + 15;
+        } )
+        .text( (d) => {
+          if (d[1] > 0) {
+            return d[1].toString();
+          }
+        });
+
   });
 };
