@@ -7,9 +7,7 @@ const Strategy = require('passport-github2').Strategy;
 const keys = require('./../config/github.config.js');
 const session = require('express-session');
 
-const userController = require('./../controllers/userController');
-
-// TODO: require users from database!
+const db = require('../db/database.js');
 
 module.exports = function(app) {
   app.use(cookieParser());
@@ -41,7 +39,10 @@ module.exports = function(app) {
   },
   function(accessToken, refreshToken, profile, cb) {
     // TODO: Add user to the database!
-    console.log('profile', profile._json)
+    var username = profile._json.login;
+    var email = profile._json.email;
+    var id = profile._json.id;
+    // db.run('INSERT INTO users (username, email, id, created_ga) VALUES ($1, $2, $3, $4)', [])
     return cb(null, profile._json);
   }));
 
