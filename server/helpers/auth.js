@@ -7,6 +7,8 @@ const Strategy = require('passport-github2').Strategy;
 const keys = require('./../config/github.config.js');
 const session = require('express-session');
 
+const userController = require('./../controllers/userController');
+
 // TODO: require users from database!
 
 module.exports = function(app) {
@@ -39,6 +41,7 @@ module.exports = function(app) {
   },
   function(accessToken, refreshToken, profile, cb) {
     // TODO: Add user to the database!
+    console.log('profile', profile._json)
     return cb(null, profile._json);
   }));
 
@@ -50,9 +53,10 @@ module.exports = function(app) {
 
   app.get('/auth/github_oauth/callback',
     passport.authenticate('github', {
-      successRedirect: '/',
       failureRedirect: '/github/failure'
-    }));
+    }), function(req, res, next) {
+      res.redirect('/');
+    });
 
   app.get('/github/profile', checkAuth, function(req, res) {
     res.send(req.user);
@@ -63,7 +67,7 @@ module.exports = function(app) {
   });
 
   app.get('/signout', function(req, res) {
-    req.logout();
+    req.session.destroy();
     res.redirect('/');
   });
 

@@ -7,7 +7,6 @@ import { bindActionCreators } from 'redux';
 class Header extends Component {
   handleSignOut() {
     this.props.actions.signoutUser();
-    browserHistory.push('/')
   }
   renderLinks() {
     if (!this.props.authenticated) {

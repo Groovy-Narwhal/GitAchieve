@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import Header from './header';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as actions from './../actions/index';
 
-export default class App extends Component {
+class App extends Component {
+  componentWillMount() {
+    if (document.cookie) {
+      this.props.actions.signinUser();
+    }
+  }
+
   render() {
     return (
       <div>
@@ -11,3 +20,13 @@ export default class App extends Component {
     )
   }
 }
+
+const mapStateToProps = state => state;
+
+const mapDispatchToProps = dispatch => (
+  {
+    actions: bindActionCreators(actions, dispatch)
+  }
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
