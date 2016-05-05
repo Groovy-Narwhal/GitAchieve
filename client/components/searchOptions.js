@@ -4,35 +4,29 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 class SearchOptions extends Component {
-  
-  getInitialState() {
-    return {
-      activeLink: 1
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeLink: 1,
+      tabs: ['users', 'repos', 'orgs']
     }
   }
 
-  fetchSearchUsers() {
-
-  }
-
-  fetchSearchRepos() {
-
-  }
-
-  fetchSearchOrgs() {
-
+  fetchSearch(name, index) {
+    console.log(this.state);
   }
 
   render() {
-    <nav>
-      <ul>
-        {['users', 'repos', 'orgs'].map((name, index) => {
-          return (
-            <li key={index} onClick={this.fetchSearch.bind(this, name)}>{name}</li>
-          )
-        })}
-      </ul>
-    </nav>
+    return (
+      <nav>
+        <ul>
+          {this.state.tabs.map((name, index) => (
+            <li key={index} onClick={this.fetchSearch.bind(this, name, index)}>{name}</li>
+          ))}
+        </ul>
+      </nav>
+    )
   }
 }
 

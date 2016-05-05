@@ -5,3 +5,7 @@ export Login from './login';
 export Header from './header';
 export About from './about';
 export SearchOptions from './searchOptions';
+export Search from './search';
+export SearchResults from './searchResults';
+export UserProfile from './userProfile';
+export CommitChart from './commitChart';

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/actionCreators';
+import { SearchOptions } from './index';
 
 class SearchResults extends Component {
   compete(e, result) {
@@ -22,16 +23,21 @@ class SearchResults extends Component {
     if (this.props.searchResults.length !== 0) {
       var searchResults = this.props.searchResults[0].items;
       return (
-        <div id="search-results-container">
-          {searchResults.map((result) => {
-            return (
-              <div key={result.id} className="search-result-container">
-                <img className="user-avatar-1" src={result.avatar_url} />
-                <h2 onClick={ (e) => { this.routeToUser.call(this, e, result) }}>{result.login}</h2>
-                <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
-              </div>
-            )
-          })}
+        <div>
+          <SearchOptions />
+          <div id="search-results-container">
+            {searchResults.map((result) => {
+              return (
+                <div key={result.id}>
+                  <div className="search-result-container">
+                    <img className="user-avatar-1" src={result.avatar_url} />
+                    <h2 onClick={ (e) => { this.routeToUser.call(this, e, result) }}>{result.login}</h2>
+                    <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
       )
     } else {
