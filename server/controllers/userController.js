@@ -26,7 +26,7 @@ exports.addUser = function(req, res) {
         console.error(err);
         res.status(500).send(err);
       } else {
-        console.log('User created with username: ' + req.body.username + ' and email: ' + req.body.id);
+        console.log('User created - username: ' + req.body.username + ', email: ' + req.body.id);
         res.status(201);
         res.send(req.body);
       }
@@ -184,34 +184,14 @@ exports.addRepo = function(req, res) {
     });
 };
 
+// todo:
+  // only add a relationship if it doesn't already exist
+  // add PATCH for /api/v1/users/:id/friends to confirm a relationship by adding a timestamp
 
 // GET at '/api/v1/users/:id/friends'
 exports.retrieveFriends = function(req, res) {
   var queryId = req.params.id;
-  // this Inner Join will return all the friends for a given user id
-  // the breakdown: 
-  // SELECT [fields from target table] 
-  // FROM [join table x] 
-  // INNER JOIN [target table y] 
-  // ON [y.privateKey] = [y.foreignKey1]
-  // WHERE [y.foreignKey2] = [queryId]
-  
-  // db.run(
-  //   ('SELECT uu.secondary_user_id ' + 
-  //   'FROM users_users uu ' +
-  //   'WHERE uu.primary_user_id =($1) ' +
-  //   'AND uu.confirmed_at !=($2) '), 
-  //   [queryId, null], 
-  //   function(err, data) {
-  //     if (err) {
-  //       res.status(500).send(err);
-  //       console.error(err);
-  //     } else {
-  //       res.send(data);
-  //     }
-  //   }); 
-  
-  // this will select all the secondary users associated with a primary user
+  // select all the secondary users associated with this user
   db.run(
     ('SELECT u.id, u.username, u.email ' + 
     'FROM users_users uu ' +
@@ -225,21 +205,106 @@ exports.retrieveFriends = function(req, res) {
         res.status(500).send(err);
         console.error(err);
       } else {
-        res.send(data);
+        // select all the primary users associated with this user
+        db.run(
+          ('SELECT u.id, u.username, u.email ' + 
+          'FROM users_users uu ' +
+          'INNER JOIN users u ' +
+          'ON u.id = uu.primary_user_id ' +
+          'WHERE uu.confirmed_at IS NOT NULL ' +
+          'AND uu.secondary_user_id =($1)'), 
+          [queryId],
+          function(err2, data2) {
+            if (err2) {
+              res.status(500).send(err2);
+              console.error(err2);
+            } else {
+              // send the combined data back
+              res.send(data.concat(data2));
+            }
+          }); 
       }
     }); 
 };
 
 // POST at '/api/v1/users/:id/friends'
 exports.addFriend = function(req, res) {
-  // this is the id of the person sending the invitation to compete
+  // this is the person sending the invitation to compete
   var primaryUserId = req.params.id; 
-  // this is the id of the person receiving the invitation to compete
+  // this is the person receiving the invitation to compete
   var secondaryUserId = req.body.secondaryUserId;
   var secondaryUsername = req.body.secondaryUsername;
   var secondaryUserEmail = req.body.secondaryUserEmail;
   var timestamp = new Date();
-  // check if the secondaryUserId exists in users table
+  
+  // ** HELPER FUNCTIONS **
+  
+  // connects users by adding a row to the users_users table
+  // the confirmed_at column will be null, showing that the relationship has not been
+  // confirmed by the secondary user yet
+  var connectUsers = function(timestamp, primaryUserId, secondaryUserId) {
+    db.run(
+    'INSERT INTO users_users (created_ga, primary_user_id, secondary_user_id) ' +
+    'VALUES ($1, $2, $3)', 
+    [timestamp, primaryUserId, secondaryUserId], 
+    function(err, data) {
+      if (err) {
+        console.error(err);
+        res.status(500).send(err);
+      } else {
+        console.log('Connected primaryUserId: ' + primaryUserId + 
+          ', to secondaryUserId: ' + secondaryUserId);
+        res.status(201);
+        res.send(req.body);
+      }
+    }); 
+  };
+  
+  // runs callback1 if a connection exists between a primary user and a secondary user;
+  // runs callback2 if the connection does not exist
+  var checkConnectionOneWay = function(primaryUserId, secondaryUserId, callback1, callback2) {
+
+      // find all users from connections with the passed in primary user as the primary user
+    db.run(
+      ('SELECT u.id, u.username, u.email ' + 
+      'FROM users_users uu ' +
+      'INNER JOIN users u ' +
+      'ON u.id = uu.secondary_user_id ' +
+      'WHERE uu.primary_user_id =($1)'), 
+      [primaryUserId],
+      function(err, data) {
+        if (err) {
+          res.status(500).send(err);
+          console.error(err);
+        } else {
+          // if any of the users found are this secondary user, set connected to true
+          var connected = false;
+          for (var i = 0; i < data.length; i++) {
+            if (data[i].id === parseInt(secondaryUserId)) {
+              connected = true;
+              break;
+            } 
+          }
+          if (connected) {
+            callback1();
+          } else {
+            callback2();
+          }
+        }
+      });        
+  };
+  
+  // runs callback1 if a connection exists between a two users in either direction;
+  // runs callback2 if the connection does not exist
+  var checkConnectionBothWays = function(primaryUserId, secondaryUserId, callback1, callback2) {
+    checkConnectionOneWay(primaryUserId, secondaryUserId, callback1,
+      checkConnectionOneWay.bind(null, secondaryUserId, primaryUserId, callback1, callback2),
+    callback2);
+  };
+  
+  // ** BUSINESS LOGIC FOR POST REQUEST **
+  
+  // check if the secondary user exists
   db.run(
   'SELECT * FROM users WHERE id=($1)',
   [secondaryUserId],
@@ -248,11 +313,16 @@ exports.addFriend = function(req, res) {
       console.error(err);
       res.status(500).send(err);
     } 
+    // if the secondary user exists
     if (data.length > 0) {
-      console.log('Secondary user exists with id: ' + data[0].id + ' and username: '
-        + data[0].username);
-      // if secondary user doesn't exist, add to users table with signedUp = false
+      // if the connection does not exist, add it
+      checkConnectionBothWays(primaryUserId, secondaryUserId, () => {
+        console.log('Users are already connected');
+        res.status(200);
+        res.send(req.body);
+      }, connectUsers.bind(null, timestamp, primaryUserId, secondaryUserId)); 
     } else {
+      // if secondary user doesn't exist, add to users table with signed_up = false
       db.run(
         'INSERT INTO users (id, username, email, created_ga, signed_up) ' +
         'VALUES ($1, $2, $3, $4, $5)',
@@ -264,25 +334,11 @@ exports.addFriend = function(req, res) {
           } else {
             console.log('Secondary user created with username: ' + secondaryUsername + 
               ' and email: ' + secondaryUserEmail + ', signed_up = false');
+            // once the secondary user exists, add a connection
+            connectUsers(timestamp, primaryUserId, secondaryUserId);
           }
         }); 
     }
-    // once we are sure the secondary user exists, add relationship to the users_users table
-    db.run(
-    'INSERT INTO users_users (created_ga, primary_user_id, secondary_user_id) ' +
-    'VALUES ($1, $2, $3)', 
-    [timestamp, primaryUserId, secondaryUserId], 
-    function(err, data) {
-      if (err) {
-        console.error(err);
-        res.status(500).send(err);
-      } else {
-        console.log('Friendship initiated with primaryUserId: ' + primaryUserId + 
-          ', secondaryUserId: ' + secondaryUserId);
-        res.status(201);
-        res.send(req.body);
-      }
-    });    
   });
 };
 
