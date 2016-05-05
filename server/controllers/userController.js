@@ -184,10 +184,6 @@ exports.addRepo = function(req, res) {
     });
 };
 
-// todo:
-  // only add a relationship if it doesn't already exist
-  // add PATCH for /api/v1/users/:id/friends to confirm a relationship by adding a timestamp
-
 // GET at '/api/v1/users/:id/friends'
 exports.retrieveFriends = function(req, res) {
   var queryId = req.params.id;
@@ -340,6 +336,57 @@ exports.addFriend = function(req, res) {
         }); 
     }
   });
+};
+
+
+// PATCH at /api/v1/users/:id/friends 
+// to confirm or end a relationship
+exports.confirmOrRemoveFriend = function(req, res) {
+  console.log('in confirmOrRemoveFriend');
+  // this is the person accepting the invitation to compete
+  var secondaryUserId = req.params.id; 
+  // this is the person who sent the invitation to compete
+  var primaryUserId = req.body.primaryUserId;
+  
+  var status = new Date();
+  // if removeFriend = true, replace status with null 
+  if (req.body.removeFriend) {
+    status = null;
+  } 
+  // find user_users connection
+  db.run(
+    ('SELECT * ' + 
+    'FROM users_users uu ' +
+    'WHERE uu.primary_user_id=($1) ' +
+    'AND uu.secondary_user_id=($2)'), 
+    [primaryUserId, secondaryUserId],
+    function(err, data) {
+      if (err) {
+        console.error(err);
+        res.send(500);
+      } else {
+      // if there is no connection, send 404
+        if (data.length === 0) {
+          res.send(404);
+        } else {
+          db.run(
+            ('UPDATE users_users uu ' + 
+            'SET confirmed_at =($1) ' +
+            'WHERE uu.primary_user_id=($2) ' +
+            'AND uu.secondary_user_id=($3)'), 
+            [status, primaryUserId, secondaryUserId], 
+            function (err, data) {
+              if (err) {
+                console.error(err.message);
+                res.status(500).send(err);
+              } else {
+                console.log('primaryUserId.');
+                res.status(201).send(req.body);
+              }
+            });
+        } 
+      }
+    });
 };
 
 // '/api/v1/users/:id/stats'

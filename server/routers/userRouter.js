@@ -18,7 +18,8 @@ userRouter.route('/:id/repos')
 
 userRouter.route('/:id/friends')
   .get(userController.retrieveFriends)
-  .post(userController.addFriend);
+  .post(userController.addFriend)
+  .patch(userController.confirmOrRemoveFriend);
 
 userRouter.route('/:id/stats')
   .get(userController.retrieveStats)
