@@ -28,9 +28,10 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 Postgres Database Schema
 
 ### API Server Endpoints
-|Endpoint|Request Type|Description|
-|---|---|---|
-|/api/v2/users|GET/POST|Get list of users or create a new user|
+|Endpoint|Request Type|Description|JSON Required|
+|---|---|---|---|
+|/api/v2/users|GET|Get list of all users|none|
+
 
 ### Client Side Routes
 |Route|Description|Related Server Endpoints|
