@@ -31,31 +31,30 @@ class Profile extends React.Component {
     super(props);
     this.state = {
       imgSrc: 'https://avatars.githubusercontent.com/u/4149515',
-      // name: 'Inje Yeo'
     };
   }
 
   render() {
     return (
-      <div>
+      <span>
         <img src={this.state.imgSrc} style={imgStyle} />
 
-        <div style={flexStyle.flexContainer}>
-          <div style={flexStyle.row}>
+        <span style={flexStyle.flexContainer}>
+          <span style={flexStyle.row}>
             <span style={flexStyle.flexItem}> {this.props.name} </span>
-          </div>
-          <div style={flexStyle.row}>
+          </span>
+          <span style={flexStyle.row}>
             <span style={flexStyle.flexItem}> {this.props.score} </span>
-          </div>
-        </div>
+          </span>
+        </span>
 
-      </div>
+      </span>
     );
   }
 }
 
 Profile.defaultProps = {
-  name: 'Injeee Yeo'
+  name: 'Inje Yeo'
 };
 
 module.exports = Profile;
