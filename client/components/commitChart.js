@@ -12,17 +12,8 @@ exports.CommitChart = () => {
       console.log('There was an error retrieving commit data: ', error);
     }
 
-    /*
-    Let's think about the shape of our data.
-    We want highest # of commits overall, to properly scale the y axis.
-    We also want the highest # of commits on a particular day, to draw the overlapping rectangles in the right order.
-    In the FUTURE, if we get a third (or more) set of data, we actually want to switch the mode of our D3 graph!
-    (From overlapping bars to side-by-side skinny bars.)
-
-    The shape of our data suggests an array of arrays so that's what we'll do.
-    */
-
     // Our user's set of data -- unsure how to add a second set in right now
+    // Data = all of the weeks of the past year and how many commits are in each week
     var userCommits = data[data.length - 1];
     var userCommitsTotal = userCommits.total;
 
@@ -34,61 +25,40 @@ exports.CommitChart = () => {
     // We'll want to dynamically generate this from the data in the future
     var week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    // Now we can process all our data into one matrix
-    var mostCommits = 0;
-    var matrix = [];
+    // Put the data in a useful format
+    var dataMatrix = [];
     for (var i = 0; i < 7; i++) {
-      matrix.push(
+      dataMatrix.push(
       [
         week[i],
         userCommits.days[i],
         dummy.days[i]
       ]);
     }
+
+    // Find the most commits overall and the most commits per day
+    // Line with (k < 3) should change to k < ? where ? is the number of users being shown, plus one
+    var mostCommits = 0;
+    var mostCommitsPerDay = [];
     for (var j = 0; j < 7; j++) {
-      var indexOfHighestOnDay = -1;
-      for (var k = 1; k < matrix[0].length; k++) {
-        if (matrix[j][k] > mostCommits)
-          mostCommits = matrix[j][k];
-        if (matrix[j][k] > highestOnDay)
-          indexOfHighestOnDay = k;
+      for (var k = 1; k < 3; k++) {
+        if (dataMatrix[j][k] > mostCommits)
+          mostCommits = dataMatrix[j][k];
       }
-      matrix[j].push(k); // theoretically this is the index of the user with the most commits for a particular day
+    }
+    for (var l = 0; l < 7; l++) {
+      var highest = 0;
+      var indexHighest = 0;
+      for (var m = 1; m < 3; m++) {
+        if (dataMatrix[l][m] > highest) {
+          highest = dataMatrix[l][m];
+          indexHighest = m;
+        }
+      }
+      mostCommitsPerDay.push(indexHighest);
     }
 
-
-
-    // Data = all of the weeks of the past year and how many commits are in each week
-    // set placeholders for received data
-    // var currentWeekCommits;
-    // var commitsPairedWithDays = [];
-    // var mostCommits = 0;
-    // // Grab the last week's commit data
-    // // It looks like this: {total: 35, days: [5, 9, 19, 2, 0, 0, 0]}
-    // // days of the week will be used for the graph's x-axis
-    // currentWeekCommits = data[data.length - 1];
-
-    // // NOTE THE HARDCODED DATA AT PROPERTY HARDCODEDUSERTWO
-    // for (var i = 0; i < 7; i++) {
-    //   commitsPairedWithDays.push(
-    //   {
-    //     day: week[i],
-    //     user: currentWeekCommits.days[i],
-    //     hardcodedUserTwo: 1
-    //   });
-    // }
-    // // OVERWRITE FOR PURPOSES OF PRACTICE
-    // commitsPairedWithDays[2].hardcodedUserTwo = currentWeekCommits.days[2]+2;
-    // commitsPairedWithDays[5].hardcodedUserTwo = currentWeekCommits.days[5]+2;
-
-    // // FIND HIGHEST NUMBER OF COMMITS
-    // var mostCommits = 0;
-    // for (var i = 0; i < commitsPairedWithDays.length; i++) {
-    //   if (commitsPairedWithDays[i].user > mostCommits)  mostCommits = commitsPairedWithDays[i].user;
-    //   if (commitsPairedWithDays[i].hardcodedUserTwo > mostCommits)  mostCommits = commitsPairedWithDays[i].hardcodedUserTwo;
-    // }
-
-
+    // VISUAL STUFF
 
     // set dimensions
     var pad = 20;
@@ -134,42 +104,67 @@ exports.CommitChart = () => {
       })
       .call(yAxis);
 
-    // the stage is set -- add the data
+
+    /* the stage is set -- add the data */
         // .attr('opacity', function(d) { return (d.user > d.hardcodedUserTwo ? 0.5 : 1); })
-    // make the larger bar be translucent (opacity = 0.5)
+    /*
+      The conditionals in this block are meant to handle the case of TWO side-by-side users.
+      The logged-in user will have their data shown in red and their 'opponent' shown in steel-blue
+      The logged-in user's data was pushed into matrixData's arrays at index 1, which explains the === 1
+
+      When more than two users are shown at once, we're going to shift to a
+      different drawing block that's actually simpler in a way: they won't overlap,
+      instead they'll be side by side which just means smaller widths (barWidth / n for n users)
+    */
+    console.log('dataMatrix', dataMatrix);
+    console.log('mostCommitsPerDay', mostCommitsPerDay);
+
     var g = svg.selectAll(".bars")
-        .data(commitsPairedWithDays)
+        .data(dataMatrix)
         .enter()
           .append("g")
-      // place the first bar
-      g.append("rect")
-        .style({ 'fill' : 'steelblue' })
-        .attr('x', (d) => xScale(d.day) )
-        .attr('y', (d) => yScale(d.user) )
-        .attr('width', barWidth )
-        .attr('height', (d) => yScale(0) - yScale(d.user) );
-      // place the second bar
-      g.append("rect")
-        .style({ 'fill' : 'red'})
-        .attr('x', (d) => xScale(d.day) )
-        .attr('y', (d) => yScale(d.hardcodedUserTwo) )
-        .attr('width', barWidth )
-        .attr('height', (d) => yScale(0) - yScale(d.hardcodedUserTwo) );
+
+    // place the larger bar
+    g.append("rect")
+    .attr('fill', 'green')
+      .attr('x', (d) => xScale(d[0]) )
+      .attr('y', (d) => {
+        return yScale(d[1])
+       })
+      .attr('width', barWidth )
+      .attr('height', (d) => {
+        return yScale(0) - yScale(d[1])
+      })
+
+    // place the smaller bar (over the larger one)
+    // g.append("rect")
+    //   // .style({ 'fill' : 'red'})
+    //   .attr('fill', (d, i) => {
+    //     return mostCommitsPerDay[i] === 1 ? 'red' : 'steelblue'
+    //   })
+    //   .attr('x', (d) => xScale(d[0]) )
+    //   .attr('y', (d) => {
+    //     return yScale(d[2]);
+    //    })
+    //   .attr('width', barWidth )
+    //   .attr('height', (d) => {
+    //     return yScale(0) - yScale(d[2])
+    //   });
 
     // and finally add text labels for # of commits (when greater than 0)
     svg.append('g')
       .selectAll('text')
-      .data(commitsPairedWithDays)
+      .data(dataMatrix)
       .enter()
         .append('text')
-        .attr('x', (d) => { return  xScale(d.day) + barWidth/2 - 5; } )
+        .attr('x', (d) => { return  xScale(d[0]) + barWidth/2 - 5; } )
         .attr('y', (d) => {
-          var higherCount = d.hardcodedUserTwo > d.user ? d.hardcodedUserTwo : d.user;
+          var higherCount = d[2] > d[1] ? d[2] : d[1];
           if (higherCount === 1)  return yScale(higherCount) - 5;
           return yScale(higherCount) + 15;
         })
         .text( (d) => {
-          var higherCount = d.hardcodedUserTwo > d.user ? d.hardcodedUserTwo : d.user;
+          var higherCount = d[2] > d[1] ? d[2] : d[1];
           if (higherCount > 0) {
             return higherCount.toString();
           }
