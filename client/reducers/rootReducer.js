@@ -8,7 +8,7 @@ import {reducer as formReducer} from 'redux-form';
 import searchResults from './searchResultsReducer';
 import searchInput from './searchInputReducer';
 import searchUserEvents from './userEventsReducer';
-import chosenSearchResultReducer from './chosenSearchResultReducer';
+import chosenSearchResult from './chosenSearchResultReducer';
 
 export default combineReducers({
   score,
@@ -19,5 +19,5 @@ export default combineReducers({
   searchResults,
   searchInput,
   searchUserEvents,
-  chosenSearchResultReducer
+  chosenSearchResult
 });
