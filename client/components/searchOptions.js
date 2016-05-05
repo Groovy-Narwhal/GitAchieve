@@ -4,6 +4,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 class SearchOptions extends Component {
+  
+  getInitialState() {
+    return {
+      activeLink: 1
+    }
+  }
 
   fetchSearchUsers() {
 
@@ -19,9 +25,13 @@ class SearchOptions extends Component {
 
   render() {
     <nav>
-      <li onClick={this.fetchSearchUsers.bind(this)}>Users</li>
-      <li onClick={this.fetchSearchRepos.bind(this)}>Repos</li>
-      <li onClick={this.fetchSearchOrgs.bind(this)}>Orgs</li>
+      <ul>
+        {['users', 'repos', 'orgs'].map((name, index) => {
+          return (
+            <li key={index} onClick={this.fetchSearch.bind(this, name)}>{name}</li>
+          )
+        })}
+      </ul>
     </nav>
   }
 }
