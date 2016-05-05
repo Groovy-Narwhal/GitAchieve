@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import * as actions from './../actions/index';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router';
+import Search from './search';
 
 class Header extends Component {
   handleSignOut() {
@@ -30,6 +32,7 @@ class Header extends Component {
     return (
       <nav>
         <h2 onClick={() => browserHistory.push('/')}>GitAchieve</h2>
+        <Search />
         <ul>
           {this.renderLinks()}
         </ul>
