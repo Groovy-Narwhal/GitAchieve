@@ -24,11 +24,9 @@ export const signoutUser = () => {
 
 export const signinUser = () => {
   return dispatch => {
-    // console.log('DISPATCH', dispatch)
     // Submit email/password to the server
     axios.get(`${ROOT_URL}/github/profile`)
       .then(response => {
-        console.log('RESPONSE', response);
         const userProfile = {
           username: response.data.data[0].username,
           id: response.data.data[0].id,

@@ -12,7 +12,6 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div>Test</div>
         <Header />
         {this.props.children}
       </div>

@@ -11,9 +11,7 @@
     "test": "tests"
   },
   "scripts": {
-    "serve": "nodemon server/server.js --ignore client/components",
-    "test": "mocha --compilers js:babel-core/register --require ./test/client/test_helper.js 'test/**/*.js'",
-    "test:watch": "npm run test -- --watch"
+    "serve": "nodemon server/server.js --ignore client/components"
   },
   "author": "Adam Isom, Alex Nitta, Inje Yeo, & Megan Smith",
   "license": "ISC",
