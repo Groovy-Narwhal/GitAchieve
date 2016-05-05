@@ -21,7 +21,7 @@ var flexStyle = {
   },
 
   flexItem: {
-    fontFamily: 'monospace'
+    fontFamily: 'monospace',
   }
 }
 
