@@ -129,34 +129,66 @@ exports.retrieveRepos = function(req, res) {
   var queryId = req.params.id;
   var queryUsername = req.body.username;
   
-  // START HERE - figure out how to get data back from GitHub 
-  gitHubMiner.getRepos(queryUsername, (data) => {
-    console.log('gihubMiner.getRepos data[0]', data[0]);
-  });
-  
-  
-  // this Inner Join will return all the repos for a given user id
-  // the breakdown: 
-  // SELECT [fields from target table] 
-  // FROM [join table x] 
-  // INNER JOIN [target table y] 
-  // ON [y.privateKey] = [y.foreignKey1]
-  // WHERE [y.foreignKey2] = [queryId]
-  db.run(
-    ('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
-    'FROM users_repos ur ' +
-    'INNER JOIN repos r ' + 
-    'ON r.id = ur.repo_id ' + 
-    'WHERE ur.user_id =($1)'), 
-    [queryId], 
+  gitHubMiner.getRepos('alexnitta', (data) => {
+    var repos = JSON.parse(data);
+    var timestamp = new Date();
+    // map a selection of the GitHub repo details to an array of repos
+    var repoDetails = repos.map((repo) => {
+      var details = {};
+      details.id = repo.id;
+      details.created_ga = timestamp;
+      details.created_at = repo.created_at;
+      details.watchers_count = repo.watchers_count;
+      details.stargazers_count = repo.stargazers_count;
+      details.forks_count = repo.forks_count;
+      return details;
+    });
+    var userRepoJoin = repoDetails.map((details) => {
+      var joinRow = {};
+      joinRow.created_ga = timestamp;
+      joinRow.repo_id = details.id;
+      joinRow.user_id = queryId;
+      return joinRow;
+    });
+    db.repos.insert(repoDetails, 
     function(err, data) {
       if (err) {
-        res.status(500).send(err);
         console.error(err);
+        res.status(500).send(err);
       } else {
-        res.send(data);
+        db.users_repos.insert(userRepoJoin,
+        function(err, data) {
+          if (err) {
+            res.status(500).send(err);
+            console.error(err);
+          } else {
+            // this Inner Join will return all the repos for a given user id
+            // the breakdown: 
+            // SELECT [fields from target table] 
+            // FROM [join table x] 
+            // INNER JOIN [target table y] 
+            // ON [y.privateKey] = [y.foreignKey1]
+            // WHERE [y.foreignKey2] = [queryId]
+            db.run(
+            ('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
+            'FROM users_repos ur ' +
+            'INNER JOIN repos r ' + 
+            'ON r.id = ur.repo_id ' + 
+            'WHERE ur.user_id =($1)'), 
+            [queryId], 
+            function(err, data) {
+              if (err) {
+                res.status(500).send(err);
+                console.error(err);
+              } else {
+                res.send(data);
+              }
+            }); 
+          }
+        });
       }
-    }); 
+    });
+  });
 };
 
 // POST at '/api/v1/users/:id/repos'

@@ -51,13 +51,16 @@ module.exports = function(app) {
         console.error('ERROR in SELECT in auth', err);
       } else {
         if (data.length === 0) {
-          db.run('INSERT INTO users (id, created_ga, username, email, avatar_url, followers, following) VALUES ($1, $2, $3, $4, $5, $6, $7)', [id, created_ga, username, email, avatar_url, followers, following], function(err, data) {
-            if (err) {
-              console.log('Error in INSERT in auth', err); 
-            } else {
-              console.log('Inserted user in database');
-            }
-          });
+          db.run(('INSERT INTO users (id, created_ga, username, email, avatar_url, followers, following) ' +
+            'VALUES ($1, $2, $3, $4, $5, $6, $7)'),
+            [id, created_ga, username, email, avatar_url, followers, following],
+            function(err, data) {
+              if (err) {
+                console.log('Error in INSERT in auth', err); 
+              } else {
+                console.log('Inserted user in database');
+              }
+            });
         }
         return cb(null, {data: data, token: accessToken});
       }    
