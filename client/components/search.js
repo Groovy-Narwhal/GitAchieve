@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/actionCreators';
 import utils from '../utils/utils.js';
@@ -15,11 +16,14 @@ class Search extends Component {
     // this.submitHandler = utils.utils.debounce(submitHandler);
   }
   submitHandler(e) {
+    let searchQuery = this.state.searchInput;
     e.preventDefault();
-    this.props.actions.inputSearch(this.state.searchInput);
-    fetch(`https://api.github.com/search/users?q=${this.state.searchInput}`)
+    this.props.actions.inputSearch(searchQuery);
+    fetch(`https://api.github.com/search/users?q=${searchQuery}`)
       .then((res) => res.json())
       .then((users) => this.props.actions.querySearch(users));
+    browserHistory.push(`?${searchQuery}`);
+
   }
   typeSearch(e) {
     this.setState({searchInput: e.target.value});

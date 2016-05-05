@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/actionCreators';
 
 class SearchResults extends Component {
   compete(e, result) {
     e.preventDefault();
-    console.log('This is e: ', e);
-    console.log('This is this: ', this);
-    console.log('This is result: ', result);
+    fetch(`https://api.github.com/users/${result.login}/repos?per_page=100`)
+      .then((repos) => repos.json())
+      .then((res) => console.log(res));
   }
   render() {
     if (this.props.searchResults.length !== 0) {
@@ -19,7 +20,7 @@ class SearchResults extends Component {
             return (
               <div key={result.id} className="search-result-container">
                 <img className="user-avatar-1" src={result.avatar_url} />
-                <a href={result.url}>{result.login}</a>
+                <h2 onClick={(e) => ( browserHistory.push(`${result.login}/profile`) )}>{result.login}</h2>
                 <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
               </div>
             )
