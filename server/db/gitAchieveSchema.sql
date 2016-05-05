@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-04 03:54:38.167
+-- Last modification date: 2016-05-04 18:15:02.758
 
 -- tables
 -- Table: branches
@@ -113,6 +113,7 @@ CREATE TABLE users (
     commits_count int  NULL,
     repos_count int  NULL,
     pull_requests_count int  NULL,
+    signed_up boolean  NOT NULL DEFAULT TRUE,
     CONSTRAINT users_pk PRIMARY KEY (id)
 );
 
