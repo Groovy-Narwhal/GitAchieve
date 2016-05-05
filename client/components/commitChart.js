@@ -1,10 +1,11 @@
-
+//@TODO: take out hardcoded value in d3.json and replace it with a variable
+//@TODO: integrate with a style sheet (if desired at that point edit .axis text to have better font)
+//@TODO: make the 'week' array depend on the data received / day-of-the-week that the API request was made
 
 exports.CommitChart = () => {
 
   // get the data
   // the rest of the code is wrapped inside d3.json because d3.json is async
-  // TODO: take out hardcoded value and replace it with a variable
   d3.json("https://api.github.com/repos/Groovy-Narwhal/GitAchieve/stats/commit_activity", (error, data) => {
     if (error) {
       console.log('There was an error retrieving commit data: ', error);
@@ -19,16 +20,22 @@ exports.CommitChart = () => {
     var week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     currentWeekCommits = data[data.length - 1];
     for (var i = 0; i < 7; i++) {
-      commitsPairedWithDays.push([ week[i], currentWeekCommits.days[i] ]);
+      commitsPairedWithDays.push(
+      {
+        day: week[i],
+        user: currentWeekCommits.days[i],
+        hardcodedUserTwo: 1
+      });
     }
+    // OVERWRITE FOR PURPOSES OF PRACTICE
+    commitsPairedWithDays[2].hardcodedUserTwo = currentWeekCommits.days[2]+2;
+    commitsPairedWithDays[5].hardcodedUserTwo = currentWeekCommits.days[5]+2;
 
     // set dimensions
-    var margin = {top: 20, right: 40, bottom: 30, left: 20};
     var pad = 20;
-    var w = 600 - 2*pad; //margin.left - margin.right;
-    var h = 320 - 2*pad; //margin.top - margin.bottom;
-    // var left_pad = 0;
-    var barWidth = Math.floor(w/7) - 10; // ADJUST WITH PADDING HERE
+    var w = 600 - 2*pad;
+    var h = 320 - 2*pad;
+    var barWidth = Math.floor(w/7) - 10;
     console.log('barWidth:', barWidth);
 
     // create container / svg
@@ -38,19 +45,26 @@ exports.CommitChart = () => {
         .attr("height", h);
 
     // set the scales
-    var x = d3.scale.ordinal()
+    var xScale = d3.scale.ordinal()
       .domain(week)
-      .rangeRoundBands( [pad*2, w] );//Points( [pad, w-pad] );
-    var y = d3.scale.linear()
+      .rangeRoundBands( [pad*2, w] );
+    // Find the highest number of commits for any user being compared to set y's max
+    var mostCommits = 0;
+    for (var i = 0; i < commitsPairedWithDays.length; i++) {
+      if (commitsPairedWithDays[i].user > mostCommits)  mostCommits = commitsPairedWithDays[i].user;
+      if (commitsPairedWithDays[i].user > mostCommits)  mostCommits = commitsPairedWithDays[i].user;
+    }
+    var yScale = d3.scale.linear()
       .domain(
-        [d3.max( currentWeekCommits.days,
-          (d) => { return d; })
-        , 0])
+        [mostCommits, 0])
+        // [d3.max( currentWeekCommits.days,
+        //   (d) => { return d; })
+        // , 0])
       .range( [pad, h-pad*2] );
 
     // set the axes
-    var xAxis = d3.svg.axis().scale(x).orient("bottom");
-    var yAxis = d3.svg.axis().scale(y).orient("left");
+    var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+    var yAxis = d3.svg.axis().scale(yScale).orient("left");
 
     // draw the axes (first is the x axis, second is the y axis)
     svg.append("g")
@@ -71,15 +85,22 @@ exports.CommitChart = () => {
       .call(yAxis);
 
     // the stage is set -- add the data
-    svg
-      .selectAll('rect')
-      .data(commitsPairedWithDays)
-      .enter()
-        .append('rect')
-          .attr('x', (d) => x(d[0]) )
-          .attr('y', (d) => y(d[1]) )
-          .attr('width', barWidth )
-          .attr('height', (d) => y(0) - y(d[1]) );
+    var g = svg.selectAll(".bars")
+        .data(commitsPairedWithDays)
+        .enter().append("g")
+      // place the first bar
+      g.append("rect")
+        .attr('x', (d) => xScale(d.day) )
+        .attr('y', (d) => yScale(d.user) )
+        .attr('width', barWidth )
+        .attr('height', (d) => yScale(0) - yScale(d.user) );
+      // place the second bar
+      g.append("rect")
+        .style({ 'fill' : 'red' })
+        .attr('x', (d) => xScale(d.day) )
+        .attr('y', (d) => yScale(d.hardcodedUserTwo) )
+        .attr('width', barWidth )
+        .attr('height', (d) => yScale(0) - yScale(d.hardcodedUserTwo) );
 
     // and finally add text labels for # of commits (when greater than 0)
     svg.append('g')
@@ -87,13 +108,16 @@ exports.CommitChart = () => {
       .data(commitsPairedWithDays)
       .enter()
         .append('text')
-        .attr('x', (d) => { return  x(d[0]) + barWidth/2 - 5; } )
+        .attr('x', (d) => { return  xScale(d.day) + barWidth/2 - 5; } )
         .attr('y', (d) => {
-          return y(d[1]) + 15;
-        } )
+          var higherCount = d.hardcodedUserTwo > d.user ? d.hardcodedUserTwo : d.user;
+          if (higherCount === 1)  return yScale(higherCount) - 5;
+          return yScale(higherCount) + 15;
+        })
         .text( (d) => {
-          if (d[1] > 0) {
-            return d[1].toString();
+          var higherCount = d.hardcodedUserTwo > d.user ? d.hardcodedUserTwo : d.user;
+          if (higherCount > 0) {
+            return higherCount.toString();
           }
         });
 
