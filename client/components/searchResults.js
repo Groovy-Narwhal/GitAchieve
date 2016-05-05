@@ -25,7 +25,7 @@ class SearchResults extends Component {
   }
 
   getResult(result) {
-    if (true) {
+    if (!!result.login) {
       return (
         <div className="search-result-container">
           <img className="user-avatar-1" src={result.avatar_url} />

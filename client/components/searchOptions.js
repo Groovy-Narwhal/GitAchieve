@@ -22,11 +22,11 @@ class SearchOptions extends Component {
     if (name === 'users') {
       fetch(`https://api.github.com/search/users?q=${this.props.searchInput}`)
         .then((res) => res.json())
-        .then((users) => console.log('USERS', users));
+        .then((users) => this.props.actions.querySearch(users));
     } else if (name === 'repos') {
       fetch(`https://api.github.com/search/repositories?q=${this.props.searchInput}`)
         .then((res) => res.json())
-        .then((repos) => console.log('REPOS', repos));
+        .then((repos) => this.props.actions.querySearch(repos));
     }
     // browserHistory.push(`?${this.props.searchInput}`);
   }
