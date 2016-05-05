@@ -15,12 +15,6 @@ const store = configureStore();
 
 const history = syncHistoryWithStore(browserHistory, store);
 
-const token = localStorage.getItem('token');
-
-if (token) {
-  store.dispatch({ type: types.AUTH_USER })
-}
-
 render(
   <Provider store={store}>
     <Router history={history}>

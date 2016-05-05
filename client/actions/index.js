@@ -15,8 +15,8 @@ export const signoutUser = () => {
         // - redirect to the route '/users'
         browserHistory.push('/');
       })
-      .catch(() => {
-        console.log('error');
+      .catch((err) => {
+        console.log('error', err);
       });
   }
 }
@@ -40,8 +40,8 @@ export const signinUser = () => {
         // - redirect to the route '/users'
         browserHistory.push('/');
       })
-      .catch((error) => {
-        console.log(error);
+        console.log('error', err);
+        dispatch({ type: types.UNAUTH_USER });
       });
   }
 };
