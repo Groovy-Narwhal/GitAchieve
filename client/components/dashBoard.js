@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import actions from './../actions/actionCreators';
 import d3 from 'd3';
 import commitChart from './commitChart';
+import Profile from './profile';
 
 class DashBoard extends Component {
   componentDidMount() {
@@ -17,7 +18,7 @@ class DashBoard extends Component {
     } = this.props;
     return (
       <div className="dashboard">
-        <div id="commit-charts"></div>
+      <div id="commit-charts"></div>
       </div>
     )
   }

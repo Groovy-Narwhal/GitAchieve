@@ -57,9 +57,6 @@ exports.CommitChart = () => {
     var yScale = d3.scale.linear()
       .domain(
         [mostCommits, 0])
-        // [d3.max( currentWeekCommits.days,
-        //   (d) => { return d; })
-        // , 0])
       .range( [pad, h-pad*2] );
 
     // set the axes
@@ -90,13 +87,14 @@ exports.CommitChart = () => {
         .enter().append("g")
       // place the first bar
       g.append("rect")
+        .style({ 'fill' : 'steelblue'})
         .attr('x', (d) => xScale(d.day) )
         .attr('y', (d) => yScale(d.user) )
         .attr('width', barWidth )
         .attr('height', (d) => yScale(0) - yScale(d.user) );
       // place the second bar
       g.append("rect")
-        .style({ 'fill' : 'red' })
+        .style({ 'fill' : 'red'})
         .attr('x', (d) => xScale(d.day) )
         .attr('y', (d) => yScale(d.hardcodedUserTwo) )
         .attr('width', barWidth )

@@ -25,22 +25,55 @@ var flexStyle = {
   }
 }
 
+class Profile extends React.Component {
 
-const Profile = () =>
-(
-  <div>
-    <img src={'https://avatars.githubusercontent.com/u/4149515'} style={imgStyle} />
+  constructor(props) {
+    super(props);
+    this.state = {
+      imgSrc: 'https://avatars.githubusercontent.com/u/4149515',
+      // name: 'Inje Yeo'
+    };
+  }
 
-    <div style={flexStyle.flexContainer}>
-      <div style={flexStyle.row}>
-        <span style={flexStyle.flexItem}> Inje Yeo </span>
+  render() {
+    return (
+      <div>
+        <img src={this.state.imgSrc} style={imgStyle} />
+
+        <div style={flexStyle.flexContainer}>
+          <div style={flexStyle.row}>
+            <span style={flexStyle.flexItem}> {this.props.name} </span>
+          </div>
+          <div style={flexStyle.row}>
+            <span style={flexStyle.flexItem}> {this.props.score} </span>
+          </div>
+        </div>
+
       </div>
-      <div style={flexStyle.row}>
-        <span style={flexStyle.flexItem}> 230-Score </span>
-      </div>
-    </div>
+    );
+  }
+}
 
-  </div>
-);
+Profile.defaultProps = {
+  name: 'Injeee Yeo'
+};
 
 module.exports = Profile;
+
+// Stateless functional component, perfect if it won't be mutating anything - I'd just have to pass props right
+// const Profile = () =>
+// (
+//   <div>
+//     <img src={'https://avatars.githubusercontent.com/u/4149515'} style={imgStyle} />
+
+//     <div style={flexStyle.flexContainer}>
+//       <div style={flexStyle.row}>
+//         <span style={flexStyle.flexItem}> Inje Yeo </span>
+//       </div>
+//       <div style={flexStyle.row}>
+//         <span style={flexStyle.flexItem}> 230-Score </span>
+//       </div>
+//     </div>
+
+//   </div>
+// );
