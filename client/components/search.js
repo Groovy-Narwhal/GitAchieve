@@ -12,9 +12,11 @@ class Search extends Component {
       searchInput: ''
     }
   }
+
   componentDidMount() {
     // this.submitHandler = utils.utils.debounce(submitHandler);
   }
+  
   submitHandler(e) {
     let searchQuery = this.state.searchInput;
     e.preventDefault();
@@ -23,11 +25,12 @@ class Search extends Component {
       .then((res) => res.json())
       .then((users) => this.props.actions.querySearch(users));
     browserHistory.push(`/search-results`);
-
   }
+
   typeSearch(e) {
     this.setState({searchInput: e.target.value});
   }
+
   render() {
     return (
       <div className="search-container">
