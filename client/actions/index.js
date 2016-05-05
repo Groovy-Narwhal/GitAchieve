@@ -4,9 +4,8 @@ import * as types from './actionTypes';
 
 const ROOT_URL = 'http://127.0.0.1:8000';
 
-export function signoutUser() {
-  return function(dispatch) {
-    console.log('DISPATCH', dispatch)
+export const signoutUser = () => {
+  return dispatch => {
     // Submit email/password to the server
     axios.get(`${ROOT_URL}/signout`)
       .then(response => {
@@ -23,16 +22,22 @@ export function signoutUser() {
   }
 }
 
-export function signinUser() {
-  return function(dispatch) {
-    // console.log('DISPATCH', dispatch)
+export const signinUser = () => {
+  return dispatch => {
     // Submit email/password to the server
     axios.get(`${ROOT_URL}/github/profile`)
       .then(response => {
+        const userProfile = {
+          username: response.data.data[0].username,
+          id: response.data.data[0].id,
+          email: response.data.data[0].email,
+          avatar_url: response.data.data[0].avatar_url
+        }
         // - Update state to indicate user is authenticated
         dispatch({ type: types.AUTH_USER });
+        dispatch({ type: types.UPDATE_USER, payload: userProfile });
         // - Save the JWT token
-        localStorage.setItem('token', 'MEGAN');
+        localStorage.setItem('token', response.data.token);
         // - redirect to the route '/users'
         browserHistory.push('/');
       })
