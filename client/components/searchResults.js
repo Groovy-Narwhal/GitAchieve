@@ -19,6 +19,30 @@ class SearchResults extends Component {
       .then((res) => {this.props.actions.searchUserEvents(res)} );
     browserHistory.push(`${result.login}/profile`);
   }
+
+  routeToRepo(e, result) {
+
+  }
+
+  getResult(result) {
+    if (true) {
+      return (
+        <div className="search-result-container">
+          <img className="user-avatar-1" src={result.avatar_url} />
+          <h2 onClick={ (e) => { this.routeToUser.call(this, e, result) }}>{result.login}</h2>
+          <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+        </div>
+      )      
+    } else {
+      return (
+        <div className="search-result-container">
+          <h2 onClick={ (e) => { this.routeToRepo.call(this, e, result) }}>{result.full_name}</h2>
+          <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+        </div>
+      )
+    }
+  }
+
   render() {
     if (this.props.searchResults.length !== 0) {
       var searchResults = this.props.searchResults[0].items;
@@ -26,16 +50,8 @@ class SearchResults extends Component {
         <div>
           <SearchOptions />
           <div id="search-results-container">
-            {searchResults.map((result) => {
-              return (
-                <div key={result.id}>
-                  <div className="search-result-container">
-                    <img className="user-avatar-1" src={result.avatar_url} />
-                    <h2 onClick={ (e) => { this.routeToUser.call(this, e, result) }}>{result.login}</h2>
-                    <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
-                  </div>
-                </div>
-              )
+            {searchResults.map((result, index) => {
+              return <div key={result.id}>{this.getResult(result)}</div>
             })}
           </div>
         </div>

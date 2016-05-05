@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import * as actions from './../actions/index';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
+import actions from './../actions/actionCreators';
 
 class SearchOptions extends Component {
 
@@ -9,15 +10,25 @@ class SearchOptions extends Component {
     super(props);
     this.state = {
       activeLink: 0,
-      tabs: ['users', 'repos', 'orgs']
+      tabs: ['users', 'repos']
     }
   }
 
   fetchSearch(name, index) {
-    this.setState({
-      activeLink: index
-    })
-    console.log(this.props.searchInput);
+    // this.setState({
+    //   activeLink: index
+    // });
+    console.log(name);
+    if (name === 'users') {
+      fetch(`https://api.github.com/search/users?q=${this.props.searchInput}`)
+        .then((res) => res.json())
+        .then((users) => console.log('USERS', users));
+    } else if (name === 'repos') {
+      fetch(`https://api.github.com/search/repositories?q=${this.props.searchInput}`)
+        .then((res) => res.json())
+        .then((repos) => console.log('REPOS', repos));
+    }
+    // browserHistory.push(`?${this.props.searchInput}`);
   }
 
   getClass(index) {

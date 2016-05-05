@@ -29,6 +29,12 @@ export default {
       searchResults
     }
   },
+  queryRepos: searchResults => {
+    return {
+      type: types.QUERY_REPOS,
+      searchResults
+    }
+  },
   inputSearch: searchInput => {
     return {
       type: types.INPUT_SEARCH,
