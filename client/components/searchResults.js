@@ -11,6 +11,13 @@ class SearchResults extends Component {
       .then((repos) => repos.json())
       .then((res) => console.log(res));
   }
+  routeToUser(e, result) {
+    this.props.actions.chooseSearchResult(result);
+    fetch(`https://api.github.com/users/${result.login}/events`)
+      .then((repos) => repos.json())
+      .then((res) => {this.props.actions.searchUserEvents(res)} );
+    browserHistory.push(`${result.login}/profile`);
+  }
   render() {
     if (this.props.searchResults.length !== 0) {
       var searchResults = this.props.searchResults[0].items;
@@ -20,7 +27,7 @@ class SearchResults extends Component {
             return (
               <div key={result.id} className="search-result-container">
                 <img className="user-avatar-1" src={result.avatar_url} />
-                <h2 onClick={(e) => ( browserHistory.push(`${result.login}/profile`) )}>{result.login}</h2>
+                <h2 onClick={ (e) => { this.routeToUser.call(this, e, result) }}>{result.login}</h2>
                 <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
               </div>
             )

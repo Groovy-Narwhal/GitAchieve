@@ -34,5 +34,17 @@ export default {
       type: types.INPUT_SEARCH,
       searchInput
     }
+  },
+  searchUserEvents: userEvents => {
+    return {
+      type: types.SEARCH_USER_EVENTS,
+      userEvents
+    }
+  },
+  chooseSearchResult: chosenSearchResult => {
+    return {
+      type: types.CHOOSE_SEARCH_RESULT,
+      chosenSearchResult
+    }
   }
 };
