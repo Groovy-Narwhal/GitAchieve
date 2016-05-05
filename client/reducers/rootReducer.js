@@ -4,7 +4,6 @@ import score from './scoreReducer';
 import tokens from './tokensReducer';
 import authReducer from './authReducer';
 import userReducer from './userReducer';
-import {reducer as formReducer} from 'redux-form';
 import searchResults from './searchResultsReducer';
 import searchInput from './searchInputReducer';
 import searchUserEvents from './userEventsReducer';
