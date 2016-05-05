@@ -1,4 +1,5 @@
 const db = require('../db/database.js');
+const gitHubMiner = require('../helpers/gitHubMiner');
 
 // GET at /api/v1/users
 exports.retrieveAllUsers = function(req, res) {
@@ -126,6 +127,14 @@ exports.deleteUser = function(req, res) {
 // GET at '/api/v1/users/:id/repos'
 exports.retrieveRepos = function(req, res) {
   var queryId = req.params.id;
+  var queryUsername = req.body.username;
+  
+  // START HERE - figure out how to get data back from GitHub 
+  gitHubMiner.getRepos(queryUsername, (data) => {
+    console.log('gihubMiner.getRepos data[0]', data[0]);
+  });
+  
+  
   // this Inner Join will return all the repos for a given user id
   // the breakdown: 
   // SELECT [fields from target table] 
@@ -338,9 +347,7 @@ exports.addFriend = function(req, res) {
   });
 };
 
-
 // PATCH at /api/v1/users/:id/friends 
-// to confirm or end a relationship
 exports.confirmOrRemoveFriend = function(req, res) {
   console.log('in confirmOrRemoveFriend');
   // this is the person accepting the invitation to compete
@@ -350,7 +357,7 @@ exports.confirmOrRemoveFriend = function(req, res) {
   
   var status = new Date();
   // if removeFriend = true, replace status with null 
-  if (req.body.removeFriend) {
+  if (req.body.remove) {
     status = null;
   } 
   // find user_users connection
