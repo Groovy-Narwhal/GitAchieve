@@ -111,52 +111,48 @@ exports.deleteUser = function(req, res) {
 exports.retrieveRepos = function(req, res) {
   var queryId = req.params.id;
   var queryUsername = req.body.username;
+
+  var dbTimestamp = pgp.as.date(new Date());
   
-  // TO DO - change 'alexnitta' to queryUsername when done testing
+  // START HERE: currently, this does not overwrite any records that already exist - it will send an error instead.
   
-  gitHubMiner.getRepos('alexnitta', (data) => {
-    var repos1 = JSON.parse(data);
-    var timestamp = new Date();
-    repos = [];
-    repos.push(repos1[0]);
-    // map a selection of the GitHub repo details to an array of repos
-    // var repoDetails = repos.map((repo) => {
-    //   var details = {};
-    //   details.id = repo.id;
-    //   details.created_ga = timestamp;
-    //   details.created_at = repo.created_at;
-    //   details.watchers_count = repo.watchers_count;
-    //   details.stargazers_count = repo.stargazers_count;
-    //   details.forks_count = repo.forks_count;
-    //   return details;
-    // });
-    // var userRepoJoin = repoDetails.map((details) => {
-    //   var joinRow = {};
-    //   joinRow.created_ga = timestamp;
-    //   joinRow.repo_id = details.id;
-    //   joinRow.user_id = queryId;
-    //   return joinRow;
-    // });
-    repos.forEach(function(repo) {  
-      db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) VALUES ($8, $9, $10, $11, $12, $13) ON CONFLICT DO UPDATE',
-        ['users', 'id', 'created_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count',
-        repo.id, timestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count])
-        .then()
-        .catch((error) => {
-          console.error(error);
-          res.status(500).send('Error saving to repos table');
-        });
-    });
-    repos.forEach(function(repo) {
+  var addRepos = function(repos, callback) {
+    db.tx(function (task) {
+      var queries = repos.map(function (repo) {
+        return task.none('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) VALUES ($8, $9, $10, $11, $12, $13)',
+        ['repos', 'id', 'created_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count',
+        repo.id, dbTimestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count]);
+      });
+      return task.batch(queries);
+    })
+    .then(function (data) {
+      console.log('Successfully added repos');
+      callback();
+    })
+    .catch(function (error) {
+      console.error(error);
+    });  
+    
+  };
+    
+  var addJoins = function(repos, callback) {
+    repos.forEach(function(repo, index) {
       db.any('INSERT INTO $1~ ($2~, $3~, $4~) VALUES ($5, $6, $7)',
-        ['users_repos', timestamp, repo.id, queryId])
-        .then()
+        ['users_repos', 'created_ga', 'repo_id', 'user_id', dbTimestamp, repo.id, queryId])
+        .then(() => {
+          if (index === repos.length - 1) {
+            callback();
+          }
+        })
         .catch((error) => {
           console.error(error);
-          res.status(500).send('Error saving to users_repos join table');
+          // res.status(500).send('Error saving to users_repos join table');
         });
     });
-    db.one(('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
+  };
+  
+  var sendRepos = function () {
+    db.any(('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
       'FROM users_repos ur ' +
       'INNER JOIN repos r ' + 
       'ON r.id = ur.repo_id ' + 
@@ -167,7 +163,17 @@ exports.retrieveRepos = function(req, res) {
         console.error(error);
         res.status(500).send('Error querying repos table');
       });
-  });
+  };
+  
+  var handleGitHubData = function(data) {
+    var repos = JSON.parse(data);
+    var timestamp = new Date();
+    addRepos(repos, addJoins.bind(null, repos, sendRepos));
+  };
+  
+    // TO DO - change 'alexnitta' to queryUsername when done testing
+  gitHubMiner.getRepos('alexnitta', handleGitHubData);
+  
 };  
   
   
