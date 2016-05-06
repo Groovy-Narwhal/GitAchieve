@@ -13,20 +13,20 @@ userRouter.route('/:id')
   .delete(userController.deleteUser);
 
 userRouter.route('/:id/repos')
-  .get(userController.retrieveRepos)
-  .post(userController.addRepo);
+  .get(userController.retrieveRepos);
+//   .post(userController.addRepo);
 
-userRouter.route('/:id/friends')
-  .get(userController.retrieveFriends)
-  .post(userController.addFriend)
-  .patch(userController.confirmOrRemoveFriend);
+// userRouter.route('/:id/friends')
+//   .get(userController.retrieveFriends)
+//   .post(userController.addFriend)
+//   .patch(userController.confirmOrRemoveFriend);
 
-userRouter.route('/:id/stats')
-  .get(userController.retrieveStats)
-  .post(userController.addStats);
+// userRouter.route('/:id/stats')
+//   .get(userController.retrieveStats)
+//   .post(userController.addStats);
 
-userRouter.route('/:id/achievements')
-  .get(userController.retrieveAchievements)
-  .post(userController.addAchievements);
+// userRouter.route('/:id/achievements')
+//   .get(userController.retrieveAchievements)
+//   .post(userController.addAchievements);
   
 module.exports = userRouter;

@@ -5,7 +5,7 @@
 -- Table: branches
 CREATE TABLE branches (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     sha varchar(40)  NULL,
     name varchar(100)  NULL,
     CONSTRAINT branches_pk PRIMARY KEY (id_ga)
@@ -14,10 +14,10 @@ CREATE TABLE branches (
 -- Table: commits
 CREATE TABLE commits (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     sha varchar(40)  NULL,
     commit_message varchar(100)  NULL,
-    commit_author_date timestamp  NULL,
+    commit_author_date timestamp with time zone  NULL,
     user_id int  NOT NULL,
     CONSTRAINT commits_pk PRIMARY KEY (id_ga)
 );
@@ -25,7 +25,7 @@ CREATE TABLE commits (
 -- Table: commits_repos
 CREATE TABLE commits_repos (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     commit_id_ga int  NOT NULL,
     repo_id int  NOT NULL,
     CONSTRAINT commits_repos_pk PRIMARY KEY (id_ga)
@@ -34,7 +34,7 @@ CREATE TABLE commits_repos (
 -- Table: orgs
 CREATE TABLE orgs (
     id int  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     orgname varchar(100)  NULL,
     followers int  NULL,
     following int  NULL,
@@ -45,12 +45,12 @@ CREATE TABLE orgs (
 -- Table: pull_requests
 CREATE TABLE pull_requests (
     id int  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     user_id int  NOT NULL,
     state varchar(10)  NULL,
     diff_url varchar(200)  NULL,
-    created_at timestamp  NULL,
-    closed_at timestamp  NULL,
+    created_at timestamp with time zone  NULL,
+    closed_at timestamp with time zone  NULL,
     milestone varchar(100)  NULL,
     base_ref varchar(50)  NULL,
     base_repo_watchers_count int  NULL,
@@ -61,8 +61,8 @@ CREATE TABLE pull_requests (
 -- Table: repos
 CREATE TABLE repos (
     id int  NOT NULL,
-    created_ga timestamp  NOT NULL,
-    created_at timestamp  NULL,
+    created_ga timestamp with time zone  NOT NULL,
+    created_at timestamp with time zone  NULL,
     watchers_count int  NULL,
     stargazers_count int  NULL,
     forks_count int  NULL,
@@ -72,7 +72,7 @@ CREATE TABLE repos (
 -- Table: repos_branches
 CREATE TABLE repos_branches (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     repo_id int  NOT NULL,
     branch_id_ga int  NOT NULL,
     CONSTRAINT repos_branches_pk PRIMARY KEY (id_ga)
@@ -81,7 +81,7 @@ CREATE TABLE repos_branches (
 -- Table: repos_stats
 CREATE TABLE repos_stats (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     repo_id int  NOT NULL,
     stats_id_ga int  NOT NULL,
     CONSTRAINT repos_stats_pk PRIMARY KEY (id_ga)
@@ -90,7 +90,7 @@ CREATE TABLE repos_stats (
 -- Table: stats
 CREATE TABLE stats (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     author_id int  NULL,
     total int  NULL,
     weeks text  NULL,
@@ -100,7 +100,7 @@ CREATE TABLE stats (
 -- Table: users
 CREATE TABLE users (
     id int  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     username varchar(100)  NULL,
     email varchar(100)  NULL,
     avatar_url varchar(200)  NULL,
@@ -120,7 +120,7 @@ CREATE TABLE users (
 -- Table: users_orgs
 CREATE TABLE users_orgs (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     user_id int  NOT NULL,
     org_id int  NOT NULL,
     CONSTRAINT users_orgs_pk PRIMARY KEY (id_ga)
@@ -129,7 +129,7 @@ CREATE TABLE users_orgs (
 -- Table: users_repos
 CREATE TABLE users_repos (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    created_ga timestamp with time zone  NOT NULL,
     repo_id int  NOT NULL,
     user_id int  NOT NULL,
     CONSTRAINT users_repos_pk PRIMARY KEY (id_ga)
@@ -138,8 +138,8 @@ CREATE TABLE users_repos (
 -- Table: users_users
 CREATE TABLE users_users (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
-    confirmed_at timestamp  NULL,
+    created_ga timestamp with time zone  NOT NULL,
+    confirmed_at timestamp with time zone  NULL,
     primary_user_id int  NOT NULL,
     secondary_user_id int  NOT NULL,
     CONSTRAINT users_users_pk PRIMARY KEY (id_ga)
