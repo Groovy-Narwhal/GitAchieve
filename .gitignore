@@ -13,3 +13,6 @@ dist/*
 
 # Dependency directories
 node_modules/*
+
+#SCSS
+.sass-cache/*

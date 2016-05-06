@@ -1,8 +1,13 @@
-$font-stack:  Open-sans, sans-serif;
-$primary-color: #333;
+// Modules and Variables
+@import "partials/base";
+
+// Partials
+@import "partials/reset";
+@import "partials/typography";
+@import "partials/buttons";
 
 rect {
-  fill: #2ae;
+  fill: $primary-color;
 }
 svg {
   font: 10px sans-serif;
