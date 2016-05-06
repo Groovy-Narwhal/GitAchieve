@@ -9,6 +9,7 @@ import RequireAuth from './components/requireAuth';
 import UserProfile from './components/userProfile';
 import configureStore from './store/store';
 import * as types from './actions/actionTypes';
+import SearchResults from './components/searchResults';
 
 const store = configureStore();
 
@@ -28,6 +29,7 @@ render(
         <Route path="/signin" component={Login} />
         <Route path="/about" component={About} />
         <Route path="/:username/profile" component={UserProfile} />
+        <Route path="/search-results" component={SearchResults} />
       </Route>
     </Router>
   </Provider>,

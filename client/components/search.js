@@ -22,7 +22,7 @@ class Search extends Component {
     fetch(`https://api.github.com/search/users?q=${searchQuery}`)
       .then((res) => res.json())
       .then((users) => this.props.actions.querySearch(users));
-    browserHistory.push(`?${searchQuery}`);
+    browserHistory.push(`/search-results`);
 
   }
   typeSearch(e) {
