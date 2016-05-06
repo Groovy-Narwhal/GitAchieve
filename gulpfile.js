@@ -22,7 +22,7 @@ gulp.task('lint', function() {
 
 // Test Task
 gulp.task('test', shell.task([
-  'mocha test/client/.setup.js test/client/index.js'
+  'mocha test/client/.setup.js test/client'
 ]));
 
 // Build Task

@@ -2,17 +2,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
-import actions from './../actions/actionCreators';
+import actions from './../actions/ActionCreators';
 
 class UserProfile extends Component {
+  
+  componentWillUnmount() {
+    this.props.actions.searchUserEvents([]);
+  }
+
   eventTypeFilter(event) {
     switch (event.type) {
       case 'PushEvent':
         return (
           <div className="event-commits">
             <strong>{event.payload.commits.length} commits</strong>
-            {event.payload.commits.map((commit) => (
-              <div key={commit.id}>
+            {event.payload.commits.map((commit, index) => (
+              <div key={index}>
                 <p>author: {commit.author.name}</p>
                 <p>commit message: {commit.message}</p>
               </div>
@@ -39,17 +44,17 @@ class UserProfile extends Component {
         return (<div></div>);
     }
   }
+
   render() {
-    console.log('Look at me, Im the props!: ', this.props.searchUserEvents);
     return (
       <div>
         <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1"/>
         <h2>{this.props.chosenSearchResult.login}</h2>
         <div id="search-results-container">
-          {this.props.searchUserEvents.map((event) => {
+          {this.props.searchUserEvents.map((event, index) => {
             if (event.type === 'PushEvent' || event.type === 'PullRequestEvent') {
               return (
-                <div key={event.id} className="search-result-container" >
+                <div key={index} className="search-result-container" >
                   <h3 className="event-title">{event.type}</h3>
                   <span className="event-title"> at </span>
                   <h3 className="event-title">{event.repo.name}</h3>

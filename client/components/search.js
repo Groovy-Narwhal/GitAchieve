@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
-import actions from './../actions/actionCreators';
+import actions from './../actions/ActionCreators';
 import utils from '../utils/utils.js';
 
 class Search extends Component {
@@ -12,9 +12,11 @@ class Search extends Component {
       searchInput: ''
     }
   }
+
   componentDidMount() {
     // this.submitHandler = utils.utils.debounce(submitHandler);
   }
+  
   submitHandler(e) {
     let searchQuery = this.state.searchInput;
     e.preventDefault();
@@ -23,16 +25,17 @@ class Search extends Component {
       .then((res) => res.json())
       .then((users) => this.props.actions.querySearch(users));
     browserHistory.push(`/search-results`);
-
   }
+
   typeSearch(e) {
     this.setState({searchInput: e.target.value});
   }
+
   render() {
     return (
       <div className="search-container">
         <form onSubmit={this.submitHandler.bind(this)} className="search-form">
-          <input type="search" placeholder="search repos" onChange={this.typeSearch.bind(this)} className="search-input"/>
+          <input type="search" placeholder="search" onChange={this.typeSearch.bind(this)} className="search-input"/>
           <input type="submit" className="search-submit-button"/>
         </form>
       </div>
