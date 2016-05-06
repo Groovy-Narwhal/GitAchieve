@@ -10,7 +10,7 @@ class SearchOptions extends Component {
     super(props);
     this.state = {
       activeLink: 0,
-      tabs: ['users', 'repos']
+      tabs: ['users', 'repos', 'orgs']
     }
   }
 
@@ -21,11 +21,21 @@ class SearchOptions extends Component {
     if (name === 'users') {
       fetch(`https://api.github.com/search/users?q=${this.props.searchInput}`)
         .then((res) => res.json())
-        .then((users) => this.props.actions.querySearch(users));
+        .then((users) => {
+          this.props.actions.querySearch(users)
+        });
     } else if (name === 'repos') {
       fetch(`https://api.github.com/search/repositories?q=${this.props.searchInput}`)
         .then((res) => res.json())
         .then((repos) => this.props.actions.querySearch(repos));
+    } else if (name === 'orgs') {
+      fetch(`https://api.github.com/search/users?q=${this.props.searchInput}`)
+        .then((res) => res.json())
+        .then((orgs) => {
+          let items = orgs.items.filter(user => user.type === 'Organization');
+          orgs.items = items;
+          this.props.actions.querySearch(orgs);
+        });
     }
   }
 

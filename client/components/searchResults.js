@@ -16,21 +16,21 @@ class SearchResults extends Component {
     this.props.actions.chooseSearchResult(result);
     fetch(`https://api.github.com/users/${result.login}/events`)
       .then((repos) => repos.json())
-      .then((res) => {this.props.actions.searchUserEvents(res)} );
+      .then((res) => {
+        this.props.actions.searchUserEvents(res);
+      });
     browserHistory.push(`${result.login}/profile`);
   }
 
   routeToRepo(e, result) {
-    console.log('RESULT', result);
-    // this.props.actions.chooseSearchResult(result);
-    // fetch(`https://api.github.com/repos/${result.name}/events`)
-    //   .then((repos) => repos.json())
-    //   .then((res) => {this.props.actions.searchUserEvents(res)} );
-    // browserHistory.push(`${result.login}/profile`);
+    this.props.actions.chooseSearchResult(result);
+    fetch(`https://api.github.com/repos/${result.owner.login}/${result.name}`)
+      .then((repos) => repos.json())
+    browserHistory.push(`${result.name}/repos`);
   }
 
   getResult(result) {
-    if (!!result.login) {
+    if (result.type === 'User') {
       return (
         <div className="search-result-container">
           <img className="user-avatar-1" src={result.avatar_url} />
@@ -38,10 +38,21 @@ class SearchResults extends Component {
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
         </div>
       )      
+    } else if (result.type === 'Organization') {
+      return (
+        <div className="search-result-container">
+          <img className="user-avatar-1" src={result.avatar_url} />
+          <h2 onClick={ (e) => { this.routeToOrg.call(this, e, result) }}>{result.login}</h2>
+          <p>Description: {result.description}</p>
+          <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+        </div>
+      )
     } else {
       return (
         <div className="search-result-container">
-          <h2 onClick={ (e) => { this.routeToRepo.call(this, e, result) }}>{result.name}</h2>
+          <h2 onClick={ (e) => { this.routeToRepo.call(this, e, result) }}>{result.full_name}</h2>
+          <p>Description: {result.description}</p>
+          <p>Stargazers: {result.watchers}</p>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
         </div>
       )
