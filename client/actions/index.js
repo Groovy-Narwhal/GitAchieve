@@ -27,7 +27,6 @@ export const signinUser = () => {
     dispatch({ type: types.AUTH_USER });
     return axios.get(`${ROOT_URL}/github/profile`)
       .then(response => {
-        console.log('RESPONES', response)
         const userProfile = {
           username: response.data.data.login,
           id: response.data.data.id,

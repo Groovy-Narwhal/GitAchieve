@@ -40,7 +40,8 @@ describe('async actions', () => {
       .get('/github/profile')
       .reply(200, { data: { data: {}}})
       const expectedActions = [
-        { type: types.AUTH_USER }
+        { type: types.AUTH_USER },
+        { type: types.UNAUTH_USER }
       ]
       const store = mockStore({
         auth: {
