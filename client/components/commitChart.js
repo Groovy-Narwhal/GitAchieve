@@ -2,10 +2,7 @@
 //@TODO: integrate with a style sheet (if desired at that point edit .axis text to have better font)
 //@TODO: make the 'week' array depend on the data received / day-of-the-week that the API request was made
 //@TODO: make sure we don't get an error relating to the d3.json having not returned
-
-// @TODO (extended note) When more than two users are shown at once, we're going to shift to a
-// different drawing block that's actually simpler in a way: they won't overlap,
-// instead they'll be side by side which just means smaller widths (barWidth / n for n users)
+//@TODO: decide what to do in case of a tie! The obvious thing is to opacity-1/2 (or 1/4) 2 exactly overlapping rects
 
 exports.CommitChart = () => {
 
@@ -30,10 +27,15 @@ exports.CommitChart = () => {
     var usernames = [];
     usernames.push('@msmith9393'.slice(0, 9));
     usernames.push('@adamrgisom'.slice(0, 9));
+    usernames.push('@....'.slice(0, 9)); // COMMENT OUT THIS TOO TO TEST 2-VS-3-PERSON VIEWS
 
     // Dummy second set of data
-    var dummy = {total: 35, days: [7, 3, 22, 2, 0, 3, 3]};
+    var dummy = {total: 40, days: [7, 3, 22, 2, 0, 3, 3]};
     users.push(dummy.days);
+
+    // Dummy third set of data!!! Comment out to compare 2-vs-3-person views!
+    var dummy2 = {total: 45, days: [5, 3, 21, 2, 9, 2, 3]};
+    users.push(dummy2.days);
 
     // Days of the week are used in the x-scaling and x-axis
     // We'll want to dynamically generate this from the data in the future
@@ -132,16 +134,20 @@ exports.CommitChart = () => {
      D3 continued: the part dealing with the data
     *************/
 
-    // declare colors array, maximum 6. Note that this suggests a limit of 6 individuals compared simultaneously.
+    // declare colors array, maximum 5.
+    // Note that if there were only 5 olors, that would mean only up to 5 individuals could get compared.
     // THIS WILL GET UPDATED WHEN APP STYLING HAPPENS.
     var colors = [
       'lightgreen', 'steelblue', 'red'
     ];
 
     // add the bars in the bar graph
-    // WILL REFACTOR SOON to do X if 1 or 2 and Y (split them to be skinny and side-and-side) if 3+
+    var length = users.length;
+    var skinnyBarWidth = barWidth/length;
+    var whichData = length > 2 ? data : sortedData;
+
     var g = svg.selectAll(".bars")
-      .data(sortedData)
+      .data(whichData)
       .enter()
         .append("g")
     for (j = 0; j < users.length; j++) {
@@ -152,11 +158,15 @@ exports.CommitChart = () => {
         // .attr('opacity', (d) => {  // hard to see how 0.65 opacity is a good idea
         //   return j===0 ? 0.15 : 0.5  // (double the # of colors = confusing)
         // })
-        .attr('x', (d, i) => xScale(week[i]) ) // i is being used as a d3 function param, not as a counter
+        .attr('x', (d, i) => {
+          return length > 2 ? xScale(week[i]) + (j * skinnyBarWidth) : xScale(week[i])
+         }) // i is being used as a d3 function param, not as a counter
         .attr('y', (d) => {
           return yScale(d[j][1])
          })
-        .attr('width', barWidth )
+        .attr('width', () => {
+          return length > 2 ? skinnyBarWidth : barWidth
+         })
         .attr('height', (d) => {
           return yScale(0) - yScale(d[j][1])
         })
@@ -169,10 +179,11 @@ exports.CommitChart = () => {
       .enter()
         .append('text')
         .attr('x', (d, i) => {
-          return  xScale(week[i]) + barWidth/2 - 5;
+          return xScale(week[i]) + barWidth/2 + 4
         })
         .attr('y', (d) => {
-          return d[0][1]===1 ? yScale(d[0][1]) - 5 : yScale(d[0][1]) + 15
+          return yScale(d[0][1]) - 11
+          // was formerly (for the 2-person-view) return d[0][1]===1 ? yScale(d[0][1]) - 5 : yScale(d[0][1]) + 15
         })
         .text((d) => {
           return d[0][1] > 0 ? d[0][1].toString() : ''
@@ -185,10 +196,10 @@ exports.CommitChart = () => {
       .enter()
         .append('circle')
         .attr('cx', (d, i) => {
-          return xScale(week[i]) + barWidth/2;
+          return xScale(week[i]) + barWidth/2 - 7;
         })
         .attr('cy', (d) => {
-          return yScale(d[0][1]) - 10
+          return yScale(d[0][1]) - 15
         })
         .attr('fill', (d) => {
           return colors[ d[0][0] ]
