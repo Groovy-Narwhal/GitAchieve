@@ -6,11 +6,15 @@
 @import "partials/typography";
 @import "partials/buttons";
 
+body {
+  font-family: $font-stack;
+}
 rect {
   fill: $primary-color;
 }
 svg {
-  font: 10px sans-serif;
+  font: 10px $font-stack;
+  font-weight: $light;
   font-size: 12px;
 }
 .user-avatar-1 {
