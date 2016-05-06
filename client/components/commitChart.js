@@ -3,6 +3,10 @@
 //@TODO: make the 'week' array depend on the data received / day-of-the-week that the API request was made
 //@TODO: make sure we don't get an error relating to the d3.json having not returned
 
+// When more than two users are shown at once, we're going to shift to a
+// different drawing block that's actually simpler in a way: they won't overlap,
+// instead they'll be side by side which just means smaller widths (barWidth / n for n users)
+
 exports.CommitChart = () => {
 
   // get the data
@@ -12,53 +16,70 @@ exports.CommitChart = () => {
       console.log('There was an error retrieving commit data: ', error);
     }
 
-    // Our user's set of data -- unsure how to add a second set in right now
-    // Data = all of the weeks of the past year and how many commits are in each week
-    var userCommits = data[data.length - 1];
-    var userCommitsTotal = userCommits.total;
+    /*************
+     Data storage stuff
+    *************/
 
-    // Dummy second set of data:
+    // Our user's set of data -- unsure how to add a second set in right now
+    // We slice off the last week because we decided to care only about the last week of Git activity
+    // Data looks something like this: {total: 35, days: [2, 5, 17, 0, 0, 1]}
+    var users = [];
+    var userCommits = data[data.length - 1];
+    users.push(userCommits.days);
+
+    // Dummy second set of data
     var dummy = {total: 35, days: [7, 3, 22, 2, 0, 3, 3]};
-    var dummyTotal = dummy.total;
+    users.push(dummy.days);
 
     // Days of the week are used in the x-scaling and x-axis
     // We'll want to dynamically generate this from the data in the future
     var week = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    // Put the data in a useful format
-    var dataMatrix = [];
-    for (var i = 0; i < 7; i++) {
-      dataMatrix.push(
-      [
-        week[i],
-        userCommits.days[i],
-        dummy.days[i]
-      ]);
+    // Declare counter variables that will be used throughout, using i = 0 in place of var i = 0 in loops
+    var i, j;
+
+    // Store each user's data for each day as a tuple of [id, commits]
+    // The tuple is because we'll need to keep track of the id/user after we sort
+    // Sort with this function: .sort(function(a,b) { return a[1] > b[1]; })    var data = [];
+    var data = [], day, tuple;
+    for (i = 0; i < 7; i++) {
+      day = [];
+      for (j = 0; j < users.length; j++) {
+        tuple = [];
+        tuple.push(j); // used as the index
+        tuple.push(users[j][i]); // a specific user's # of commits on a specific day
+        day.push(tuple); // the day array now has commit data for each of the users (for that day)
+      }
+      data.push(day); // data will have 7 'day' arrays, which will each have n 'tuples' where n = # of users
     }
 
     // Find the most commits overall and the most commits per day
-    // Line with (k < 3) should change to k < ? where ? is the number of users being shown, plus one
     var mostCommits = 0;
     var mostCommitsPerDay = [];
-    for (var j = 0; j < 7; j++) {
-      for (var k = 1; k < 3; k++) {
-        if (dataMatrix[j][k] > mostCommits)
-          mostCommits = dataMatrix[j][k];
+
+    console.log('data:', data);
+
+    for (i = 0; i < 7; i++) {
+      for (j = 0; j < users.length; j++) {
+        if (data[i][j][1] > mostCommits)
+          mostCommits = data[i][j][1];
       }
     }
-    for (var l = 0; l < 7; l++) {
+    for (i = 0; i < 7; i++) {
       var highest = 0;
       var indexHighest = 0;
-      for (var m = 1; m < 3; m++) {
-        if (dataMatrix[l][m] > highest) {
-          highest = dataMatrix[l][m];
-          indexHighest = m;
+      for (j = 0; j < users.length; j++) {
+        if (data[i][j][1] > highest) {
+          highest = data[i][j][1];
+          indexHighest = j;
         }
       }
       mostCommitsPerDay.push(indexHighest);
     }
 
-    // VISUAL STUFF
+    /*************
+     Actual D3
+    *************/
 
     // set dimensions
     var pad = 20;
@@ -104,67 +125,57 @@ exports.CommitChart = () => {
       })
       .call(yAxis);
 
-
-    /* the stage is set -- add the data */
-        // .attr('opacity', function(d) { return (d.user > d.hardcodedUserTwo ? 0.5 : 1); })
-    /*
-      The conditionals in this block are meant to handle the case of TWO side-by-side users.
-      The logged-in user will have their data shown in red and their 'opponent' shown in steel-blue
-      The logged-in user's data was pushed into matrixData's arrays at index 1, which explains the === 1
-
-      When more than two users are shown at once, we're going to shift to a
-      different drawing block that's actually simpler in a way: they won't overlap,
-      instead they'll be side by side which just means smaller widths (barWidth / n for n users)
-    */
-    console.log('dataMatrix', dataMatrix);
-    console.log('mostCommitsPerDay', mostCommitsPerDay);
+    /*************
+     The D3 part dealing with the data
+    *************/
 
     var g = svg.selectAll(".bars")
-        .data(dataMatrix)
-        .enter()
-          .append("g")
+      .data(data)
+      .enter()
+        .append("g")
 
-    // place the larger bar
+    // place the larger bar first
     g.append("rect")
     .attr('fill', 'green')
-      .attr('x', (d) => xScale(d[0]) )
+      .attr('x', (d, i) => xScale(week[i]) )
       .attr('y', (d) => {
-        return yScale(d[1])
+        return yScale(d[0][1])
        })
       .attr('width', barWidth )
       .attr('height', (d) => {
-        return yScale(0) - yScale(d[1])
+        return yScale(0) - yScale(d[0][1])
       })
 
     // place the smaller bar (over the larger one)
-    // g.append("rect")
-    //   // .style({ 'fill' : 'red'})
-    //   .attr('fill', (d, i) => {
-    //     return mostCommitsPerDay[i] === 1 ? 'red' : 'steelblue'
-    //   })
-    //   .attr('x', (d) => xScale(d[0]) )
-    //   .attr('y', (d) => {
-    //     return yScale(d[2]);
-    //    })
-    //   .attr('width', barWidth )
-    //   .attr('height', (d) => {
-    //     return yScale(0) - yScale(d[2])
-    //   });
+    g.append("rect")
+      // .style({ 'fill' : 'red'})
+      .attr('fill', (d, i) => {
+        return 'red'//mostCommitsPerDay[i] === 1 ? 'red' : 'steelblue'
+      })
+      .attr('x', (d, i) => xScale(week[i]) )
+      .attr('y', (d) => {
+        return yScale(d[1][1]);
+       })
+      .attr('width', barWidth )
+      .attr('height', (d) => {
+        return yScale(0) - yScale(d[1][1])
+      });
 
     // and finally add text labels for # of commits (when greater than 0)
     svg.append('g')
       .selectAll('text')
-      .data(dataMatrix)
+      .data(data)
       .enter()
         .append('text')
-        .attr('x', (d) => { return  xScale(d[0]) + barWidth/2 - 5; } )
+        .attr('x', (d, i) => { return  xScale(week[i]) + barWidth/2 - 5; } )
         .attr('y', (d) => {
-          var higherCount = d[2] > d[1] ? d[2] : d[1];
-          if (higherCount === 1)  return yScale(higherCount) - 5;
+          var higherCount = d[1][1] > d[0][1] ? d[1][1] : d[0][1];
+          if (higherCount === 1)
+            return yScale(higherCount) - 5;
           return yScale(higherCount) + 15;
         })
         .text( (d) => {
-          var higherCount = d[2] > d[1] ? d[2] : d[1];
+          var higherCount = d[1][1] > d[0][1] ? d[1][1] : d[0][1];
           if (higherCount > 0) {
             return higherCount.toString();
           }
