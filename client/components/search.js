@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
-import actions from './../actions/actionCreators';
+import actions from './../actions/ActionCreators';
 import utils from '../utils/utils.js';
 
 class Search extends Component {

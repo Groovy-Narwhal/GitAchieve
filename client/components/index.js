@@ -9,4 +9,5 @@ export Search from './search';
 export SearchResults from './searchResults';
 export UserProfile from './userProfile';
 export RepoProfile from './repoProfile';
+export OrgProfile from './orgProfile';
 export CommitChart from './commitChart';

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import actions from './../actions/actionCreators';
+import actions from './../actions/ActionCreators';
 import d3 from 'd3';
 import { commitChart } from './index';
 
