@@ -1,27 +1,20 @@
+// Style Reset
+@import "partials/reset";
+
 // Modules and Variables
 @import "partials/base";
 
 // Partials
-@import "partials/reset";
 @import "partials/typography";
-@import "partials/buttons";
 
-body {
-  font-family: $font-stack;
-}
-rect {
-  fill: $primary-color;
-}
-svg {
-  font: 10px $font-stack;
-  font-weight: $light;
-  font-size: 12px;
-}
-.user-avatar-1 {
-  width: 100px;
-  height: auto;
-  border-radius: 5px;
-}
+// Components
+@import "components/buttons";
+@import "components/images";
+@import "components/inputs";
+
+// Layout
+@import "layout/header";
+
 #search-results-container {
   background-color: #ddd;
   padding: 10px;

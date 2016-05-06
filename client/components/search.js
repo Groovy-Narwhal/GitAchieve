@@ -30,14 +30,10 @@ class Search extends Component {
   }
   render() {
     return (
-      <div>
-        <form onSubmit={this.submitHandler.bind(this)}>
-          <select>
-            <option value="repos">repos</option>
-            <option value="users">users</option>
-          </select>
-          <input type="search" placeholder="search repos" onChange={this.typeSearch.bind(this)} />
-          <input type="submit" />
+      <div className="search-container">
+        <form onSubmit={this.submitHandler.bind(this)} className="search-form">
+          <input type="search" placeholder="search repos" onChange={this.typeSearch.bind(this)} className="search-input"/>
+          <input type="submit" className="search-submit-button"/>
         </form>
       </div>
     )

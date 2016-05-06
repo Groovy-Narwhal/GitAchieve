@@ -4,8 +4,21 @@ $regular: 400;
 $semi-bold: 600;
 $bold: 700;
 
+// Font Sizes
+$light-size: 8px;
+$regular-size: 12px;
+$semi-large-size: 16px;
+$large-size: 20px;
+$x-large-size: 24px;
+
+// Color
+$dark-gray: #222;
+$medium-gray: #444;
+$light-gray: #999;
+$white: #fff;
+
 // Base Font
-$base-font-family: sans-serif;
+$base-font-family: 'Open Sans', sans-serif;
 $base-font-weight: $regular;
 $base-font-size: 13px;
 $base-line-height: 1.4;
@@ -19,4 +32,28 @@ $fixed-line-height: $base-line-height;
 $header-font-weight: $bold;
 
 // Base Colors
-$primary-color: #444;
+$primary-color: #445878;
+
+body {
+  font-family: $base-font-family;
+}
+rect {
+  fill: $primary-color;
+}
+.day {
+  color: $white;
+}
+svg {
+  font: 10px;
+  font-weight: $light;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 5px;
+  margin: 20px 0;
+}
+#commit-charts {
+  text-align: center;
+}
+.black-container-bg {
+  background-color: #1C1D21;
+}

@@ -1,0 +1,41 @@
+.header-nav {
+  border-bottom: 1px solid #ddd;
+  padding: 20px 20px;
+}
+
+.header-components-container {
+  margin-right: auto;
+  margin-left: auto;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.logo {
+  font-weight: $bold;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.search-form {
+  padding-top:5px;
+  padding-top:5px;
+}
+
+.search-submit-button {
+  border-radius: 0;
+}
+
+.search-container {
+  white-space: nowrap;
+}
+
+.nav-link {
+  margin: 0 10px;
+  font-weight: $semi-bold;
+  color: $medium-gray;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}

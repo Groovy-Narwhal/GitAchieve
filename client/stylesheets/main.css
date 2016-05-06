@@ -43,6 +43,29 @@ table {
   border-spacing: 0; }
 
 /* End CSS reset */
+body {
+  font-family: "Open Sans", sans-serif; }
+
+rect {
+  fill: #445878; }
+
+.day {
+  color: #fff; }
+
+svg {
+  font: 10px;
+  font-weight: 300;
+  font-size: 12px;
+  background-color: white;
+  border-radius: 5px;
+  margin: 20px 0; }
+
+#commit-charts {
+  text-align: center; }
+
+.black-container-bg {
+  background-color: #1C1D21; }
+
 @font-face {
   font-family: 'Open Sans';
   font-weight: 300;
@@ -67,21 +90,49 @@ table {
   font-style: normal;
   src: url("/fonts/Open-Sans-700/Open-Sans-700.eot");
   src: url("/fonts/Open-Sans-700/Open-Sans-700.eot?#iefix") format("embedded-opentype"), local("Open Sans Bold"), local("Open-Sans-700"), url("/fonts/Open-Sans-700/Open-Sans-700.woff2") format("woff2"), url("/fonts/Open-Sans-700/Open-Sans-700.woff") format("woff"), url("/fonts/Open-Sans-700/Open-Sans-700.ttf") format("truetype"), url("/fonts/Open-Sans-700/Open-Sans-700.svg#OpenSans") format("svg"); }
-body {
-  font-family: "Open Sans", sans-serif; }
-
-rect {
-  fill: #444; }
-
-svg {
-  font: 10px "Open Sans", sans-serif;
-  font-weight: 300;
-  font-size: 12px; }
-
 .user-avatar-1 {
   width: 100px;
   height: auto;
   border-radius: 5px; }
+
+.search-input {
+  width: 300px;
+  height: 75px; }
+
+.header-nav {
+  border-bottom: 1px solid #ddd;
+  padding: 20px 20px; }
+
+.header-components-container {
+  margin-right: auto;
+  margin-left: auto;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap; }
+
+.logo {
+  font-weight: 700;
+  font-size: 26px;
+  cursor: pointer; }
+
+.search-form {
+  padding-top: 5px;
+  padding-top: 5px; }
+
+.search-submit-button {
+  border-radius: 0; }
+
+.search-container {
+  white-space: nowrap; }
+
+.nav-link {
+  margin: 0 10px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px; }
 
 #search-results-container {
   background-color: #ddd;

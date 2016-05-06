@@ -17,8 +17,7 @@ class DashBoard extends Component {
       actions
     } = this.props;
     return (
-      <div>
-        <h1>Dash Board</h1>
+      <div className="dashboard black-container-bg">
         <div id="commit-charts"></div>
         <SearchResults />
       </div>
