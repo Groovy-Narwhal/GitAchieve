@@ -8,4 +8,5 @@ export SearchOptions from './searchOptions';
 export Search from './search';
 export SearchResults from './searchResults';
 export UserProfile from './userProfile';
+export RepoProfile from './repoProfile';
 export CommitChart from './commitChart';

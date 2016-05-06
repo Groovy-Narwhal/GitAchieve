@@ -15,10 +15,9 @@ class SearchOptions extends Component {
   }
 
   fetchSearch(name, index) {
-    // this.setState({
-    //   activeLink: index
-    // });
-    console.log(name);
+    this.setState({
+      activeLink: index
+    });
     if (name === 'users') {
       fetch(`https://api.github.com/search/users?q=${this.props.searchInput}`)
         .then((res) => res.json())
@@ -28,7 +27,6 @@ class SearchOptions extends Component {
         .then((res) => res.json())
         .then((repos) => this.props.actions.querySearch(repos));
     }
-    // browserHistory.push(`?${this.props.searchInput}`);
   }
 
   getClass(index) {

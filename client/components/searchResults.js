@@ -21,7 +21,12 @@ class SearchResults extends Component {
   }
 
   routeToRepo(e, result) {
-
+    console.log('RESULT', result);
+    // this.props.actions.chooseSearchResult(result);
+    // fetch(`https://api.github.com/repos/${result.name}/events`)
+    //   .then((repos) => repos.json())
+    //   .then((res) => {this.props.actions.searchUserEvents(res)} );
+    // browserHistory.push(`${result.login}/profile`);
   }
 
   getResult(result) {
@@ -36,7 +41,7 @@ class SearchResults extends Component {
     } else {
       return (
         <div className="search-result-container">
-          <h2 onClick={ (e) => { this.routeToRepo.call(this, e, result) }}>{result.full_name}</h2>
+          <h2 onClick={ (e) => { this.routeToRepo.call(this, e, result) }}>{result.name}</h2>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
         </div>
       )

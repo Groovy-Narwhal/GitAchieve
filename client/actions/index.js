@@ -40,6 +40,7 @@ export const signinUser = () => {
         // - redirect to the route '/users'
         browserHistory.push('/');
       })
+      .catch((err) => {
         console.log('error', err);
         dispatch({ type: types.UNAUTH_USER });
       });
