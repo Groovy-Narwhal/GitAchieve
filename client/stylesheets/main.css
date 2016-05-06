@@ -1,0 +1,157 @@
+/* CSS Reset */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/* End CSS reset */
+body {
+  font-family: "Open Sans", sans-serif; }
+
+rect {
+  fill: #445878; }
+
+.day {
+  color: #fff; }
+
+svg {
+  font: 10px;
+  font-weight: 300;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 5px;
+  margin: 20px 0; }
+
+#commit-charts {
+  text-align: center; }
+
+.black-container-bg {
+  background-color: #1C1D21; }
+
+.main-img-container-bg {
+  background: url(../../static/assets/valley-dusting-1-2.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover; }
+
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-style: normal;
+  src: url("/fonts/Open-Sans-300/Open-Sans-300.eot");
+  src: url("/fonts/Open-Sans-300/Open-Sans-300.eot?#iefix") format("embedded-opentype"), local("Open Sans Light"), local("Open-Sans-300"), url("/fonts/Open-Sans-300/Open-Sans-300.woff2") format("woff2"), url("/fonts/Open-Sans-300/Open-Sans-300.woff") format("woff"), url("/fonts/Open-Sans-300/Open-Sans-300.ttf") format("truetype"), url("/fonts/Open-Sans-300/Open-Sans-300.svg#OpenSans") format("svg"); }
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 400;
+  font-style: normal;
+  src: url("/fonts/Open-Sans-regular/Open-Sans-regular.eot");
+  src: url("/fonts/Open-Sans-regular/Open-Sans-regular.eot?#iefix") format("embedded-opentype"), local("Open Sans"), local("Open-Sans-regular"), url("/fonts/Open-Sans-regular/Open-Sans-regular.woff2") format("woff2"), url("/fonts/Open-Sans-regular/Open-Sans-regular.woff") format("woff"), url("/fonts/Open-Sans-regular/Open-Sans-regular.ttf") format("truetype"), url("/fonts/Open-Sans-regular/Open-Sans-regular.svg#OpenSans") format("svg"); }
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 600;
+  font-style: normal;
+  src: url("/fonts/Open-Sans-600/Open-Sans-600.eot");
+  src: url("/fonts/Open-Sans-600/Open-Sans-600.eot?#iefix") format("embedded-opentype"), local("Open Sans Semibold"), local("Open-Sans-600"), url("/fonts/Open-Sans-600/Open-Sans-600.woff2") format("woff2"), url("/fonts/Open-Sans-600/Open-Sans-600.woff") format("woff"), url("/fonts/Open-Sans-600/Open-Sans-600.ttf") format("truetype"), url("/fonts/Open-Sans-600/Open-Sans-600.svg#OpenSans") format("svg"); }
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 700;
+  font-style: normal;
+  src: url("/fonts/Open-Sans-700/Open-Sans-700.eot");
+  src: url("/fonts/Open-Sans-700/Open-Sans-700.eot?#iefix") format("embedded-opentype"), local("Open Sans Bold"), local("Open-Sans-700"), url("/fonts/Open-Sans-700/Open-Sans-700.woff2") format("woff2"), url("/fonts/Open-Sans-700/Open-Sans-700.woff") format("woff"), url("/fonts/Open-Sans-700/Open-Sans-700.ttf") format("truetype"), url("/fonts/Open-Sans-700/Open-Sans-700.svg#OpenSans") format("svg"); }
+.user-avatar-1 {
+  width: 100px;
+  height: auto;
+  border-radius: 5px; }
+
+.search-input {
+  width: 300px;
+  height: 75px; }
+
+.header-nav {
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  padding: 20px 20px; }
+
+.header-components-container {
+  margin-right: auto;
+  margin-left: auto;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap; }
+
+.logo {
+  font-weight: 700;
+  font-size: 26px;
+  cursor: pointer; }
+
+.search-form {
+  padding-top: 5px;
+  padding-top: 5px; }
+
+.search-submit-button {
+  border-radius: 0; }
+
+.search-container {
+  white-space: nowrap; }
+
+.nav-link {
+  margin: 0 10px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px; }
+
+#search-results-container {
+  padding: 10px; }
+
+.search-result-container {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px; }
+
+.event-title {
+  display: inline; }
+
+/*# sourceMappingURL=main.css.map */

@@ -15,27 +15,27 @@ class Header extends Component {
       return null;
     } else {
       return [
-        <li key={1} onClick={() => browserHistory.push('/repos')}>
+        <a key={1} onClick={() => browserHistory.push('/repos')} className="nav-link">
           Repos
-        </li>,
-        <li key={2} onClick={() => browserHistory.push('/orgs')}>
+        </a>,
+        <a key={2} onClick={() => browserHistory.push('/orgs')} className="nav-link">
           Orgs
-        </li>,
-        <li key={3} onClick={this.handleSignOut.bind(this)}>
-          Sign Out
-        </li>
+        </a>,
+        <a key={3} onClick={this.handleSignOut.bind(this)} className="nav-link">
+          SignOut
+        </a>
       ];
     }
   }
 
   render() {
     return (
-      <nav>
-        <h2 onClick={() => browserHistory.push('/')}>GitAchieve</h2>
-        <Search />
-        <ul>
+      <nav className="header-nav">
+        <div className="header-components-container">
+          <h2 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h2>
+          <Search />
           {this.renderLinks()}
-        </ul>
+        </div>
       </nav>
     );
   }

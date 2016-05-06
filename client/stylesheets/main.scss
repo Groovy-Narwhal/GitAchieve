@@ -1,0 +1,29 @@
+// Style Reset
+@import "partials/reset";
+
+// Modules and Variables
+@import "partials/base";
+
+// Partials
+@import "partials/typography";
+
+// Components
+@import "components/buttons";
+@import "components/images";
+@import "components/inputs";
+
+// Layout
+@import "layout/header";
+
+#search-results-container {
+  padding: 10px;
+}
+.search-result-container {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+.event-title {
+  display: inline;
+}
