@@ -8,7 +8,7 @@ exports.retrieveAllUsers = function(req, res) {
     .then((data) => res.send(data))
     .catch((error) => {
       console.error(error);
-      res.status(500).send(error);
+      res.status(500).send('Error reading users table');
     });
 };
 
@@ -106,13 +106,69 @@ exports.deleteUser = function(req, res) {
       }
     });
 };  
+
+// GET at '/api/v1/users/:id/repos'
+exports.retrieveRepos = function(req, res) {
+  var queryId = req.params.id;
+  var queryUsername = req.body.username;
   
+  // TO DO - change 'alexnitta' to queryUsername when done testing
   
-  
-  
-  
-  
-  
+  gitHubMiner.getRepos('alexnitta', (data) => {
+    var repos1 = JSON.parse(data);
+    var timestamp = new Date();
+    repos = [];
+    repos.push(repos1[0]);
+    // map a selection of the GitHub repo details to an array of repos
+    // var repoDetails = repos.map((repo) => {
+    //   var details = {};
+    //   details.id = repo.id;
+    //   details.created_ga = timestamp;
+    //   details.created_at = repo.created_at;
+    //   details.watchers_count = repo.watchers_count;
+    //   details.stargazers_count = repo.stargazers_count;
+    //   details.forks_count = repo.forks_count;
+    //   return details;
+    // });
+    // var userRepoJoin = repoDetails.map((details) => {
+    //   var joinRow = {};
+    //   joinRow.created_ga = timestamp;
+    //   joinRow.repo_id = details.id;
+    //   joinRow.user_id = queryId;
+    //   return joinRow;
+    // });
+    repos.forEach(function(repo) {  
+      db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) VALUES ($8, $9, $10, $11, $12, $13) ON CONFLICT DO UPDATE',
+        ['users', 'id', 'created_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count',
+        repo.id, timestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count])
+        .then()
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error saving to repos table');
+        });
+    });
+    repos.forEach(function(repo) {
+      db.any('INSERT INTO $1~ ($2~, $3~, $4~) VALUES ($5, $6, $7)',
+        ['users_repos', timestamp, repo.id, queryId])
+        .then()
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error saving to users_repos join table');
+        });
+    });
+    db.one(('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
+      'FROM users_repos ur ' +
+      'INNER JOIN repos r ' + 
+      'ON r.id = ur.repo_id ' + 
+      'WHERE ur.user_id=$1'), 
+      queryId)
+      .then((data) => res.send(data))
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send('Error querying repos table');
+      });
+  });
+};  
   
   
   

@@ -12,8 +12,8 @@ userRouter.route('/:id')
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
-// userRouter.route('/:id/repos')
-//   .get(userController.retrieveRepos)
+userRouter.route('/:id/repos')
+  .get(userController.retrieveRepos);
 //   .post(userController.addRepo);
 
 // userRouter.route('/:id/friends')
