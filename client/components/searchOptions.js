@@ -9,15 +9,11 @@ class SearchOptions extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeLink: 0,
       tabs: ['users', 'repos', 'orgs']
     }
   }
 
   fetchSearch(name, index) {
-    this.setState({
-      activeLink: index
-    });
     if (name === 'users') {
       fetch(`https://api.github.com/search/users?q=${this.props.searchInput}`)
         .then((res) => res.json())
@@ -39,16 +35,12 @@ class SearchOptions extends Component {
     }
   }
 
-  getClass(index) {
-    return this.state.activeLink === index ? 'active' : '';
-  }
-
   render() {
     return (
       <nav>
         <ul>
           {this.state.tabs.map((name, index) => (
-            <li key={index} className={this.getClass(index)} onClick={this.fetchSearch.bind(this, name, index)}>{name}</li>
+            <li key={index} onClick={this.fetchSearch.bind(this, name, index)}>{name}</li>
           ))}
         </ul>
       </nav>

@@ -46,7 +46,7 @@ class SearchResults extends Component {
           <p>Description: {result.description}</p>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
         </div>
-      )
+        )
     } else {
       return (
         <div className="search-result-container">
@@ -60,22 +60,24 @@ class SearchResults extends Component {
   }
 
   render() {
-    if (this.props.searchResults.length !== 0) {
-      var searchResults = this.props.searchResults[0].items;
-      return (
-        <div>
-          <SearchOptions />
-          <div id="search-results-container">
-            {searchResults.map((result, index) => {
-              return <div key={result.id}>{this.getResult(result)}</div>
-            })}
+    if (this.props.searchResults.length > 0) {
+      const searchResults = this.props.searchResults[0].items;
+      if (searchResults.length > 0) {
+        return (
+          <div>
+            <SearchOptions />
+            <div id="search-results-container">
+              {searchResults.map((result, index) => {
+                return <div key={result.id}>{this.getResult(result)}</div>
+              })}
+            </div>
           </div>
-        </div>
-      )
+        )
+      } else {
+        return <SearchOptions />
+      }
     } else {
-      return (
-        <div></div>
-      )
+      return <div></div>
     }
   }
 }
