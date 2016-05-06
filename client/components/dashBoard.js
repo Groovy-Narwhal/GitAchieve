@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import actions from './../actions/actionCreators';
+import actions from './../actions/ActionCreators';
 import d3 from 'd3';
-import commitChart from './commitChart';
+import { CommitChart } from './index';
 
 class DashBoard extends Component {
+
   componentDidMount() {
     // This instantiates a new d3 commit graph
-    commitChart.CommitChart();
+    CommitChart.CommitChart();
   }
 
   render() {

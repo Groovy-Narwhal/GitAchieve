@@ -42,7 +42,7 @@ module.exports = function(app) {
   // GITHUB LOGIN
   app.get('/auth/github_oauth',
     passport.authenticate('github',
-      { scope: [ 'user:email' ]
+      { scope: [ 'user', 'read:org', 'public_repo' ]
     }));
 
   app.get('/auth/github_oauth/callback',
