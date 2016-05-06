@@ -25,6 +25,12 @@ exports.CommitChart = () => {
     var userCommits = data[data.length - 1];
     users.push(userCommits.days);
 
+    // Keep track of usernames. FOR NOW THESE ARE HARDCODED.
+    // Slice off only the first 9 characters to get a fairly uniform max length when they're used in the graph's legend
+    var usernames = [];
+    usernames.push('@msmith9393'.slice(0, 9));
+    usernames.push('@adamrgisom'.slice(0, 9));
+
     // Dummy second set of data
     var dummy = {total: 35, days: [7, 3, 22, 2, 0, 3, 3]};
     users.push(dummy.days);
@@ -76,7 +82,7 @@ exports.CommitChart = () => {
     }
 
     /*************
-     Actual D3
+     Actual D3: the setup
     *************/
 
     // set dimensions
@@ -84,7 +90,6 @@ exports.CommitChart = () => {
     var w = 600 - 2*pad;
     var h = 360 - 2*pad;
     var barWidth = Math.floor(w/7) - 10;
-    console.log('barWidth:', barWidth);
 
     // create container / svg
     var svg = d3.select("#commit-charts")
@@ -127,6 +132,12 @@ exports.CommitChart = () => {
      D3 continued: the part dealing with the data
     *************/
 
+    // declare colors array, maximum 6. Note that this suggests a limit of 6 individuals compared simultaneously.
+    // THIS WILL GET UPDATED WHEN APP STYLING HAPPENS.
+    var colors = [
+      'lightgreen', 'steelblue', 'red'
+    ];
+
     var g = svg.selectAll(".bars")
       .data(sortedData)
       .enter()
@@ -134,8 +145,9 @@ exports.CommitChart = () => {
 
     for (j = 0; j < users.length; j++) {
       g.append("rect")
-        .attr('fill', (d) => {
-          return d[j][0]===0 ? 'lightgreen' : 'steelblue'
+        .attr('fill', () => {
+          return colors[j]
+          //colors[ d[0][0] ]
         })
         // .attr('opacity', (d) => {  // hard to see how 0.65 opacity is a good idea
         //   return j===0 ? 0.65 : 1  // (double the # of colors = confusing)
@@ -166,29 +178,42 @@ exports.CommitChart = () => {
           return d[0][1] > 0 ? d[0][1].toString() : ''
         });
 
-      // add indicators
-      for (j = 0; j < users.length; j++) {
-        svg.append('rect')
-          .style({
-            'fill': 'red',
-            'stroke': 'red'
-          })
-          .attr('x', 50 + 100 * j)
-          .attr('y', h - pad + 15)
-          .attr('width', 8)
-          .attr('height', 8)
-          // .attr('transform', 'translate(-36,' + (22+j*10) + ')')
-          // .text('Hello world')
-          ;
-        svg.append('text')
-          .style({
-            'fontFamily': 'monospace',
-            'fontSize': '8px'
-          })
-          .attr('transform', 'translate(' + (60 + 100 * j) + ',' + (h - 7) + ')')
-          .text('@msmith9393')
-          ;
-      }
+    // add color dot indicators above the bars showing who won
+    svg.append('g')
+      .selectAll('circle')
+      .data(sortedData)
+      .enter()
+        .append('circle')
+        .attr('cx', (d, i) => {
+          return xScale(week[i]) + barWidth/2;
+        })
+        .attr('cy', (d) => {
+          return yScale(d[0][1]) - 10
+        })
+        .attr('fill', (d) => {
+          return colors[ d[0][0] ]
+        })
+        .attr('r', 5)
+        .attr('stroke', 'black');
+
+    console.log(sortedData);
+    for (var k = 0; k < 7; k++) {
+      console.log('the winner on ' + week[k] + ' was:', usernames[ sortedData[k][0][0] ]);
+      console.log('they had score of ', sortedData[k][0][1], ' versus score of ', sortedData[k][1][1]);
+    }
+
+    // add a legend associating usernames with colors on the graph
+    for (j = 0; j < users.length; j++) {
+      svg.append('rect')
+        .attr('fill', () => colors[j])
+        .attr('x', 50 + 100 * j)
+        .attr('y', h - pad + 15)
+        .attr('width', 8)
+        .attr('height', 8);
+      svg.append('text')
+        .attr('transform', 'translate(' + (60 + 100 * j) + ',' + (h - 7) + ')')
+        .text(() => usernames[j]);
+    }
 
   });
 };
