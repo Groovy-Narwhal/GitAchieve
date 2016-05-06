@@ -138,19 +138,19 @@ exports.CommitChart = () => {
       'lightgreen', 'steelblue', 'red'
     ];
 
+    // add the bars in the bar graph
+    // WILL REFACTOR SOON to do X if 1 or 2 and Y (split them to be skinny and side-and-side) if 3+
     var g = svg.selectAll(".bars")
       .data(sortedData)
       .enter()
         .append("g")
-
     for (j = 0; j < users.length; j++) {
       g.append("rect")
-        .attr('fill', () => {
-          return colors[j]
-          //colors[ d[0][0] ]
+        .attr('fill', (d) => {
+          return colors[ d[j][0] ]
         })
         // .attr('opacity', (d) => {  // hard to see how 0.65 opacity is a good idea
-        //   return j===0 ? 0.65 : 1  // (double the # of colors = confusing)
+        //   return j===0 ? 0.15 : 0.5  // (double the # of colors = confusing)
         // })
         .attr('x', (d, i) => xScale(week[i]) ) // i is being used as a d3 function param, not as a counter
         .attr('y', (d) => {
@@ -178,7 +178,7 @@ exports.CommitChart = () => {
           return d[0][1] > 0 ? d[0][1].toString() : ''
         });
 
-    // add color dot indicators above the bars showing who won
+    // add color dot indicators above the bars showing who won that day
     svg.append('g')
       .selectAll('circle')
       .data(sortedData)
@@ -195,12 +195,6 @@ exports.CommitChart = () => {
         })
         .attr('r', 5)
         .attr('stroke', 'black');
-
-    console.log(sortedData);
-    for (var k = 0; k < 7; k++) {
-      console.log('the winner on ' + week[k] + ' was:', usernames[ sortedData[k][0][0] ]);
-      console.log('they had score of ', sortedData[k][0][1], ' versus score of ', sortedData[k][1][1]);
-    }
 
     // add a legend associating usernames with colors on the graph
     for (j = 0; j < users.length; j++) {
