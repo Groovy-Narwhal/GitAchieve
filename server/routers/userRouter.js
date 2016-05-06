@@ -9,8 +9,8 @@ userRouter.route('/')
 
 userRouter.route('/:id')
   .get(userController.retrieveUser)
-  .patch(userController.updateUser);
-//   .delete(userController.deleteUser);
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
 
 // userRouter.route('/:id/repos')
 //   .get(userController.retrieveRepos)

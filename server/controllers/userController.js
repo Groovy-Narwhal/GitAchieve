@@ -79,14 +79,33 @@ exports.updateUser = function(req, res) {
       }
     })
   .catch((error) => {
+    // if the user was not found, send 404
     if (error.code === 0) {
-      res.send(404);
+      res.status(404).send('User does not exist');
+    } else {
+      console.error(error);
+      res.status(500).send('Error searching database for user');
     }
-    console.error(error);
-    res.status(500).send('Error searching database for user');
   });
 };  
-  
+
+// DELETE at '/api/v1/users/:id'
+exports.deleteUser = function(req, res) {
+  var queryId = req.params.id;
+  console.log('queryId', queryId);
+  // delete the user and return all deleted rows
+  db.one('DELETE FROM users WHERE id=$1 RETURNING *', queryId)
+    .then((data) => res.send(data))
+    .catch((error) => {
+      if (error.code === 0) {
+        console.error(error);
+        res.status(404).send('User does not exist');
+      } else {
+        console.error(error);
+        res.status(500).send('Error searching database for user');
+      }
+    });
+};  
   
   
   
