@@ -47,7 +47,7 @@ svg {
   font: 10px;
   font-weight: $light;
   font-size: 12px;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.85);
   border-radius: 5px;
   margin: 20px 0;
 }
@@ -56,4 +56,11 @@ svg {
 }
 .black-container-bg {
   background-color: #1C1D21;
+}
+.main-img-container-bg {
+  background: url(../../static/assets/valley-dusting-1-2.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
