@@ -32,6 +32,94 @@ exports.retrieveUser = function(req, res) {
     .then((data) => res.send(data))
     .catch((error) => {
       console.error(error);
-      res.status(500).send(error);
+      res.status(500).send('Error searching database for user');
     });
 };
+
+// PATCH at '/api/v1/users/:id'
+exports.updateUser = function(req, res) {
+  var queryId = req.params.id;
+  // first, find the user by id
+  db.one('SELECT * FROM users WHERE id=$1', queryId)
+    .then((data) => {
+      // if there is a matching user, set up keyCount to determine when to respond
+      var keyCount = 0;
+      for (var key in req.body) {
+      // if a key in the request body doesn't exist, send error 
+        if (data[key] === undefined) {
+          res.status(500).send('You are trying to update the user.' + key + ' property, which doesn\'t exist');
+        } else {
+          // otherwise, increment key count
+          keyCount++;
+        }
+      }
+      // copy user into an object called updatedUser
+      var updatedUser = data;
+      // for each key:value pair in the request body
+      for (var key in req.body) {
+        // update the updatedUser
+        updatedUser[key] = req.body[key];
+        // and update the database
+        db.any(
+          'UPDATE users SET ' + key + 
+          '=$1 WHERE id=$2', 
+          [req.body[key], queryId]) 
+          .then((data) => {
+            keyCount --;
+            // when there are no more keys left
+            if (keyCount === 0) {
+              // send the updated user back
+              res.send(updatedUser);
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+            res.send(500);
+          });
+      }
+    })
+  .catch((error) => {
+    if (error.code === 0) {
+      res.send(404);
+    }
+    console.error(error);
+    res.status(500).send('Error searching database for user');
+  });
+};  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

@@ -8,8 +8,8 @@ userRouter.route('/')
   .post(userController.addUser);
 
 userRouter.route('/:id')
-  .get(userController.retrieveUser);
-//   .patch(userController.updateUser)
+  .get(userController.retrieveUser)
+  .patch(userController.updateUser);
 //   .delete(userController.deleteUser);
 
 // userRouter.route('/:id/repos')
