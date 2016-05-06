@@ -80,9 +80,9 @@ exports.CommitChart = () => {
     *************/
 
     // set dimensions
-    var pad = 20;
+    var pad = 30;
     var w = 600 - 2*pad;
-    var h = 320 - 2*pad;
+    var h = 360 - 2*pad;
     var barWidth = Math.floor(w/7) - 10;
     console.log('barWidth:', barWidth);
 
@@ -167,6 +167,28 @@ exports.CommitChart = () => {
         });
 
       // add indicators
+      for (j = 0; j < users.length; j++) {
+        svg.append('rect')
+          .style({
+            'fill': 'red',
+            'stroke': 'red'
+          })
+          .attr('x', 50 + 100 * j)
+          .attr('y', h - pad + 15)
+          .attr('width', 8)
+          .attr('height', 8)
+          // .attr('transform', 'translate(-36,' + (22+j*10) + ')')
+          // .text('Hello world')
+          ;
+        svg.append('text')
+          .style({
+            'fontFamily': 'monospace',
+            'fontSize': '8px'
+          })
+          .attr('transform', 'translate(' + (60 + 100 * j) + ',' + (h - 7) + ')')
+          .text('@msmith9393')
+          ;
+      }
 
   });
 };
