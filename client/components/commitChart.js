@@ -3,14 +3,12 @@
 //@TODO: make the 'week' array depend on the data received / day-of-the-week that the API request was made
 //@TODO: make sure we don't get an error relating to the d3.json having not returned
 
-// When more than two users are shown at once, we're going to shift to a
+// @TODO (extended note) When more than two users are shown at once, we're going to shift to a
 // different drawing block that's actually simpler in a way: they won't overlap,
 // instead they'll be side by side which just means smaller widths (barWidth / n for n users)
 
 exports.CommitChart = () => {
 
-  // get the data
-  // the rest of the code is wrapped inside d3.json because d3.json is async
   d3.json("https://api.github.com/repos/Groovy-Narwhal/GitAchieve/stats/commit_activity", (error, data) => {
     if (error) {
       console.log('There was an error retrieving commit data: ', error);
@@ -40,8 +38,7 @@ exports.CommitChart = () => {
 
     // Store each user's data for each day as a tuple of [id, commits]
     // The tuple is because we'll need to keep track of the id/user after we sort
-    // Sort with this function: .sort(function(a,b) { return a[1] > b[1]; })    var data = [];
-    var data = [], day, tuple;
+    var data = [], sortedData, day, tuple;
     for (i = 0; i < 7; i++) {
       day = [];
       for (j = 0; j < users.length; j++) {
@@ -53,22 +50,23 @@ exports.CommitChart = () => {
       data.push(day); // data will have 7 'day' arrays, which will each have n 'tuples' where n = # of users
     }
 
-    // Find the most commits overall and the most commits per day
+    // Sort data so that for each day the users' tuples are sorted in descending order (most-commits-first)
+    sortedData = JSON.parse(JSON.stringify(data)); // for some reason .slice seems to be changing original after sort
+    for (i = 0; i < 7; i++) {
+      sortedData[i].sort(function(a,b) { return a[1] < b[1]; });
+    }
+
+    // Find the most commits overall as well as the most commits per day
     var mostCommits = 0;
     var mostCommitsPerDay = [];
 
-    console.log('data:', data);
+    for (i = 0; i < 7; i++) {
+      var highest = 0, indexHighest = 0; // used for finding most commits for a particular day
 
-    for (i = 0; i < 7; i++) {
       for (j = 0; j < users.length; j++) {
-        if (data[i][j][1] > mostCommits)
+        if (data[i][j][1] > mostCommits) {
           mostCommits = data[i][j][1];
-      }
-    }
-    for (i = 0; i < 7; i++) {
-      var highest = 0;
-      var indexHighest = 0;
-      for (j = 0; j < users.length; j++) {
+        }
         if (data[i][j][1] > highest) {
           highest = data[i][j][1];
           indexHighest = j;
@@ -126,60 +124,49 @@ exports.CommitChart = () => {
       .call(yAxis);
 
     /*************
-     The D3 part dealing with the data
+     D3 continued: the part dealing with the data
     *************/
 
     var g = svg.selectAll(".bars")
-      .data(data)
+      .data(sortedData)
       .enter()
         .append("g")
 
-    // place the larger bar first
-    g.append("rect")
-    .attr('fill', 'green')
-      .attr('x', (d, i) => xScale(week[i]) )
-      .attr('y', (d) => {
-        return yScale(d[0][1])
-       })
-      .attr('width', barWidth )
-      .attr('height', (d) => {
-        return yScale(0) - yScale(d[0][1])
-      })
+    for (j = 0; j < users.length; j++) {
+      g.append("rect")
+        .attr('fill', (d) => {
+          return d[j][0]===0 ? 'lightgreen' : 'steelblue'
+        })
+        // .attr('opacity', (d) => {  // hard to see how 0.65 opacity is a good idea
+        //   return j===0 ? 0.65 : 1  // (double the # of colors = confusing)
+        // })
+        .attr('x', (d, i) => xScale(week[i]) ) // i is being used as a d3 function param, not as a counter
+        .attr('y', (d) => {
+          return yScale(d[j][1])
+         })
+        .attr('width', barWidth )
+        .attr('height', (d) => {
+          return yScale(0) - yScale(d[j][1])
+        })
+    }
 
-    // place the smaller bar (over the larger one)
-    g.append("rect")
-      // .style({ 'fill' : 'red'})
-      .attr('fill', (d, i) => {
-        return 'red'//mostCommitsPerDay[i] === 1 ? 'red' : 'steelblue'
-      })
-      .attr('x', (d, i) => xScale(week[i]) )
-      .attr('y', (d) => {
-        return yScale(d[1][1]);
-       })
-      .attr('width', barWidth )
-      .attr('height', (d) => {
-        return yScale(0) - yScale(d[1][1])
-      });
-
-    // and finally add text labels for # of commits (when greater than 0)
+    // add text labels for # of commits (when greater than 0)
     svg.append('g')
       .selectAll('text')
-      .data(data)
+      .data(sortedData)
       .enter()
         .append('text')
-        .attr('x', (d, i) => { return  xScale(week[i]) + barWidth/2 - 5; } )
-        .attr('y', (d) => {
-          var higherCount = d[1][1] > d[0][1] ? d[1][1] : d[0][1];
-          if (higherCount === 1)
-            return yScale(higherCount) - 5;
-          return yScale(higherCount) + 15;
+        .attr('x', (d, i) => {
+          return  xScale(week[i]) + barWidth/2 - 5;
         })
-        .text( (d) => {
-          var higherCount = d[1][1] > d[0][1] ? d[1][1] : d[0][1];
-          if (higherCount > 0) {
-            return higherCount.toString();
-          }
+        .attr('y', (d) => {
+          return d[0][1]===1 ? yScale(d[0][1]) - 5 : yScale(d[0][1]) + 15
+        })
+        .text((d) => {
+          return d[0][1] > 0 ? d[0][1].toString() : ''
         });
+
+      // add indicators
 
   });
 };
