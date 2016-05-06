@@ -1,5 +1,5 @@
-const PORT = process.env.PORT || 8000;
-const callbackHost = (PORT === 8000) ? 'http://127.0.0.1:8000' : 'http://www.gitachieve.com';
+const PORT = require('../config/config-settings').PORT;
+const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
@@ -8,6 +8,7 @@ const keys = require('./../config/github.config.js');
 const session = require('express-session');
 
 const db = require('../db/database.js');
+const gitHubMiner = require('./gitHubMiner');
 
 module.exports = function(app) {
   app.use(cookieParser());
@@ -35,37 +36,8 @@ module.exports = function(app) {
   passport.use(new Strategy({
     clientID: keys.id,
     clientSecret: keys.secret,
-    callbackURL: callbackHost + '/auth/github_oauth/callback'
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    // TODO: Add user to the database!
-    const id = profile._json.id;
-    const created_ga = new Date();
-    const username = profile._json.login;
-    const email = profile._json.email;
-    const avatar_url = profile._json.avatar_url;
-    const followers = profile._json.followers;
-    const following = profile._json.following;
-    db.run('SELECT * FROM users WHERE id=($1)', [id], function(err, data) {
-      if (err) {
-        console.error('ERROR in SELECT in auth', err);
-      } else {
-        if (data.length === 0) {
-          db.run(('INSERT INTO users (id, created_ga, username, email, avatar_url, followers, following) ' +
-            'VALUES ($1, $2, $3, $4, $5, $6, $7)'),
-            [id, created_ga, username, email, avatar_url, followers, following],
-            function(err, data) {
-              if (err) {
-                console.log('Error in INSERT in auth', err); 
-              } else {
-                console.log('Inserted user in database');
-              }
-            });
-        }
-        return cb(null, {data: data, token: accessToken});
-      }    
-    });
-  }));
+    callbackURL: CALLBACKHOST + '/auth/github_oauth/callback'
+  }, gitHubMiner.getOrAddUser));
 
   // GITHUB LOGIN
   app.get('/auth/github_oauth',
@@ -81,6 +53,7 @@ module.exports = function(app) {
     });
 
   app.get('/github/profile', checkAuth, function(req, res) {
+    console.log('in auth.js /github/profile, req.user', req.user);
     res.send(req.user);
   });
 

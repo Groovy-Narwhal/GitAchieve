@@ -27,11 +27,12 @@ export const signinUser = () => {
     // Submit email/password to the server
     axios.get(`${ROOT_URL}/github/profile`)
       .then(response => {
+        console.log('RESPONES', response)
         const userProfile = {
-          username: response.data.data[0].username,
-          id: response.data.data[0].id,
-          email: response.data.data[0].email,
-          avatar_url: response.data.data[0].avatar_url
+          username: response.data.data.login,
+          id: response.data.data.id,
+          email: response.data.data.email,
+          avatar_url: response.data.data.avatar_url
         }
         // - Update state to indicate user is authenticated
         dispatch({ type: types.AUTH_USER });
@@ -41,8 +42,8 @@ export const signinUser = () => {
         // - redirect to the route '/users'
         browserHistory.push('/');
       })
-      .catch(() => {
-        console.log('error');
+      .catch((error) => {
+        console.log(error);
       });
   }
 };
