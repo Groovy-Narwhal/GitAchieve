@@ -107,6 +107,7 @@ svg {
   height: 75px; }
 
 .header-nav {
+  background-color: #fff;
   border-bottom: 1px solid #ddd;
   padding: 20px 20px; }
 
@@ -142,7 +143,6 @@ svg {
   padding-bottom: 5px; }
 
 #search-results-container {
-  background-color: #ddd;
   padding: 10px; }
 
 .search-result-container {
