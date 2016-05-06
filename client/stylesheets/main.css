@@ -46,8 +46,8 @@ table {
 body {
   font-family: "Open Sans", sans-serif; }
 
-rect {
-  fill: #445878; }
+/*rect {
+  fill: #445878; }*/
 
 .day {
   color: #fff; }

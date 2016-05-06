@@ -17,7 +17,7 @@ class DashBoard extends Component {
     } = this.props;
     return (
       <div className="dashboard">
-        <div id="commit-charts"></div>
+      <div id="commit-charts"></div>
       </div>
     )
   }
