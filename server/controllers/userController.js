@@ -115,6 +115,9 @@ exports.retrieveRepos = function(req, res) {
   var dbTimestamp = pgp.as.date(new Date());
   
   // START HERE: currently, this does not overwrite any records that already exist - it will send an error instead.
+  // copy the approach used in gitHubMiner getOrAddUser
+  // need to make it so that when two users are both part of a repo, they can both be added to the users_repos join table
+  // currently, the second user will not be able to add the repo or the join row
   
   var addRepos = function(repos, callback) {
     db.tx(function (task) {

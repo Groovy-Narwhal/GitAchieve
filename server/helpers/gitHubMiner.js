@@ -1,5 +1,56 @@
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
+const db = require('../db/database.js').db;
+const pgp = require('../db/database.js').pgp;
+const PORT = require('../config/config-settings').PORT;
+const HOST = require('../config/config-settings').HOST;
+
+exports.getOrAddUser = function(accessToken, refreshToken, profile, cb) {
+  const id = profile._json.id;
+  const created_ga = pgp.as.date(new Date());
+  const username = profile._json.login;
+  const email = profile._json.email;
+  const avatar_url = profile._json.avatar_url;
+  const followers = profile._json.followers;
+  const following = profile._json.following;
+  
+  db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~) ' +
+    'SELECT $9, $10, $11, $12, $13, $14, $15 WHERE NOT EXISTS ' +
+    '(SELECT * FROM $1~ WHERE $2~ = $9)',
+    ['users', 'id', 'username', 'email', 'created_ga', 'avatar_url', 'followers', 'following', 
+    id, username, email, created_ga, avatar_url, followers, following])
+    .then((data) => {
+      console.log('data in gitHubMiner', data);
+      return cb(null, {data: profile._json, token: accessToken});    
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  
+  var options = {
+    host: HOST,
+    port: PORT,
+    path: '/api/v1/users/' + id + '/repos',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+  
+  var request = http.request(options, function(response) {
+    var data = '';
+    response.on('data', function(chunk) {
+      data += chunk;
+    });
+    response.on('end', function() {
+      console.log(data);
+    });
+  });
+  
+  request.end();
+  
+};
 
 exports.getRepos = function(username, callback) {
   console.log('in gitHubMiner getRepos');
