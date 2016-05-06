@@ -35,7 +35,7 @@ class Search extends Component {
     return (
       <div className="search-container">
         <form onSubmit={this.submitHandler.bind(this)} className="search-form">
-          <input type="search" placeholder="search repos" onChange={this.typeSearch.bind(this)} className="search-input"/>
+          <input type="search" placeholder="search" onChange={this.typeSearch.bind(this)} className="search-input"/>
           <input type="submit" className="search-submit-button"/>
         </form>
       </div>

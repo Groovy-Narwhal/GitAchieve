@@ -41,8 +41,8 @@ class Header extends Component {
       <nav className="header-nav">
         <div className="header-components-container">
           <h2 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h2>
-          <Search />
           {this.renderSearch()}
+          {this.renderLinks()}
         </div>
       </nav>
     );

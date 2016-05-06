@@ -6,6 +6,7 @@ import actions from './../actions/ActionCreators';
 import { SearchOptions } from './index';
 
 class SearchResults extends Component {
+
   compete(e, result) {
     e.preventDefault();
     fetch(`https://api.github.com/users/${result.login}/repos?per_page=100`)
@@ -52,7 +53,6 @@ class SearchResults extends Component {
         <div className="search-result-container">
           <img className="user-avatar-1" src={result.avatar_url} />
           <h2 onClick={ (e) => { this.routeTo.call(this, e, result, 'org') }}>{result.login}</h2>
-          <p>Description: {result.description}</p>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
         </div>
         )

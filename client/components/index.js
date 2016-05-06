@@ -1,6 +1,5 @@
 export App from './app';
 export DashBoard from './dashBoard';
-export ScoreBoard from './scoreBoard';
 export Login from './login';
 export Header from './header';
 export About from './about';
@@ -11,3 +10,4 @@ export UserProfile from './userProfile';
 export RepoProfile from './repoProfile';
 export OrgProfile from './orgProfile';
 export CommitChart from './commitChart';
+export Organizations from './organizations';

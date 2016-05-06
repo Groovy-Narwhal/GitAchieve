@@ -5,11 +5,13 @@ import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 
 class OrgProfile extends Component {
+
   render() {
     const { chosenSearchResult } = this.props;
     return (
       <div>
-        <h3>Org Profile</h3>
+        <img src={chosenSearchResult.avatar_url} className="user-avatar-1"/>
+        <h2>{chosenSearchResult.login}</h2>
       </div>
     )
   }

@@ -37,7 +37,7 @@ export const signinUser = () => {
         dispatch({ type: types.UPDATE_USER, payload: userProfile });
         // - Save the JWT token
         localStorage.setItem('token', response.data.token);
-        // - redirect to the route '/users'
+        // - redirect to the route '/'
         browserHistory.push('/');
       })
       .catch((err) => {
