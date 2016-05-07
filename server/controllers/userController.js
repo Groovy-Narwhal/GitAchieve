@@ -68,6 +68,7 @@ exports.updateUser = function(req, res) {
   };
   
   // if user exists, update their info; otherwise, add them
+  // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
   var upsertUser = function(body) {
     db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
       'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
@@ -156,8 +157,8 @@ exports.retrieveRepos = function(req, res) {
         return task.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
           'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
           '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
-        ['users_repos', 'created_ga', 'repo_id', 'user_id',
-        dbTimestamp, repo.id, queryId]);
+          ['users_repos', 'created_ga', 'repo_id', 'user_id',
+          dbTimestamp, repo.id, queryId]);
       });
       return task.batch(queries);
     })
@@ -179,7 +180,7 @@ exports.retrieveRepos = function(req, res) {
       'INNER JOIN repos r ' + 
       'ON r.id = ur.repo_id ' + 
       'WHERE ur.user_id=$1'), 
-      queryId)
+      [queryId])
       .then((data) => res.send(data))
       .catch((error) => {
         console.error(error);
