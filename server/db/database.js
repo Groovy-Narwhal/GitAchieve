@@ -21,10 +21,9 @@ const db = pgp(config);
 
 db.tx(t=> t.one(sql.test)
   .then((data) => {
-    // if the users table exists, return false
+    // if users table doesn't exist, rebuild database
     if (!data.exists) {
       console.log('Rebuilding database');
-      // if users table doesn't exist, rebuild database
       t.batch([t.none(sql.drop), t.none(sql.build)]);
     } else {
       console.log('Users table exists, not rebuilding database');
