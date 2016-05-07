@@ -5,11 +5,7 @@ import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 
 class Organizations extends Component {
-  componentWillMount() {
-    fetch(`https://api.github.com/user/orgs`)
-      .then(res => res.json())
-      .then(res => console.log(res))
-  }
+
   render() {
     return (
       <div>
