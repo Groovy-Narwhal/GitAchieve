@@ -54,6 +54,25 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       callback(body);
     }
   });
+
+
+  // update the user's orgs in our database   
+  var options = {
+    url: CALLBACKHOST + '/api/v1/users/' + id + '/orgs',
+    method: 'PATCH',
+    form: profile,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+  request(options, (error, response, body) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('Success in Auth get orgs');
+      callback(body);
+    }
+  });
 };
 
 module.exports = function(app) {
