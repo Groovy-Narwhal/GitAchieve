@@ -5,7 +5,7 @@ import * as actions from './../actions/index';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import Search from './search';
-import HeaderUserButton from './headerUserButton';
+import HeaderProfileButton from './headerProfileButton';
 
 class Header extends Component {
   handleSignOut() {
@@ -26,7 +26,7 @@ class Header extends Component {
         <a key={3} onClick={this.handleSignOut.bind(this)} className="nav-link">
           SignOut
         </a>,
-        <HeaderUserButton />
+        <HeaderProfileButton />
       ];
     }
   }
