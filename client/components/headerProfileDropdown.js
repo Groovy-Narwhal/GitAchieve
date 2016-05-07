@@ -31,11 +31,9 @@ class HeaderUserButton extends Component {
   render() {
     return (
       <div className="header-profile-dropdown">
-        <ul>
-        <li>profile</li>
-        <li>achievements</li>
-        <li>signout</li>
-        </ul>
+        <div className="header-profile-dropdown-item">profile</div>
+        <div className="header-profile-dropdown-item">achievements</div>
+        <div className="header-profile-dropdown-item">signout</div>
       </div>
     )
   }

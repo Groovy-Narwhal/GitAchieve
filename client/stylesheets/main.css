@@ -155,8 +155,15 @@ svg {
   background-color: #fff;
   border-radius: 5px;
   position: absolute;
+  color: #444;
+  border: 1px solid #eee; }
+
+.header-profile-dropdown-item {
   padding: 10px;
-  color: #444; }
+  cursor: pointer; }
+
+.header-profile-dropdown-item:hover {
+  background-color: #eee; }
 
 #search-results-container {
   padding: 10px; }
