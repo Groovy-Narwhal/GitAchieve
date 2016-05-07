@@ -14,11 +14,13 @@ exports.retrieveOrgs = function(req, res) {
   const addOrgsToDb = (orgs, callback) => {
     db.tx(task => {
       const queries = orgs.map(org => {
-        return task.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~) ' +
-  + 'SELECT $6, $7, $8, $9 WHERE NOT EXISTS ' +
-  '(SELECT * FROM $1~ WHERE $2~ = $6)',
-  ['orgs', 'id', 'orgname', 'followers', 'following',
-  id, orgname, followers, following]);
+        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~) ' +
+          'VALUES ($7, $8, $9, $10) ' +
+          'ON CONFLICT ($3~) ' +
+          'DO UPDATE SET ($4~, $5~, $6~) = ($8, $9, $10) ' +
+          'WHERE $2~.$3~ = $7',
+          ['orgs', 'o', 'id', 'orgname', 'followers', 'following',
+          id, orgname, followers, following]);
       });
     return task.batch(queries);
     })
