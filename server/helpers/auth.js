@@ -22,7 +22,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   const following = profile._json.following;
   
   // add the user to our database
-  // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
+  // @TODO - MAKE THIS A REAL UPSERT
   db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~) ' +
     'SELECT $9, $10, $11, $12, $13, $14, $15 WHERE NOT EXISTS ' +
     '(SELECT * FROM $1~ WHERE $2~ = $9)',
