@@ -18,27 +18,27 @@ const config = {
 const db = pgp(config);
 
 // check if the users table exists
-db.query(sql.test)
-  .then((data) => {
-    // if the users table does not exist, drop all tables and rebuild from schema
-    if (!data[0].exists) {
-      console.log('Users table does not exist; dropping tables');
-      db.query(sql.drop)
-        .then((data) => {
-          db.query(sql.build)
-            .then((data) => {
-              console.log('Empty database built from GitAchieve schema');
+db.tx(t=> {
+        t.one(sql.test)
+            .then(data=> {
+                return !!data.exists || t.batch([
+                            t.none(sql.drop),
+                            t.none(sql.build)
+                        ])
+                        .then(()=>false);
             });
-        });  
-    // if the users table exists, do nothing     
-    } else {
-      console.log('Users table exists; not dropping tables');
-    }
-  })  
-  .catch((error) => {
-    console.error('Error: ', error);
-  })
-  .finally(() => pgp.end());
+    })
+    .then(rebuilt=> {
+        if (rebuilt) {
+            console.log('Database was rebuilt.');
+        } else {
+            console.log('Users table already exists.');
+        }
+    })
+    .catch(error=> {
+        console.log("ERROR:", error);
+    })
+    .finally(pgp.end);
   
 exports.db = db;
 exports.pgp = pgp;
