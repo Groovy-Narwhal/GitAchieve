@@ -62,19 +62,19 @@ exports.updateUser = function(req, res) {
       if (error) {
         console.error(error);
       } else {
-        callback(body);
+        callback(JSON.parse(body));
       }
     });
   };
   
-  // START HERE - the PATCH to http://localhost:8000/api/v1/users/15864056 with body = username:alexnitta is not working
   // if user exists, update their info; otherwise, add them
   var upsertUser = function(body) {
-    db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9) ' +
+    db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
       'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
       'ON CONFLICT ($3~) ' + 
       'DO UPDATE SET ($4~, $5~, $6~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
-      'WHERE $2~.$3~ = $10',
+      'WHERE $2~.$3~ = $10 ' +
+      'RETURNING *',
       ['users', 'u', 'id', 'created_ga', 'username', 'email', 'avatar_url', 'followers', 'following',
       queryId, dbTimestamp, username, body.email, body.avatar_url, body.followers, body.following])
     .then((data) => {
@@ -82,10 +82,10 @@ exports.updateUser = function(req, res) {
     })
     .catch((error) => {
       // if the user was not found, send 404
+      console.error(error);
       if (error.code === 0) {
         res.status(404).send('User does not exist');
       } else {
-        console.error(error);
         res.status(500).send('Error searching database for user');
       }
     });
