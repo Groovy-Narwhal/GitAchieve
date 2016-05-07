@@ -1,6 +1,9 @@
+const request = require('request');
 const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
-const gitHubMiner = require('../helpers/gitHubMiner');
+const PORT = require('../config/config-settings').PORT;
+const HOST = require('../config/config-settings').HOST;
+const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 // GET at /api/v1/users
 exports.retrieveAllUsers = function(req, res) {
@@ -107,24 +110,25 @@ exports.deleteUser = function(req, res) {
     });
 };  
 
-// GET at '/api/v1/users/:id/repos'
+// PATCH at '/api/v1/users/:id/repos'
 exports.retrieveRepos = function(req, res) {
   var queryId = req.params.id;
   var queryUsername = req.body.username;
-
   var dbTimestamp = pgp.as.date(new Date());
   
-  // START HERE: currently, this does not overwrite any records that already exist - it will send an error instead.
-  // copy the approach used in gitHubMiner getOrAddUser
-  // need to make it so that when two users are both part of a repo, they can both be added to the users_repos join table
-  // currently, the second user will not be able to add the repo or the join row
+  // ** HELPER FUNCTIONS **
   
-  var addRepos = function(repos, callback) {
+  // add an array of repos to our repos table
+  var addReposToDb = function(repos, callback) {
+    // db.tx is a 'transaction' - it allows you to execute several commands on one connection
     db.tx(function (task) {
       var queries = repos.map(function (repo) {
-        return task.none('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) VALUES ($8, $9, $10, $11, $12, $13)',
-        ['repos', 'id', 'created_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count',
-        repo.id, dbTimestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count]);
+        // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
+        return task.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~) ' +
+          'SELECT $9, $10, $11, $12, $13, $14, $15 WHERE NOT EXISTS ' +
+          '(SELECT * FROM $1~ WHERE $2~ = $9)',
+        ['repos', 'id', 'created_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count', 'name',
+        repo.id, dbTimestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count, repo.name]);
       });
       return task.batch(queries);
     })
@@ -133,28 +137,38 @@ exports.retrieveRepos = function(req, res) {
       callback();
     })
     .catch(function (error) {
+      console.log('addReposToDb error');
       console.error(error);
     });  
     
   };
+  
+  // add a join for each repo to our users_repos table, associating each repo with a user  
+  var addJoinsToDb = function(repos, callback) {
+    db.tx(function (task) {
+      var queries = repos.map(function (repo) {
+        // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
+        return task.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
+          'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
+          '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
+        ['users_repos', 'created_ga', 'repo_id', 'user_id',
+        dbTimestamp, repo.id, queryId]);
+      });
+      return task.batch(queries);
+    })
+    .then(function (data) {
+      console.log('Successfully added users_repos joins');
+      callback();
+    })
+    .catch(function (error) {
+      console.log('Add users_repos join error');
+      console.error(error);
+    });     
     
-  var addJoins = function(repos, callback) {
-    repos.forEach(function(repo, index) {
-      db.any('INSERT INTO $1~ ($2~, $3~, $4~) VALUES ($5, $6, $7)',
-        ['users_repos', 'created_ga', 'repo_id', 'user_id', dbTimestamp, repo.id, queryId])
-        .then(() => {
-          if (index === repos.length - 1) {
-            callback();
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          // res.status(500).send('Error saving to users_repos join table');
-        });
-    });
   };
   
-  var sendRepos = function () {
+  // sends the response for this API endpoint, containing all this user's repos
+  var patchReposResponse = function () {
     db.any(('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
       'FROM users_repos ur ' +
       'INNER JOIN repos r ' + 
@@ -168,36 +182,35 @@ exports.retrieveRepos = function(req, res) {
       });
   };
   
-  var handleGitHubData = function(data) {
-    var repos = JSON.parse(data);
-    var timestamp = new Date();
-    addRepos(repos, addJoins.bind(null, repos, sendRepos));
+  // get the user's repos from GitHub
+  var getReposFromGitHub = function(username, callback) {
+    var options = {
+      url: 'https://api.github.com/users/' + username + '/repos',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': username
+      }
+    };
+    request(options, (error, response, body) => {
+      if (error) {
+        console.error(error);
+      } else {
+        callback(body);
+      }
+    });
   };
   
-    // TO DO - change 'alexnitta' to queryUsername when done testing
-  gitHubMiner.getRepos('alexnitta', handleGitHubData);
+  // gather the helper functions together into one asynchronous series
+  var handleGitHubData = function(data) {
+    var repos = JSON.parse(data);
+    addReposToDb(repos, addJoinsToDb.bind(null, repos, patchReposResponse));
+  };
+  
+  // CALL HELPER FUNCTIONS
+  getReposFromGitHub(queryUsername, handleGitHubData);
   
 };  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   
