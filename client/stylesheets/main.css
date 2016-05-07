@@ -46,8 +46,8 @@ table {
 body {
   font-family: "Open Sans", sans-serif; }
 
-/*rect {
-  fill: #445878; }*/
+rect {
+  fill: #445878; }
 
 .day {
   color: #fff; }
@@ -73,6 +73,9 @@ svg {
   -o-background-size: cover;
   background-size: cover; }
 
+.float-right {
+  float: right; }
+
 @font-face {
   font-family: 'Open Sans';
   font-weight: 300;
@@ -90,13 +93,18 @@ svg {
   font-weight: 600;
   font-style: normal;
   src: url("/fonts/Open-Sans-600/Open-Sans-600.eot");
-  src: url("/fonts/Open-Sans-600/Open-Sans-600.eot?#iefix") format("embedded-opentype"), local("Open Sans Semibold"), local("Open-Sans-600"), url("/fonts/Open-Sans-600/Open-Sans-600.woff2") format("woff2"), url("/fonts/Open-Sans-600/Open-Sans-600.woff") format("woff"), url("/fonts/Open-Sans-600/Open-Sans-600.ttf") format("truetype"), url("/fonts/Open-Sans-600/Open-Sans-600.svg#OpenSans") format("svg"); }
+  src: url("/fonts/Open-Sans-600/Open-Sans-600.eot?#iefix") format("embedded-opentype"), local("Open Sans Semibold"), local("Open-Sans-600"), url("/static/stylesheets/partials/fonts/Open-Sans-600/Open-Sans-600.woff2") format("woff2"), url("/static/stylesheets/partials/fonts/Open-Sans-600/Open-Sans-600.woff") format("woff"), url("/static/stylesheets/partials/fonts/Open-Sans-600/Open-Sans-600.ttf") format("truetype"), url("/fonts/Open-Sans-600/Open-Sans-600.svg#OpenSans") format("svg"); }
 @font-face {
   font-family: 'Open Sans';
   font-weight: 700;
   font-style: normal;
   src: url("/fonts/Open-Sans-700/Open-Sans-700.eot");
-  src: url("/fonts/Open-Sans-700/Open-Sans-700.eot?#iefix") format("embedded-opentype"), local("Open Sans Bold"), local("Open-Sans-700"), url("/fonts/Open-Sans-700/Open-Sans-700.woff2") format("woff2"), url("/fonts/Open-Sans-700/Open-Sans-700.woff") format("woff"), url("/fonts/Open-Sans-700/Open-Sans-700.ttf") format("truetype"), url("/fonts/Open-Sans-700/Open-Sans-700.svg#OpenSans") format("svg"); }
+  src: url("/fonts/Open-Sans-700/Open-Sans-700.eot?#iefix") format("embedded-opentype"), local("Open Sans Bold"), local("Open-Sans-700"), url("/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.woff2") format("woff2"), url("/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.woff") format("woff"), url("/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.ttf") format("truetype"), url("/fonts/Open-Sans-700/Open-Sans-700.svg#OpenSans") format("svg"); }
+.user-avatar-sm {
+  width: 20px;
+  height: 20px;
+  border-radius: 2px; }
+
 .user-avatar-1 {
   width: 100px;
   height: auto;
@@ -117,7 +125,8 @@ svg {
   width: 80%;
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap; }
+  flex-wrap: nowrap;
+  justify-content: space-around; }
 
 .logo {
   font-weight: 700;

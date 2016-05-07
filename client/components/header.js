@@ -4,7 +4,8 @@ import { browserHistory } from 'react-router';
 import * as actions from './../actions/index';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
-import { Search } from './index';
+import Search from './search';
+import HeaderUserButton from './headerUserButton';
 
 class Header extends Component {
   handleSignOut() {
@@ -15,6 +16,7 @@ class Header extends Component {
       return null;
     } else {
       return [
+        <Search />,
         <a key={1} onClick={() => browserHistory.push('/repos')} className="nav-link">
           Repos
         </a>,
@@ -23,7 +25,8 @@ class Header extends Component {
         </a>,
         <a key={3} onClick={this.handleSignOut.bind(this)} className="nav-link">
           SignOut
-        </a>
+        </a>,
+        <HeaderUserButton />
       ];
     }
   }
@@ -41,7 +44,6 @@ class Header extends Component {
       <nav className="header-nav">
         <div className="header-components-container">
           <h2 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h2>
-          {this.renderSearch()}
           {this.renderLinks()}
         </div>
       </nav>

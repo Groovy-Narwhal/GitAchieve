@@ -36,9 +36,9 @@ $font-stack:  'Open Sans', sans-serif;
   src: url('/fonts/Open-Sans-600/Open-Sans-600.eot?#iefix') format('embedded-opentype'),
        local('Open Sans Semibold'),
        local('Open-Sans-600'),
-       url('/fonts/Open-Sans-600/Open-Sans-600.woff2') format('woff2'),
-       url('/fonts/Open-Sans-600/Open-Sans-600.woff') format('woff'),
-       url('/fonts/Open-Sans-600/Open-Sans-600.ttf') format('truetype'),
+       url('/static/stylesheets/partials/fonts/Open-Sans-600/Open-Sans-600.woff2') format('woff2'),
+       url('/static/stylesheets/partials/fonts/Open-Sans-600/Open-Sans-600.woff') format('woff'),
+       url('/static/stylesheets/partials/fonts/Open-Sans-600/Open-Sans-600.ttf') format('truetype'),
        url('/fonts/Open-Sans-600/Open-Sans-600.svg#OpenSans') format('svg');
 }
 
@@ -50,9 +50,9 @@ $font-stack:  'Open Sans', sans-serif;
   src: url('/fonts/Open-Sans-700/Open-Sans-700.eot?#iefix') format('embedded-opentype'),
        local('Open Sans Bold'),
        local('Open-Sans-700'),
-       url('/fonts/Open-Sans-700/Open-Sans-700.woff2') format('woff2'),
-       url('/fonts/Open-Sans-700/Open-Sans-700.woff') format('woff'),
-       url('/fonts/Open-Sans-700/Open-Sans-700.ttf') format('truetype'),
+       url('/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.woff2') format('woff2'),
+       url('/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.woff') format('woff'),
+       url('/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.ttf') format('truetype'),
        url('/fonts/Open-Sans-700/Open-Sans-700.svg#OpenSans') format('svg');
 }
 
