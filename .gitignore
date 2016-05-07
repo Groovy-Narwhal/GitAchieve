@@ -16,3 +16,6 @@ node_modules/*
 
 #SCSS
 .sass-cache/*
+
+#NPM logs
+npm-debug.log
