@@ -6,7 +6,7 @@ const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 
-// /api/v1/users/:id/orgs
+// /api/v1/users/orgs/:id/orgs
 exports.retrieveOrgs = (req, res) => {
   const queryId = req.params.id;
   const username = req.body.username;
@@ -17,6 +17,7 @@ exports.retrieveOrgs = (req, res) => {
   // helper functions
   const addOrgsToDb = (orgs, callback) => {
     db.tx(task => {
+      console.log('ORGS', orgs)
       const queries = orgs.map(org => {
         return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~) ' +
           'VALUES ($7, $8, $9, $10) ' +
@@ -61,7 +62,7 @@ exports.retrieveOrgs = (req, res) => {
   }
 
   // send the response for the api endpoint, containing all this user's orgs
-  var patchReposResponse = () => {
+  var patchOrgsResponse = () => {
     db.any(('SELECT o.id, o.created_ga, o.created_at, o.orgname, o.followers, o.following, o.score ' +
       'FROM users_orgs uo ' +
       'INNER JOIN orgs o ' +
@@ -76,12 +77,14 @@ exports.retrieveOrgs = (req, res) => {
 
   // get user info from GitHub
   var getOrgsFromGitHub = (username, callback) => {
+    console.log('USERNAME IN GETORGS FROM GITHUB', username);
     var options = {
       url: 'https://api.github.com/user/orgs',
       method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': username
+        'User-Agent': username,
+        'Authorization':'14e38927fb9ac93004f09b57fe39a382c780c78a'
       }
     };
     request(options, (error, response, body) => {
@@ -100,7 +103,7 @@ exports.retrieveOrgs = (req, res) => {
   }
 
   // call helper functions
-  // getOrgsFromGitHub(username, handleGitHubData);
+  getOrgsFromGitHub(username, handleGitHubData);
 }
 
 

@@ -3,7 +3,7 @@ const orgController = require('../controllers/orgController.js');
 
 // the following routes start from /api/v1/orgs
 
-orgRouter.route(':id/orgs')
+orgRouter.route('/:id/orgs')
   .patch(orgController.retrieveOrgs);
 
 orgRouter.route('/:orgname')

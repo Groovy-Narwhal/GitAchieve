@@ -44,33 +44,36 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     method: 'PATCH',
     form: profile,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': accessToken
     }
   };
   request(options, (error, response, body) => {
     if (error) {
       console.error(error);
     } else {
-      callback(body);
+      console.log('Success in Auth get repos');
+      // callback(body);
     }
   });
 
 
   // update the user's orgs in our database   
-  var options = {
-    url: CALLBACKHOST + '/api/v1/users/' + id + '/orgs',
+  var options2 = {
+    url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
     method: 'PATCH',
     form: profile,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': accessToken
     }
   };
-  request(options, (error, response, body) => {
+  request(options2, (error, response, body) => {
     if (error) {
       console.error(error);
     } else {
       console.log('Success in Auth get orgs');
-      callback(body);
+      console.log('body', body)
     }
   });
 };
