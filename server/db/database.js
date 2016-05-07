@@ -4,9 +4,11 @@ const options = {
 };
 const pgp = require('pg-promise')(options);
 const sql = require('./sql/sql');
+const PORT = require('../config/config-settings').PORT;
+const HOST = require('../config/config-settings').HOST;
 
 const config = {
-  host: 'localhost', // server name or IP address;
+  host: HOST, // server name or IP address;
   port: 5432,
   database: 'gitachieve',
   user: 'postgres',

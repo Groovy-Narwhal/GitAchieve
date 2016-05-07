@@ -1,14 +1,56 @@
 const PORT = require('../config/config-settings').PORT;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
-
+const request = require('request');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const Strategy = require('passport-github2').Strategy;
 const keys = require('./../config/github.config.js');
 const session = require('express-session');
+const db = require('../db/database.js').db;
+const pgp = require('../db/database.js').pgp;
 
-const db = require('../db/database.js');
-const gitHubMiner = require('./gitHubMiner');
+// helper function to be used in Passport authentication as a callback
+// adds a user to the database, if they don't already exist
+// also updates their repos in our database
+const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
+  const id = profile._json.id;
+  const created_ga = pgp.as.date(new Date());
+  const username = profile._json.login;
+  const email = profile._json.email;
+  const avatar_url = profile._json.avatar_url;
+  const followers = profile._json.followers;
+  const following = profile._json.following;
+  
+  // add the user to our database
+  // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
+  db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~) ' +
+    'SELECT $9, $10, $11, $12, $13, $14, $15 WHERE NOT EXISTS ' +
+    '(SELECT * FROM $1~ WHERE $2~ = $9)',
+    ['users', 'id', 'username', 'email', 'created_ga', 'avatar_url', 'followers', 'following', 
+    id, username, email, created_ga, avatar_url, followers, following])
+    .then((data) => {
+      return callback(null, {data: profile._json, token: accessToken});    
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  // update the user's repos in our database   
+  var options = {
+    url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
+    method: 'PATCH',
+    form: profile,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  };
+  request(options, (error, response, body) => {
+    if (error) {
+      console.error(error);
+    } else {
+      callback(body);
+    }
+  });
+};
 
 module.exports = function(app) {
   app.use(cookieParser());
@@ -37,7 +79,7 @@ module.exports = function(app) {
     clientID: keys.id,
     clientSecret: keys.secret,
     callbackURL: CALLBACKHOST + '/auth/github_oauth/callback'
-  }, gitHubMiner.getOrAddUser));
+  }, getOrAddUser));
 
   // GITHUB LOGIN
   app.get('/auth/github_oauth',
@@ -53,7 +95,6 @@ module.exports = function(app) {
     });
 
   app.get('/github/profile', checkAuth, function(req, res) {
-    console.log('in auth.js /github/profile, req.user', req.user);
     res.send(req.user);
   });
 
