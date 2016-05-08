@@ -1,10 +1,10 @@
 import React from 'react';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
-import logger from 'redux-logger';
+import reduxThunk from 'redux-thunk';
 import reducers from './../reducers/rootReducer';
 
 const finalCreateStore = compose(
-  applyMiddleware(logger())
+  applyMiddleware(reduxThunk)
 )(createStore);
 
 

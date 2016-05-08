@@ -4,27 +4,29 @@ const userController = require('./../controllers/userController.js');
 // the following routes start from /api/v1/users
 
 userRouter.route('/')
-  .get(userController.retrieve)
-  .post(userController.addOne);
+  .get(userController.retrieveAllUsers)
+  .post(userController.addUser);
 
-userRouter.route('/:username')
-  .get(userController.retrieveOne)
-  .patch(userController.updateOne)
-  .delete(userController.deleteOne);
+userRouter.route('/:id')
+  .get(userController.retrieveUser)
+  .patch(userController.updateUser)
+  .delete(userController.deleteUser);
 
-userRouter.route('/:username/repos')
-  .get(userController.retrieveRepos);
+userRouter.route('/:id/repos')
+  .patch(userController.retrieveRepos)
+  .post(userController.addRepo);
 
-userRouter.route('/:username/friends')
-  .get(userController.retrieveFriends)
-  .post(userController.addFriend);
+// userRouter.route('/:id/friends')
+//   .get(userController.retrieveFriends)
+//   .post(userController.addFriend)
+//   .patch(userController.confirmOrRemoveFriend);
 
-userRouter.route('/:username/stats')
-  .get(userController.retrieveStats)
-  .post(userController.addStats);
+// userRouter.route('/:id/stats')
+//   .get(userController.retrieveStats)
+//   .post(userController.addStats);
 
-userRouter.route('/:username/achievements')
-  .get(userController.retrieveAchievements)
-  .post(userController.addAchievements);
+// userRouter.route('/:id/achievements')
+//   .get(userController.retrieveAchievements)
+//   .post(userController.addAchievements);
   
 module.exports = userRouter;

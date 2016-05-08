@@ -1,0 +1,71 @@
+// Font weights
+$light: 300;
+$regular: 400;
+$semi-bold: 600;
+$bold: 700;
+
+// Font Sizes
+$light-size: 8px;
+$regular-size: 12px;
+$semi-large-size: 16px;
+$large-size: 20px;
+$x-large-size: 24px;
+
+// Color
+$dark-gray: #222;
+$medium-gray: #444;
+$light-gray: #999;
+$lighter-gray: #ccc;
+$lightest-gray: #eee;
+$white: #fff;
+
+// Base Font
+$base-font-family: 'Open Sans', sans-serif;
+$base-font-weight: $regular;
+$base-font-size: 13px;
+$base-line-height: 1.4;
+
+// Fixed Font
+$fixed-font-family: monospace;
+$fixed-font-size: 85%;
+$fixed-line-height: $base-line-height;
+
+// Headings
+$header-font-weight: $bold;
+
+// Base Colors
+$primary-color: #445878;
+
+body {
+  font-family: $base-font-family;
+}
+rect {
+  fill: $primary-color;
+}
+.day {
+  color: $white;
+}
+svg {
+  font: 10px;
+  font-weight: $light;
+  font-size: 12px;
+  background-color: rgba(255, 255, 255, 0.85);
+  border-radius: 5px;
+  margin: 20px 0;
+}
+#commit-charts {
+  text-align: center;
+}
+.black-container-bg {
+  background-color: #1C1D21;
+}
+.main-img-container-bg {
+  background: url(../../static/assets/valley-dusting-1-2.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.float-right {
+  float: right;
+}

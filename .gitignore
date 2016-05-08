@@ -3,8 +3,7 @@ gitSpy/*
 
 # Server data
 server/logs/*
-server/config/*
-server/npm-debug.log
+server/config/github.config.js
 
 # Concatenated and minified code
 dist/*
@@ -13,3 +12,11 @@ dist/*
 
 # Dependency directories
 node_modules/*
+
+#SCSS
+.sass-cache/*
+
+#NPM logs
+npm-debug.log
+server/npm-debug.log
+server/db/npm-debug.log

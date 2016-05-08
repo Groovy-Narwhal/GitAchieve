@@ -1,49 +1,39 @@
-const massive = require('massive');
-const fs = require('fs');
+const promise = require('bluebird');
+const options = {
+  promiseLib: promise
+};
+const pgp = require('pg-promise')(options);
+const sql = require('./sql/sql');
+const PORT = require('../config/config-settings').PORT;
+const HOST = require('../config/config-settings').HOST;
+const diag = require('./diagnostics');
+diag.init(options);
 
-// @todo: use an env variable here for dev vs. production servers
-const connectionString = 'postgres://localhost:5432/gitachieve';
+const config = {
+  host: HOST, // server name or IP address;
+  port: 5432,
+  database: 'gitachieve',
+  user: 'postgres',
+  password: ''
+};
 
-const db = massive.connectSync({connectionString: connectionString});
+const db = pgp(config);
 
-// workaround for the built-in Massive function that is supposed to create a method from the .sql 
-// files - see line 32 and https://massive-js.readthedocs.io/en/latest/functions/
-const userSchema = fs.readFileSync(__dirname + '/user_schema.sql', 'utf8', function (err, data) {
-  if (err) {
-    console.error(err);
-  }
-});
-
-
-
-// if the users table is empty, build it
-db.run('select * from users', function(err, users) {
-  if (err) {
-    console.error(err);
-  } else {
-    if (users.length === 0) {
-      console.log('building users table');
-      db.run(userSchema, function(error, res) {
-        if (error) {
-          console.error('Error in userSchema, ', error);
-        } else {
-          console.log('Created users table from userSchema');
-        }
-      });
-    
-    // this version should read the user_schema.sql file within this folder
-    // and make it into a method on the db instance
-    // ** this is not working, it seems to load after the run command is called
-    
-    // db.user_schema(function(error, response) {
-    //   if (error) {
-    //     console.error('Error in user_schema, ', error);
-    //   } else {
-    //     console.log('Created table from user_schema');
-    //   }
-    // });
+db.tx(t=> t.one(sql.test)
+  .then((data) => {
+    // if users table doesn't exist, rebuild database
+    if (!data.exists) {
+      console.log('Rebuilding database');
+      t.batch([t.none(sql.drop), t.none(sql.build)]);
+    } else {
+      console.log('Users table exists, not rebuilding database');
     }
-  }
-});
-
-module.exports = db;
+  })
+  .catch(error=> {
+    console.log('error:', error);
+  })
+  .finally(pgp.end)
+);
+  
+exports.db = db;
+exports.pgp = pgp;

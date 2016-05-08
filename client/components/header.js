@@ -1,44 +1,66 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { browserHistory } from 'react-router';
+import * as actions from './../actions/index';
+import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
+import Search from './search';
+import HeaderProfileButton from './headerProfileButton';
 
 class Header extends Component {
+  handleSignOut() {
+    this.props.actions.signoutUser();
+  }
   renderLinks() {
     if (!this.props.authenticated) {
-      return <li>
-        <Link to="/signin">Sign In</Link>
-      </li>
+      return null;
     } else {
       return [
-        <li key={1}>
-          <Link to="/repos">Repos</Link>
-        </li>,
-        <li key={2}>
-          <Link to="/orgs">Organizations</Link>
-        </li>,
-        <li key={3}>
-          <Link to="/signout">Sign Out</Link>
-        </li>
+        <Search />,
+        <a key={1} onClick={() => browserHistory.push('/repos')} className="nav-link">
+          Repos
+        </a>,
+        <a key={2} onClick={() => browserHistory.push('/orgs')} className="nav-link">
+          Orgs
+        </a>,
+        <a key={3} onClick={this.handleSignOut.bind(this)} className="nav-link">
+          SignOut
+        </a>,
+        <HeaderProfileButton />
       ];
+    }
+  }
+
+  renderSearch() {
+    if (!this.props.authenticated) {
+      return null;
+    } else {
+      return <Search />;
     }
   }
 
   render() {
     return (
-      <nav>
-        <Link to="/">GitAchieve</Link>
-        <ul>
+      <nav className="header-nav">
+        <div className="header-components-container">
+          <h2 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h2>
           {this.renderLinks()}
-        </ul>
+        </div>
       </nav>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {
+const mapStateToProps = state => (
+  {
     authenticated: state.auth.authenticated
-  };
-}
+  }
+)
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = dispatch => (
+  {
+    actions: bindActionCreators(actions, dispatch)
+  }
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

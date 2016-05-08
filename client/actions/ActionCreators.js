@@ -1,26 +1,38 @@
-import axios from 'axios';
-import { browserHistory } from 'react-router';
 import * as types from './actionTypes';
 
-const ROOT_URL = 'http://localhost:8000';
-
 export default {
-  incrementStore: num => {
+  authUser: () => {
     return {
-      type: types.INCREMENT_SCORE,
-      num
+      type: types.AUTH_USER
     }
   },
-  addToken: token => {
+  unAuthUser: () => {
     return {
-      type: types.ADD_TOKEN,
-      token
+      type: types.UNAUTH_USER
+    }
+  },
+  querySearch: searchResults => {
+    return {
+      type: types.QUERY_SEARCH,
+      searchResults
+    }
+  },
+  inputSearch: searchInput => {
+    return {
+      type: types.INPUT_SEARCH,
+      searchInput
+    }
+  },
+  searchUserEvents: userEvents => {
+    return {
+      type: types.SEARCH_USER_EVENTS,
+      userEvents
+    }
+  },
+  chooseSearchResult: chosenSearchResult => {
+    return {
+      type: types.CHOOSE_SEARCH_RESULT,
+      chosenSearchResult
     }
   }
-}
-
-export function signinUser() {
-  // return (dispatch) {
-    
-  // }
-}
+};

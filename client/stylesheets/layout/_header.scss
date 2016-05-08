@@ -1,0 +1,70 @@
+.header-nav {
+  background-color: $white;
+  border-bottom: 1px solid #ddd;
+  padding: 20px 20px;
+}
+
+.header-components-container {
+  margin-right: auto;
+  margin-left: auto;
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+
+.logo {
+  font-weight: $bold;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.search-form {
+  padding-top:5px;
+  padding-top:5px;
+}
+
+.search-submit-button {
+  border-radius: 0;
+}
+
+.search-container {
+  white-space: nowrap;
+}
+
+.nav-link {
+  margin: 0 10px;
+  font-weight: $semi-bold;
+  color: $medium-gray;
+  cursor: pointer;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.header-user-button {
+  border-radius: 5px;
+  border: 1px solid $lightest-gray;
+  padding: 5px;
+}
+
+.header-profile-dropdown {
+  background-color: $white;
+  border-radius: 5px;
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -5px;
+  color: $medium-gray;
+  border: 1px solid $lightest-gray;
+  font-weight: $light;
+  font-size: $regular-size;
+}
+
+.header-profile-dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.header-profile-dropdown-item:hover {
+  background-color: $lightest-gray;
+}
