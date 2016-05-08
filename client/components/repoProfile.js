@@ -3,9 +3,13 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
+import axios from 'axios';
 
 class RepoProfile extends Component {
-  
+  componentWillMount() {
+    // axios.get('/repos')
+  }
+
   render() {
     const { chosenSearchResult } = this.props;
     return (

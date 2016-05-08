@@ -13,6 +13,7 @@ const pgp = require('../db/database.js').pgp;
 // adds a user to the database, if they don't already exist
 // also updates their repos in our database
 const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
+  console.log('refresh token', refreshToken);
   const id = profile._json.id;
   const dbTimestamp = pgp.as.date(new Date());
   const username = profile._json.login;
@@ -45,7 +46,6 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     form: profile,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
-      // 'Authorization': accessToken
     }
   };
   request(options, (error, response, body) => {
@@ -72,7 +72,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       console.error(error);
     } else {
       console.log('Success in Auth get orgs');
-      console.log('body', body)
+      callback(body);
     }
   });
 };
@@ -109,7 +109,7 @@ module.exports = function(app) {
   // GITHUB LOGIN
   app.get('/auth/github_oauth',
     passport.authenticate('github',
-      { scope: [ 'user', 'read:org', 'public_repo' ]
+      { scope: ['admin:gpg_key', 'admin:org', 'admin:org_hook', 'admin:public_key', 'admin:repo_hook', 'delete_repo', 'gist', 'notifications', 'repo', 'user']
     }));
 
   app.get('/auth/github_oauth/callback',

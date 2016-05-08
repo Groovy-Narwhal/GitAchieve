@@ -4,39 +4,33 @@ const pgp = require('../db/database.js').pgp;
 const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
-
+const keys = require('../config/github.config.js')
 
 // /api/v1/users/orgs/:id/orgs
 exports.retrieveOrgs = (req, res) => {
-  console.log('jiji',req.body)
   const queryId = req.params.id;
   const username = req.body.profile.username;
-  const orgname = req.body.profile.login;
-  const followers = req.body.profile.followers;
-  const following = req.body.profile.following
-
+  const token = req.body.token;
   const dbTimestamp = pgp.as.date(new Date());
-  console.log('----------------- HELLO ----------------------');
-  console.log('queryId', queryId);
-  console.log('username', username);
+
   // helper functions
   const addOrgsToDb = (orgs, callback) => {
+    console.log('Orgs',orgs);
     db.tx(task => {
-      console.log('ORGS', orgs)
       const queries = orgs.map(org => {
-        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~) ' +
-          'VALUES ($5~, $6~) ' +
+        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
+          'VALUES ($6, $7, $8) ' +
           'ON CONFLICT ($3~) ' +
-          'DO UPDATE SET ($4~) = ($8, $9, $10) ' +
-          'WHERE $2~.$3~ = $7',
-          ['orgs', 'o', 'id', 'orgname',
-          queryId, org.login]);
+          'DO UPDATE SET ($4~, $5~) = ($7, $8) ' +
+          'WHERE $2~.$3~ = $6',
+          ['orgs', 'o', 'id', 'orgname', 'updated_ga',
+          org.id, org.login, dbTimestamp]);
       });
     return task.batch(queries);
     })
     .then(data => {
       console.log('Successfully added orgs!');
-      callback();
+      callback(data);
     })
     .catch(error => {
       console.log('Did not successfully add orgs');
@@ -46,11 +40,12 @@ exports.retrieveOrgs = (req, res) => {
 
   // add a join for each org to our user_orgs table, associating each org with a user
   var addJoinsToDb = (orgs, callback) => {
+    console.log('ORGS', orgs);
     db.tx(task => {
       var queries = orgs.map(org => {
         return task.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
         'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
-        '(SELECT * FROM $1~ WHERE $3~ = $6~ AND $4~ = $7)',
+        '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
         ['users_orgs', 'created_ga', 'user_id', 'org_id',
         dbTimestamp, queryId, org.id]);
       });
@@ -58,7 +53,7 @@ exports.retrieveOrgs = (req, res) => {
     })
     .then(data => {
       console.log('Successfully added users_orgs joins');
-      callback();
+      callback(data);
     })
     .catch(error => {
       console.log('Add users_orgs join error');
@@ -68,7 +63,7 @@ exports.retrieveOrgs = (req, res) => {
 
   // send the response for the api endpoint, containing all this user's orgs
   var patchOrgsResponse = () => {
-    db.any(('SELECT o.id, o.created_ga, o.created_at, o.orgname, o.followers, o.following, o.score ' +
+    db.any(('SELECT o.id, o.updated_ga, o.orgname, o.followers, o.following, o.score ' +
       'FROM users_orgs uo ' +
       'INNER JOIN orgs o ' +
       'ON o.id = uo.org_id ' +
@@ -82,23 +77,20 @@ exports.retrieveOrgs = (req, res) => {
 
   // get user info from GitHub
   var getOrgsFromGitHub = (username, callback) => {
-    console.log('USERNAME IN GETORGS FROM GITHUB', username);
     var options = {
       url: 'https://api.github.com/user/orgs',
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': username,
-        'Authorization': 'Basic bXNtaXRoOTM5MzpGaWxpcHBpbmkqNjA=',
-        'WWW_Authenticate': 'Basic',
-        'scope': ['user', 'read:org']
+        'Authorization': `token ${req.body.token}`
       }
     };
     request(options, (error, response, body) => {
       if (error) {
-        console.error(error);
+        console.error('error: ', error);
       } else {
-        console.log('koko', body)
+        console.log('body', body)
         callback(body);
       }
     });
@@ -114,7 +106,9 @@ exports.retrieveOrgs = (req, res) => {
   getOrgsFromGitHub(username, handleGitHubData);
 }
 
-
+exports.addOrg = function(req, res) {
+  console.log('REQ IN ADD ORG', req);
+}
 
 // '/:orgname'
 exports.retrieveOne = function(req, res) {
