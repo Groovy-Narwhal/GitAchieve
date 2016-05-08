@@ -11,6 +11,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  justify-content: space-around;
 }
 
 .logo {
@@ -39,4 +40,31 @@
   cursor: pointer;
   padding-top: 5px;
   padding-bottom: 5px;
+}
+
+.header-user-button {
+  border-radius: 5px;
+  border: 1px solid $lightest-gray;
+  padding: 5px;
+}
+
+.header-profile-dropdown {
+  background-color: $white;
+  border-radius: 5px;
+  position: absolute;
+  margin-top: 5px;
+  margin-left: -5px;
+  color: $medium-gray;
+  border: 1px solid $lightest-gray;
+  font-weight: $light;
+  font-size: $regular-size;
+}
+
+.header-profile-dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.header-profile-dropdown-item:hover {
+  background-color: $lightest-gray;
 }

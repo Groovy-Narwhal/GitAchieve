@@ -23,6 +23,7 @@ render(
         <Route path="/orgs" component={component.Organizations} />
         <Route path="/search-results" component={component.SearchResults} />
         <Route path="/:username/profile" component={component.UserProfile} />
+        <Route path="/:username/achievements" component={component.UserAchievements} />
         <Route path="/:reponame/repos" component={component.RepoProfile} />
         <Route path="/:orgname/orgs" component={component.OrgProfile} />
       </Route>
