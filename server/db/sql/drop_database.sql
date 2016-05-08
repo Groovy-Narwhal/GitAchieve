@@ -1,6 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-06 23:11:55.703
--- modified after download:  change 'TABLE' to 'TABLE IF EXISTS' for both ALTER and DROP
+-- Last modification date: 2016-05-08 00:18:07.023
 
 -- foreign keys
 ALTER TABLE IF EXISTS commits_repos
@@ -11,6 +10,12 @@ ALTER TABLE IF EXISTS commits_repos
 
 ALTER TABLE IF EXISTS commits
     DROP CONSTRAINT commits_users;
+
+ALTER TABLE IF EXISTS orgs_repos
+    DROP CONSTRAINT orgs_repos_orgs;
+
+ALTER TABLE IF EXISTS orgs_repos
+    DROP CONSTRAINT orgs_repos_repos;
 
 ALTER TABLE IF EXISTS pull_requests
     DROP CONSTRAINT pull_requests_users;
@@ -53,6 +58,8 @@ DROP TABLE IF EXISTS commits;
 DROP TABLE IF EXISTS commits_repos;
 
 DROP TABLE IF EXISTS orgs;
+
+DROP TABLE IF EXISTS orgs_repos;
 
 DROP TABLE IF EXISTS pull_requests;
 

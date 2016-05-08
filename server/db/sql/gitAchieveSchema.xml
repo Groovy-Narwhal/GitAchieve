@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DatabaseModel VersionId="2.3">
-    <Name>GitAchieve - Master</Name>
+    <Name>GitAchieve</Name>
     <Description></Description>
     <DatabaseEngine>
         <Name>postgresql</Name>
@@ -9,12 +9,12 @@
     <Counters>
         <Counter>
             <Name>table</Name>
-            <Value>22</Value>
+            <Value>23</Value>
             <Prefix>t</Prefix>
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>149</Value>
+            <Value>158</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -24,7 +24,7 @@
         </Counter>
         <Counter>
             <Name>reference</Name>
-            <Value>38</Value>
+            <Value>40</Value>
             <Prefix>r</Prefix>
         </Counter>
         <Counter>
@@ -69,12 +69,12 @@
         </Counter>
         <Counter>
             <Name>tableDisplay</Name>
-            <Value>21</Value>
+            <Value>22</Value>
             <Prefix>td</Prefix>
         </Counter>
         <Counter>
             <Name>referenceDisplay</Name>
-            <Value>37</Value>
+            <Value>39</Value>
             <Prefix>rd</Prefix>
         </Counter>
         <Counter>
@@ -106,6 +106,15 @@
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c152">
+                    <Name>updated_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -246,7 +255,7 @@
                     <Properties/>
                 </Column>
                 <Column Id="c31">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -368,7 +377,7 @@
                     </Properties>
                 </Column>
                 <Column Id="c85">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -567,7 +576,7 @@
                     <Properties/>
                 </Column>
                 <Column Id="c63">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -638,11 +647,11 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
-                <Column Id="c84">
-                    <Name>created_ga</Name>
+                <Column Id="c153">
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -650,6 +659,15 @@
                 <Column Id="c88">
                     <Name>created_at</Name>
                     <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c150">
+                    <Name>name</Name>
+                    <Type>varchar(100)</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
@@ -677,6 +695,15 @@
                 <Column Id="c80">
                     <Name>forks_count</Name>
                     <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c151">
+                    <Name>org_commit_activity</Name>
+                    <Type>text</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
@@ -819,7 +846,7 @@
                     <Properties/>
                 </Column>
                 <Column Id="c107">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -927,7 +954,7 @@
                     <Properties/>
                 </Column>
                 <Column Id="c138">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -1021,6 +1048,60 @@
                 <Name></Name>
                 <Columns>
                     <Column>c142</Column>
+                </Columns>
+            </PrimaryKey>
+            <AlternateKeys/>
+            <Indexes/>
+            <TableChecks/>
+            <AdditionalSQLBefore></AdditionalSQLBefore>
+            <AdditionalSQLAfter></AdditionalSQLAfter>
+            <Properties/>
+        </Table>
+        <Table Id="t23">
+            <Name>orgs_repos</Name>
+            <Description></Description>
+            <Columns>
+                <Column Id="c154">
+                    <Name>id_ga</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c155">
+                    <Name>created_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c157">
+                    <Name>org_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c158">
+                    <Name>repo_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+            </Columns>
+            <PrimaryKey>
+                <Name></Name>
+                <Columns>
+                    <Column>c154</Column>
                 </Columns>
             </PrimaryKey>
             <AlternateKeys/>
@@ -1299,6 +1380,44 @@
             <OnDeleteAction>None</OnDeleteAction>
             <Properties/>
         </Reference>
+        <Reference Id="r39">
+            <Name>orgs_repos_orgs</Name>
+            <Description></Description>
+            <PKTable>t9</PKTable>
+            <FKTable>t23</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c48</PKColumn>
+                    <FKColumn>c157</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r40">
+            <Name>orgs_repos_repos</Name>
+            <Description></Description>
+            <PKTable>t13</PKTable>
+            <FKTable>t23</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c101</PKColumn>
+                    <FKColumn>c158</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
     </References>
     <Sequences>
         <Sequence Id="s3">
@@ -1322,9 +1441,9 @@
     <TableDisplays>
         <TableDisplay Id="td6">
             <X>3924.5</X>
-            <Y>4293.5</Y>
+            <Y>4285.5</Y>
             <Width>236.0</Width>
-            <Height>231.0</Height>
+            <Height>246.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t7</Table>
@@ -1341,8 +1460,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td8">
-            <X>3934.5</X>
-            <Y>4828.5</Y>
+            <X>3920.5</X>
+            <Y>4813.5</Y>
             <Width>175.0</Width>
             <Height>116.0</Height>
             <LineColor>#000000</LineColor>
@@ -1381,10 +1500,10 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td12">
-            <X>4166.5</X>
-            <Y>4795.5</Y>
-            <Width>198.0</Width>
-            <Height>118.0</Height>
+            <X>4162.5</X>
+            <Y>4807.5</Y>
+            <Width>215.0</Width>
+            <Height>159.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t13</Table>
@@ -1392,7 +1511,7 @@
         </TableDisplay>
         <TableDisplay Id="td13">
             <X>4173.5</X>
-            <Y>4670.5</Y>
+            <Y>4678.5</Y>
             <Width>162.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
@@ -1412,8 +1531,8 @@
         </TableDisplay>
         <TableDisplay Id="td15">
             <X>4409.5</X>
-            <Y>4895.5</Y>
-            <Width>169.0</Width>
+            <Y>4887.5</Y>
+            <Width>172.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
@@ -1431,9 +1550,9 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td20">
-            <X>4174.5</X>
-            <Y>5078.5</Y>
-            <Width>156.0</Width>
+            <X>4416.5</X>
+            <Y>4992.5</Y>
+            <Width>159.0</Width>
             <Height>102.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
@@ -1441,13 +1560,23 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td21">
-            <X>4177.5</X>
-            <Y>4952.5</Y>
+            <X>4205.5</X>
+            <Y>5010.5</Y>
             <Width>157.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t22</Table>
+            <FixedSize>false</FixedSize>
+        </TableDisplay>
+        <TableDisplay Id="td22">
+            <X>3981.5</X>
+            <Y>4981.5</Y>
+            <Width>156.0</Width>
+            <Height>87.0</Height>
+            <LineColor>#000000</LineColor>
+            <FillColor>#ffffff</FillColor>
+            <Table>t23</Table>
             <FixedSize>false</FixedSize>
         </TableDisplay>
     </TableDisplays>
@@ -1459,11 +1588,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4110.5</X>
-                    <Y>4384.5</Y>
+                    <Y>4376.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4236.5</X>
-                    <Y>4384.5</Y>
+                    <Y>4376.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4236.5</X>
@@ -1484,7 +1613,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4110.5</X>
-                    <Y>4322.5</Y>
+                    <Y>4314.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4110.5</X>
@@ -1508,11 +1637,11 @@
             <Type>Vertical_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4176.5</X>
-                    <Y>4828.5</Y>
+                    <X>4172.5</X>
+                    <Y>4840.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4176.5</X>
+                    <X>4172.5</X>
                     <Y>4777.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1521,7 +1650,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4217.5</X>
-                    <Y>4705.5</Y>
+                    <Y>4713.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -1534,15 +1663,15 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4110.5</X>
-                    <Y>4446.5</Y>
+                    <Y>4438.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4183.5</X>
-                    <Y>4446.5</Y>
+                    <Y>4438.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4183.5</X>
-                    <Y>4680.5</Y>
+                    <Y>4688.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1575,11 +1704,11 @@
             <Type>Cross_3CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4354.5</X>
-                    <Y>4811.5</Y>
+                    <X>4350.5</X>
+                    <Y>4823.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4354.5</X>
+                    <X>4350.5</X>
                     <Y>4745.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1596,7 +1725,7 @@
             <Type>Horizontal_2CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4333.5</X>
+                    <X>4329.5</X>
                     <Y>4836.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1614,7 +1743,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4489.5</X>
-                    <Y>4905.5</Y>
+                    <Y>4897.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4489.5</X>
@@ -1631,11 +1760,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4209.5</X>
-                    <Y>4867.5</Y>
+                    <Y>4879.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4209.5</X>
-                    <Y>4999.5</Y>
+                    <Y>5057.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -1644,15 +1773,23 @@
         </ReferenceDisplay>
         <ReferenceDisplay Id="rd33">
             <Color>#000000</Color>
-            <Type>Vertical_2CP</Type>
+            <Type>Vertical_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4216.5</X>
-                    <Y>5095.5</Y>
+                    <X>4445.5</X>
+                    <Y>5009.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4216.5</X>
-                    <Y>5007.5</Y>
+                    <X>4445.5</X>
+                    <Y>5028.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4242.5</X>
+                    <Y>5028.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4242.5</X>
+                    <Y>5065.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td20</PkTableDisplay>
@@ -1665,7 +1802,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>3945.5</X>
-                    <Y>4445.5</Y>
+                    <Y>4437.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>3945.5</X>
@@ -1682,7 +1819,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>3980.5</X>
-                    <Y>4892.5</Y>
+                    <Y>4877.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>3980.5</X>
@@ -1699,7 +1836,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4004.5</X>
-                    <Y>4470.5</Y>
+                    <Y>4462.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4004.5</X>
@@ -1716,7 +1853,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4036.5</X>
-                    <Y>4480.5</Y>
+                    <Y>4472.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4036.5</X>
@@ -1726,6 +1863,44 @@
             <PkTableDisplay>td6</PkTableDisplay>
             <FkTableDisplay>td10</FkTableDisplay>
             <Reference>r38</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd38">
+            <Color>#000000</Color>
+            <Type>Vertical_2CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4030.5</X>
+                    <Y>4890.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4030.5</X>
+                    <Y>5023.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td8</PkTableDisplay>
+            <FkTableDisplay>td22</FkTableDisplay>
+            <Reference>r39</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd39">
+            <Color>#000000</Color>
+            <Type>Cross_3CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4225.5</X>
+                    <Y>4948.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4127.5</X>
+                    <Y>4948.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4127.5</X>
+                    <Y>5034.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td12</PkTableDisplay>
+            <FkTableDisplay>td22</FkTableDisplay>
+            <Reference>r40</Reference>
         </ReferenceDisplay>
     </ReferenceDisplays>
     <Properties>

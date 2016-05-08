@@ -1,11 +1,11 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-06 23:43:12.24
+-- Last modification date: 2016-05-08 00:18:07.023
 
 -- tables
 -- Table: branches
 CREATE TABLE branches (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    updated_ga timestamp  NOT NULL,
     sha varchar(40)  NULL,
     name varchar(100)  NULL,
     CONSTRAINT branches_pk PRIMARY KEY (id_ga)
@@ -14,7 +14,7 @@ CREATE TABLE branches (
 -- Table: commits
 CREATE TABLE commits (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    updated_ga timestamp  NOT NULL,
     sha varchar(40)  NULL,
     commit_message varchar(100)  NULL,
     commit_author_date timestamp  NULL,
@@ -34,7 +34,7 @@ CREATE TABLE commits_repos (
 -- Table: orgs
 CREATE TABLE orgs (
     id int  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    updated_ga timestamp  NOT NULL,
     orgname varchar(100)  NULL,
     followers int  NULL,
     following int  NULL,
@@ -42,10 +42,19 @@ CREATE TABLE orgs (
     CONSTRAINT orgs_pk PRIMARY KEY (id)
 );
 
+-- Table: orgs_repos
+CREATE TABLE orgs_repos (
+    id_ga int  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    org_id int  NOT NULL,
+    repo_id int  NOT NULL,
+    CONSTRAINT orgs_repos_pk PRIMARY KEY (id_ga)
+);
+
 -- Table: pull_requests
 CREATE TABLE pull_requests (
     id int  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    updated_ga timestamp  NOT NULL,
     user_id int  NOT NULL,
     state varchar(10)  NULL,
     diff_url varchar(200)  NULL,
@@ -61,13 +70,13 @@ CREATE TABLE pull_requests (
 -- Table: repos
 CREATE TABLE repos (
     id int  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    updated_ga timestamp  NULL,
     created_at timestamp  NULL,
     name varchar(100)  NULL,
     watchers_count int  NULL,
     stargazers_count int  NULL,
     forks_count int  NULL,
-    commit_activity text  NULL,
+    org_commit_activity text  NULL,
     CONSTRAINT repos_pk PRIMARY KEY (id)
 );
 
@@ -92,7 +101,7 @@ CREATE TABLE repos_stats (
 -- Table: stats
 CREATE TABLE stats (
     id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
+    updated_ga timestamp  NOT NULL,
     author_id int  NULL,
     total int  NULL,
     weeks text  NULL,
@@ -103,6 +112,7 @@ CREATE TABLE stats (
 CREATE TABLE users (
     id int  NOT NULL,
     created_ga timestamp  NOT NULL,
+    updated_ga timestamp  NULL,
     username varchar(100)  NULL,
     email varchar(100)  NULL,
     avatar_url varchar(200)  NULL,
@@ -167,6 +177,22 @@ ALTER TABLE commits_repos ADD CONSTRAINT commits_repos_repos
 ALTER TABLE commits ADD CONSTRAINT commits_users
     FOREIGN KEY (user_id)
     REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: orgs_repos_orgs (table: orgs_repos)
+ALTER TABLE orgs_repos ADD CONSTRAINT orgs_repos_orgs
+    FOREIGN KEY (org_id)
+    REFERENCES orgs (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: orgs_repos_repos (table: orgs_repos)
+ALTER TABLE orgs_repos ADD CONSTRAINT orgs_repos_repos
+    FOREIGN KEY (repo_id)
+    REFERENCES repos (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;

@@ -30,7 +30,7 @@ db.tx(t=> t.one(sql.test)
     }
   })
   .catch(error=> {
-    console.log("ERROR:", error);
+    console.log('error:', error);
   })
   .finally(pgp.end)
 );
