@@ -8,8 +8,13 @@ const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 // /api/v1/users/orgs/:id/orgs
 exports.retrieveOrgs = (req, res) => {
+  console.log('jiji',req.body)
   const queryId = req.params.id;
-  const username = req.body.username;
+  const username = req.body.profile.username;
+  const orgname = req.body.profile.login;
+  const followers = req.body.profile.followers;
+  const following = req.body.profile.following
+
   const dbTimestamp = pgp.as.date(new Date());
   console.log('----------------- HELLO ----------------------');
   console.log('queryId', queryId);
@@ -19,13 +24,13 @@ exports.retrieveOrgs = (req, res) => {
     db.tx(task => {
       console.log('ORGS', orgs)
       const queries = orgs.map(org => {
-        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~) ' +
-          'VALUES ($7, $8, $9, $10) ' +
+        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~) ' +
+          'VALUES ($5~, $6~) ' +
           'ON CONFLICT ($3~) ' +
-          'DO UPDATE SET ($4~, $5~, $6~) = ($8, $9, $10) ' +
+          'DO UPDATE SET ($4~) = ($8, $9, $10) ' +
           'WHERE $2~.$3~ = $7',
-          ['orgs', 'o', 'id', 'orgname', 'followers', 'following',
-          id, orgname, followers, following]);
+          ['orgs', 'o', 'id', 'orgname',
+          queryId, org.login]);
       });
     return task.batch(queries);
     })
@@ -82,15 +87,18 @@ exports.retrieveOrgs = (req, res) => {
       url: 'https://api.github.com/user/orgs',
       method: 'GET',
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
         'User-Agent': username,
-        'Authorization':'14e38927fb9ac93004f09b57fe39a382c780c78a'
+        'Authorization': 'Basic bXNtaXRoOTM5MzpGaWxpcHBpbmkqNjA=',
+        'WWW_Authenticate': 'Basic',
+        'scope': ['user', 'read:org']
       }
     };
     request(options, (error, response, body) => {
       if (error) {
         console.error(error);
       } else {
+        console.log('koko', body)
         callback(body);
       }
     });

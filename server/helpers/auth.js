@@ -44,8 +44,8 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     method: 'PATCH',
     form: profile,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': accessToken
+      'Content-Type': 'application/x-www-form-urlencoded'
+      // 'Authorization': accessToken
     }
   };
   request(options, (error, response, body) => {
@@ -53,7 +53,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       console.error(error);
     } else {
       console.log('Success in Auth get repos');
-      // callback(body);
+      callback(body);
     }
   });
 
@@ -62,10 +62,9 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   var options2 = {
     url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
     method: 'PATCH',
-    form: profile,
+    form: {profile: profile, token: accessToken},
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': accessToken
     }
   };
   request(options2, (error, response, body) => {
