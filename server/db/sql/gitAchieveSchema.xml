@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DatabaseModel VersionId="2.3">
-    <Name>GitAchieve - Master</Name>
+    <Name>GitAchieve</Name>
     <Description></Description>
     <DatabaseEngine>
         <Name>postgresql</Name>
@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>149</Value>
+            <Value>153</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -106,6 +106,15 @@
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c152">
+                    <Name>updated_ga</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -246,7 +255,7 @@
                     <Properties/>
                 </Column>
                 <Column Id="c31">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -368,7 +377,7 @@
                     </Properties>
                 </Column>
                 <Column Id="c85">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -567,7 +576,7 @@
                     <Properties/>
                 </Column>
                 <Column Id="c63">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -638,11 +647,11 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
-                <Column Id="c84">
-                    <Name>created_ga</Name>
+                <Column Id="c153">
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -650,6 +659,15 @@
                 <Column Id="c88">
                     <Name>created_at</Name>
                     <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c150">
+                    <Name>name</Name>
+                    <Type>varchar(100)</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
@@ -677,6 +695,15 @@
                 <Column Id="c80">
                     <Name>forks_count</Name>
                     <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c151">
+                    <Name>commit_activity</Name>
+                    <Type>text</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
@@ -819,7 +846,7 @@
                     <Properties/>
                 </Column>
                 <Column Id="c107">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -927,7 +954,7 @@
                     <Properties/>
                 </Column>
                 <Column Id="c138">
-                    <Name>created_ga</Name>
+                    <Name>updated_ga</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -1322,9 +1349,9 @@
     <TableDisplays>
         <TableDisplay Id="td6">
             <X>3924.5</X>
-            <Y>4293.5</Y>
+            <Y>4285.5</Y>
             <Width>236.0</Width>
-            <Height>231.0</Height>
+            <Height>246.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t7</Table>
@@ -1383,8 +1410,8 @@
         <TableDisplay Id="td12">
             <X>4166.5</X>
             <Y>4795.5</Y>
-            <Width>198.0</Width>
-            <Height>118.0</Height>
+            <Width>201.0</Width>
+            <Height>159.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t13</Table>
@@ -1413,7 +1440,7 @@
         <TableDisplay Id="td15">
             <X>4409.5</X>
             <Y>4895.5</Y>
-            <Width>169.0</Width>
+            <Width>172.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
@@ -1432,8 +1459,8 @@
         </TableDisplay>
         <TableDisplay Id="td20">
             <X>4174.5</X>
-            <Y>5078.5</Y>
-            <Width>156.0</Width>
+            <Y>5097.5</Y>
+            <Width>159.0</Width>
             <Height>102.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
@@ -1441,8 +1468,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td21">
-            <X>4177.5</X>
-            <Y>4952.5</Y>
+            <X>4179.5</X>
+            <Y>4980.5</Y>
             <Width>157.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
@@ -1459,11 +1486,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4110.5</X>
-                    <Y>4384.5</Y>
+                    <Y>4376.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4236.5</X>
-                    <Y>4384.5</Y>
+                    <Y>4376.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4236.5</X>
@@ -1484,7 +1511,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4110.5</X>
-                    <Y>4322.5</Y>
+                    <Y>4314.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4110.5</X>
@@ -1534,11 +1561,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4110.5</X>
-                    <Y>4446.5</Y>
+                    <Y>4438.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4183.5</X>
-                    <Y>4446.5</Y>
+                    <Y>4438.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4183.5</X>
@@ -1635,7 +1662,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4209.5</X>
-                    <Y>4999.5</Y>
+                    <Y>5027.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -1648,11 +1675,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4216.5</X>
-                    <Y>5095.5</Y>
+                    <Y>5114.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4216.5</X>
-                    <Y>5007.5</Y>
+                    <Y>5035.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td20</PkTableDisplay>
@@ -1665,7 +1692,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>3945.5</X>
-                    <Y>4445.5</Y>
+                    <Y>4437.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>3945.5</X>
@@ -1699,7 +1726,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4004.5</X>
-                    <Y>4470.5</Y>
+                    <Y>4462.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4004.5</X>
@@ -1716,7 +1743,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4036.5</X>
-                    <Y>4480.5</Y>
+                    <Y>4472.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4036.5</X>

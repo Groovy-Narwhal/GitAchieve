@@ -14,7 +14,7 @@ const pgp = require('../db/database.js').pgp;
 // also updates their repos in our database
 const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   const id = profile._json.id;
-  const created_ga = pgp.as.date(new Date());
+  const dbTimestamp = pgp.as.date(new Date());
   const username = profile._json.login;
   const email = profile._json.email;
   const avatar_url = profile._json.avatar_url;
@@ -22,14 +22,14 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   const following = profile._json.following;
   
   
-  // add the user to our database
+  // add the user to our database, or update them if they already exist
   db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
     'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
     'ON CONFLICT ($3~) ' +
-    'DO UPDATE SET ($4~, $5~, $6~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
+    'DO UPDATE SET ($4~, $5~, $17~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
     'WHERE $2~.$3~ = $10',
     ['users', 'u', 'id', 'username', 'email', 'created_ga', 'avatar_url', 'followers', 'following',
-    id, username, email, created_ga, avatar_url, followers, following])
+    id, username, email, dbTimestamp, avatar_url, followers, following, 'updated_ga'])
     .then((data) => {
       return callback(null, {data: profile._json, token: accessToken});    
     })
@@ -37,19 +37,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       console.log('error in user upsert');
       console.error(error);
     });  
-  
-  // db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~) ' +
-  //   'SELECT $9, $10, $11, $12, $13, $14, $15 WHERE NOT EXISTS ' +
-  //   '(SELECT * FROM $1~ WHERE $2~ = $9)',
-  //   ['users', 'id', 'username', 'email', 'created_ga', 'avatar_url', 'followers', 'following', 
-  //   id, username, email, created_ga, avatar_url, followers, following])
-  //   .then((data) => {
-  //     return callback(null, {data: profile._json, token: accessToken});    
-  //   })
-  //   .catch((error) => {
-  //     console.error(error);
-  //   });
-    
+      
   // update the user's repos in our database   
   var options = {
     url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',

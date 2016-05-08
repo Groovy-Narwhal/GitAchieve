@@ -73,11 +73,11 @@ exports.updateUser = function(req, res) {
     db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
       'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
       'ON CONFLICT ($3~) ' + 
-      'DO UPDATE SET ($4~, $5~, $6~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
+      'DO UPDATE SET ($17~, $5~, $6~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
       'WHERE $2~.$3~ = $10 ' +
       'RETURNING *',
       ['users', 'u', 'id', 'created_ga', 'username', 'email', 'avatar_url', 'followers', 'following',
-      queryId, dbTimestamp, username, body.email, body.avatar_url, body.followers, body.following])
+      queryId, dbTimestamp, username, body.email, body.avatar_url, body.followers, body.following, 'updated_ga'])
     .then((data) => {
       res.send(data);
     })
@@ -133,7 +133,7 @@ exports.retrieveRepos = function(req, res) {
           'ON CONFLICT ($2~) ' + 
           'DO UPDATE SET ($3~, $4~, $5~, $6~, $7~, $8~) = ($10, $11, $12, $13, $14, $15) ' +
           'WHERE $16~.$2~ = $9',
-          ['repos', 'id', 'created_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count', 'name',
+          ['repos', 'id', 'updated_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count', 'name',
           repo.id, dbTimestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count, repo.name, 'r']);
       });
       return task.batch(queries);
@@ -175,7 +175,7 @@ exports.retrieveRepos = function(req, res) {
   
   // sends the response for this API endpoint, containing all this user's repos
   var patchReposResponse = function () {
-    db.any(('SELECT r.id, r.created_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
+    db.any(('SELECT r.id, r.updated_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
       'FROM users_repos ur ' +
       'INNER JOIN repos r ' + 
       'ON r.id = ur.repo_id ' + 

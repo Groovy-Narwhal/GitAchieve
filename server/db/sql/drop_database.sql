@@ -1,6 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-06 23:11:55.703
--- modified after download:  change 'TABLE' to 'TABLE IF EXISTS' for both ALTER and DROP
+-- Last modification date: 2016-05-07 23:42:15.749
 
 -- foreign keys
 ALTER TABLE IF EXISTS commits_repos
