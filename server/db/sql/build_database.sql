@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-07 23:42:15.749
+-- Last modification date: 2016-05-08 00:18:07.023
 
 -- tables
 -- Table: branches
@@ -42,6 +42,15 @@ CREATE TABLE orgs (
     CONSTRAINT orgs_pk PRIMARY KEY (id)
 );
 
+-- Table: orgs_repos
+CREATE TABLE orgs_repos (
+    id_ga int  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    org_id int  NOT NULL,
+    repo_id int  NOT NULL,
+    CONSTRAINT orgs_repos_pk PRIMARY KEY (id_ga)
+);
+
 -- Table: pull_requests
 CREATE TABLE pull_requests (
     id int  NOT NULL,
@@ -67,7 +76,7 @@ CREATE TABLE repos (
     watchers_count int  NULL,
     stargazers_count int  NULL,
     forks_count int  NULL,
-    commit_activity text  NULL,
+    org_commit_activity text  NULL,
     CONSTRAINT repos_pk PRIMARY KEY (id)
 );
 
@@ -168,6 +177,22 @@ ALTER TABLE commits_repos ADD CONSTRAINT commits_repos_repos
 ALTER TABLE commits ADD CONSTRAINT commits_users
     FOREIGN KEY (user_id)
     REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: orgs_repos_orgs (table: orgs_repos)
+ALTER TABLE orgs_repos ADD CONSTRAINT orgs_repos_orgs
+    FOREIGN KEY (org_id)
+    REFERENCES orgs (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: orgs_repos_repos (table: orgs_repos)
+ALTER TABLE orgs_repos ADD CONSTRAINT orgs_repos_repos
+    FOREIGN KEY (repo_id)
+    REFERENCES repos (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
