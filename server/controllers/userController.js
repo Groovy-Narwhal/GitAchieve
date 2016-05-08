@@ -218,6 +218,80 @@ exports.retrieveRepos = function(req, res) {
   
 };  
   
+// POST at '/api/v1/users/:id/repos'  
+exports.addRepo = function(req, res) {
+  var queryId = req.params.id;
+  var dbTimestamp = pgp.as.date(new Date());
+  
+  db.tx(t => {
+    // save query to add a repo with upsert (update or insert)
+    var q1 = t.any(
+      'INSERT INTO $1~ AS $16~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~) ' +
+      'VALUES ($9, $10, $11, $12, $13, $14, $15) ' +
+      'ON CONFLICT ($2~) ' + 
+      'DO UPDATE SET ($3~, $4~, $5~, $6~, $7~, $8~) = ($10, $11, $12, $13, $14, $15) ' +
+      'WHERE $16~.$2~ = $9',
+      ['repos', 'id', 'updated_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count', 'name',
+      req.body.id, dbTimestamp, req.body.created_at, req.body.watchers_count, req.body.stargazers_count, req.body.forks_count, req.body.name, 'r']);
+    
+    // save query to add a users_repo join 
+    var q2 = t.any(
+      'INSERT INTO $1~ ($2~, $3~, $4~) ' +
+      'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
+      '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7) ',
+      ['users_repos', 'created_ga', 'repo_id', 'user_id',
+      dbTimestamp, req.body.id, queryId]); 
+    
+    // call both queries
+    return t.batch([q1, q2]);
+  })
+  .then(data => {
+    console.log('repo added to database');
+    res.send(req.body);
+  })
+  .catch(error => {
+    console.log('error:', error);
+    res.status(500).send('Error inserting to repos table');
+  });
+  
+};  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   

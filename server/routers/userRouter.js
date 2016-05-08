@@ -13,8 +13,8 @@ userRouter.route('/:id')
   .delete(userController.deleteUser);
 
 userRouter.route('/:id/repos')
-  .patch(userController.retrieveRepos);
-//   .post(userController.addRepo);
+  .patch(userController.retrieveRepos)
+  .post(userController.addRepo);
 
 // userRouter.route('/:id/friends')
 //   .get(userController.retrieveFriends)
