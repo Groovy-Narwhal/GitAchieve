@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router';
 import actions from './../actions/ActionCreators';
 
 class HeaderUserButton extends Component {
@@ -10,11 +11,12 @@ class HeaderUserButton extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className="header-profile-dropdown">
-        <div className="header-profile-dropdown-item">profile</div>
-        <div className="header-profile-dropdown-item">achievements</div>
-        <div className="header-profile-dropdown-item">signout</div>
+        <div className="header-profile-dropdown-item" onClick={() => (browserHistory.push('user/profile'))}>profile</div>
+        <div className="header-profile-dropdown-item" onClick={() => (browserHistory.push('user/achievements'))}>achievements</div>
+        <div className="header-profile-dropdown-item" onClick={this.props.actions.unAuthUser}>signout</div>
       </div>
     )
   }
@@ -24,4 +26,10 @@ const mapStateToProps = state => {
   return state;
 }
 
-export default connect(mapStateToProps)(HeaderUserButton);
+const mapDispatchToProps = dispatch => (
+  {
+    actions: bindActionCreators(actions, dispatch)
+  }
+)
+
+export default connect(mapStateToProps, mapDispatchToProps)(HeaderUserButton);
