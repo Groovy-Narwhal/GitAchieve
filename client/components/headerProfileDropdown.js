@@ -11,7 +11,6 @@ class HeaderUserButton extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <div className="header-profile-dropdown">
         <div className="header-profile-dropdown-item" onClick={() => (browserHistory.push('user/profile'))}>profile</div>

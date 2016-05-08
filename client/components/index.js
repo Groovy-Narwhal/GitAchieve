@@ -11,3 +11,4 @@ export RepoProfile from './repoProfile';
 export OrgProfile from './orgProfile';
 export CommitChart from './commitChart';
 export Organizations from './organizations';
+export UserAchievements from './UserAchievements';
