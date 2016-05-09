@@ -24,7 +24,7 @@ db.tx(t=> t.one(sql.test)
     // if users table doesn't exist, rebuild database
     if (!data.exists) {
       console.log('Rebuilding database');
-      t.batch([t.none(sql.drop), t.none(sql.build)]);
+      return t.batch([t.none(sql.drop), t.none(sql.build)]);
     } else {
       console.log('Users table exists, not rebuilding database');
     }
