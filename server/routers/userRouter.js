@@ -20,8 +20,8 @@ userRouter.route('/:id/repos')
   .post(repoController.addRepo);
 
 userRouter.route('/:id/friends')
-  .get(friendController.retrieveFriends);
-//   .post(friendController.addFriend)
+  .get(friendController.retrieveFriends)
+  .post(friendController.addFriend);
 //   .patch(friendController.confirmOrRemoveFriend);
 
 // userRouter.route('/:id/stats')
