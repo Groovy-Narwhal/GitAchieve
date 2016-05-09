@@ -5,7 +5,7 @@ const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
-// /api/v1/users/orgs/:id/orgs
+// /api/v1/orgs/:id/orgs
 exports.retrieveOrgs = (req, res) => {
   const queryId = req.params.id;
   const username = req.body.profile.username;
@@ -91,7 +91,6 @@ exports.retrieveOrgs = (req, res) => {
       }
     });
   };
-
   // gather the helper functions together into one asynchronous series
   const handleGitHubData = data => {
     var orgs = JSON.parse(data);

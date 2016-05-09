@@ -37,13 +37,17 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       console.error(error);
     });  
       
+
+
+
   // update the user's repos in our database   
   var options = {
     url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': username
     }
   };
   request(options, (error, response, body) => {
@@ -52,6 +56,24 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     } else {
       console.log('Success in Auth get repos');
       callback(body);
+      // update user's pull requests
+      // var options3 = {
+      //   url: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
+      //   method: 'PATCH',
+      //   form: { profile: profile, repos: body },
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded',
+      //     'User-Agent': username
+      //   }
+      // };
+      // request(options3, (error, response, body) => {
+      //   if (error) {
+      //     console.error(error);
+      //   } else {
+      //     console.log('Success in Auth get pull requests');
+      //     callback(body);
+      //   }
+      // });
     }
   });
 
@@ -63,6 +85,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
+      'User-Agent': username
     }
   };
   request(options2, (error, response, body) => {
@@ -73,6 +96,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       callback(body);
     }
   });
+
 };
 
 module.exports = function(app) {
