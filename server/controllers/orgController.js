@@ -104,9 +104,6 @@ exports.retrieveOrgs = (req, res) => {
 
 // '/github/:username/orgs'
 exports.retrieveAllOrgsForUser = function(req, res) {
-  // find id of user from username in users table
-  // find all orgs in user_orgs table whose user_id = id from users table
-  // return selected orgs from orgs table
   db.any('SELECT o.orgname FROM orgs o INNER JOIN users_orgs uo ON ' +
     '(o.id=uo.org_id) INNER JOIN users u on (uo.user_id=u.id) WHERE u.username=$1', [req.params.username])
     .then(data => res.send(data))

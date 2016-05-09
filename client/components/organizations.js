@@ -10,22 +10,18 @@ const ROOT_URL = 'http://127.0.0.1:8000';
 class Organizations extends Component {
   constructor(props) {
     super(props);
-    this.state = {orgsList: []}
-    // axios.get(`${ROOT_URL}/github/${this.props.user.username}/orgs`)
-    //   .then(response => {
-    //     this.state = {orgsList: response.data}
-    //   })
+    this.state = { orgsList: [] };
   }
+
   componentWillMount() {
     console.log('hola senorita')
     axios.get(`${ROOT_URL}/github/${this.props.user.username}/orgs`)
       .then(response => {
         this.setState({orgsList: response.data})
-      })
+      });
   }
 
   render() {
-    console.log('in render', this.state)
     return (
       <div>
         <h4>Organizations</h4>
