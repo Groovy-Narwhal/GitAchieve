@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>158</Value>
+            <Value>159</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -388,6 +388,15 @@
                 <Column Id="c49">
                     <Name>orgname</Name>
                     <Type>varchar(100)</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c159">
+                    <Name>avatar_url</Name>
+                    <Type>varchar(200)</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
@@ -1463,7 +1472,7 @@
             <X>3920.5</X>
             <Y>4813.5</Y>
             <Width>175.0</Width>
-            <Height>116.0</Height>
+            <Height>130.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t9</Table>
