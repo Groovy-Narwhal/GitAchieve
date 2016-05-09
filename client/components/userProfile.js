@@ -48,7 +48,7 @@ class UserProfile extends Component {
   render() {
     return (
       <div>
-        <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1"/>
+        <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1" />
         <h2>{this.props.chosenSearchResult.login}</h2>
         <div id="search-results-container">
           {this.props.searchUserEvents.map((event, index) => {

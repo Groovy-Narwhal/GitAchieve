@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-08 00:18:07.023
+-- Last modification date: 2016-05-09 17:35:21.874
 
 -- tables
 -- Table: branches
@@ -36,6 +36,7 @@ CREATE TABLE orgs (
     id int  NOT NULL,
     updated_ga timestamp  NOT NULL,
     orgname varchar(100)  NULL,
+    avatar_url varchar(200)  NULL,
     followers int  NULL,
     following int  NULL,
     score int  NULL,
