@@ -23,13 +23,12 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   
   
   // add the user to our database, or update them if they already exist
-  db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
-    'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
-    'ON CONFLICT ($3~) ' +
-    'DO UPDATE SET ($4~, $5~, $17~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
-    'WHERE $2~.$3~ = $10',
-    ['users', 'u', 'id', 'username', 'email', 'created_ga', 'avatar_url', 'followers', 'following',
-    id, username, email, dbTimestamp, avatar_url, followers, following, 'updated_ga'])
+  db.any('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
+    'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ' +
+    'ON CONFLICT (id) ' +
+    'DO UPDATE SET (username, email, updated_ga, signed_up, avatar_url, followers, following) = ($2, $3, $4, $6, $7, $8, $9) ' +
+    'WHERE u.id = $1',
+    [id, username, email, dbTimestamp, null, true, avatar_url, followers, following])
     .then((data) => {
       return callback(null, {data: profile._json, token: accessToken});    
     })
@@ -42,7 +41,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   var options = {
     url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
     method: 'PATCH',
-    form: profile,
+    form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
