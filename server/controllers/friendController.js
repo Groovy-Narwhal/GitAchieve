@@ -42,9 +42,7 @@ exports.retrieveFriends = function(req, res) {
 
 // POST at '/api/v1/users/:id/friends'
 
-/* NOTE by Alex - this is the most current version of the function, still a work in progress
-Just commenting it out while I fix other issues, to be resolved later
-
+/*
 exports.addFriend = function(req, res) {
   // this is the person sending the invitation to compete
   const primaryUserId = req.params.id; 
@@ -57,14 +55,14 @@ exports.addFriend = function(req, res) {
   // check if the secondary user exists
   db.tx(t => {
     // adds a user with signed_up = false
-    var addUserQuery = this.any(
+    var addUserQuery = this.one(
       'INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~) ' +
       'VALUES ($7, $8, $9, $10, $11)',
       ['users', 'id', 'username', 'email', 'greated_ga', 'signed_up', 
       secondaryUserId, secondaryUsername, secondaryUserEmail, dbTimestamp, false]);
     
     // adds a connection between users
-    var addConnectionQuery = this.any(
+    var addConnectionQuery = this.one(
       'INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
       'VALUES ($6, $7, $8) ' +
       'RETURNING *',
@@ -72,7 +70,7 @@ exports.addFriend = function(req, res) {
       dbTimestamp, primaryUserId, secondaryUserId]);
 
     // checks if a connection exists
-    var checkConnectionQuery = this.any(
+    var checkConnectionQuery = this.one(
       'SELECT * FROM $1~ AS $2~' +
       'WHERE $2~.$3~ = $4' +
       'AND $2~.$5~ = $6',
@@ -154,8 +152,8 @@ exports.addFriend = function(req, res) {
       }
     });
 };
-
 */
+
 exports.addFriend = function(req, res) {
   // this is the person sending the invitation to compete
   const primaryUserId = req.params.id; 

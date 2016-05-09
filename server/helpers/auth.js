@@ -41,7 +41,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   var options = {
     url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
     method: 'PATCH',
-    form: profile,
+    form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }

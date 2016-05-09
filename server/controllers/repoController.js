@@ -5,7 +5,7 @@ const pgp = require('../db/database.js').pgp;
 // PATCH at '/api/v1/users/:id/repos'
 exports.retrieveRepos = function(req, res) {
   var queryId = req.params.id;
-  var queryUsername = req.body.username;
+  var queryUsername = req.body.profile.username;
   var dbTimestamp = pgp.as.date(new Date());
   
   // ** HELPER FUNCTIONS **
@@ -83,7 +83,8 @@ exports.retrieveRepos = function(req, res) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': username
+        'User-Agent': username,
+        'Authorization': `token ${req.body.token}`
       }
     };
     request(options, (error, response, body) => {
@@ -120,7 +121,7 @@ exports.addRepo = function(req, res) {
       'DO UPDATE SET ($3~, $4~, $5~, $6~, $7~, $8~) = ($10, $11, $12, $13, $14, $15) ' +
       'WHERE $16~.$2~ = $9',
       ['repos', 'id', 'updated_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count', 'name',
-      req.body.id, dbTimestamp, req.body.created_at, req.body.watchers_count, req.body.stargazers_count, req.body.forks_count, req.body.name, 'r']);
+      req.body.profile.id, dbTimestamp, req.body.profile.created_at, req.body.profile.watchers_count, req.body.profile.stargazers_count, req.body.profile.forks_count, req.body.profile.name, 'r']);
     
     // save query to add a users_repo join 
     var q2 = t.any(
@@ -128,14 +129,14 @@ exports.addRepo = function(req, res) {
       'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
       '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7) ',
       ['users_repos', 'created_ga', 'repo_id', 'user_id',
-      dbTimestamp, req.body.id, queryId]); 
+      dbTimestamp, req.body.profile.id, queryId]); 
     
     // call both queries
     return t.batch([q1, q2]);
   })
   .then(data => {
     console.log('repo added to database');
-    res.send(req.body);
+    res.send(req.body.profile);
   })
   .catch(error => {
     console.log('error:', error);
