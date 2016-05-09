@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 
 class RepoProfile extends Component {
-  
+
   render() {
     const { chosenSearchResult } = this.props;
     return (

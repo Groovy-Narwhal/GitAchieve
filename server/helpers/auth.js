@@ -51,6 +51,26 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     if (error) {
       console.error(error);
     } else {
+      console.log('Success in Auth get repos');
+      callback(body);
+    }
+  });
+
+
+  // update the user's orgs in our database   
+  var options2 = {
+    url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
+    method: 'PATCH',
+    form: { profile: profile, token: accessToken },
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
+  };
+  request(options2, (error, response, body) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log('Success in Auth get orgs');
       callback(body);
     }
   });
@@ -88,7 +108,7 @@ module.exports = function(app) {
   // GITHUB LOGIN
   app.get('/auth/github_oauth',
     passport.authenticate('github',
-      { scope: [ 'user', 'read:org', 'public_repo' ]
+      { scope: ['admin:gpg_key', 'admin:org', 'admin:org_hook', 'admin:public_key', 'admin:repo_hook', 'delete_repo', 'gist', 'notifications', 'repo', 'user']
     }));
 
   app.get('/auth/github_oauth/callback',
