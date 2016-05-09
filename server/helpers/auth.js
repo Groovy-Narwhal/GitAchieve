@@ -13,7 +13,6 @@ const pgp = require('../db/database.js').pgp;
 // adds a user to the database, if they don't already exist
 // also updates their repos in our database
 const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
-  console.log('refresh token', refreshToken);
   const id = profile._json.id;
   const dbTimestamp = pgp.as.date(new Date());
   const username = profile._json.login;
@@ -62,7 +61,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   var options2 = {
     url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
     method: 'PATCH',
-    form: {profile: profile, token: accessToken},
+    form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     }

@@ -3,8 +3,19 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
+import axios from 'axios';
+
+const ROOT_URL = 'http://127.0.0.1:8000';
 
 class Organizations extends Component {
+
+  componentWillMount() {
+    console.log('hola senorita')
+    axios.get(`${ROOT_URL}/github/${this.props.user.username}/orgs`)
+      .then(response => {
+        console.log('YOU KNOW', response);
+      })
+  }
 
   render() {
     return (

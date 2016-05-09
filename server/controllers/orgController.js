@@ -4,7 +4,6 @@ const pgp = require('../db/database.js').pgp;
 const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
-const keys = require('../config/github.config.js')
 
 // /api/v1/users/orgs/:id/orgs
 exports.retrieveOrgs = (req, res) => {
@@ -15,7 +14,6 @@ exports.retrieveOrgs = (req, res) => {
 
   // helper functions
   const addOrgsToDb = (orgs, callback) => {
-    console.log('Orgs',orgs);
     db.tx(task => {
       const queries = orgs.map(org => {
         return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
@@ -40,7 +38,6 @@ exports.retrieveOrgs = (req, res) => {
 
   // add a join for each org to our user_orgs table, associating each org with a user
   var addJoinsToDb = (orgs, callback) => {
-    console.log('ORGS', orgs);
     db.tx(task => {
       var queries = orgs.map(org => {
         return task.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
@@ -90,7 +87,6 @@ exports.retrieveOrgs = (req, res) => {
       if (error) {
         console.error('error: ', error);
       } else {
-        console.log('body', body)
         callback(body);
       }
     });
@@ -104,16 +100,20 @@ exports.retrieveOrgs = (req, res) => {
 
   // call helper functions
   getOrgsFromGitHub(username, handleGitHubData);
-}
+};
 
-exports.addOrg = function(req, res) {
-  console.log('REQ IN ADD ORG', req);
-}
-
-// '/:orgname'
-exports.retrieveOne = function(req, res) {
-  var query = {_id: req.params.id};
-  // TODO: fill this out with Postgres findOne query
+// '/github/:username/orgs'
+exports.retrieveAllOrgsForUser = function(req, res) {
+  // find id of user from username in users table
+  // find all orgs in user_orgs table whose user_id = id from users table
+  // return selected orgs from orgs table
+  db.any('SELECT o.orgname FROM orgs o INNER JOIN users_orgs uo ON ' +
+    '(o.id=uo.org_id) INNER JOIN users u on (uo.user_id=u.id) WHERE u.username=$1', [req.params.username])
+    .then(data => res.send(data))
+    .catch(error => {
+      console.error(error);
+      res.status(500).send('Error reading orgs table');
+    });
 };
 
 // '/:orgname/stats'

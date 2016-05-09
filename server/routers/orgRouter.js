@@ -5,10 +5,9 @@ const orgController = require('../controllers/orgController.js');
 
 orgRouter.route('/:id/orgs')
   .patch(orgController.retrieveOrgs)
-  .post(orgController.addOrg);
 
 orgRouter.route('/:orgname')
-  .get(orgController.retrieveOne);
+  // .get(orgController.retrieveOne);
 
 orgRouter.route('/:orgname/stats')
   .get(orgController.retrieveStats)

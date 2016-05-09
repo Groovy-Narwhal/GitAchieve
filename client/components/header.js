@@ -16,7 +16,7 @@ class Header extends Component {
       return null;
     } else {
       return [
-        <Search />,
+        <Search key={0} />,
         <a key={1} onClick={() => browserHistory.push('/repos')} className="nav-link">
           Repos
         </a>,
@@ -26,16 +26,8 @@ class Header extends Component {
         <a key={3} onClick={this.handleSignOut.bind(this)} className="nav-link">
           SignOut
         </a>,
-        <HeaderProfileButton />
+        <HeaderProfileButton key={4} />
       ];
-    }
-  }
-
-  renderSearch() {
-    if (!this.props.authenticated) {
-      return null;
-    } else {
-      return <Search />;
     }
   }
 
