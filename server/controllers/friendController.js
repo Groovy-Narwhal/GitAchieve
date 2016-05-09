@@ -42,6 +42,9 @@ exports.retrieveFriends = function(req, res) {
 
 // POST at '/api/v1/users/:id/friends'
 
+/* NOTE by Alex - this is the most current version of the function, still a work in progress
+Just commenting it out while I fix other issues, to be resolved later
+
 exports.addFriend = function(req, res) {
   // this is the person sending the invitation to compete
   const primaryUserId = req.params.id; 
@@ -152,8 +155,8 @@ exports.addFriend = function(req, res) {
     });
 };
 
-
-exports.addFriend1 = function(req, res) {
+*/
+exports.addFriend = function(req, res) {
   // this is the person sending the invitation to compete
   const primaryUserId = req.params.id; 
   // this is the person receiving the invitation to compete

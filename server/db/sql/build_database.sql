@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-09 17:35:21.874
+-- Last modification date: 2016-05-09 22:56:20.022
 
 -- tables
 -- Table: branches
@@ -114,6 +114,7 @@ CREATE TABLE users (
     id int  NOT NULL,
     created_ga timestamp  NOT NULL,
     updated_ga timestamp  NULL,
+    signed_up boolean  NULL,
     username varchar(100)  NULL,
     email varchar(100)  NULL,
     avatar_url varchar(200)  NULL,
