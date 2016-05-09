@@ -4,8 +4,6 @@
 // search through data and insert into the pull request table if merged_at does not equal null
 // github endpoint /repos/:owner/:repo/pulls?state=all
 
-
-
 const request = require('request');
 const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
@@ -13,10 +11,14 @@ const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
+const orgController = require('./orgController');
+
+
 // /api/v1/users/orgs/:id/pullrequsts
 exports.retrievePullRequests = (req, res) => {
-  console.log('INSIDE RETRIEVE PULL REQUESTS')
   const dbTimestamp = pgp.as.date(new Date());
+  const username = req.body.profile.username;
+
   // helper functions
   const addPR = (prs, callback) => {
     console.log('prs in RPR', prs)
@@ -44,14 +46,14 @@ exports.retrievePullRequests = (req, res) => {
 
 
   // get user info from GitHub
-  var getPRSFromGitHub = (username, owner, repo, callback) => {
+  var getPRSFromGitHub = (owner, repo, callback) => {
     var options = {
       url: `https://api.github.com/repos/${owner}/${repo}/pulls?state=all`,
       method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': username
-        // 'Authorization': `token ${req.body.token}`
+        'User-Agent': username,
+        'Authorization': `token ${req.body.token}`
       }
     };
     request(options, (error, response, body) => {
@@ -74,8 +76,84 @@ exports.retrievePullRequests = (req, res) => {
     })
   }
 
+  db.any('SELECT o.orgname FROM orgs o INNER JOIN users_orgs uo ON ' +
+    '(o.id=uo.org_id) INNER JOIN users u on (uo.user_id=u.id) WHERE u.username=$1', [username])
+    .then(data => {
+      data.forEach(org => {
+        if (org.orgname !== 'hackreactor') {
+          var membersOptions = {
+            url: `https://api.github.com/orgs/${org.orgname}/members`,
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'User-Agent': username,
+              'Authorization': `token ${req.body.token}`
+            }
+          };
+          request(membersOptions, (error, response, body) => {
+            if (error) {
+              console.error('error: ', error);
+            } else {
+              const parsedBody = JSON.parse(body);
+              parsedBody.forEach(member => {
+                // if user exists, update their info; otherwise, add them
+                // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
+                  db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
+                    'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
+                    'ON CONFLICT ($3~) ' + 
+                    'DO UPDATE SET ($17~, $5~, $6~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
+                    'WHERE $2~.$3~ = $10 ' +
+                    'RETURNING *',
+                    ['users', 'u', 'id', 'updated_ga', 'username', 'email', 'avatar_url', 'followers', 'following', 'signed_up',
+                    queryId, false, dbTimestamp, username, body.email, body.avatar_url, body.followers, body.following, 'created_ga'])
+                  .then((data) => {
+                    res.send(data);
+                  })
+                  .catch((error) => {
+                    // if the user was not found, send 404
+                    console.error(error);
+                    if (error.code === 0) {
+                      res.status(404).send('User does not exist');
+                    } else {
+                      res.status(500).send('Error searching database for user');
+                    }
+                  });
+
+
+
+
+
+
+              })
+            }
+          });
+        }
+          // var options = {
+          //   url: `https://api.github.com/orgs/${org.orgname}/repos`,
+          //   method: 'GET',
+          //   headers: {
+          //     'Content-Type': 'application/x-www-form-urlencoded',
+          //     'User-Agent': username,
+          //     'Authorization': `token ${req.body.token}`
+          //   }
+          // };
+          // request(options, (error, response, body) => {
+          //   if (error) {
+          //     console.error('error: ', error);
+          //   } else {
+          //     const parsedBody = JSON.parse(body);
+          //     parsedBody.forEach(repo => {console.log('what up')})
+          //     // console.log('BODYDYDYDYDY', Array.isArray(parsedBody));
+          //   }
+          // });
+      })
+    })
+    .catch(error => {
+      console.error(error);
+      res.status(500).send('Error reading orgs table');
+    });
   // call helper functions
-  getPRSFromGitHub('msmith9393', 'Groovy-Narwhal', 'GitAchieve', handleGitHubData);
+  // getPRSFromGitHub('Groovy-Narwhal', 'GitAchieve', handleGitHubData);
 
 };
 

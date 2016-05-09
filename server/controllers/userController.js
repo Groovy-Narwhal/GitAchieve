@@ -111,5 +111,5 @@ exports.deleteUser = function(req, res) {
         console.error(error);
         res.status(500).send('Error searching database for user');
       }
-  });
-};
+    });
+};  

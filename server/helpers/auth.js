@@ -57,23 +57,24 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       console.log('Success in Auth get repos');
       callback(body);
       // update user's pull requests
-      // var options3 = {
-      //   url: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
-      //   method: 'PATCH',
-      //   form: { profile: profile, repos: body },
-      //   headers: {
-      //     'Content-Type': 'application/x-www-form-urlencoded',
-      //     'User-Agent': username
-      //   }
-      // };
-      // request(options3, (error, response, body) => {
-      //   if (error) {
-      //     console.error(error);
-      //   } else {
-      //     console.log('Success in Auth get pull requests');
-      //     callback(body);
-      //   }
-      // });
+      var options3 = {
+        url: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
+        method: 'PATCH',
+        form: { profile: profile, repos: body, token: accessToken },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': username
+        }
+      };
+      request(options3, (error, response, body) => {
+        if (error) {
+          console.error(error);
+        } else {
+          console.log('Success in Auth get pull requests');
+          console.log('foo sho', body)
+          callback(body);
+        }
+      });
     }
   });
 
