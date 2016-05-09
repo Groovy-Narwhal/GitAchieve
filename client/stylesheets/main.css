@@ -178,10 +178,10 @@ svg {
 .header-profile-dropdown-item:hover {
   background-color: #eee; }
 
-#search-results-container {
+#data-results-container {
   padding: 10px; }
 
-.search-result-container {
+.data-result-container {
   background-color: #fff;
   padding: 10px;
   margin-bottom: 10px;

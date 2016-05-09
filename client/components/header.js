@@ -12,12 +12,13 @@ class Header extends Component {
     this.props.actions.signoutUser();
   }
   renderLinks() {
-    if (!this.props.authenticated) {
+    if (!this.props.auth.authenticated) {
       return null;
     } else {
+      console.log(this.props);
       return [
         <Search key={0} />,
-        <a key={1} onClick={() => browserHistory.push('/repos')} className="nav-link">
+        <a key={1} onClick={() => browserHistory.push(`/${this.props.user.username}/repos`)} className="nav-link">
           Repos
         </a>,
         <a key={2} onClick={() => browserHistory.push('/orgs')} className="nav-link">
@@ -43,11 +44,7 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = state => (
-  {
-    authenticated: state.auth.authenticated
-  }
-)
+const mapStateToProps = state => (state)
 
 const mapDispatchToProps = dispatch => (
   {

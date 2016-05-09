@@ -34,40 +34,31 @@ class Repos extends Component {
     var getRepoCommits = (repos) => {
       this.setState({repos: repos});
       var numCommits = 0;
-      for (var i = 0; i < repos.length; i++) {
-        let url = repos[i].commits_url.slice(0, repos[i].commits_url.indexOf('{'));
-        console.log('this is the url', url);
-        fetch(url, options)
-          .then((res) => res.json())
-          .then((data) => this.setState({reposCommits: [...this.state.reposCommits, data]}));
-        numCommits += 1;
-        this.state.commits += 1;
-      }
-      this.setState({reposNumCommits: [...this.state.reposCommits, numCommits]});
+      // for (var i = 0; i < repos.length; i++) {
+      //   let url = repos[i].commits_url.slice(0, repos[i].commits_url.indexOf('{'));
+      //   fetch(url, options)
+      //     .then((res) => res.json())
+      //     .then((data) => this.setState({reposCommits: [...this.state.reposCommits, data]}));
+      //   numCommits += 1;
+      //   this.state.commits += 1;
+      // }
+      console.log('These are the repos', repos);
+      // console.log(this.state.reposNumCommits);
+      this.setState({reposNumCommits: [...this.state.reposNumCommits, numCommits]});
     };
     initRepoFetch();
-  }
-  componentWillMount() {
-    // this.getAllRepos();
   }
   render() {
     return (
       <div id="data-results-container">
         <h3>Repos</h3>
         {this.state.repos.map((val, i)=> {
+          console.log('val and i', val, i);
+          console.log('Number of repo commits', this.state.reposNumCommits)
           return (
           <div key={i} className="data-result-container">
             <h2>{val.name}</h2>
             <h3>score: {this.state.reposNumCommits[i]}</h3>
-            {this.state.reposCommits.map((commits, i) => {
-              console.log('Commit and i', commits, i);
-              return (
-              <div key={i} className="commits">
-                <strong>{commits[0].commit.author.name}</strong>
-                <p>{commits[0].commit.message}</p>
-              </div>
-              );
-            })}
           </div>
           )
         })}
@@ -76,6 +67,16 @@ class Repos extends Component {
   }
   
 }
+
+// {this.state.reposCommits.map((commits, i) => {
+//               console.log('Commit and i', commits, i);
+//               return (
+//               <div key={i} className="commits">
+//                 <strong>{commits[0].commit.author.name}</strong>
+//                 <p>{commits[0].commit.message}</p>
+//               </div>
+//               );
+//             })}
 
 const mapStateToProps = (state) => {
   return state;
