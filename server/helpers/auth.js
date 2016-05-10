@@ -21,7 +21,68 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   const followers = profile._json.followers;
   const following = profile._json.following;
   
-  
+
+  const pullrequests = () => {
+    var options3 = {
+      url: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
+      method: 'PATCH',
+      form: { profile: profile, token: accessToken },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': username
+      }
+    };
+    request(options3, (error, response, body) => {
+      if (error) {
+        console.error('ERROR IN OPTIONS 3', error);
+      } else {
+        console.log('Success in Auth get pull requests');
+      }
+    });
+  }
+
+  const getOrgs = (pullrequestsCB) => {
+    // update the user's orgs in our database   
+    var options2 = {
+      url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
+      method: 'PATCH',
+      form: { profile: profile, token: accessToken },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': username
+      }
+    };
+    request(options2, (error, response, body) => {
+      if (error) {
+        console.error('ERROR IN OPTIONS 2', error);
+      } else {
+        console.log('Success in Auth get orgs');
+        pullrequestsCB();
+      }
+    });
+  }
+
+  const getRepos = (getOrgsCB) => {
+    // update the user's repos in our database   
+    var options = {
+      url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
+      method: 'PATCH',
+      form: { profile: profile, token: accessToken },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'User-Agent': username
+      }
+    };
+    request(options, (error, response, body) => {
+      if (error) {
+        console.error('ERROR IN OPTIONS 1', error);
+      } else {
+        console.log('Success in Auth get repos');
+        getOrgsCB(pullrequests);
+      }
+    });    
+  }
+
   // add the user to our database, or update them if they already exist
   db.any('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
     'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ' +
@@ -32,73 +93,16 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     .then((data) => {
       return callback(null, {data: profile._json, token: accessToken});    
     })
+    .then(() => {
+      getRepos(getOrgs);
+    })
     .catch((error) => {
       console.log('error in user upsert');
       console.error(error);
-    });  
-      
-
-
-
-  // update the user's repos in our database   
-  var options = {
-    url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
-    method: 'PATCH',
-    form: { profile: profile, token: accessToken },
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
-    }
-  };
-  request(options, (error, response, body) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log('Success in Auth get repos');
-      callback(body);
-      // update user's pull requests
-      var options3 = {
-        url: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
-        method: 'PATCH',
-        form: { profile: profile, repos: body, token: accessToken },
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': username
-        }
-      };
-      request(options3, (error, response, body) => {
-        if (error) {
-          console.error(error);
-        } else {
-          console.log('Success in Auth get pull requests');
-          console.log('foo sho', body)
-          callback(body);
-        }
-      });
-    }
-  });
-
-
-  // update the user's orgs in our database   
-  var options2 = {
-    url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
-    method: 'PATCH',
-    form: { profile: profile, token: accessToken },
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
-    }
-  };
-  request(options2, (error, response, body) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log('Success in Auth get orgs');
-      callback(body);
-    }
-  });
+    });
 
 };
+
 
 module.exports = function(app) {
   app.use(cookieParser());
