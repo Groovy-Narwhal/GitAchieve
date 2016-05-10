@@ -2,6 +2,7 @@ const userRouter = require('express').Router();
 const userController = require('./../controllers/userController.js');
 const repoController = require('./../controllers/repoController.js');
 const friendController = require('./../controllers/friendController.js');
+const statController = require('./../controllers/statController.js');
 
 
 // the following routes start from /api/v1/users
@@ -24,9 +25,9 @@ userRouter.route('/:id/friends')
   .post(friendController.addFriend)
   .patch(friendController.confirmOrRemoveFriend);
 
-// userRouter.route('/:id/stats')
-//   .get(userController.retrieveStats)
-//   .post(userController.addStats);
+userRouter.route('/:id/stats')
+  .get(statController.retrieveStats)
+  .post(statController.addStats);
 
 // userRouter.route('/:id/achievements')
 //   .get(userController.retrieveAchievements)
