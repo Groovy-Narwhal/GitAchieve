@@ -11,10 +11,10 @@ class Repos extends Component {
     this.state = {
       repos: [],
       reposCommits: [],
+      reposContributors: [],
       reposNumCommits: [],
       totalCommits: 0
     }
-    // this.getAllReposCommits();
   }
   getAllRepoData() {
     var options = {
@@ -29,44 +29,65 @@ class Repos extends Component {
       return fetch(`https://api.github.com/users/${this.props.user.username}/repos?per_page=100`, options)
         .then((res) => res.json())
         .then(getRepoCommits)
-        .catch((err) => console.log(err));      
+        .catch((err) => console.log('There was an error in initRepoFetch', err));
     };
     var getRepoCommits = (repos) => {
       this.setState({repos: repos});
-      var numCommits = 0;
-      // for (var i = 0; i < repos.length; i++) {
-      //   let url = repos[i].commits_url.slice(0, repos[i].commits_url.indexOf('{'));
-      //   fetch(url, options)
-      //     .then((res) => res.json())
-      //     .then((data) => this.setState({reposCommits: [...this.state.reposCommits, data]}));
-      //   numCommits += 1;
-      //   this.state.commits += 1;
-      // }
-      console.log('These are the repos', repos);
-      // console.log(this.state.reposNumCommits);
-      this.setState({reposNumCommits: [...this.state.reposNumCommits, numCommits]});
+      for (var i = 0; i < repos.length; i++) {
+        fetch(repos[i].contributors_url, options)
+          .then((res) => res.json())
+          .then((data) => this.setState({reposContributors: [...this.state.reposContributors, data]}))
+          .catch((err) => console.log(err));
+      }
     };
     initRepoFetch();
+  }
+  renderTopContributors(i) {
+    console.log('Were inside of the renderTopContributors, ', i, this.state.reposContributors[i]);
+    console.log('And here are the reposContributors: ', this.state.reposContributors);
+    return (
+      this.state.reposContributors[i].map((contributor) => (
+        <div>
+          <p>{contributor.login}</p>
+          <strong>Number of Contributions</strong>
+          <p>{contributor.contributions}</p>
+        </div>
+      ))
+    )
   }
   render() {
     return (
       <div id="data-results-container">
         <h3>Repos</h3>
-        {this.state.repos.map((val, i)=> {
-          console.log('val and i', val, i);
-          console.log('Number of repo commits', this.state.reposNumCommits)
+        {this.state.repos.map((val, i) => {
+          console.log(this.state.reposContributors[i]);
           return (
           <div key={i} className="data-result-container">
             <h2>{val.name}</h2>
             <h3>score: {this.state.reposNumCommits[i]}</h3>
+            <strong>top contributors</strong>
+            {this.state.reposContributors[i] === undefined ? null : this.state.reposContributors[i].map((contributor, i) => {
+              return (
+              <div key={i}>
+                <h2>{contributor.login}</h2>
+                <strong>Number of Contributions</strong>
+                <p>{contributor.contributions}</p>
+              </div>
+              )}
+            )}
           </div>
           )
         })}
       </div>
     )
   }
-  
 }
+/*
+
+
+*/
+
+// {this.renderTopContributors(i)}
 
 // {this.state.reposCommits.map((commits, i) => {
 //               console.log('Commit and i', commits, i);
