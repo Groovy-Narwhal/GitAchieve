@@ -12,3 +12,5 @@ exports.retrieveStats = function(req, res) {
 exports.addStats = function(req, res) {
 
 };
+
+// PATCH at '/api/v1/org/:id/stats' to update 
