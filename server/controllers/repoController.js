@@ -84,8 +84,8 @@ exports.retrieveRepos = function(req, res) {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': username,
-        // @TODO - uncomment this line to make GET requests from within the site (not with Postman)
-        // 'Authorization': `token ${req.body.token}`
+        // Uncomment this line to make GET requests from within the site (not with Postman)
+        'Authorization': `token ${req.body.token}`
       }
     };
     request(options, (error, response, body) => {
