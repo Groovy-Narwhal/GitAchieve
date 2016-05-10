@@ -69,11 +69,12 @@ class Repos extends Component {
             {this.state.reposContributors[i] === undefined ? null : this.state.reposContributors[i].map((contributor, i) => {
               if (i < 6) {
                 return (
-                <div key={i}>
-                  <h2>{contributor.login}</h2>
-                  <strong>Number of Contributions</strong>
-                  <p>{contributor.contributions}</p>
-                </div>
+                  <div key={i}>
+                    <img src={contributor.avatar_url} className="user-avatar-med" />
+                    <h2>{contributor.login}</h2>
+                    <strong>Number of Contributions</strong>
+                    <p>{contributor.contributions}</p>
+                  </div>
               )}}
             )}
           </div>
