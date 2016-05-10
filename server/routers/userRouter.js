@@ -21,8 +21,8 @@ userRouter.route('/:id/repos')
 
 userRouter.route('/:id/friends')
   .get(friendController.retrieveFriends)
-  .post(friendController.addFriend);
-//   .patch(friendController.confirmOrRemoveFriend);
+  .post(friendController.addFriend)
+  .patch(friendController.confirmOrRemoveFriend);
 
 // userRouter.route('/:id/stats')
 //   .get(userController.retrieveStats)
