@@ -96,33 +96,21 @@ exports.retrievePullRequests = (req, res) => {
             } else {
               const parsedBody = JSON.parse(body);
               parsedBody.forEach(member => {
-                // if user exists, update their info; otherwise, add them
-                // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
-                  db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
-                    'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
-                    'ON CONFLICT ($3~) ' + 
-                    'DO UPDATE SET ($17~, $5~, $6~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
-                    'WHERE $2~.$3~ = $10 ' +
-                    'RETURNING *',
-                    ['users', 'u', 'id', 'updated_ga', 'username', 'email', 'avatar_url', 'followers', 'following', 'signed_up',
-                    queryId, false, dbTimestamp, username, body.email, body.avatar_url, body.followers, body.following, 'created_ga'])
+                // add the member to our database, or update them if they already exist
+                db.one('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
+                  'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ' +
+                  'ON CONFLICT (id) ' +
+                  'DO UPDATE SET (updated_ga) = ($4) ' +
+                  'WHERE u.id = $1',
+                  [member.id, member.login, null, dbTimestamp, null, false, member.avatar_url, null, null])
                   .then((data) => {
-                    res.send(data);
+                    console.log('success adding members');
+                    console.log('DATA', data);   
                   })
                   .catch((error) => {
-                    // if the user was not found, send 404
+                    console.log('error in member upsert');
                     console.error(error);
-                    if (error.code === 0) {
-                      res.status(404).send('User does not exist');
-                    } else {
-                      res.status(500).send('Error searching database for user');
-                    }
-                  });
-
-
-
-
-
+                  });  
 
               })
             }
