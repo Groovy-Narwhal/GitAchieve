@@ -40,9 +40,9 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/api/v1/users/:id/friends|GET|Get a user's friends|none|
 |/api/v1/users/:id/friends|POST|Primary user requests friendship with secondary user|primary user id, secondary user id, username and email|
 |/api/v1/users/:id/friends|PATCH|Confirm a friend request or remove a friendship|remove:true to remove friendship|
-|/api/v1/owner/:id/stats|GET|Get the stats for a repo by owner (either user or organization| |
-|/api/v1/owner/:id/stats|POST|Add the stats for a repo by owner (either user or organization| |
-|/api/v1/owner/:id/stats|PATCH|Update stats from GitHub for an owner (either user or organization| |
+|/api/v1/owner/:id/stats|GET|Get the stats for a repo by owner (either user or organization)| |
+|/api/v1/owner/:id/stats|POST|Add the stats for a repo by owner (either user or organization)| |
+|/api/v1/owner/:id/stats|PATCH|Update stats from GitHub for an owner (either user or organization)| |
 
 ### Client Side Routes
 |Route|Description|Related Server Endpoints|
