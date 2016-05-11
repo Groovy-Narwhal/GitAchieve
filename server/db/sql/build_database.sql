@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-11 14:04:08.846
+-- Last modification date: 2016-05-11 22:07:05.833
 
 -- tables
 -- Table: branches
@@ -78,6 +78,7 @@ CREATE TABLE repos (
     stargazers_count int  NULL,
     forks_count int  NULL,
     org_commit_activity text  NULL,
+    owner_id int  NULL,
     CONSTRAINT repos_pk PRIMARY KEY (id)
 );
 

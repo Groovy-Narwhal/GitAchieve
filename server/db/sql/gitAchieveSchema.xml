@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>175</Value>
+            <Value>176</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -722,6 +722,15 @@
                 <Column Id="c151">
                     <Name>org_commit_activity</Name>
                     <Type>text</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c176">
+                    <Name>owner_id</Name>
+                    <Type>int</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
