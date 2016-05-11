@@ -5,13 +5,14 @@ const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
-// /api/v1/orgs/:id/orgs
+// PATCH at /api/v1/orgs/:id/orgs
 exports.retrieveOrgs = (req, res) => {
   const queryId = req.params.id;
   const username = req.body.profile.username;
   const token = req.body.token;
   const dbTimestamp = pgp.as.date(new Date());
-
+  var orgCount = 0;
+  var orgsSoFar = 0; 
   // *** HELPER FUNCTIONS ***
   
   // get all of this user's orgs from GitHub
@@ -29,7 +30,6 @@ exports.retrieveOrgs = (req, res) => {
       if (error) {
         console.error('getOrgsFromGitHub error');
       } else {
-        console.log('getOrgsFromGitHub success');
         var orgs = JSON.parse(body);
         callback(username, orgs);
       }
@@ -39,6 +39,8 @@ exports.retrieveOrgs = (req, res) => {
   const addOrgsToDb = (orgs, callback) => {
     db.tx(task => {
       const queries = orgs.map(org => {
+        // increment counter for each org
+        orgCount++;
         return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~) ' +
           'VALUES ($7, $8, $9, $10) ' +
           'ON CONFLICT ($3~) ' +
@@ -50,8 +52,7 @@ exports.retrieveOrgs = (req, res) => {
       return task.batch(queries);
     })
     .then(data => {
-      console.log('addOrgsToDb success');
-      callback(data);
+      callback();
     })
     .catch(error => {
       console.error('addOrgsToDb error');
@@ -71,13 +72,13 @@ exports.retrieveOrgs = (req, res) => {
       return task.batch(queries);
     })
     .then(data => {
-      console.log('addUserOrgJoins success');
       callback();
     })
     .catch(error => {
       console.error('addUserOrgJoins error');
     });
   };
+
 
   // get all of an org's repos from GitHub
   var getReposFromGitHub = (username, orgs, callback) => {
@@ -96,7 +97,6 @@ exports.retrieveOrgs = (req, res) => {
         if (error) {
           console.error('getReposFromGitHub error');
         } else {
-          console.log('getReposFromGitHub success');
           var repos = JSON.parse(body);
           callback(repos, org);
         }
@@ -104,26 +104,50 @@ exports.retrieveOrgs = (req, res) => {
     });
   };  
   
-  // add a join for each repo to our orgs_repos table, associating each repo to an org
-  var addOrgRepoJoins = (orgs, callback) => {
+  const addReposToDb = (repos, org) => {
     db.tx(task => {
-      var queries = orgs.map(org => {
-        return task.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
-        'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
-        '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
-        ['users_orgs', 'created_ga', 'user_id', 'org_id',
-        dbTimestamp, queryId, org.id]);
+      const queries = repos.map(repo => {
+        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~, $10~) ' +
+          'VALUES ($11, $12, $13, $14, $15, $16, $17, $18) ' +
+          'ON CONFLICT ($3~) ' +
+          'DO UPDATE SET ($5~, $6~, $7~, $8~, $9~, $10~) = ($13, $14, $15, $16, $17, $18) ' +
+          'WHERE $2~.$3~ = $11',
+          ['repos', 'r', 'id', 'created_at', 'updated_ga', 'name', 'owner', 'watchers_count', 'stargazers_count', 'forks_count',
+          repo.id, repo.created_at, dbTimestamp, repo.name, repo.owner.id, repo.watchers_count, repo.stargazers_count, repo.forks_count]);
       });
       return task.batch(queries);
     })
     .then(data => {
-      console.log('addOrgRepoJoins success');
+      addOrgRepoJoins(repos, org, patchOrgsResponse);
+    })
+    .catch(error => {
+      console.error('addReposToD error: ', error);
+    });
+  };
+  
+  // add a join for each repo to our orgs_repos table, associating each repo to an org
+  var addOrgRepoJoins = (repos, org, callback) => {
+    db.tx(task => {
+      var queries = repos.map(repo => {
+        console.log('in addOrgRepoJoins, repo.id', repo.id);
+        console.log('in addOrgRepoJoins, org.id', org.id);
+        
+        return task.oneOrNone('INSERT INTO $1~ ($2~, $3~, $4~) ' +
+        'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
+        '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
+        ['orgs_repos', 'created_ga', 'org_id', 'repo_id',
+        dbTimestamp, org.id, repo.id]);
+      });
+      return task.batch(queries);
+    })
+    .then(data => {
       callback(data);
     })
     .catch(error => {
-      console.error('addOrgRepoJoins error');
+      console.error('addOrgRepoJoins error: ', error);
     });
   };
+
 
   // send the response for the api endpoint, containing all this user's orgs
   var patchOrgsResponse = () => {
@@ -133,16 +157,15 @@ exports.retrieveOrgs = (req, res) => {
       'ON o.id = uo.org_id ' +
       'WHERE uo.user_id=$1'), [queryId])
     .then(data => {
-      console.log('patchOrgsResponse success');
-      
-      // START HERE - the PatchOrgs response is called once per org, so it can't be used to send the server response
-      // also, check that the join queries are working properly
-
-      // res.send(data);
+    // increment counter for each org that has been fully processed
+      orgsSoFar ++;
+      if (orgsSoFar === orgCount) {
+        res.send(data);
+      }
     })
     .catch(error => {
       console.error('patchOrgsResponse error');
-      // res.status(500).send('Error querying orgs table');
+      res.status(500).send('Error querying orgs table');
     });
   };
   
@@ -153,9 +176,9 @@ exports.retrieveOrgs = (req, res) => {
     addOrgsToDb(orgs, 
       addUserOrgJoins.bind(null, orgs, 
         getReposFromGitHub.bind(null, username, orgs, 
-          addOrgRepoJoins.bind(null, orgs, 
-            patchOrgsResponse))));
+          addReposToDb)));
   };
+  
   getOrgsFromGitHub(username, handleGitHubData);
 };
 
