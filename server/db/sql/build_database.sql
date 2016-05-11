@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-11 00:49:42.307
+-- Last modification date: 2016-05-11 02:54:18.786
 
 -- tables
 -- Table: branches
@@ -45,7 +45,7 @@ CREATE TABLE orgs (
 
 -- Table: orgs_repos
 CREATE TABLE orgs_repos (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     org_id int  NOT NULL,
     repo_id int  NOT NULL,
@@ -54,7 +54,7 @@ CREATE TABLE orgs_repos (
 
 -- Table: owners_stats
 CREATE TABLE owners_stats (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     stats_id_ga int  NOT NULL,
     owner_id int  NOT NULL,

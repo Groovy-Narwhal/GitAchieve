@@ -1045,7 +1045,7 @@
             <Columns>
                 <Column Id="c154">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -1099,7 +1099,7 @@
             <Columns>
                 <Column Id="c163">
                     <Name>id_ga</Name>
-                    <Type>int</Type>
+                    <Type>serial</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
