@@ -14,7 +14,7 @@ class Organizations extends Component {
   }
 
   componentWillMount() {
-    axios.get(`${ROOT_URL}/github/${this.props.user.username}/orgs`)
+    axios.get(`${ROOT_URL}/api/v1/orgs/${this.props.user.username}/orgs`)
       .then(response => {
         this.setState({orgsList: response.data})
       });

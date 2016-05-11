@@ -9,18 +9,23 @@ orgRouter.route('/:id/orgs')
 orgRouter.route('/:id/pullrequests')
   .patch(pullRequestController.retrievePullRequests)
 
+orgRouter.route('/:username/orgs')
+  .get(orgController.retrieveAllOrgsForUser)
 
+orgRouter.route('/:username/pullrequests')
+  .get(pullRequestController.retrieveAllPRSForUser)
 
+  
 
-orgRouter.route('/:orgname')
+// orgRouter.route('/:orgname')
   // .get(orgController.retrieveOne);
 
-orgRouter.route('/:orgname/stats')
-  .get(orgController.retrieveStats)
-  .post(orgController.addStats);
+// orgRouter.route('/:orgname/stats')
+//   .get(orgController.retrieveStats)
+//   .post(orgController.addStats);
 
-orgRouter.route('/:orgname/achievements')
-  .get(orgController.retrieveAchievements)
-  .post(orgController.addAchievements);
+// orgRouter.route('/:orgname/achievements')
+//   .get(orgController.retrieveAchievements)
+//   .post(orgController.addAchievements);
 
 module.exports = orgRouter;
