@@ -8,11 +8,8 @@ class Repos extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      selectedUser: undefined,
       repos: [],
-      reposCommits: [],
-      reposContributors: {},
-      reposNumCommits: [],
-      totalCommits: 0,
       options: {
         method: 'GET',
         headers: {
@@ -23,17 +20,15 @@ class Repos extends Component {
       }
     }
     // Initiates fetching of all repo data for the user
-    this.fetchAllRepoData.call(this)
+    this.fetchAllRepoData();
   }
   fetchRepos() {
-    return fetch(`https://api.github.com/users/${this.props.user.username}/repos?per_page=100`, this.state.options)
-      .then((res) => res.json())
-      .then((data) => data)
+    return fetch(`https://api.github.com/users/${this.props.chosenSearchResults !== undefined ? this.props.chosenSearchResults.login : this.props.user.username}/repos?per_page=100`, this.state.options)
+      .then((res) => res.json());
   }
   fetchContributors(repo) {
-    return fetch(repo.contributors_url, this.state.options)
-      .then((res) => res.json())
-      .then((data) => data);
+    return fetch(`https://api.github.com/repos/${repo.full_name}/stats/contributors`, this.state.options)
+      .then((res) => res.json());
   }
   fetchAllRepoData() {
     async function renderRepos () {
@@ -42,9 +37,17 @@ class Repos extends Component {
       for (var i = 0; i < repos.length; i++) {
         contributors.push(await this.fetchContributors(repos[i]));
       }
-      var incrementor = 0;
-      var reposAndContributors = repos.map((repo) => ({repo: repo, contributors: contributors[incrementor++]}))
+      var userScoreArr = contributors.map((c) => { 
+        let res;
+        c.forEach((user) => { if (user.author.login === this.props.user.username) res = user.total; });
+        return res;
+      });
+      var reposFiltered = repos.filter((repo, i) => userScoreArr[i] !== undefined);
+      var contributorsFiltered = contributors.filter((c, i) => userScoreArr[i] !== undefined);
+      var scoreFiltered = userScoreArr.filter((s, i) => userScoreArr[i] !== undefined);
+      var reposAndContributors = reposFiltered.map((repo, index) => ({repo: repo, contributors: contributorsFiltered[index], numCommits: scoreFiltered[index]}))
       this.setState({repos: reposAndContributors});
+      this.props.actions.chooseSearchResult({});
     };
     renderRepos.call(this);
   }
@@ -64,11 +67,12 @@ class Repos extends Component {
           {this.state.repos.map((repoData, i) => (
             <div className="data-result-container" key={i} >
               <h2>{repoData.repo.name}</h2>
+              <strong>your score: {repoData.numCommits}</strong>
               {repoData.contributors.map((contributor, i) => (
                 <div key={i}>
-                  <img src={contributor.avatar_url} className="user-avatar-med" />
-                  <strong>{contributor.login}</strong>
-                  <p>contributions: {contributor.contributions}</p>
+                  <img src={contributor.author.avatar_url} className="user-avatar-med" />
+                  <strong>{contributor.author.login}</strong>
+                  <p>contributions: {contributor.total}</p>
                 </div>
               ))}
             </div>
