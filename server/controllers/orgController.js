@@ -112,7 +112,7 @@ exports.retrieveOrgs = (req, res) => {
           'ON CONFLICT ($3~) ' +
           'DO UPDATE SET ($5~, $6~, $7~, $8~, $9~, $10~) = ($13, $14, $15, $16, $17, $18) ' +
           'WHERE $2~.$3~ = $11',
-          ['repos', 'r', 'id', 'created_at', 'updated_ga', 'name', 'owner', 'watchers_count', 'stargazers_count', 'forks_count',
+          ['repos', 'r', 'id', 'created_at', 'updated_ga', 'name', 'owner_id', 'watchers_count', 'stargazers_count', 'forks_count',
           repo.id, repo.created_at, dbTimestamp, repo.name, repo.owner.id, repo.watchers_count, repo.stargazers_count, repo.forks_count]);
       });
       return task.batch(queries);
@@ -129,9 +129,6 @@ exports.retrieveOrgs = (req, res) => {
   var addOrgRepoJoins = (repos, org, callback) => {
     db.tx(task => {
       var queries = repos.map(repo => {
-        console.log('in addOrgRepoJoins, repo.id', repo.id);
-        console.log('in addOrgRepoJoins, org.id', org.id);
-        
         return task.oneOrNone('INSERT INTO $1~ ($2~, $3~, $4~) ' +
         'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
         '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
@@ -160,6 +157,7 @@ exports.retrieveOrgs = (req, res) => {
     // increment counter for each org that has been fully processed
       orgsSoFar ++;
       if (orgsSoFar === orgCount) {
+        console.log('DONE');
         res.send(data);
       }
     })
