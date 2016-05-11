@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-11 02:54:18.786
+-- Last modification date: 2016-05-11 03:05:12.039
 
 -- tables
 -- Table: branches
@@ -57,7 +57,8 @@ CREATE TABLE owners_stats (
     id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     stats_id_ga int  NOT NULL,
-    owner_id int  NOT NULL,
+    org_id int  NOT NULL,
+    user_id int  NOT NULL,
     CONSTRAINT owners_stats_pk PRIMARY KEY (id_ga)
 );
 
@@ -203,8 +204,16 @@ ALTER TABLE orgs_repos ADD CONSTRAINT orgs_repos_repos
 
 -- Reference: owners_stats_orgs (table: owners_stats)
 ALTER TABLE owners_stats ADD CONSTRAINT owners_stats_orgs
-    FOREIGN KEY (owner_id)
+    FOREIGN KEY (org_id)
     REFERENCES orgs (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: owners_stats_users (table: owners_stats)
+ALTER TABLE owners_stats ADD CONSTRAINT owners_stats_users
+    FOREIGN KEY (user_id)
+    REFERENCES users (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
@@ -237,14 +246,6 @@ ALTER TABLE repos_branches ADD CONSTRAINT repos_branches_repos
 ALTER TABLE owners_stats ADD CONSTRAINT stats_owners_stats
     FOREIGN KEY (stats_id_ga)
     REFERENCES stats (id_ga)  
-    NOT DEFERRABLE 
-    INITIALLY IMMEDIATE
-;
-
--- Reference: stats_owners_users (table: owners_stats)
-ALTER TABLE owners_stats ADD CONSTRAINT stats_owners_users
-    FOREIGN KEY (owner_id)
-    REFERENCES users (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
