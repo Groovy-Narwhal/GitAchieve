@@ -10,6 +10,8 @@ const app = express();
 // Passport Authentication and Middleware
 require('./helpers/middleware.js')(app);
 require('./helpers/auth.js')(app);
+require('./helpers/databaseRequests.js')(app);
+require('./helpers/userGHFetcher')(app);
 
 // Routers
 const userRouter = require('./routers/userRouter.js');
