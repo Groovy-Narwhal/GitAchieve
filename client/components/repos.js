@@ -32,16 +32,20 @@ class Repos extends Component {
   }
   fetchAllRepoData() {
     async function renderRepos () {
+      // awaits the promise from this.fetchRepos to resolve, then assigns repos to that value
       var repos = await this.fetchRepos();
       var contributors = [];
+      // Get all contributors from each repo
       for (var i = 0; i < repos.length; i++) {
         contributors.push(await this.fetchContributors(repos[i]));
       }
+      // Get user contributions for each repo
       var userScoreArr = contributors.map((c) => { 
         let res;
         c.forEach((user) => { if (user.author.login === this.props.user.username) res = user.total; });
         return res;
       });
+      // Filter data to only include repos that the user has contributed to
       var reposFiltered = repos.filter((repo, i) => userScoreArr[i] !== undefined);
       var contributorsFiltered = contributors.filter((c, i) => userScoreArr[i] !== undefined);
       var scoreFiltered = userScoreArr.filter((s, i) => userScoreArr[i] !== undefined);
