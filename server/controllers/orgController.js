@@ -5,7 +5,8 @@ const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
-// PATCH at /api/v1/orgs/:id/orgs
+// PATCH at /api/v1/orgs/:id/orgs to add all of a user's orgs, each org's users, 
+// and each org's repos to our database
 exports.retrieveOrgs = (req, res) => {
   const queryId = req.params.id;
   const username = req.body.profile.username;
@@ -28,7 +29,7 @@ exports.retrieveOrgs = (req, res) => {
     };
     request(options, (error, response, body) => {
       if (error) {
-        console.error('getOrgsFromGitHub error');
+        console.error('getOrgsFromGitHub error: ', error);
       } else {
         var orgs = JSON.parse(body);
         callback(username, orgs);
@@ -55,7 +56,7 @@ exports.retrieveOrgs = (req, res) => {
       callback();
     })
     .catch(error => {
-      console.error('addOrgsToDb error');
+      console.error('addOrgsToDb error: ', error);
     });
   };
 
@@ -75,7 +76,7 @@ exports.retrieveOrgs = (req, res) => {
       callback();
     })
     .catch(error => {
-      console.error('addUserOrgJoins error');
+      console.error('addUserOrgJoins error: ', error);
     });
   };
 
@@ -95,7 +96,7 @@ exports.retrieveOrgs = (req, res) => {
       };
       request(options, (error, response, body) => {
         if (error) {
-          console.error('getReposFromGitHub error');
+          console.error('getReposFromGitHub error: ', error);
         } else {
           var repos = JSON.parse(body);
           callback(repos, org);
@@ -145,7 +146,6 @@ exports.retrieveOrgs = (req, res) => {
     });
   };
 
-
   // send the response for the api endpoint, containing all this user's orgs
   var patchOrgsResponse = () => {
     db.any(('SELECT o.id, o.updated_ga, o.orgname, o.avatar_url, o.followers, o.following, o.score ' +
@@ -157,26 +157,23 @@ exports.retrieveOrgs = (req, res) => {
     // increment counter for each org that has been fully processed
       orgsSoFar ++;
       if (orgsSoFar === orgCount) {
-        console.log('DONE');
+        console.log('Successfully added all of user id ' + queryId + '\'s repos and orgs (and each org\'s users)');
         res.send(data);
       }
     })
     .catch(error => {
-      console.error('patchOrgsResponse error');
+      console.error('patchOrgsResponse error: ', error);
       res.status(500).send('Error querying orgs table');
     });
   };
   
-  
   // *** CALL HELPER FUNCTIONS ***
-
   const handleGitHubData = (username, orgs) => {
     addOrgsToDb(orgs, 
       addUserOrgJoins.bind(null, orgs, 
         getReposFromGitHub.bind(null, username, orgs, 
           addReposToDb)));
   };
-  
   getOrgsFromGitHub(username, handleGitHubData);
 };
 
@@ -186,7 +183,7 @@ exports.retrieveAllOrgsForUser = function(req, res) {
     '(o.id=uo.org_id) INNER JOIN users u on (uo.user_id=u.id) WHERE u.username=$1', [req.params.username])
     .then(data => res.send(data))
     .catch(error => {
-      console.error(error);
+      console.error('retrieveAllOrgsForUser error: ', error);
       res.status(500).send('Error reading orgs table');
     });
 };
