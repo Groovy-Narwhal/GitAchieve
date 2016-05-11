@@ -26,7 +26,7 @@ exports.addUser = function(req, res) {
       console.error(error);
       res.status(500).send(error);
     });
-};  
+};
 
 // GET at '/api/v1/users/:id'
 exports.retrieveUser = function(req, res) {
@@ -94,7 +94,7 @@ exports.updateUser = function(req, res) {
   
   // CALL HELPERS
   getUserFromGitHub(username, upsertUser);
-};  
+};
 
 // DELETE at '/api/v1/users/:id'
 exports.deleteUser = function(req, res) {

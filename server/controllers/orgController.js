@@ -5,7 +5,7 @@ const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
-// /api/v1/users/orgs/:id/orgs
+// /api/v1/orgs/:id/orgs
 exports.retrieveOrgs = (req, res) => {
   const queryId = req.params.id;
   const username = req.body.profile.username;
@@ -16,13 +16,13 @@ exports.retrieveOrgs = (req, res) => {
   const addOrgsToDb = (orgs, callback) => {
     db.tx(task => {
       const queries = orgs.map(org => {
-        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
-          'VALUES ($6, $7, $8) ' +
+        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~) ' +
+          'VALUES ($7, $8, $9, $10) ' +
           'ON CONFLICT ($3~) ' +
-          'DO UPDATE SET ($4~, $5~) = ($7, $8) ' +
-          'WHERE $2~.$3~ = $6',
-          ['orgs', 'o', 'id', 'orgname', 'updated_ga',
-          org.id, org.login, dbTimestamp]);
+          'DO UPDATE SET ($4~, $5~, $6~) = ($8, $9, $10) ' +
+          'WHERE $2~.$3~ = $7',
+          ['orgs', 'o', 'id', 'orgname', 'avatar_url', 'updated_ga',
+          org.id, org.login, org.avatar_url, dbTimestamp]);
       });
     return task.batch(queries);
     })
@@ -60,7 +60,7 @@ exports.retrieveOrgs = (req, res) => {
 
   // send the response for the api endpoint, containing all this user's orgs
   var patchOrgsResponse = () => {
-    db.any(('SELECT o.id, o.updated_ga, o.orgname, o.followers, o.following, o.score ' +
+    db.any(('SELECT o.id, o.updated_ga, o.orgname, o.avatar_url, o.followers, o.following, o.score ' +
       'FROM users_orgs uo ' +
       'INNER JOIN orgs o ' +
       'ON o.id = uo.org_id ' +
@@ -91,7 +91,6 @@ exports.retrieveOrgs = (req, res) => {
       }
     });
   };
-
   // gather the helper functions together into one asynchronous series
   const handleGitHubData = data => {
     var orgs = JSON.parse(data);
@@ -104,7 +103,7 @@ exports.retrieveOrgs = (req, res) => {
 
 // '/github/:username/orgs'
 exports.retrieveAllOrgsForUser = function(req, res) {
-  db.any('SELECT o.orgname FROM orgs o INNER JOIN users_orgs uo ON ' +
+  db.any('SELECT o.orgname, o.avatar_url FROM orgs o INNER JOIN users_orgs uo ON ' +
     '(o.id=uo.org_id) INNER JOIN users u on (uo.user_id=u.id) WHERE u.username=$1', [req.params.username])
     .then(data => res.send(data))
     .catch(error => {

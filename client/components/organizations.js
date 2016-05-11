@@ -14,8 +14,7 @@ class Organizations extends Component {
   }
 
   componentWillMount() {
-    console.log('hola senorita')
-    axios.get(`${ROOT_URL}/github/${this.props.user.username}/orgs`)
+    axios.get(`${ROOT_URL}/api/v1/orgs/${this.props.user.username}/orgs`)
       .then(response => {
         this.setState({orgsList: response.data})
       });
@@ -28,7 +27,7 @@ class Organizations extends Component {
         {this.state.orgsList.map((org, index) => {
           return (
             <div key={index} className="org-container">
-            <img src="https://avatars.githubusercontent.com/u/18317404?v=3" className="user-avatar-1" />
+            <img className="user-avatar-1" src={org.avatar_url} />
               <h4>{org.orgname}</h4>
             </div>
           )
