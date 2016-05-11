@@ -23,14 +23,14 @@ exports.updateStats = function(req, res) {
   //  get the stats for a given owner & repo from GitHub
   var getStatsFromGitHub = function(owner, repo, callback) {
     var options = {
-      url: 'https://api.github.com/repos/' + owner + '/' + repo.name + '/stats/contributors',
+      url: 'https://api.github.com/repos/' + owner.name + '/' + repo.name + '/stats/contributors',
       method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': owner,
+        'User-Agent': owner.name,
         // Uncomment this line to make GET requests from within the site (not with Postman)
         // 'Authorization': `token ${req.body.token}`
-        'Authorization' : 'token ' + token
+        'Authorization': 'token ' + token
       }
     };
     
@@ -39,40 +39,52 @@ exports.updateStats = function(req, res) {
         console.error(error);
       } else {
         console.log('success in getStats');
-        callback(repo, stats);
+        callback(owner, repo, stats);
       }
     });
   };
     
   // callback function - will delete old stats, then add new stats to our database
-  var updateStatsInDb = function(repo, stats) {
+  var updateStatsInDb = function(owner, repo, stats) {
     var statsArray = JSON.parse(stats);
-    console.log('in updateStatsInDb, repo.id:', repo.id);
-    // console.log('in updateStatsInDb, statsArray: ', statsArray);
+    
     if (statsArray.length !== undefined) {
       var dbTimestamp = pgp.as.date(new Date());
       db.tx(function(t) {
+        
         var deleteJoinsQuery = t.any(
-          'DELETE from $1~ AS $2~ ' +
-          'WHERE $3~=$4',
-          ['repos_stats', 'rs', 'repo_id', repo.id]);
+          'DELETE from $1~' +
+          'WHERE $2~=$3',
+          ['owners_stats', 'owner_id', owner.id]);
       
         var deleteStatsQuery = t.any(
-          'DELETE from $1~ AS $2~ ' +
-          'WHERE $3~=$4',
-          ['stats', 's', 'repo_id', repo.id]);      
+          'DELETE from $1~' +
+          'WHERE $2~=$3',
+          ['stats', 'repo_id', repo.id]);      
         
         var insertStatsAndJoinsQuery = statsArray.map(function(stat) {
-          console.log('stat.author.id', stat.author.id);
-          console.log('stat.total', stat.total);
-          console.log('stat.weeks[0]', stat.weeks[0]);
           
-          return t.any(
-            'INSERT INTO $1~ ($2~, $3~, $4~, $5~) ' +
-            'VALUES ($6, $7, $8, $9) ' +
-            'RETURNING *',
-            ['stats', 'updated_ga', 'author_id', 'total', 'weeks',
-            dbTimestamp, stat.author.id, stat.total, JSON.stringify(stat.weeks)]);
+          return (t.any(
+            'INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~) ' +
+            'VALUES ($7, $8, $9, $10, $11) ' +
+            'RETURNING $12~',
+            ['stats', 'updated_ga', 'repo_id', 'author_id', 'total', 'weeks',
+            dbTimestamp, repo.id, stat.author.id, stat.total, JSON.stringify(stat.weeks), 'id_ga'])
+            .then(data => {
+              // console.log('data: ' + data + ', type: ' + typeof(data));
+              // console.log('data', JSON.stringify(data));
+              // console.log('type of data[0].id_ga', typeof data[0].id_ga);
+              var statId = data[0].id_ga;
+              console.log('statId', statId);
+              console.log('owner.id', owner.id);
+              db.any(
+                'INSERT INTO $1~ ($2~, $3~, $4~) ' +
+                'VALUES ($5, $6, $7) ' +
+                'RETURNING *',
+                ['owners_stats', 'created_ga', 'stats_id_ga', 'owner_id',
+                dbTimestamp, statId, owner.id]);
+            })
+          );
         });
         
         // return t.batch(insertStatsAndJoinsQuery);
@@ -80,19 +92,6 @@ exports.updateStats = function(req, res) {
       })
       .then(data => {
         console.log('success in updateStatsInDb');
-        // res.send('success');
-        // db.any(
-        //   'INSERT INTO $1~ ($2~, $3~, $4~) ' +
-        //   'VALUES ($5, $6, $7) ' +
-        //   'RETURNING *',
-        //   ['repos_stats', 'created_ga', 'repo_id', 'stats_id_ga ',
-        //   dbTimestamp, repo.id, statIdGa])
-        //   .then(join => {
-        //     console.log('join: ', join);
-        //   })
-        //   .catch(error => {
-        //     console.error('Error in inserting stats and joins: ', error);
-        //   });
       })
       .catch(error => {
         console.error('Error updating stats in db: ', error);
@@ -115,17 +114,19 @@ exports.updateStats = function(req, res) {
     return t.batch([userQuery, orgQuery]);
   })
   .then(data => {
-    var owner;
+    var owner = {};
     if (data[0] !== null) {
-      owner = data[0].username;
+      owner.name = data[0].username;
+      owner.id = data[0].id;
     } else {
-      owner = data[1].orgname;
+      owner.name = data[1].orgname;
+      owner.id = data[1].id;
     }
     // get the repos from our db for the owner
     db.any(
       'SELECT * FROM $1~ ' +
       'WHERE $1~.$2~=$3',
-      ['repos', 'owner', owner])
+      ['repos', 'owner', owner.name])
       .then(repos => {
         // for each repo:
           // make a GET request to GitHub at /repos/:owner/:repo/stats/contributors
@@ -134,14 +135,9 @@ exports.updateStats = function(req, res) {
         repos.forEach((repo, index) => {
           getStatsFromGitHub(owner, repo, updateStatsInDb);
         });
-        
-        // TODO: remove this and use the forEach above
-        // getStatsFromGitHub(owner, repos[0], updateStatsInDb);
-        
-        // test
-        // getStatsFromGitHub('Groovy-Narwhal', 'GitAchieve', updateStatsInDb);
-        
-
+      })
+      .then(data => {
+        res.send('success');
       })
       .catch(error => {
         console.error('Error selecting repos: ', error);
