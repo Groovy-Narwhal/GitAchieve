@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>159</Value>
+            <Value>162</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -113,6 +113,15 @@
                 <Column Id="c152">
                     <Name>updated_ga</Name>
                     <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c161">
+                    <Name>signed_up</Name>
+                    <Type>boolean</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
@@ -676,6 +685,15 @@
                 </Column>
                 <Column Id="c150">
                     <Name>name</Name>
+                    <Type>varchar(100)</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c162">
+                    <Name>owner</Name>
                     <Type>varchar(100)</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
@@ -1452,7 +1470,7 @@
             <X>3924.5</X>
             <Y>4285.5</Y>
             <Width>236.0</Width>
-            <Height>246.0</Height>
+            <Height>260.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t7</Table>
