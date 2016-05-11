@@ -54,8 +54,9 @@ exports.updateStats = function(req, res) {
         
         var deleteJoinsQuery = t.any(
           'DELETE from $1~' +
-          'WHERE $2~=$3',
-          ['owners_stats', 'owner_id', owner.id]);
+          'WHERE $2~=$3 ' +
+          'OR $4~=$3',
+          ['owners_stats', 'user_id', owner.id, 'org_id']);
       
         var deleteStatsQuery = t.any(
           'DELETE from $1~' +
@@ -71,18 +72,42 @@ exports.updateStats = function(req, res) {
             ['stats', 'updated_ga', 'repo_id', 'author_id', 'total', 'weeks',
             dbTimestamp, repo.id, stat.author.id, stat.total, JSON.stringify(stat.weeks), 'id_ga'])
             .then(data => {
-              // console.log('data: ' + data + ', type: ' + typeof(data));
-              // console.log('data', JSON.stringify(data));
-              // console.log('type of data[0].id_ga', typeof data[0].id_ga);
               var statId = data[0].id_ga;
               console.log('statId', statId);
-              console.log('owner.id', owner.id);
+              // the query will need to save values in both the user_id column and org_id column
+              // but only one will have an actual id in it
+              
+              // the column we are saving a real id to 
+              var validIdCol = owner.type + '_id';
+              // the column we are saving a dummy id to
+              var nullIdCol;
+              
+              if (owner.type === 'user') {
+                nullIdCol = 'org_id';
+              } else {
+                nullIdCol = 'user_id';
+              }
+              
+              console.log('validIdCol: ', validIdCol);
+              console.log('owner.id: ', owner.id);
+              console.log('nullIdCol: ', nullIdCol);
+              
+              // START HERE - this insert is failing, with this showing in the console:
+              
+              /*
+              statId 639
+              validIdCol:  user_id
+              owner.id:  15864056
+              nullIdCol:  org_id
+              Unhandled rejection error: insert or update on table "owners_stats" violates foreign key constraint "stats_owners_stats"
+              */
+              
               db.any(
-                'INSERT INTO $1~ ($2~, $3~, $4~) ' +
-                'VALUES ($5, $6, $7) ' +
+                'INSERT INTO $1~ ($2~, $3~, $4~, $5~) ' +
+                'VALUES ($6, $7, $8, $9) ' +
                 'RETURNING *',
-                ['owners_stats', 'created_ga', 'stats_id_ga', 'owner_id',
-                dbTimestamp, statId, owner.id]);
+                ['owners_stats', 'created_ga', 'stats_id_ga', validIdCol, nullIdCol,
+                dbTimestamp, statId, owner.id, 0]);
             })
           );
         });
@@ -118,9 +143,11 @@ exports.updateStats = function(req, res) {
     if (data[0] !== null) {
       owner.name = data[0].username;
       owner.id = data[0].id;
+      owner.type = 'user';
     } else {
       owner.name = data[1].orgname;
       owner.id = data[1].id;
+      owner.type = 'org';
     }
     // get the repos from our db for the owner
     db.any(
