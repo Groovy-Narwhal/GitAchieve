@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-11 00:38:14.558
+-- Last modification date: 2016-05-11 00:49:42.307
 
 -- tables
 -- Table: branches
@@ -52,6 +52,15 @@ CREATE TABLE orgs_repos (
     CONSTRAINT orgs_repos_pk PRIMARY KEY (id_ga)
 );
 
+-- Table: owners_stats
+CREATE TABLE owners_stats (
+    id_ga int  NOT NULL,
+    created_ga timestamp  NOT NULL,
+    stats_id_ga int  NOT NULL,
+    owner_id int  NOT NULL,
+    CONSTRAINT owners_stats_pk PRIMARY KEY (id_ga)
+);
+
 -- Table: pull_requests
 CREATE TABLE pull_requests (
     id int  NOT NULL,
@@ -91,15 +100,6 @@ CREATE TABLE repos_branches (
     CONSTRAINT repos_branches_pk PRIMARY KEY (id_ga)
 );
 
--- Table: repos_stats
-CREATE TABLE repos_stats (
-    id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
-    repo_id int  NOT NULL,
-    stats_id_ga int  NOT NULL,
-    CONSTRAINT repos_stats_pk PRIMARY KEY (id_ga)
-);
-
 -- Table: stats
 CREATE TABLE stats (
     id_ga serial  NOT NULL,
@@ -107,6 +107,7 @@ CREATE TABLE stats (
     author_id int  NULL,
     total int  NULL,
     weeks text  NULL,
+    repo_id int  NULL,
     CONSTRAINT stats_pk PRIMARY KEY (id_ga)
 );
 
@@ -200,6 +201,14 @@ ALTER TABLE orgs_repos ADD CONSTRAINT orgs_repos_repos
     INITIALLY IMMEDIATE
 ;
 
+-- Reference: owners_stats_orgs (table: owners_stats)
+ALTER TABLE owners_stats ADD CONSTRAINT owners_stats_orgs
+    FOREIGN KEY (owner_id)
+    REFERENCES orgs (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
 -- Reference: pull_requests_users (table: pull_requests)
 ALTER TABLE pull_requests ADD CONSTRAINT pull_requests_users
     FOREIGN KEY (user_id)
@@ -224,18 +233,18 @@ ALTER TABLE repos_branches ADD CONSTRAINT repos_branches_repos
     INITIALLY IMMEDIATE
 ;
 
--- Reference: repos_stats_repos (table: repos_stats)
-ALTER TABLE repos_stats ADD CONSTRAINT repos_stats_repos
-    FOREIGN KEY (repo_id)
-    REFERENCES repos (id)  
+-- Reference: stats_owners_stats (table: owners_stats)
+ALTER TABLE owners_stats ADD CONSTRAINT stats_owners_stats
+    FOREIGN KEY (stats_id_ga)
+    REFERENCES stats (id_ga)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
 
--- Reference: repos_stats_stats (table: repos_stats)
-ALTER TABLE repos_stats ADD CONSTRAINT repos_stats_stats
-    FOREIGN KEY (stats_id_ga)
-    REFERENCES stats (id_ga)  
+-- Reference: stats_owners_users (table: owners_stats)
+ALTER TABLE owners_stats ADD CONSTRAINT stats_owners_users
+    FOREIGN KEY (owner_id)
+    REFERENCES users (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
