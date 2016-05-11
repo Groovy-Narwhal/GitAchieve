@@ -692,15 +692,6 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
-                <Column Id="c162">
-                    <Name>owner</Name>
-                    <Type>varchar(100)</Type>
-                    <Description></Description>
-                    <Nullable>true</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
                 <Column Id="c78">
                     <Name>watchers_count</Name>
                     <Type>int</Type>

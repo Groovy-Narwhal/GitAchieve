@@ -3,24 +3,25 @@ const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
 const token = require('../config/github.config').token;
 
-// GET at '/api/v1/owner/:id/stats'
+// GET at '/api/v1/user/:id/stats'
 exports.retrieveStats = function(req, res) {
   var queryId = req.params.id;
   
 };
 
-// POST at '/api/v1/owner/:id/stats'
+// POST at '/api/v1/user/:id/stats'
 exports.addStats = function(req, res) {
   var queryId = req.params.id;
 };
 
-// PATCH at '/api/v1/owner/:id/stats' to update stats 
+// PATCH at '/api/v1/user/:id/stats' to update stats 
+
 exports.updateStats = function(req, res) {
   var queryId = req.params.id;
   
   // ** HELPER FUNCTIONS **
   
-  //  get the stats for a given owner & repo from GitHub
+  //  get the stats for a given user from GitHub
   var getStatsFromGitHub = function(owner, repo, callback) {
     var options = {
       url: 'https://api.github.com/repos/' + owner.name + '/' + repo.name + '/stats/contributors',
@@ -51,13 +52,7 @@ exports.updateStats = function(req, res) {
     if (statsArray.length !== undefined) {
       var dbTimestamp = pgp.as.date(new Date());
       db.tx(function(t) {
-        
-        var deleteJoinsQuery = t.any(
-          'DELETE from $1~' +
-          'WHERE $2~=$3 ' +
-          'OR $4~=$3',
-          ['owners_stats', 'user_id', owner.id, 'org_id']);
-      
+              
         var deleteStatsQuery = t.any(
           'DELETE from $1~' +
           'WHERE $2~=$3',
@@ -126,54 +121,26 @@ exports.updateStats = function(req, res) {
     
   // CALL HELPER FUNCTIONS
     
-  // get the owner name (either username or orgname) from the database by id
-  db.tx(function(t) {
-    var userQuery = t.oneOrNone(
-      'SELECT * FROM $1~ ' +
-      'WHERE $2~=$3',
-      ['users', 'id', queryId]);
-    var orgQuery = t.oneOrNone(
-      'SELECT * FROM $1~ ' +
-      'WHERE $2~=$3',
-      ['orgs', 'id', queryId]);
-    return t.batch([userQuery, orgQuery]);
-  })
-  .then(data => {
-    var owner = {};
-    if (data[0] !== null) {
-      owner.name = data[0].username;
-      owner.id = data[0].id;
-      owner.type = 'user';
-    } else {
-      owner.name = data[1].orgname;
-      owner.id = data[1].id;
-      owner.type = 'org';
-    }
-    // get the repos from our db for the owner
-    db.any(
-      'SELECT * FROM $1~ ' +
-      'WHERE $1~.$2~=$3',
-      ['repos', 'owner', owner.name])
-      .then(repos => {
-        // for each repo:
-          // make a GET request to GitHub at /repos/:owner/:repo/stats/contributors
-          // delete existing stats and joins for the repo from our database
-          // add stats and joins for the repo to our database
-        repos.forEach((repo, index) => {
-          getStatsFromGitHub(owner, repo, updateStatsInDb);
-        });
-      })
-      .then(data => {
-        res.send('success');
-      })
-      .catch(error => {
-        console.error('Error selecting repos: ', error);
-        // res.status(500).send('Error selecting repos');
+  db.any(
+    'SELECT * FROM $1~ ' +
+    'WHERE $1~.$2~=$3',
+    ['repos', 'owner', owner.name])
+    .then(repos => {
+      // for each repo:
+        // make a GET request to GitHub at /repos/:owner/:repo/stats/contributors
+        // delete existing stats and joins for the repo from our database
+        // add stats and joins for the repo to our database
+      repos.forEach((repo, index) => {
+        getStatsFromGitHub(owner, repo, updateStatsInDb);
       });
-  })
-  .catch(error => {
-    console.error('Error selecting owner: ', error);
-    // res.status(500).send('Error selecting owner');
-  });
+    })
+    .then(data => {
+      res.send('success');
+    })
+    .catch(error => {
+      console.error('Error selecting repos: ', error);
+      // res.status(500).send('Error selecting repos');
+    });
+
 
 };

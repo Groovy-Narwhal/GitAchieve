@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-11 13:32:29.496
+-- Last modification date: 2016-05-11 14:04:08.846
 
 -- tables
 -- Table: branches
@@ -74,7 +74,6 @@ CREATE TABLE repos (
     updated_ga timestamp  NULL,
     created_at timestamp  NULL,
     name varchar(100)  NULL,
-    owner varchar(100)  NULL,
     watchers_count int  NULL,
     stargazers_count int  NULL,
     forks_count int  NULL,

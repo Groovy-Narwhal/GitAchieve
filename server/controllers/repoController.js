@@ -16,13 +16,13 @@ exports.retrieveRepos = function(req, res) {
     db.tx(function (task) {
       var queries = repos.map(function (repo) {
         // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
-        return task.any('INSERT INTO $1~ AS $16~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~, $17~) ' +
+        return task.any('INSERT INTO $1~ AS $16~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~) ' +
           'VALUES ($9, $10, $11, $12, $13, $14, $15, $18) ' +
           'ON CONFLICT ($2~) ' + 
-          'DO UPDATE SET ($3~, $4~, $5~, $6~, $7~, $8~, $17~) = ($10, $11, $12, $13, $14, $15, $18) ' +
+          'DO UPDATE SET ($3~, $4~, $5~, $6~, $7~, $8~, $17~) = ($10, $11, $12, $13, $14, $15) ' +
           'WHERE $16~.$2~ = $9',
           ['repos', 'id', 'updated_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count', 'name',
-          repo.id, dbTimestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count, repo.name, 'r', 'owner', repo.owner.login]);
+          repo.id, dbTimestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count, repo.name, 'r']);
       });
       return task.batch(queries);
     })
@@ -63,7 +63,7 @@ exports.retrieveRepos = function(req, res) {
   
   // sends the response for this API endpoint, containing all this user's repos
   var patchReposResponse = function () {
-    db.any(('SELECT r.id, r.updated_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count, owner ' + 
+    db.any(('SELECT r.id, r.updated_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
       'FROM users_repos ur ' +
       'INNER JOIN repos r ' + 
       'ON r.id = ur.repo_id ' + 

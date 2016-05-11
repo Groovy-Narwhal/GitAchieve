@@ -15,14 +15,10 @@ require('./helpers/userGHFetcher')(app);
 // Routers
 const userRouter = require('./routers/userRouter.js');
 const orgRouter = require('./routers/orgRouter.js');
-const ownerRouter = require('./routers/ownerRouter.js');
-
 
 // Use routers for specific paths
 app.use('/api/v1/users', userRouter); 
 app.use('/api/v1/orgs', orgRouter);
-app.use('/api/v1/owner', ownerRouter);
-
 
 app.use('/static', express.static(__dirname + '/../client'));
 
