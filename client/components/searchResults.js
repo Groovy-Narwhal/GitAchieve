@@ -38,7 +38,10 @@ class SearchResults extends Component {
       });
     browserHistory.push(routeTo);
   }
-
+  navToUserRepo(e, userData) {
+    browserHistory.push(`${userData.login}/repos`)
+    this.props.actions.chooseSearchResult(userData);
+  }
   getResult(result) {
     if (result.type === 'User') {
       return (
@@ -46,6 +49,7 @@ class SearchResults extends Component {
           <img className="user-avatar-1" src={result.avatar_url} />
           <h2 onClick={ (e) => { this.routeTo.call(this, e, result, 'user') }}>{result.login}</h2>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+          <input type="button" value="repos" onClick={(e) => { this.navToUserRepo(e, result) }} />
         </div>
       )      
     } else if (result.type === 'Organization') {
