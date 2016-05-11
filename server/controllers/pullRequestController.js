@@ -14,9 +14,9 @@ exports.retrievePullRequests = (req, res) => {
   // helper functions
   const addPR = (prs) => {
     prs.forEach((pr, index) => {
-      return db.any('SELECT * FROM users WHERE users.id = ($1)', [pr.user.id])
+      db.any('SELECT * FROM users WHERE users.id = ($1)', [pr.user.id])
         .then((data) => {
-          return db.any('SELECT COUNT(*) FROM users WHERE users.id = ($1)', [pr.user.id])
+          db.any('SELECT COUNT(*) FROM users WHERE users.id = ($1)', [pr.user.id])
             .then((data) => {
               if (data[0].count !== '0') {
                 db.any('INSERT INTO pull_requests AS pr (id, created_at, updated_ga, user_id, state, diff_url, closed_at, milestone, base_ref, base_repo_watchers_count, base_repo_stargazers_count) ' +
@@ -27,13 +27,10 @@ exports.retrievePullRequests = (req, res) => {
                   [pr.id, dbTimestamp, dbTimestamp, pr.user.id, pr.state, pr.diff_url, pr.merged_at, pr.milestone, pr.base.ref, pr.base.repo.watchers_count, pr.base.repo.stargazers_count])
               }
             })
-            .catch(error => {
-              console.error('ERROR: ', error);
-            })
         })
         .catch(error => {
-          console.error('ERROR: ', error);
-        })
+          console.error('ERROR:', error);
+        });
     });
   };
 
@@ -51,7 +48,7 @@ exports.retrievePullRequests = (req, res) => {
       };
       request(repoOptions, (error, response, body) => {
         if (error) {
-          console.error(error);
+          console.error('ERROR:', error);
         } else {
           const data = JSON.parse(body);
           return addPRCB(data);
@@ -73,10 +70,10 @@ exports.retrievePullRequests = (req, res) => {
     };
     request(options, (error, response, body) => {
       if (error) {
-        console.error('error: ', error);
+        console.error('error2: ', error);
       } else {
         const data = JSON.parse(body);
-        return gotAllReposCB(data, orgname, addPR);
+        gotAllReposCB(data, orgname, addPR);
       }
     });
   };
@@ -96,60 +93,61 @@ exports.retrievePullRequests = (req, res) => {
     })
     .then(() => {
       console.log('successfully added members');
-      return requestReposCB(orgname, gotAllRepos);
+      requestReposCB(orgname, gotAllRepos);
     })
     .catch(error => {
       console.log('did not successfully add users');
-      console.error('error', error)
+      console.error('ERROR:', error);
     });
   };
 
 
   const requestMembers = (orgData, addMembersCB) => {
     orgData.forEach(org => {
-      // if (org.orgname === 'Groovy-Narwhal') {
-        var membersOptions = {
-          url: `https://api.github.com/orgs/${org.orgname}/members`,
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': username,
-            'Authorization': `token ${req.body.token}`
-          }
-        };
-        request(membersOptions, (error, response, body) => {
-          if (error) {
-            console.error('error: ', error);
-          } else {
-            const memberData = JSON.parse(body);
-            return addMembersCB(memberData, org.orgname, requestRepos);
-          }
-        })
-      // }
+      var membersOptions = {
+        url: `https://api.github.com/orgs/${org.orgname}/members`,
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': username,
+          'Authorization': `token ${req.body.token}`
+        }
+      };
+      request(membersOptions, (error, response, body) => {
+        if (error) {
+          console.error('ERROR:', error);
+        } else {
+          const memberData = JSON.parse(body);
+          addMembersCB(memberData, org.orgname, requestRepos);
+        }
+      })
     })
   };
 
 
-  const selectOrg = (requestMembersCB) => {
+  const selectOrg = (requestMembersCB, statusCB) => {
     db.any('SELECT * FROM orgs AS o INNER JOIN users_orgs AS uo ON ' +
     '(o.id=uo.org_id) INNER JOIN users AS u ON (uo.user_id=u.id) WHERE u.username=($1)', [username])
     .then(data => {
-      return requestMembersCB(data, addMembers);
-    }).catch(error => {
-      console.error('ERROR: ', error);
+      requestMembersCB(data, addMembers);
     })
+    .then(statusCB)
+    .catch(error => {
+      console.error('ERROR:', error);
+      res.status(500).send('Error querying pull request table');
+    });
   };
 
-  selectOrg(requestMembers);
+  return selectOrg(requestMembers, (data)=> {res.send(data)});
 
 };
 
 // '/github/:username/pullrequests'
 exports.retrieveAllPRSForUser = function(req, res) {
-  db.any('SELECT * FROM pull_requests WHERE pull_requests.username=$1 AND pull_requests.closed_at != null', [req.params.username])
-    .then(data => res.send(data))
-    .catch(error => {
-      console.error(error);
-      res.status(500).send('Error reading pull_requests table');
-    });
+  // db.any('SELECT * FROM pull_requests WHERE pull_requests.username=$1 AND pull_requests.closed_at != null', [req.params.username])
+  //   .then(data => res.send(data))
+  //   .catch(error => {
+  //     console.error(error);
+  //     res.status(500).send('Error reading pull_requests table');
+  //   });
 };

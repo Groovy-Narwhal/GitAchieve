@@ -23,7 +23,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   
 
   const pullrequests = () => {
-    var options3 = {
+    var options = {
       url: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
       method: 'PATCH',
       form: { profile: profile, token: accessToken },
@@ -32,9 +32,9 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         'User-Agent': username
       }
     };
-    request(options3, (error, response, body) => {
+    request(options, (error, response, body) => {
       if (error) {
-        console.error('ERROR IN OPTIONS 3', error);
+        console.error('ERROR:', error);
       } else {
         console.log('Success in Auth get pull requests');
       }
@@ -43,7 +43,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
 
   const getOrgs = (pullrequestsCB) => {
     // update the user's orgs in our database   
-    var options2 = {
+    var options = {
       url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
       method: 'PATCH',
       form: { profile: profile, token: accessToken },
@@ -52,9 +52,9 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         'User-Agent': username
       }
     };
-    request(options2, (error, response, body) => {
+    request(options, (error, response, body) => {
       if (error) {
-        console.error('ERROR IN OPTIONS 2', error);
+        console.error('ERROR:', error);
       } else {
         console.log('Success in Auth get orgs');
         pullrequestsCB();
@@ -75,7 +75,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     };
     request(options, (error, response, body) => {
       if (error) {
-        console.error('ERROR IN OPTIONS 1', error);
+        console.error('ERROR:', error);
       } else {
         console.log('Success in Auth get repos');
         getOrgsCB(pullrequests);
