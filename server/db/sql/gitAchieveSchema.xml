@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>171</Value>
+            <Value>175</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -24,7 +24,7 @@
         </Counter>
         <Counter>
             <Name>reference</Name>
-            <Value>46</Value>
+            <Value>49</Value>
             <Prefix>r</Prefix>
         </Counter>
         <Counter>
@@ -74,7 +74,7 @@
         </Counter>
         <Counter>
             <Name>referenceDisplay</Name>
-            <Value>45</Value>
+            <Value>48</Value>
             <Prefix>rd</Prefix>
         </Counter>
         <Counter>
@@ -989,15 +989,6 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
-                <Column Id="c139">
-                    <Name>author_id</Name>
-                    <Type>int</Type>
-                    <Description></Description>
-                    <Nullable>true</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
                 <Column Id="c140">
                     <Name>total</Name>
                     <Type>int</Type>
@@ -1016,11 +1007,29 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
-                <Column Id="c168">
+                <Column Id="c173">
+                    <Name>user_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c174">
+                    <Name>org_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c175">
                     <Name>repo_id</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>true</Nullable>
+                    <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -1084,69 +1093,6 @@
                 <Name></Name>
                 <Columns>
                     <Column>c154</Column>
-                </Columns>
-            </PrimaryKey>
-            <AlternateKeys/>
-            <Indexes/>
-            <TableChecks/>
-            <AdditionalSQLBefore></AdditionalSQLBefore>
-            <AdditionalSQLAfter></AdditionalSQLAfter>
-            <Properties/>
-        </Table>
-        <Table Id="t24">
-            <Name>owners_stats</Name>
-            <Description></Description>
-            <Columns>
-                <Column Id="c163">
-                    <Name>id_ga</Name>
-                    <Type>serial</Type>
-                    <Description></Description>
-                    <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
-                <Column Id="c164">
-                    <Name>created_ga</Name>
-                    <Type>timestamp</Type>
-                    <Description></Description>
-                    <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
-                <Column Id="c165">
-                    <Name>stats_id_ga</Name>
-                    <Type>int</Type>
-                    <Description></Description>
-                    <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
-                <Column Id="c170">
-                    <Name>org_id</Name>
-                    <Type>int</Type>
-                    <Description></Description>
-                    <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
-                <Column Id="c171">
-                    <Name>user_id</Name>
-                    <Type>int</Type>
-                    <Description></Description>
-                    <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
-            </Columns>
-            <PrimaryKey>
-                <Name></Name>
-                <Columns>
-                    <Column>c163</Column>
                 </Columns>
             </PrimaryKey>
             <AlternateKeys/>
@@ -1425,55 +1371,55 @@
             <OnDeleteAction>None</OnDeleteAction>
             <Properties/>
         </Reference>
-        <Reference Id="r41">
-            <Name>stats_owners_stats</Name>
-            <Description></Description>
-            <PKTable>t21</PKTable>
-            <FKTable>t24</FKTable>
-            <PKRole></PKRole>
-            <FKRole></FKRole>
-            <ReferenceColumns>
-                <ReferenceColumn>
-                    <PKColumn>c137</PKColumn>
-                    <FKColumn>c165</FKColumn>
-                </ReferenceColumn>
-            </ReferenceColumns>
-            <Cardinality>0..*</Cardinality>
-            <Mandatory>true</Mandatory>
-            <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
-            <Properties/>
-        </Reference>
-        <Reference Id="r45">
-            <Name>owners_stats_orgs</Name>
-            <Description></Description>
-            <PKTable>t9</PKTable>
-            <FKTable>t24</FKTable>
-            <PKRole></PKRole>
-            <FKRole></FKRole>
-            <ReferenceColumns>
-                <ReferenceColumn>
-                    <PKColumn>c48</PKColumn>
-                    <FKColumn>c170</FKColumn>
-                </ReferenceColumn>
-            </ReferenceColumns>
-            <Cardinality>0..*</Cardinality>
-            <Mandatory>true</Mandatory>
-            <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
-            <Properties/>
-        </Reference>
-        <Reference Id="r46">
-            <Name>owners_stats_users</Name>
+        <Reference Id="r47">
+            <Name>stats_users</Name>
             <Description></Description>
             <PKTable>t7</PKTable>
-            <FKTable>t24</FKTable>
+            <FKTable>t21</FKTable>
             <PKRole></PKRole>
             <FKRole></FKRole>
             <ReferenceColumns>
                 <ReferenceColumn>
                     <PKColumn>c25</PKColumn>
-                    <FKColumn>c171</FKColumn>
+                    <FKColumn>c173</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r48">
+            <Name>stats_orgs</Name>
+            <Description></Description>
+            <PKTable>t9</PKTable>
+            <FKTable>t21</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c48</PKColumn>
+                    <FKColumn>c174</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r49">
+            <Name>stats_repos</Name>
+            <Description></Description>
+            <PKTable>t13</PKTable>
+            <FKTable>t21</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c101</PKColumn>
+                    <FKColumn>c175</FKColumn>
                 </ReferenceColumn>
             </ReferenceColumns>
             <Cardinality>0..*</Cardinality>
@@ -1565,7 +1511,7 @@
         </TableDisplay>
         <TableDisplay Id="td12">
             <X>4162.5</X>
-            <Y>4807.5</Y>
+            <Y>4794.5</Y>
             <Width>215.0</Width>
             <Height>159.0</Height>
             <LineColor>#000000</LineColor>
@@ -1614,33 +1560,23 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td20">
-            <X>4416.5</X>
-            <Y>4992.5</Y>
+            <X>4179.5</X>
+            <Y>4990.5</Y>
             <Width>159.0</Width>
-            <Height>116.0</Height>
+            <Height>130.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t21</Table>
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td22">
-            <X>3981.5</X>
-            <Y>4981.5</Y>
+            <X>3983.5</X>
+            <Y>4979.5</Y>
             <Width>156.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t23</Table>
-            <FixedSize>false</FixedSize>
-        </TableDisplay>
-        <TableDisplay Id="td23">
-            <X>4189.5</X>
-            <Y>5009.5</Y>
-            <Width>169.0</Width>
-            <Height>102.0</Height>
-            <LineColor>#000000</LineColor>
-            <FillColor>#ffffff</FillColor>
-            <Table>t24</Table>
             <FixedSize>false</FixedSize>
         </TableDisplay>
     </TableDisplays>
@@ -1702,7 +1638,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4172.5</X>
-                    <Y>4840.5</Y>
+                    <Y>4827.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4172.5</X>
@@ -1769,7 +1705,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4350.5</X>
-                    <Y>4823.5</Y>
+                    <Y>4810.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4350.5</X>
@@ -1896,7 +1832,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4030.5</X>
-                    <Y>5023.5</Y>
+                    <Y>5021.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td8</PkTableDisplay>
@@ -1909,79 +1845,79 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4225.5</X>
-                    <Y>4948.5</Y>
+                    <Y>4935.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4127.5</X>
-                    <Y>4948.5</Y>
+                    <X>4129.5</X>
+                    <Y>4935.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4127.5</X>
-                    <Y>5034.5</Y>
+                    <X>4129.5</X>
+                    <Y>5032.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
             <FkTableDisplay>td22</FkTableDisplay>
             <Reference>r40</Reference>
         </ReferenceDisplay>
-        <ReferenceDisplay Id="rd40">
-            <Color>#000000</Color>
-            <Type>Horizontal_2CP</Type>
-            <ControlPoints>
-                <ControlPoint>
-                    <X>4462.5</X>
-                    <Y>5055.5</Y>
-                </ControlPoint>
-                <ControlPoint>
-                    <X>4289.5</X>
-                    <Y>5055.5</Y>
-                </ControlPoint>
-            </ControlPoints>
-            <PkTableDisplay>td20</PkTableDisplay>
-            <FkTableDisplay>td23</FkTableDisplay>
-            <Reference>r41</Reference>
-        </ReferenceDisplay>
-        <ReferenceDisplay Id="rd44">
-            <Color>#000000</Color>
-            <Type>Cross_3CP</Type>
-            <ControlPoints>
-                <ControlPoint>
-                    <X>3968.5</X>
-                    <Y>4933.5</Y>
-                </ControlPoint>
-                <ControlPoint>
-                    <X>3968.5</X>
-                    <Y>5085.5</Y>
-                </ControlPoint>
-                <ControlPoint>
-                    <X>4199.5</X>
-                    <Y>5085.5</Y>
-                </ControlPoint>
-            </ControlPoints>
-            <PkTableDisplay>td8</PkTableDisplay>
-            <FkTableDisplay>td23</FkTableDisplay>
-            <Reference>r45</Reference>
-        </ReferenceDisplay>
-        <ReferenceDisplay Id="rd45">
+        <ReferenceDisplay Id="rd46">
             <Color>#000000</Color>
             <Type>Cross_3CP</Type>
             <ControlPoints>
                 <ControlPoint>
                     <X>3907.5</X>
-                    <Y>4453.5</Y>
+                    <Y>4484.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>3907.5</X>
-                    <Y>5101.5</Y>
+                    <Y>5104.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4235.5</X>
-                    <Y>5101.5</Y>
+                    <X>4236.5</X>
+                    <Y>5104.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
-            <FkTableDisplay>td23</FkTableDisplay>
-            <Reference>r46</Reference>
+            <FkTableDisplay>td20</FkTableDisplay>
+            <Reference>r47</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd47">
+            <Color>#000000</Color>
+            <Type>Cross_3CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>3930.5</X>
+                    <Y>4933.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>3930.5</X>
+                    <Y>5081.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4189.5</X>
+                    <Y>5081.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td8</PkTableDisplay>
+            <FkTableDisplay>td20</FkTableDisplay>
+            <Reference>r48</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd48">
+            <Color>#000000</Color>
+            <Type>Vertical_2CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4330.5</X>
+                    <Y>4943.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4330.5</X>
+                    <Y>5110.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td12</PkTableDisplay>
+            <FkTableDisplay>td20</FkTableDisplay>
+            <Reference>r49</Reference>
         </ReferenceDisplay>
     </ReferenceDisplays>
     <Properties>
