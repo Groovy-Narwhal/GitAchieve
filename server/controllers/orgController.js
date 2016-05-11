@@ -12,67 +12,9 @@ exports.retrieveOrgs = (req, res) => {
   const token = req.body.token;
   const dbTimestamp = pgp.as.date(new Date());
 
-  // helper functions
-  const addOrgsToDb = (orgs, callback) => {
-    db.tx(task => {
-      const queries = orgs.map(org => {
-        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~) ' +
-          'VALUES ($7, $8, $9, $10) ' +
-          'ON CONFLICT ($3~) ' +
-          'DO UPDATE SET ($4~, $5~, $6~) = ($8, $9, $10) ' +
-          'WHERE $2~.$3~ = $7',
-          ['orgs', 'o', 'id', 'orgname', 'avatar_url', 'updated_ga',
-          org.id, org.login, org.avatar_url, dbTimestamp]);
-      });
-    return task.batch(queries);
-    })
-    .then(data => {
-      console.log('Successfully added orgs!');
-      callback(data);
-    })
-    .catch(error => {
-      console.log('Did not successfully add orgs');
-      console.error(error);
-    })
-  }
-
-  // add a join for each org to our user_orgs table, associating each org with a user
-  var addJoinsToDb = (orgs, callback) => {
-    db.tx(task => {
-      var queries = orgs.map(org => {
-        return task.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
-        'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
-        '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
-        ['users_orgs', 'created_ga', 'user_id', 'org_id',
-        dbTimestamp, queryId, org.id]);
-      });
-      return task.batch(queries);
-    })
-    .then(data => {
-      console.log('Successfully added users_orgs joins');
-      callback(data);
-    })
-    .catch(error => {
-      console.log('Add users_orgs join error');
-      console.error(error);
-    });
-  }
-
-  // send the response for the api endpoint, containing all this user's orgs
-  var patchOrgsResponse = () => {
-    db.any(('SELECT o.id, o.updated_ga, o.orgname, o.avatar_url, o.followers, o.following, o.score ' +
-      'FROM users_orgs uo ' +
-      'INNER JOIN orgs o ' +
-      'ON o.id = uo.org_id ' +
-      'WHERE uo.user_id=$1'), [queryId])
-    .then(data => res.send(data))
-    .catch(error => {
-      console.error(error);
-      res.status(500).send('Error querying orgs table');
-    })
-  }
-
-  // get user info from GitHub
+  // *** HELPER FUNCTIONS ***
+  
+  // get all of this user's orgs from GitHub
   var getOrgsFromGitHub = (username, callback) => {
     var options = {
       url: 'https://api.github.com/user/orgs',
@@ -85,19 +27,135 @@ exports.retrieveOrgs = (req, res) => {
     };
     request(options, (error, response, body) => {
       if (error) {
-        console.error('error: ', error);
+        console.error('getOrgsFromGitHub error');
       } else {
-        callback(body);
+        console.log('getOrgsFromGitHub success');
+        var orgs = JSON.parse(body);
+        callback(username, orgs);
       }
     });
   };
-  // gather the helper functions together into one asynchronous series
-  const handleGitHubData = data => {
-    var orgs = JSON.parse(data);
-    addOrgsToDb(orgs, addJoinsToDb.bind(null, orgs, patchOrgsResponse))
-  }
+  
+  const addOrgsToDb = (orgs, callback) => {
+    db.tx(task => {
+      const queries = orgs.map(org => {
+        return task.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~) ' +
+          'VALUES ($7, $8, $9, $10) ' +
+          'ON CONFLICT ($3~) ' +
+          'DO UPDATE SET ($4~, $5~, $6~) = ($8, $9, $10) ' +
+          'WHERE $2~.$3~ = $7',
+          ['orgs', 'o', 'id', 'orgname', 'avatar_url', 'updated_ga',
+          org.id, org.login, org.avatar_url, dbTimestamp]);
+      });
+      return task.batch(queries);
+    })
+    .then(data => {
+      console.log('addOrgsToDb success');
+      callback(data);
+    })
+    .catch(error => {
+      console.error('addOrgsToDb error');
+    });
+  };
 
-  // call helper functions
+  // add a join for each org to our user_orgs table, associating each org with a user
+  var addUserOrgJoins = (orgs, callback) => {
+    db.tx(task => {
+      var queries = orgs.map(org => {
+        return task.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
+        'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
+        '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
+        ['users_orgs', 'created_ga', 'user_id', 'org_id',
+        dbTimestamp, queryId, org.id]);
+      });
+      return task.batch(queries);
+    })
+    .then(data => {
+      console.log('addUserOrgJoins success');
+      callback();
+    })
+    .catch(error => {
+      console.error('addUserOrgJoins error');
+    });
+  };
+
+  // get all of an org's repos from GitHub
+  var getReposFromGitHub = (username, orgs, callback) => {
+    orgs.forEach(function(org, index, body) {
+      // get the repos for each of this user's orgs
+      var options = {
+        url: 'https://api.github.com/orgs/' + org.login + '/repos',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'User-Agent': username,
+          'Authorization': `token ${req.body.token}`
+        }
+      };
+      request(options, (error, response, body) => {
+        if (error) {
+          console.error('getReposFromGitHub error');
+        } else {
+          console.log('getReposFromGitHub success');
+          var repos = JSON.parse(body);
+          callback(repos, org);
+        }
+      });
+    });
+  };  
+  
+  // add a join for each repo to our orgs_repos table, associating each repo to an org
+  var addOrgRepoJoins = (orgs, callback) => {
+    db.tx(task => {
+      var queries = orgs.map(org => {
+        return task.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
+        'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
+        '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
+        ['users_orgs', 'created_ga', 'user_id', 'org_id',
+        dbTimestamp, queryId, org.id]);
+      });
+      return task.batch(queries);
+    })
+    .then(data => {
+      console.log('addOrgRepoJoins success');
+      callback(data);
+    })
+    .catch(error => {
+      console.error('addOrgRepoJoins error');
+    });
+  };
+
+  // send the response for the api endpoint, containing all this user's orgs
+  var patchOrgsResponse = () => {
+    db.any(('SELECT o.id, o.updated_ga, o.orgname, o.avatar_url, o.followers, o.following, o.score ' +
+      'FROM users_orgs uo ' +
+      'INNER JOIN orgs o ' +
+      'ON o.id = uo.org_id ' +
+      'WHERE uo.user_id=$1'), [queryId])
+    .then(data => {
+      console.log('patchOrgsResponse success');
+      
+      // START HERE - the PatchOrgs response is called once per org, so it can't be used to send the server response
+      // also, check that the join queries are working properly
+
+      // res.send(data);
+    })
+    .catch(error => {
+      console.error('patchOrgsResponse error');
+      // res.status(500).send('Error querying orgs table');
+    });
+  };
+  
+  
+  // *** CALL HELPER FUNCTIONS ***
+
+  const handleGitHubData = (username, orgs) => {
+    addOrgsToDb(orgs, 
+      addUserOrgJoins.bind(null, orgs, 
+        getReposFromGitHub.bind(null, username, orgs, 
+          addOrgRepoJoins.bind(null, orgs, 
+            patchOrgsResponse))));
+  };
   getOrgsFromGitHub(username, handleGitHubData);
 };
 
