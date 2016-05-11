@@ -6,6 +6,7 @@ import searchResults from './searchResultsReducer';
 import searchInput from './searchInputReducer';
 import searchUserEvents from './userEventsReducer';
 import chosenSearchResult from './chosenSearchResultReducer';
+import userContributions from './userContributionsReducer';
 
 export default combineReducers({
   routing: routerReducer,
@@ -14,5 +15,6 @@ export default combineReducers({
   searchResults,
   searchInput,
   searchUserEvents,
-  chosenSearchResult
+  chosenSearchResult,
+  userContributions
 });
