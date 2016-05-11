@@ -39,7 +39,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         console.log('Success in Auth get pull requests');
       }
     });
-  }
+  };
 
   const getOrgs = (pullrequestsCB) => {
     // update the user's orgs in our database   
@@ -60,7 +60,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         pullrequestsCB();
       }
     });
-  }
+  };
 
   const getRepos = (getOrgsCB) => {
     // update the user's repos in our database   
@@ -81,7 +81,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         getOrgsCB(pullrequests);
       }
     });    
-  }
+  };
 
   // add the user to our database, or update them if they already exist
   db.any('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
