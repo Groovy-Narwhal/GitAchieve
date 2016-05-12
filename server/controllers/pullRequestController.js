@@ -24,9 +24,9 @@ exports.retrievePullRequests = (req, res) => {
                   'ON CONFLICT (id) ' +
                   'DO UPDATE SET (updated_ga, user_id, state, diff_url, closed_at, milestone, base_ref, base_repo_watchers_count, base_repo_stargazers_count) = ($3, $4, $5, $6, $7, $8, $9, $10, $11) ' +
                   'WHERE pr.id = ($1)',
-                  [pr.id, dbTimestamp, dbTimestamp, pr.user.id, pr.state, pr.diff_url, pr.merged_at, pr.milestone, pr.base.ref, pr.base.repo.watchers_count, pr.base.repo.stargazers_count])
+                  [pr.id, dbTimestamp, dbTimestamp, pr.user.id, pr.state, pr.diff_url, pr.merged_at, pr.milestone, pr.base.ref, pr.base.repo.watchers_count, pr.base.repo.stargazers_count]);
               }
-            })
+            });
         })
         .catch(error => {
           console.error('ERROR:', error);
@@ -87,7 +87,7 @@ exports.retrievePullRequests = (req, res) => {
         'ON CONFLICT (id) ' +
         'DO UPDATE SET (updated_ga) = ($4) ' +
         'WHERE u.id = $1',
-        [member.id, member.login, null, dbTimestamp, null, false, member.avatar_url, null, null])
+        [member.id, member.login, null, dbTimestamp, null, false, member.avatar_url, null, null]);
       });
       return task.batch(queries);
     })
@@ -120,8 +120,8 @@ exports.retrievePullRequests = (req, res) => {
           const memberData = JSON.parse(body);
           addMembersCB(memberData, org.orgname, requestRepos);
         }
-      })
-    })
+      });
+    });
   };
 
 
@@ -138,7 +138,7 @@ exports.retrievePullRequests = (req, res) => {
     });
   };
 
-  return selectOrg(requestMembers, (data)=> {res.send(data)});
+  return selectOrg(requestMembers, (data)=> {res.send(data)} );
 
 };
 

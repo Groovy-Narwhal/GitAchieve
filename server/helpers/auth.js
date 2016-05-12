@@ -20,7 +20,24 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   const avatar_url = profile._json.avatar_url;
   const followers = profile._json.followers;
   const following = profile._json.following;
-  
+
+  const updateStats = () => {
+    var options = {
+      url: CALLBACKHOST + '/api/v1/users/' + id + '/stats',
+      method: 'PATCH',
+      form: { profile: profile, token: accessToken },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    };
+    request(options, (error, response, body) => {
+      if (error) {
+        console.error('ERROR:', error);
+      } else {
+        console.log('Success in Auth updateStats');
+      }
+    });
+  };
 
   const pullrequests = () => {
     var options = {
@@ -37,6 +54,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         console.error('ERROR:', error);
       } else {
         console.log('Success in Auth get pull requests');
+        updateStats();
       }
     });
   };
