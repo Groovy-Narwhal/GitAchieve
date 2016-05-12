@@ -5,12 +5,11 @@ import actions from './../actions/ActionCreators';
 import d3 from 'd3';
 import { CommitChart } from './index';
 import ghFetch from './../utils/utils';
+import Repos from './repos';
 
 class DashBoard extends Component {
-
-  componentDidMount() {
-    // This instantiates a new d3 commit graph
-    CommitChart.CommitChart();
+  constructor(props) {
+    super(props);
   }
   componentDidUpdate() {
     if (this.props.auth.authenticated && this.props.userContributions[0] === 0) {
@@ -25,15 +24,16 @@ class DashBoard extends Component {
     getContribs.call(this);
   }
   render() {
-    const {
-      actions
-    } = this.props;
-    return (
-      <div className="dashboard">
-      <h1>Your contributions: {this.props.userContributions}</h1>
-      <div id="commit-charts"></div>
-      </div>
-    )
+    const { actions } = this.props;
+    if (this.props.auth.authenticated) {
+      return (
+        <div className="dashboard">
+          <h1>Your contributions: {this.props.userContributions}</h1>
+          <div id="commit-charts"></div>
+          <div><Repos /></div>
+        </div>
+      )
+    }
   }
 }
 
