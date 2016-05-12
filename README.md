@@ -28,15 +28,15 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/1GPTzF5Bm_S3_2266Ib4b60NtqnQYp3_9fj6ODiP5INs/edit?usp=sharing)
 ![Schema](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/server/db/sql/schema.png)
 ### API Server Endpoints
-|Endpoint|Request Type|Description|JSON Required|
-|---|---|---|---|
-|/api/v1/users|GET|Get list of all users|none|
-|/api/v1/users|POST|Add a user|GitHub username, email|
-|/api/v1/users/:id|GET|Get a user by id|none|
-|/api/v1/users/:id|PATCH|Edit a user by id|property:newvalue pairs|
-|/api/v1/users/:id|DELETE|Delete a user by id|GitHub username, email|
-|/api/v1/users/:id/repos|GET|Get a user's repos|none|
-|/api/v1/users/:id/repos|POST|Add a repo for a user|repo id, created_at, watchers_count, stargazers_count, forks_count|
+|Endpoint|Request Type|Description|JSON Required|Data Returned|
+|---|---|---|---|---|
+|/api/v1/users|GET|Get list of all users|none|Array of users|
+|/api/v1/users|POST|Add a user|GitHub username, id and email|Added user|
+|/api/v1/users/:id|GET|Get a user by id|none|User|
+|/api/v1/users/:id|PATCH|Update a user with current GitHub info|none|Updated user|
+|/api/v1/users/:id|DELETE|Delete a user by id|none|Deleted user|
+|/api/v1/users/:id/repos|GET|Get a user's repos|none|Array of repos|
+|/api/v1/users/:id/repos|POST|Add a repo for a user|repo id, created_at, watchers_count, stargazers_count, forks_count|Added repo|
 |/api/v1/users/:id/friends|GET|Get a user's friends|none|
 |/api/v1/users/:id/friends|POST|Primary user requests friendship with secondary user|primary user id, secondary user id, username and email|
 |/api/v1/users/:id/friends|PATCH|Confirm a friend request or remove a friendship|remove:true to remove friendship|
