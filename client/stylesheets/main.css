@@ -46,9 +46,6 @@ table {
 body {
   font-family: "Open Sans", sans-serif; }
 
-rect {
-  fill: #445878; }
-
 .day {
   color: #fff; }
 
@@ -75,6 +72,9 @@ svg {
 
 .float-right {
   float: right; }
+
+svg text {
+  font-family: 'Garamond'; }
 
 @font-face {
   font-family: 'Open Sans';

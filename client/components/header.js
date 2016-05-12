@@ -15,7 +15,6 @@ class Header extends Component {
     if (!this.props.auth.authenticated) {
       return null;
     } else {
-      console.log(this.props);
       return [
         <Search key={0} />,
         <a key={1} onClick={() => browserHistory.push(`/${this.props.user.username}/repos`)} className="nav-link">
