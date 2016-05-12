@@ -29,7 +29,10 @@ class DashBoard extends Component {
       return (
         <div className="dashboard">
           <h1>Your contributions: {this.props.userContributions}</h1>
-          <div id="commit-charts"></div>
+          <div id="commit-charts">
+            <svg width={540} height={300}>
+            </svg>
+          </div>
           <div><Repos /></div>
         </div>
       )
