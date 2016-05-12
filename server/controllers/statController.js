@@ -4,18 +4,21 @@ const pgp = require('../db/database.js').pgp;
 const token = require('../config/github.config').token;
 
 
-// GET at '/api/v1/user/:id/stats'
+// GET at '/api/v1/users/:id/stats' to get a user's stats
 exports.retrieveStats = function(req, res) {
   var queryId = req.params.id;
-  
+  db.any('SELECT * FROM $1~ $2~' +
+    'WHERE $2~.$3~=$4',
+    ['stats', 's', 'user_id', queryId])
+    .then(stats => {
+      res.send(stats);
+    })
+    .catch(error => {
+      console.error('Error in retrieveStats: ', error);
+    });
 };
 
-// POST at '/api/v1/user/:id/stats'
-exports.addStats = function(req, res) {
-  var queryId = req.params.id;
-};
-
-// PATCH at '/api/v1/user/:id/stats' to update stats 
+// PATCH at '/api/v1/users/:id/stats' to update stats 
 exports.updateStats = function(req, res) {
   var queryId = req.params.id;
   var dbTimestamp = pgp.as.date(new Date());
@@ -31,10 +34,9 @@ exports.updateStats = function(req, res) {
       ['stats', 'org_id', combo.orgId, 'repo_id', repo.repoId])
       .then(data => {
         callback(combo, repo, stat);
-        console.log('successful deleteStatFromDb');
       })
       .catch(error => {
-        console.error('error in deleteStatFromDb: ', error);
+        console.error('Error in deleteStatFromDb: ', error);
       });
   };
   
@@ -45,10 +47,14 @@ exports.updateStats = function(req, res) {
       ['stats', 'updated_ga', 'total', 'weeks', 'user_id', 'org_id', 'repo_id',
       dbTimestamp, stat.total, stat.weeks, queryId, combo.orgId, repo.repoId])
       .then(data => {
-        console.log('successful saveStatsToDb');
+        statsSaved++;
+        if (statsSaved === totalStats) {
+          console.log('Successfully saved stats for ' + totalStats + ' repos');
+          res.send('Successfully saved stats for ' + totalStats + ' repos');
+        }
       })
       .catch(error => {
-        console.error('error in saveStatsToDb: ', error);
+        console.error('Error in saveStatsToDb: ', error);
       });
   };
   
@@ -67,7 +73,7 @@ exports.updateStats = function(req, res) {
     };
     request(options, (error, response, stats) => {
       if (error) {
-        console.error(error);
+        console.error('Error in getStatsFromGitHub: ', error);
       } else {
         var statsArray = JSON.parse(stats);
         statsArray.forEach((stat) => {
@@ -81,6 +87,8 @@ exports.updateStats = function(req, res) {
   
   // this will store the combinations of every orgname and repo name that we want to query GitHub for
   var statCombos = [];
+  var totalStats = 0;
+  var statsSaved = 0;
   // retrieve this user's username
   db.one('SELECT * ' +
     'FROM $2~ ' +
@@ -119,6 +127,9 @@ exports.updateStats = function(req, res) {
                     statCombos.push(statCombo);
                     orgsLeft--;
                     if (orgsLeft === 0) {
+                      statCombos.forEach((combo) => {
+                        totalStats += combo.repos.length;
+                      });
                       // once the combinations are set up, get the stats for each
                         // the getStatsFromGitHub will use a callback to delete existing stats
                         // and save updated stats
@@ -135,16 +146,15 @@ exports.updateStats = function(req, res) {
                 console.error('Error in orgs.forEach: ', error);
               });
           });
-          
         })
         .catch(error => {
           res.status(500).send();
-          console.error('error: ', error);
+          console.error('Error selecting orgs: ', error);
         });  
     })
     .catch(error => {
       res.send(500);
-      console.error('error: ', error);
+      console.error('Error retrieving username: ', error);
     });
 
 };
