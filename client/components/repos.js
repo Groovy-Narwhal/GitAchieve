@@ -48,8 +48,17 @@ class Repos extends Component {
     renderRepos.call(this);
   }
   fetchRepoData(eTarget, repo) {
-    console.log('You clicked target: ', eTarget);
-    console.log('You clicked this: ', repo);
+    var url = `https://api.github.com/repos/${repo.full_name}/stats/participation`;
+    fetch(url, this.state.options)
+      .then(res => {
+        if (res.status === 202) {
+          this.fetchRepoData(null, repo);
+          return undefined;
+      } else {
+        return res.json()
+      }})
+      .then(data => { console.log('This is our data.owner: ', data.owner, `for repo: ${repo.full_name}`); return data} )
+      .catch(err => console.log(err));
   }
   render() {
     if (this.state.repos.length === 0) {

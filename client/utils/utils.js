@@ -16,7 +16,6 @@ exports.utils = {
     };
   },
   fetchLastYearGHContribs: function(user) {
-    console.log(user);
     var options = {
       username: user
     };

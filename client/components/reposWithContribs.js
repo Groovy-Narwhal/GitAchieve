@@ -57,7 +57,6 @@ class ReposWithContribs extends Component {
       this.setState({repos: reposAndContributors});
       this.props.actions.chooseSearchResult({});
       console.log('This is the async username', this.props.user.username);
-      this.props.actions.renderDashboard(true);
     };
     renderRepos.call(this);
   }

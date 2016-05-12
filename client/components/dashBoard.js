@@ -33,6 +33,10 @@ class DashBoard extends Component {
           <div><Repos /></div>
         </div>
       )
+    } else {
+      return (
+        <div></div>
+      )
     }
   }
 }
