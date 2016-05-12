@@ -63,6 +63,18 @@ module.exports = (data) => {
   var svg = d3.select("#commit-charts svg");
   svg.selectAll('*').remove();
 
+  // if there is NO recent activity, don't draw a graph
+  // just write text saying 'no recent activity' in an ellipse (?)
+  if (recentActivity.length === 0) {
+    svg.append('text')
+      .text('no recent activity on this repo!')
+      .attr('x', w/2)
+      .attr('y', h/2)
+      .attr('text-anchor', 'middle')
+      .style('font-size', '24px');
+    return;
+  }
+
   // set the scales
   var xScale = d3.scale.ordinal()
     .domain(timeAxis)
