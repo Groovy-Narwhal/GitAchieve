@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-10 02:24:23.146
+-- Last modification date: 2016-05-11 22:07:05.833
 
 -- tables
 -- Table: branches
@@ -45,7 +45,7 @@ CREATE TABLE orgs (
 
 -- Table: orgs_repos
 CREATE TABLE orgs_repos (
-    id_ga int  NOT NULL,
+    id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     org_id int  NOT NULL,
     repo_id int  NOT NULL,
@@ -74,11 +74,11 @@ CREATE TABLE repos (
     updated_ga timestamp  NULL,
     created_at timestamp  NULL,
     name varchar(100)  NULL,
-    owner varchar(100)  NULL,
     watchers_count int  NULL,
     stargazers_count int  NULL,
     forks_count int  NULL,
     org_commit_activity text  NULL,
+    owner_id int  NULL,
     CONSTRAINT repos_pk PRIMARY KEY (id)
 );
 
@@ -91,22 +91,15 @@ CREATE TABLE repos_branches (
     CONSTRAINT repos_branches_pk PRIMARY KEY (id_ga)
 );
 
--- Table: repos_stats
-CREATE TABLE repos_stats (
-    id_ga serial  NOT NULL,
-    created_ga timestamp  NOT NULL,
-    repo_id int  NOT NULL,
-    stats_id_ga int  NOT NULL,
-    CONSTRAINT repos_stats_pk PRIMARY KEY (id_ga)
-);
-
 -- Table: stats
 CREATE TABLE stats (
     id_ga serial  NOT NULL,
     updated_ga timestamp  NOT NULL,
-    author_id int  NULL,
     total int  NULL,
     weeks text  NULL,
+    user_id int  NOT NULL,
+    org_id int  NOT NULL,
+    repo_id int  NOT NULL,
     CONSTRAINT stats_pk PRIMARY KEY (id_ga)
 );
 
@@ -224,18 +217,26 @@ ALTER TABLE repos_branches ADD CONSTRAINT repos_branches_repos
     INITIALLY IMMEDIATE
 ;
 
--- Reference: repos_stats_repos (table: repos_stats)
-ALTER TABLE repos_stats ADD CONSTRAINT repos_stats_repos
+-- Reference: stats_orgs (table: stats)
+ALTER TABLE stats ADD CONSTRAINT stats_orgs
+    FOREIGN KEY (org_id)
+    REFERENCES orgs (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: stats_repos (table: stats)
+ALTER TABLE stats ADD CONSTRAINT stats_repos
     FOREIGN KEY (repo_id)
     REFERENCES repos (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
 
--- Reference: repos_stats_stats (table: repos_stats)
-ALTER TABLE repos_stats ADD CONSTRAINT repos_stats_stats
-    FOREIGN KEY (stats_id_ga)
-    REFERENCES stats (id_ga)  
+-- Reference: stats_users (table: stats)
+ALTER TABLE stats ADD CONSTRAINT stats_users
+    FOREIGN KEY (user_id)
+    REFERENCES users (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;

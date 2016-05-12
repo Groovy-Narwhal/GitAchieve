@@ -20,7 +20,24 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   const avatar_url = profile._json.avatar_url;
   const followers = profile._json.followers;
   const following = profile._json.following;
-  
+
+  const updateStats = () => {
+    var options = {
+      url: CALLBACKHOST + '/api/v1/users/' + id + '/stats',
+      method: 'PATCH',
+      form: { profile: profile, token: accessToken },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    };
+    request(options, (error, response, body) => {
+      if (error) {
+        console.error('ERROR:', error);
+      } else {
+        console.log('Success in Auth updateStats');
+      }
+    });
+  };
 
   const pullrequests = () => {
     var options = {
@@ -37,9 +54,10 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         console.error('ERROR:', error);
       } else {
         console.log('Success in Auth get pull requests');
+        updateStats();
       }
     });
-  }
+  };
 
   const getOrgs = (pullrequestsCB) => {
     // update the user's orgs in our database   
@@ -60,7 +78,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         pullrequestsCB();
       }
     });
-  }
+  };
 
   const getRepos = (getOrgsCB) => {
     // update the user's repos in our database   
@@ -81,7 +99,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         getOrgsCB(pullrequests);
       }
     });    
-  }
+  };
 
   // add the user to our database, or update them if they already exist
   db.any('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
