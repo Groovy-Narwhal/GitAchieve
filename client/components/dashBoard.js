@@ -1,3 +1,5 @@
+//@TODO: initially populate graph with logged-in user's 'contributions in last year' data
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

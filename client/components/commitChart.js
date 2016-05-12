@@ -1,7 +1,3 @@
-//@TODO: take out hardcoded value in d3.json and replace it with a variable
-//@TODO: integrate with a style sheet (if desired at that point edit .axis text to have better font)
-//@TODO: make the 'week' array depend on the data received / day-of-the-week that the API request was made
-//@TODO: make sure we don't get an error relating to the d3.json having not returned
 //@TODO: decide what to do in case of a tie! The obvious thing is to opacity-1/2 (or 1/4) 2 exactly overlapping rects
 
 module.exports = (data) => {
@@ -65,7 +61,7 @@ module.exports = (data) => {
   //       .attr("height", h);
   // }
   var svg = d3.select("#commit-charts svg");
-  
+  svg.selectAll('*').remove();
 
   // set the scales
   var xScale = d3.scale.ordinal()
@@ -125,6 +121,21 @@ module.exports = (data) => {
            })
           .attr('height', (d) => yScale(0) - yScale(d))
       }
+
+  g.append("g")
+    for (var j = 0; j < length; j++) {
+      g.append("rect")
+        .attr('fill', (d, i) => colors[i])
+        .attr('x', (d, i) => {
+          return length > 2 ? xScale(timeAxis[i]) + (j * skinnyBarWidth) : xScale(timeAxis[i])
+         }) 
+        .attr('y', (d) => yScale(d))
+        .attr('width', () => {
+          return length > 2 ? skinnyBarWidth : barWidth
+         })
+        .attr('height', (d) => yScale(0) - yScale(d))
+    }
+
 };
 
 
