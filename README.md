@@ -26,7 +26,7 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 ## Architecture
 ### Database Schema
 For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/1GPTzF5Bm_S3_2266Ib4b60NtqnQYp3_9fj6ODiP5INs/edit?usp=sharing)
-![Schema](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/server/db/sql/schema.png)
+
 ### API Server Endpoints
 |Endpoint|Request Type|Description|JSON Required|
 |---|---|---|---|
