@@ -8,32 +8,14 @@ import CommitChart from './commitChart';
 class Repos extends Component {
   constructor(props) {
     super(props)
-    this.state ={
-      repos: []
+    this.state = {
+      fetched: false,
+      repos: [],
+      options: {}
     };
   }
-  componentDidUpdate() {
-    if (this.props.user.username && !this.state.fetched) {
-      this.state = {
-        selectedUser: undefined,
-        fetched: true,
-        repos: [],
-        options: {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': this.props.user.username,
-            'Authorization': `token ${localStorage.token}`
-          }
-        }
-      }
-      // Initiates fetching of all repo data for the user
-      this.fetchAllRepos();
-    }
-  }
   fetchRepos() {
-    console.log('This is the async username', this.props.user.username);
-    return fetch(`https://api.github.com/users/${this.props.chosenSearchResults !== undefined ? this.props.chosenSearchResults.login : this.props.user.username}/repos?per_page=100`, this.state.options)
+    return fetch(`https://api.github.com/users/${this.props.chosenSearchResult.login !== undefined ? this.props.chosenSearchResult.login : this.props.user.username}/repos?per_page=100`, this.state.options)
       .then(res => res.json())
       .then(data => data)
       .catch(err => err);
@@ -44,7 +26,7 @@ class Repos extends Component {
       var repos = await this.fetchRepos();
       // Filter data to only include repos that the user has contributed to
       this.setState({repos: repos});
-      console.log('These are the repos', this.state.repos);
+      this.props.actions.chooseSearchResult({});
     };
     renderRepos.call(this);
   }
@@ -60,6 +42,33 @@ class Repos extends Component {
       }})
       .then(data => { CommitChart(data) })
       .catch(err => console.log(err));
+  }
+  setStateFetchInit() {
+    if (this.props.user.username && !this.state.fetched) {
+      this.setState({
+        fetched: true,
+        repos: [],
+        options: {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'User-Agent': this.props.user.username,
+            'Authorization': `token ${localStorage.token}`
+          }
+        }
+      });
+      // Initiates fetching of all repo data for the user
+      this.fetchAllRepos();
+    } else {
+      // setTimeout is necessary to check if the this.props.user.username is updated and defined
+      // initially, this.props.user.username upon load is undefined, therefore we need to keep checking if it's loaded
+      // putting the if block code in the render method will give you a warning that setState should not be in the render method
+      // putting the ifblock code in the componentDidUpdate will give you an infinite loop, or not work for different cases of looking up repos
+      setTimeout(this.setStateFetchInit.bind(this), 250);
+    }
+  }
+  componentDidMount() {
+    this.setStateFetchInit();
   }
   render() {
     if (this.state.repos.length === 0) {
