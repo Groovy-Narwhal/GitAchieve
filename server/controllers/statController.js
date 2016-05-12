@@ -3,6 +3,7 @@ const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
 const token = require('../config/github.config').token;
 
+
 // GET at '/api/v1/user/:id/stats'
 exports.retrieveStats = function(req, res) {
   var queryId = req.params.id;
@@ -21,10 +22,38 @@ exports.updateStats = function(req, res) {
   
   // ** HELPER FUNCTIONS **
   
+  // delete existing stats from database
+  var deleteStatFromDb = function(combo, repo, stat, callback) {
+    db.any('DELETE FROM $1~ ' +
+      'WHERE $2~ = $3 ' +
+      'AND $4~ = $5 ' +
+      'RETURNING *',
+      ['stats', 'org_id', combo.orgId, 'repo_id', repo.repoId])
+      .then(data => {
+        callback(combo, repo, stat);
+        console.log('successful deleteStatFromDb');
+      })
+      .catch(error => {
+        console.error('error in deleteStatFromDb: ', error);
+      });
+  };
+  
+  // save stat to database
+  var saveStatToDb = function(combo, repo, stat) {
+    db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) ' +
+      'VALUES ($8, $9, $10, $11, $12, $13)',
+      ['stats', 'updated_ga', 'total', 'weeks', 'user_id', 'org_id', 'repo_id',
+      dbTimestamp, stat.total, stat.weeks, queryId, combo.orgId, repo.repoId])
+      .then(data => {
+        console.log('successful saveStatsToDb');
+      })
+      .catch(error => {
+        console.error('error in saveStatsToDb: ', error);
+      });
+  };
+  
   //  get the stats for a given owner & repo from GitHub
   var getStatsFromGitHub = function(username, combo, repo, callback) {
-    console.log('combo.orgName', combo.orgName);
-    console.log('repo.repoName', repo.repoName);
     var options = {
       url: 'https://api.github.com/repos/' + combo.orgName + '/' + repo.repoName + '/stats/contributors',
       method: 'GET',
@@ -36,49 +65,16 @@ exports.updateStats = function(req, res) {
         'Authorization': 'token ' + token
       }
     };
-    
     request(options, (error, response, stats) => {
       if (error) {
         console.error(error);
       } else {
-        console.log('success in getStats, stats.length: ', stats.length);
-        
-        // START HERE - stats is an array; callback needs to happen for each element
-        
-        // callback(combo, repo, stats);
+        var statsArray = JSON.parse(stats);
+        statsArray.forEach((stat) => {
+          deleteStatFromDb(combo, repo, stat, saveStatToDb);
+        });
       }
     });
-  };
-  
-  // delete existing stats from database
-  var deleteStatsFromDb = function(combo, repo, stats) {
-    
-    db.any('DELETE FROM $1~ ' +
-      'WHERE $2~ = $3 ' +
-      'AND $4~ = $5 ' +
-      'RETURNING *',
-      ['stats', 'org_id', combo.orgId, 'repo_id', repo.repoId])
-      .then(data => {
-        console.log('successful deleteStatsFromDb, data: ', data);
-        saveStatsToDb(combo, repo, stats);
-      })
-      .catch(error => {
-        console.error('error in deleteStatsFromDb: ', error);
-      });
-  };
-  
-  // save stats to database
-  var saveStatsToDb = function(combo, repo, stats) {
-    db.one('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) ' +
-      'VALUES ($8, $9, $10, $11, $12, $13)',
-      ['stats', 'updated_ga', 'total', 'weeks', 'user_id', 'org_id', 'repo_id',
-      dbTimestamp, stats.total, stats.weeks, queryId, combo.orgId, repo.repoId])
-      .then(data => {
-        console.log('successful saveStatsToDb, data: ', data);
-      })
-      .catch(error => {
-        console.error('error in saveStatsToDb: ', error);
-      });
   };
   
   // ** BUSINESS LOGIC FOR PATCH REQUEST **
@@ -101,7 +97,6 @@ exports.updateStats = function(req, res) {
         [queryId])
         .then(orgs => {
           // find the repos associated with each org
-                              
           var orgsLeft = orgs.length;
           orgs.forEach((org, index, orgs) => {
             var statCombo = {};
@@ -114,6 +109,7 @@ exports.updateStats = function(req, res) {
               'ON r.id = ogr.repo_id ' + 
               'WHERE ogr.org_id=$1', 
               [org.id])
+              // assemble all the combinations of each org with its repos
               .then(repos => {
                 var reposLeft = repos.length;
                 repos.forEach((repo, index, repos) => {
@@ -123,10 +119,12 @@ exports.updateStats = function(req, res) {
                     statCombos.push(statCombo);
                     orgsLeft--;
                     if (orgsLeft === 0) {
-                      console.log('statCombos', statCombos);
+                      // once the combinations are set up, get the stats for each
+                        // the getStatsFromGitHub will use a callback to delete existing stats
+                        // and save updated stats
                       statCombos.forEach((combo) => {
                         combo.repos.forEach((repo) => {
-                          getStatsFromGitHub(username, combo, repo, deleteStatsFromDb);
+                          getStatsFromGitHub(username, combo, repo, deleteStatFromDb);
                         });                            
                       });
                     }  
