@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
+import CommitChart from './commitChart';
 
 class Repos extends Component {
   constructor(props) {
@@ -57,7 +58,7 @@ class Repos extends Component {
       } else {
         return res.json()
       }})
-      .then(data => { console.log('This is our data.owner: ', data.owner, `for repo: ${repo.full_name}`); return data} )
+      .then(data => { CommitChart(data) })
       .catch(err => console.log(err));
   }
   render() {
