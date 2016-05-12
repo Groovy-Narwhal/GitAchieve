@@ -17,17 +17,20 @@ exports.addStats = function(req, res) {
 // PATCH at '/api/v1/user/:id/stats' to update stats 
 exports.updateStats = function(req, res) {
   var queryId = req.params.id;
+  var dbTimestamp = pgp.as.date(new Date());
   
   // ** HELPER FUNCTIONS **
   
   //  get the stats for a given owner & repo from GitHub
-  var getStatsFromGitHub = function(orgname, repo, callback) {
+  var getStatsFromGitHub = function(username, combo, repo, callback) {
+    console.log('combo.orgName', combo.orgName);
+    console.log('repo.repoName', repo.repoName);
     var options = {
-      url: 'https://api.github.com/repos/' + orgname + '/' + repo.name + '/stats/contributors',
+      url: 'https://api.github.com/repos/' + combo.orgName + '/' + repo.repoName + '/stats/contributors',
       method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': orgname,
+        'User-Agent': username,
         // Uncomment this line to make GET requests from within the site (not with Postman)
         // 'Authorization': `token ${req.body.token}`
         'Authorization': 'token ' + token
@@ -38,60 +41,112 @@ exports.updateStats = function(req, res) {
       if (error) {
         console.error(error);
       } else {
-        console.log('success in getStats');
-        callback(orgname, repo, stats);
+        console.log('success in getStats, stats.length: ', stats.length);
+        
+        // START HERE - stats is an array; callback needs to happen for each element
+        
+        // callback(combo, repo, stats);
       }
     });
   };
   
+  // delete existing stats from database
+  var deleteStatsFromDb = function(combo, repo, stats) {
+    
+    db.any('DELETE FROM $1~ ' +
+      'WHERE $2~ = $3 ' +
+      'AND $4~ = $5 ' +
+      'RETURNING *',
+      ['stats', 'org_id', combo.orgId, 'repo_id', repo.repoId])
+      .then(data => {
+        console.log('successful deleteStatsFromDb, data: ', data);
+        saveStatsToDb(combo, repo, stats);
+      })
+      .catch(error => {
+        console.error('error in deleteStatsFromDb: ', error);
+      });
+  };
+  
+  // save stats to database
+  var saveStatsToDb = function(combo, repo, stats) {
+    db.one('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) ' +
+      'VALUES ($8, $9, $10, $11, $12, $13)',
+      ['stats', 'updated_ga', 'total', 'weeks', 'user_id', 'org_id', 'repo_id',
+      dbTimestamp, stats.total, stats.weeks, queryId, combo.orgId, repo.repoId])
+      .then(data => {
+        console.log('successful saveStatsToDb, data: ', data);
+      })
+      .catch(error => {
+        console.error('error in saveStatsToDb: ', error);
+      });
+  };
+  
   // ** BUSINESS LOGIC FOR PATCH REQUEST **
   
+  // this will store the combinations of every orgname and repo name that we want to query GitHub for
+  var statCombos = [];
   // retrieve this user's username
   db.one('SELECT * ' +
     'FROM $2~ ' +
     'WHERE $3~=$4',
     ['username', 'users', 'id', queryId])
-  .then(user => {
-    console.log('user', user);
-    // select all of this user's repos
-    db.any('SELECT r.id, r.updated_ga, r.created_at, r.watchers_count, r.stargazers_count, r.forks_count ' + 
-      'FROM users_repos ur ' +
-      'INNER JOIN repos r ' + 
-      'ON r.id = ur.repo_id ' + 
-      'WHERE ur.user_id=$1', 
-      [queryId])
-      .then(repos => {
-        console.log(repos);
-        // find the org (if any) associated with each repo
-        db.tx(function(t) {
-          var queries = repos.map(function (repo) {
-            return t.oneOrNone('SELECT o.id, o.updated_ga, o.orgname, o.avatar_url, o.followers, o.following, o.score ' + 
-              'FROM orgs_repos ogr ' +
-              'INNER JOIN orgs o ' + 
-              'ON o.id = ogr.repo_id ' + 
-              'WHERE ogr.repo_id=$1', 
-              [repo.id]);
-          });
-          return t.batch(queries);
-        })
+    .then(user => {
+      const username = user.username;
+      // select all of this user's orgs
+      db.any('SELECT o.id, o.updated_ga, o.orgname, o.avatar_url, o.followers, o.following, o.score ' + 
+        'FROM users_orgs uo ' +
+        'INNER JOIN orgs o ' + 
+        'ON o.id = uo.org_id ' + 
+        'WHERE uo.user_id=$1', 
+        [queryId])
         .then(orgs => {
-          console.log('orgs[0]', orgs[0]);
-          res.send('success');
+          // find the repos associated with each org
+                              
+          var orgsLeft = orgs.length;
+          orgs.forEach((org, index, orgs) => {
+            var statCombo = {};
+            statCombo.orgName = org.orgname;
+            statCombo.orgId = org.id;
+            statCombo.repos = [];
+            db.any('SELECT r.id, r.name ' + 
+              'FROM orgs_repos ogr ' +
+              'INNER JOIN repos r ' + 
+              'ON r.id = ogr.repo_id ' + 
+              'WHERE ogr.org_id=$1', 
+              [org.id])
+              .then(repos => {
+                var reposLeft = repos.length;
+                repos.forEach((repo, index, repos) => {
+                  statCombo.repos.push({repoName: repo.name, repoId: repo.id});
+                  reposLeft--;
+                  if (reposLeft === 0) {
+                    statCombos.push(statCombo);
+                    orgsLeft--;
+                    if (orgsLeft === 0) {
+                      console.log('statCombos', statCombos);
+                      statCombos.forEach((combo) => {
+                        combo.repos.forEach((repo) => {
+                          getStatsFromGitHub(username, combo, repo, deleteStatsFromDb);
+                        });                            
+                      });
+                    }  
+                  }
+                });
+              })
+              .catch(error => {
+                console.error('Error in orgs.forEach: ', error);
+              });
+          });
+          
         })
         .catch(error => {
+          res.status(500).send();
           console.error('error: ', error);
-          res.send(500);
-        });
-        // for each org / repo pair, get the stats from GitHub
-      })
-      .catch(error => {
-        res.send(500);
-        console.error('error: ', error);
-      });  
-  })
-  .catch(error => {
-    res.send(500);
-    console.error('error: ', error);
-  });
+        });  
+    })
+    .catch(error => {
+      res.send(500);
+      console.error('error: ', error);
+    });
 
 };
