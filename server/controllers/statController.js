@@ -76,9 +76,11 @@ exports.updateStats = function(req, res) {
         console.error('Error in getStatsFromGitHub: ', error);
       } else {
         var statsArray = JSON.parse(stats);
-        statsArray.forEach((stat) => {
-          deleteStatFromDb(combo, repo, stat, saveStatToDb);
-        });
+        if (Array.isArray(statsArray)) {
+          statsArray.forEach((stat) => {
+            deleteStatFromDb(combo, repo, stat, saveStatToDb);
+          });
+        }
       }
     });
   };
