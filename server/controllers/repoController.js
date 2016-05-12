@@ -1,6 +1,7 @@
 const request = require('request');
 const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
+const token = require('../config/github.config').token;
 
 // PATCH at '/api/v1/users/:id/repos'
 exports.retrieveRepos = function(req, res) {
@@ -85,7 +86,8 @@ exports.retrieveRepos = function(req, res) {
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': username,
         // Uncomment this line to make GET requests from within the site (not with Postman)
-        'Authorization': `token ${req.body.token}`
+        // 'Authorization': `token ${req.body.token}`
+        'Authorization': 'token ' + token
       }
     };
     request(options, (error, response, body) => {
