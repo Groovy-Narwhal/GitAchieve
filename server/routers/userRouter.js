@@ -16,8 +16,8 @@ userRouter.route('/:id')
   .delete(userController.deleteUser);
 
 userRouter.route('/:id/repos')
-  .patch(repoController.retrieveRepos)
-  .post(repoController.addRepo);
+  .post(repoController.addRepo)
+  .patch(repoController.retrieveRepos);
 
 userRouter.route('/:id/friends')
   .get(friendController.retrieveFriends)
@@ -25,8 +25,7 @@ userRouter.route('/:id/friends')
   .patch(friendController.confirmOrRemoveFriend);
 
 userRouter.route('/:id/stats')
-  // .get(statController.retrieveStats)
-  // .post(statController.addStats)
+  .get(statController.retrieveStats)
   .patch(statController.updateStats);
 
 // userRouter.route('/:id/achievements')
