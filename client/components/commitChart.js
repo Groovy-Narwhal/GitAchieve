@@ -13,15 +13,31 @@ module.exports = (data) => {
   }
   // show only the last 13 weeks of data, or last N weeks if commit activity is only in last N weeks,
   // but if all last 13 weeks had no data, just show a flat graph of 13 weeks of 0 activity
-  if (beginningOfActivityIndex !== 12) {
-    recentActivity = recentActivity.slice(beginningOfActivityIndex, recentActivity.length);
-  }
+  // if (beginningOfActivityIndex !== 12) {
+  recentActivity = recentActivity.slice(beginningOfActivityIndex, recentActivity.length);
+  // }
 
   // generate time axis -- start with week
   // recentActivity = data;
+  console.log('data is:', data);
+  const generateTimeAxisTicks = () => {
+    var now = new Date();
+    var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-
-
+    var timeAxis = [], lastSunday, timeString;
+    if (recentActivity.length > 0) {
+      timeAxis.push((today.getMonth()+1) + '/' + today.getDate());
+    
+      for (var i = 1; i < recentActivity.length; i++) {
+          var lastSunday = i === 1 ? new Date(today.setDate(today.getDate()-today.getDay())) : new Date(lastSunday - 604800000);
+          timeString = (lastSunday.getMonth()+1) + '/' + lastSunday.getDate();
+          timeAxis.push(timeString);
+      }
+    }
+    return timeAxis;
+  };
+  var timeAxis = generateTimeAxisTicks();
+  console.log('timeAxisTicks', timeAxis);
   // d3.json("https://api.github.com/repos/Groovy-Narwhal/GitAchieve/stats/commit_activity", (error, data) => {
   //   if (error) {
   //     console.log('There was an error retrieving commit data: ', error);
