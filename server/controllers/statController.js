@@ -5,16 +5,19 @@ const token = require('../config/github.config').token;
 
 
 // GET at '/api/v1/users/:id/stats' to get a user's stats
+// the headers must include the orgid and repoid
 exports.retrieveStats = function(req, res) {
   var queryId = req.params.id;
   db.any('SELECT * FROM $1~ $2~' +
-    'WHERE $2~.$3~=$4',
-    ['stats', 's', 'user_id', queryId])
+    'WHERE $2~.$3~=$4 ' +
+    'AND $2~.$5~=$6 ' +
+    'AND $2~.$7~=$8',
+    ['stats', 's', 'user_id', queryId, 'repo_id', req.headers.repoid, 'org_id', req.headers.orgid])
     .then(stats => {
       res.send(stats);
     })
     .catch(error => {
-      console.error('Error in retrieveStats: ', error);
+      console.error('Error selecting stats: ', error);
     });
 };
 
