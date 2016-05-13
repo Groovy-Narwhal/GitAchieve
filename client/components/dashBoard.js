@@ -10,6 +10,7 @@ import ghFetch from './../utils/utils';
 import Repos from './repos';
 import { CumulativeChart } from './index';
 import { DailyChart } from './index';
+import Search from './search';
 
 class DashBoard extends Component {
   constructor(props) {
@@ -47,6 +48,7 @@ class DashBoard extends Component {
     if (this.props.auth.authenticated) {
       return (
         <div className="dashboard">
+          <Search />
           <h1>Your contributions: {this.props.userContributions}</h1>
 
           <button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>

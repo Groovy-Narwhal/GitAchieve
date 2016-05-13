@@ -1,4 +1,20 @@
 .search-input {
   width: 300px;
   height: 75px;
+  display: inline-block;
+}
+
+.search-form {
+  margin: 0 auto;
+  padding-top:5px;
+  padding-top:5px;
+  width: 350px;
+}
+
+.search-submit-button {
+  border-radius: 0;
+}
+
+.search-container {
+  white-space: nowrap;
 }

@@ -49,6 +49,16 @@ body {
 .day {
   color: #fff; }
 
+centered {
+  margin-right: auto;
+  margin-left: auto; }
+
+text-centered {
+  text-align: center; }
+
+block {
+  display: block; }
+
 svg {
   font: 10px;
   font-weight: 300;
@@ -121,7 +131,20 @@ svg text {
 
 .search-input {
   width: 300px;
-  height: 75px; }
+  height: 75px;
+  display: inline-block; }
+
+.search-form {
+  margin: 0 auto;
+  padding-top: 5px;
+  padding-top: 5px;
+  width: 350px; }
+
+.search-submit-button {
+  border-radius: 0; }
+
+.search-container {
+  white-space: nowrap; }
 
 .header-nav {
   background-color: #fff;
@@ -141,16 +164,6 @@ svg text {
   font-weight: 700;
   font-size: 26px;
   cursor: pointer; }
-
-.search-form {
-  padding-top: 5px;
-  padding-top: 5px; }
-
-.search-submit-button {
-  border-radius: 0; }
-
-.search-container {
-  white-space: nowrap; }
 
 .nav-link {
   margin: 0 10px;
