@@ -40,7 +40,7 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/api/v1/users/:id/friends|GET|Get a user's friends|none|Array of friends|
 |/api/v1/users/:id/friends|POST|Primary user requests friendship with secondary user|primary user id, secondary user id, username and email|Array containing join row in users_users|
 |/api/v1/users/:id/friends|PATCH|Confirm a friend request or remove a friendship|remove:true to remove friendship|Array containing join row in users_users|
-|/api/v1/users/:id/stats|GET|Get stats for a use by org and repo|Obect with repoName and orgName properties|Array containing stat object|
+|/api/v1/users/:id/stats|GET|Get stats for a use by org and repo|Headers for `orgid` and `repoid`|Array containing stat object|
 |/api/v1/users/:id/stats|PATCH|Update stats for a user|none|Array of stats updated - each has user_id, org_id and repo_id|
 
 ### Client Side Routes
