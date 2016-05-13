@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
-import { CommitChart } from './index';
+import { cumulativeChart } from './index';
 
 class DashBoard extends Component {
 

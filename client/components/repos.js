@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
-import CommitChart from './commitChart';
+import { CumulativeChart } from './index';
 
 class Repos extends Component {
   constructor(props) {
@@ -52,7 +52,7 @@ class Repos extends Component {
       } else {
         return res.json()
       }})
-      .then(data => { CommitChart(data) })
+      .then(data => { CumulativeChart(data) })
       .catch(err => console.log(err));
   }
   setStateFetchInit() {

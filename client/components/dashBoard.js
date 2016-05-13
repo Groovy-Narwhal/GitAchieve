@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
-import { CommitChart } from './index';
+import { cumulativeChart } from './index';
 import ghFetch from './../utils/utils';
 import Repos from './repos';
 

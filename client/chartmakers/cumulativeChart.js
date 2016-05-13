@@ -11,14 +11,11 @@ module.exports = (data) => {
   // HARDCODED FOR NOW
   var users = ['@adamrgisom', '@msmith9393'];
 
-  /*************
-   The setup
-  *************/
   // set dimensions
   var pad = 30;
   var w = 600 - 2*pad;
   var h = 360 - 2*pad;
-  var barWidth = Math.floor((w-2*pad)/users.length);
+  var barWidth = Math.floor((w-3*pad)/users.length) - 3;
 
   var svg = d3.select("#commit-charts svg");
 
@@ -40,17 +37,16 @@ module.exports = (data) => {
   // set the scales
   var xScale = d3.scale.ordinal()
     .domain(users)
-    .rangeRoundBands( [pad*2, w] );
+    .rangeRoundBands( [pad*2, w-pad] );
   var yScale = d3.scale.linear()
-    .domain(
-      [mostCommits, 0])
+    .domain([mostCommits, 0])
     .range( [pad, h-pad*2] );
 
   // set the axes
   var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
   var yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-  // draw the axes (first is the x axis, second is the y axis)
+  // draw the axes
   svg.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(0, " + (h-2*pad) + ")")
@@ -68,16 +64,15 @@ module.exports = (data) => {
     })
     .call(yAxis);
 
-  // declare colors array, maximum 5
-  // Note that if there were only 5 colors, that would mean only up to 5 individuals could get compared.
-  var colors = [ 'lightgreen', 'steelblue'];
+  // declare colors array
+  var colors = [ 'red', 'steelblue'];
 
   // add the bars in the bar graph
   var g = svg.selectAll(".bars")
     .data(data)
     .enter()
       .append("g")
-      for (var j = 0; j < 2; j++) {
+      for (var j = 0; j < users.length; j++) {
         g.append("rect")
           .attr('fill', (d, i) => colors[i])
           .attr('x', (d, i) => xScale(users[i]))
@@ -86,8 +81,9 @@ module.exports = (data) => {
           .attr('height', (d) => yScale(0) - yScale(d))
       }
 
+  // (add the bars, continued) update selection (may be buggy, not used/tested)
   g.append("g")
-    for (var j = 0; j < users; j++) {
+    for (var j = 0; j < users.length; j++) {
       g.append("rect")
         .attr('fill', (d, i) => colors[i])
         .attr('x', (d, i) => xScale(users[i]))
@@ -96,52 +92,22 @@ module.exports = (data) => {
         .attr('height', (d) => yScale(0) - yScale(d))
     }
 
-  //   // add text labels for # of commits (when greater than 0)
-  //   svg.append('g')
-  //     .selectAll('text')
-  //     .data(sortedData)
-  //     .enter()
-  //       .append('text')
-  //       .attr('x', (d, i) => {
-  //         return xScale(week[i]) + barWidth/2 + 4
-  //       })
-  //       .attr('y', (d) => {
-  //         return yScale(d[0][1]) - 11
-  //         // was formerly (for the 2-person-view) return d[0][1]===1 ? yScale(d[0][1]) - 5 : yScale(d[0][1]) + 15
-  //       })
-  //       .text((d) => {
-  //         return d[0][1] > 0 ? d[0][1].toString() : ''
-  //       });
+    // add text labels for # of commits (when greater than 0)
+    svg.append('g')
+      .selectAll('text')
+      .data(data)
+      .enter()
+        .append('text')
+        .attr('x', (d, i) => xScale(users[i]) + barWidth/2 + 4)
+        .attr('y', (d) => yScale(d) - 11)
+        .text((d) => d > 0 ? d.toString() : '');
 
-  //   // add color dot indicators above the bars showing who won that day
-  //   svg.append('g')
-  //     .selectAll('circle')
-  //     .data(sortedData)
-  //     .enter()
-  //       .append('circle')
-  //       .attr('cx', (d, i) => {
-  //         return xScale(week[i]) + barWidth/2 - 7;
-  //       })
-  //       .attr('cy', (d) => {
-  //         return yScale(d[0][1]) - 15
-  //       })
-  //       .attr('fill', (d) => {
-  //         return colors[ d[0][0] ]
-  //       })
-  //       .attr('r', 5)
-  //       .attr('stroke', 'black');
+    // display placeholder for winner graphic
+    var placeOfWinner_x = data[0]===mostCommits ? 0 : 1;
+    var placeOfWinner_y = data[placeOfWinner_x];
 
-  //   // add a legend associating usernames with colors on the graph
-  //   for (j = 0; j < users.length; j++) {
-  //     svg.append('rect')
-  //       .attr('fill', () => colors[j])
-  //       .attr('x', 50 + 100 * j)
-  //       .attr('y', h - pad + 15)
-  //       .attr('width', 8)
-  //       .attr('height', 8);
-  //     svg.append('text')
-  //       .attr('transform', 'translate(' + (60 + 100 * j) + ',' + (h - 7) + ')')
-  //       .text(() => usernames[j]);
-  //   }
-
+    svg.append('text')
+      .attr('x', () => xScale(users[placeOfWinner_x]) + barWidth/2 + 40)
+      .attr('y', () => yScale(placeOfWinner_y) - 11)
+      .text('winner');
 };
