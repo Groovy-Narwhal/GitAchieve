@@ -58,5 +58,11 @@ export default {
       type: types.ADD_COMPETITOR,
       competitor
     }
+  },
+  chooseWeapon: weapon => {
+    return {
+      type: types.CHOOSE_WEAPON,
+      weapon
+    }
   }
 };

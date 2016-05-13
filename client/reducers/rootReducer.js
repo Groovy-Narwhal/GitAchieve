@@ -10,6 +10,7 @@ import userContributions from './userContributionsReducer';
 import competitors from './competitorsReducer';
 import competitorsData from './competitorDataReducer';
 import dailyCompetitorsData from './dailyCompetitorDataReducer';
+import chosenWeapons from './chosenWeaponsReducer';
 
 
 export default combineReducers({
@@ -23,5 +24,6 @@ export default combineReducers({
   userContributions,
   competitors,
   competitorsData,
-  dailyCompetitorsData
+  dailyCompetitorsData,
+  chosenWeapons
 });
