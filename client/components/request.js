@@ -57,3 +57,44 @@ const mapDispatchToProps = dispatch => (
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(Request);
+||||||| merged common ancestors
+=======
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Header } from './index';
+import * as actions from './../actions/index';
+import axios from 'axios';
+
+const ROOT_URL = 'http://127.0.0.1:8000';
+
+class Request extends Component {
+  
+  handleAccept(req) {
+    // search for user in users_users table they will be the secondary user id switch confirmed at flag to true.
+    const secondaryId = this.props.user.id;
+    // axios.patch(`${ROOT_URL}/api/v1/users/${secondaryId}/friends`, {
+    //   primaryUserId: req.primary_user_id
+    // })
+  }
+
+  render() {
+    return (
+      <div>
+        <p>You have a compete request</p>
+        <button onClick={this.handleAccept.bind(this, this.props.req)}>Accept</button>
+      </div>
+    )
+  }
+}
+
+const mapStateToProps = state => state;
+
+const mapDispatchToProps = dispatch => (
+  {
+    actions: bindActionCreators(actions, dispatch)
+  }
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Request);
+>>>>>>> (feat) Add request

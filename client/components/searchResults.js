@@ -20,7 +20,6 @@ class SearchResults extends Component {
     this.props.actions.chooseSearchResult(result);
     browserHistory.push(`compete/choose-repo/${result.login}`);
 
-    e.preventDefault();
     var dummyData = {
       primary_user_id: 15220759,
       secondary_user_id: 10040945,
@@ -42,7 +41,7 @@ class SearchResults extends Component {
         competitionStart: dummyData.competition_start
       });
     })
-  } 
+  }
 
   routeTo(e, result, type) {
     this.props.actions.chooseSearchResult(result);

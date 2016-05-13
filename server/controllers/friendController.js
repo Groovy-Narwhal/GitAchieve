@@ -3,7 +3,6 @@ const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
 
 // GET at '/api/v1/users/:id/friends'
-
 exports.retrieveFriends = function(req, res) {
   var queryId = req.params.id;
   // select all the secondary users associated with this user
@@ -88,90 +87,20 @@ exports.addFriend = function(req, res) {
             res.send('Connection already exists');
           }
         });
-      });
-  };
+  });
+};
 
-
-
-
-
-
-// this is an alternate version that uses transactions
-// it's not working yet
-
-exports.addFriend2 = function(req, res) {
-  // this is the person sending the invitation to compete
-  const primaryUserId = req.params.id; 
-  // this is the person receiving the invitation to compete
-  const secondaryUserId = req.body.secondaryUserId;
-  const secondaryUsername = req.body.secondaryUsername;
-  const secondaryUserEmail = req.body.secondaryUserEmail;
-  const dbTimestamp = pgp.as.date(new Date());
-  
-  // check if the secondary user exists
-  db.tx(t => t.oneOrNone('SELECT * FROM $1~ WHERE $2~=($3)', ['users', 'id', secondaryUserId])
-    .then(data => { 
-      console.log('select * data', data);
-      // ** HELPER FUNCTIONS **
-      // adds a user with signed_up = false
-      var addUserQuery = t.one(
-        'INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~) ' +
-        'VALUES ($7, $8, $9, $10, $11) ' +
-        'RETURNING *',
-        ['users', 'id', 'username', 'email', 'created_ga', 'signed_up', 
-        secondaryUserId, secondaryUsername, secondaryUserEmail, dbTimestamp, false]);
-      // adds a connection between users
-      var addConnectionQuery = t.one(
-        'INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
-        'VALUES ($6, $7, $8) ' +
-        'RETURNING *',
-        ['users_users', 'uu', 'created_ga', 'primary_user_id', 'secondary_user_id', 
-        dbTimestamp, primaryUserId, secondaryUserId]);
-      // checks if a connection exists
-      var checkConnectionQuery = t.one(
-        'SELECT * FROM $1~ AS $2~' +
-        'WHERE $2~.$3~ = $4' +
-        'AND $2~.$5~ = $6',
-        ['users_users', 'uu', 'primary_user_id', primaryUserId, 'secondary_user_id', secondaryUserId]);
-      var deleteConnectionQuery = t.one(
-        'DELETE FROM $1~ AS $2~' +
-        'WHERE $2~.$3~ = $4' +
-        'AND $2~.$5~ = $6 ' +
-        'RETURNING *',
-        ['users_users', 'uu', 'primary_user_id', primaryUserId, 'secondary_user_id', secondaryUserId]);
-      // ** CALL HELPER FUNCTIONS **
-      // if the secondary user does not exist, add them and then add a connection 
-      if (data === null) {
-        return t.batch([addUserQuery, addConnectionQuery]);
-      } else {
-        // return checkConnectionQuery;
-      // if the secondary user has been created, check if there is a connection  
-        return t.batch([checkConnectionQuery]);
-      }
-    })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(error => {
-      console.log('catch tx error');
-      console.error(error);
-      res.status(500).send(error);
-    })
-    .finally(pgp.end)
-  );  
-}; 
 
 // PATCH at /api/v1/users/:id/friends to confirm a friendship
-exports.confirmOrRemoveFriend = function(req, res) {
+exports.confirmFriend = function(req, res) {
   // this is the person accepting the invitation to compete
   var secondaryUserId = req.params.id; 
   // this is the person who sent the invitation to compete
   var primaryUserId = req.body.primaryUserId;
-  var status = pgp.as.date(new Date());
-  // if removeFriend = true, replace status with null 
-  if (req.body.remove) {
-    status = null;
-  } 
+  const secondaryRepoId = req.body.secondaryRepoId;
+  var confirmedAt = pgp.as.date(new Date());
+  const lastActive = pgp.as.date(new Date());
+
   // find user_users connection
   db.oneOrNone(
     'SELECT * ' + 
@@ -183,11 +112,13 @@ exports.confirmOrRemoveFriend = function(req, res) {
       if (data !== null) {
         db.oneOrNone(
           'UPDATE users_users uu ' + 
-          'SET confirmed_at =($1) ' +
-          'WHERE uu.primary_user_id=($2) ' +
-          'AND uu.secondary_user_id=($3) ' +
+          'SET confirmed_at =($1) AND ' +
+          'SET secondary_repo_id =($2) AND ' +
+          'SET last_active =($3) AND ' +
+          'WHERE uu.primary_user_id=($4) ' +
+          'AND uu.secondary_user_id=($5) ' +
           'RETURNING *', 
-          [status, primaryUserId, secondaryUserId])
+          [confirmedAt, secondaryRepoId, lastActive, primaryUserId, secondaryUserId])
           .then(data => {
             res.send(data);
           })

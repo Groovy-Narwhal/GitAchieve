@@ -15,3 +15,4 @@ export DailyChart from './../chartmakers/dailyChart';
 export Organizations from './organizations';
 export UserAchievements from './UserAchievements';
 export ChooseWeapon from './chooseWeapon';
+export Request from './request';
