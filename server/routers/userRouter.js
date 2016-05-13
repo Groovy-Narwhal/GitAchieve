@@ -16,8 +16,9 @@ userRouter.route('/:id')
   .delete(userController.deleteUser);
 
 userRouter.route('/:id/repos')
+  .get(repoController.retrieveRepos)
   .post(repoController.addRepo)
-  .patch(repoController.retrieveRepos);
+  .patch(repoController.updateRepos);
 
 userRouter.route('/:id/stats')
   .get(statController.retrieveStats)

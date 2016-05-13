@@ -6,7 +6,7 @@ const pgp = require('../db/database.js').pgp;
 exports.retrieveFriends = function(req, res) {
   var queryId = req.params.id;
   // select all the secondary users associated with this user
-  db.one(
+  db.any(
     'SELECT u.id, u.username, u.email ' + 
     'FROM users_users uu ' +
     'INNER JOIN users u ' +
@@ -16,7 +16,7 @@ exports.retrieveFriends = function(req, res) {
     queryId)
     // select all the primary users associated with this user
     .then(data1 => {
-      db.one(
+      db.any(
         'SELECT u.id, u.username, u.email ' + 
         'FROM users_users uu ' +
         'INNER JOIN users u ' +

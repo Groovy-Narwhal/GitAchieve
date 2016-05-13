@@ -18,10 +18,11 @@ exports.retrieveAllUsers = function(req, res) {
 // POST at /api/v1/users to add a user manually
 exports.addUser = function(req, res) {  
   var dbTimestamp = pgp.as.date(new Date());
-  db.any('INSERT INTO users (username, email, id, created_ga) ' +
-    'VALUES ($1, $2, $3, $4)',
+  db.one('INSERT INTO users (username, email, id, created_ga) ' +
+    'VALUES ($1, $2, $3, $4) ' +
+    'RETURNING *',
     [req.body.username, req.body.email, req.body.id, dbTimestamp])
-    .then((data) => res.status(201).send(req.body))
+    .then((data) => res.status(201).send(data))
     .catch((error) => {
       console.error(error);
       res.status(500).send(error);
