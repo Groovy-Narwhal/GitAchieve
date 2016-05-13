@@ -234,7 +234,7 @@ exports.confirmOrRemoveFriend = function(req, res) {
 
 
 // retrieve all entries in the user to user table in which someone else sent you a request to compete and you have not yet accepted the match
-// GET at /api/v1/users/:id/receivematches
+// GET at /api/v1/users/:id/receivedmatches
 exports.checkForFriendRequests = function(req, res) {
   // this is the current users id
   var secondaryIdCheck = req.params.id;
@@ -255,7 +255,7 @@ exports.checkForFriendRequests = function(req, res) {
 
 // retrieve all entries in the user to user table in which you sent a request to compete and they have not yet accepted the match
 // GET at /api/v1/users/:id/requestedmatches
-exports.checkForUnacceptedRequests = function(req, res) {
+exports.checkForSentRequests = function(req, res) {
   // this is the current users id
   var primaryIdCheck = req.params.id;
 

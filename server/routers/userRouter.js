@@ -28,6 +28,12 @@ userRouter.route('/:id/stats')
   .get(statController.retrieveStats)
   .patch(statController.updateStats);
 
+userRouter.route('/:id/receivedmatches')
+  .get(friendController.checkForFriendRequests);
+
+userRouter.route('/:id/requestedmatches')
+  .get(friendController.checkForSentRequests);
+
 // userRouter.route('/:id/achievements')
 //   .get(userController.retrieveAchievements)
 //   .post(userController.addAchievements);

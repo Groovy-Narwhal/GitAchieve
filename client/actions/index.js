@@ -22,8 +22,9 @@ export const signoutUser = () => {
 }
 
 const checkForFriendRequests = (id, dispatch) => {
-  return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivematches`)
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivedmatches`)
     .then(response => {
+      console.log('RES IN CFR', response);
       dispatch({
         type: types.RECEIVED_FR,
         receivedRequests: response.data
@@ -34,6 +35,7 @@ const checkForFriendRequests = (id, dispatch) => {
 const checkForSentRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
     .then(response => {
+      console.log('RES IN CSR', response);
       dispatch({
         type: types.SENT_FR,
         receivedRequests: response.data
