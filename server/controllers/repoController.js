@@ -35,13 +35,14 @@ exports.updateRepos = function(req, res) {
       if (Array.isArray(repos)) {
         queries = repos.map(function (repo) {
           // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
-          return task.any('INSERT INTO $1~ AS $16~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~) ' +
-            'VALUES ($9, $10, $11, $12, $13, $14, $15) ' +
+          return task.any('INSERT INTO $1~ AS $16~ ($2~, $3~, $4~, $5~, $6~, $7~, $8~, $17~) ' +
+            'VALUES ($9, $10, $11, $12, $13, $14, $15, $18) ' +
             'ON CONFLICT ($2~) ' + 
-            'DO UPDATE SET ($3~, $4~, $5~, $6~, $7~, $8~) = ($10, $11, $12, $13, $14, $15) ' +
+            'DO UPDATE SET ($3~, $4~, $5~, $6~, $7~, $8~, $17~) = ($10, $11, $12, $13, $14, $15, $18) ' +
             'WHERE $16~.$2~ = $9',
             ['repos', 'id', 'updated_ga', 'created_at', 'watchers_count', 'stargazers_count', 'forks_count', 'name',
-            repo.id, dbTimestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count, repo.name, 'r']);
+            repo.id, dbTimestamp, repo.created_at, repo.watchers_count, repo.stargazers_count, repo.forks_count, repo.name, 'r',
+            'owner_id', repo.owner.id]);
         });
       }
       return task.batch(queries);
@@ -132,7 +133,6 @@ exports.updateRepos = function(req, res) {
   
 };  
 
-// START HERE - make it possible to update all repo fields, including org_commit_activity
   
 // POST at '/api/v1/users/:id/repos'  
 exports.addRepo = function(req, res) {
