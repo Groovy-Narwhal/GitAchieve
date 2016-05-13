@@ -12,6 +12,7 @@ class Repos extends Component {
     this.state = {
       fetched: false,
       repos: [],
+      repoClicked: [],
       options: {}
     };
   }
@@ -25,6 +26,7 @@ class Repos extends Component {
     async function renderRepos () {
       // awaits the promise from this.fetchRepos to resolve, then assigns repos to that value
       var repos = await this.fetchRepos();
+      var selectableRepos = repos.map(repo => ({value: repo , label: repo.name}))
       // Filter data to only include repos that the user has contributed to
       this.setState({repos: repos});
       this.props.actions.chooseSearchResult({});
@@ -40,6 +42,7 @@ class Repos extends Component {
         .attr('text-anchor', 'middle')
         .style('font-size', '24px');
 
+      this.setState({repoClicked: this.state.repos.map(repo => false)});
     };
     renderRepos.call(this);
   }
@@ -80,9 +83,14 @@ class Repos extends Component {
       setTimeout(this.setStateFetchInit.bind(this), 250);
     }
   }
-  selectRepo(e, repoData) {
-    console.log('In compete', e.target);
-    console.log(e);
+  selectRepo(i) {
+    var newClickedState = this.state.repos.map(repo => false);
+    newClickedState[i] = !newClickedState[i];
+    this.setState({repoClicked: newClickedState});
+    this.log();
+  }
+  log() {
+    console.log('new state of repo click: ', this.state.repoClicked);
   }
   componentDidMount() {
     this.setStateFetchInit();
@@ -100,16 +108,16 @@ class Repos extends Component {
       if (window.location.pathname.includes('compete')) {
         return (
           <div className="data-results-container-flex full-width">
-            {this.state.repos.map((repoData, i) => (
-              <Repo1 repoData={repoData} key={i} />
-              ))}
+            <select>
+              {this.state.repos.map(repo => (<option>{repo.name}</option>))}
+            </select>
           </div>
         );
       } else {
         return (
           <div className="data-results-container-flex full-width">
             {this.state.repos.map((repoData, i) => (
-              <div className="data-result-container" key={i} onClick={ (e) => (this.fetchRepoData(e.target, repoData)) } >
+              <div className="data-result-container" key={repoData.id} onClick={ (e) => (this.fetchRepoData(e.target, repoData)) } >
                 <h2>{repoData.name}</h2>
               </div>
               ))}
@@ -119,6 +127,12 @@ class Repos extends Component {
     }
   }
 }
+
+// {this.state.repos.map((repoData, i) => (
+//   <div onClick={this.selectRepo.bind(this, i)}>
+//     <Repo1 repoData={repoData} key={repoData.id} index={i} selected={this.state.repoClicked[i]} />
+//   </div>
+//   ))}
 
 const mapStateToProps = (state) => {
   return state;
