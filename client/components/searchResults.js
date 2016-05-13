@@ -9,15 +9,10 @@ class SearchResults extends Component {
 
   compete(e, result) {
     e.preventDefault();
-    fetch(`https://api.github.com/repos/alexnitta/GitAchieve/stats/participation`)
-      .then((repos) => repos.json())
-      .then((res) => {
-        // call an addCompetitorData action with data
-        this.props.actions.addCompetitorData(res);
-        // route to dashboard
-        // update dashboard to pass in competitorData if any
-        // refactor commitChart
-      });
+
+    // HARDCODE DATA IN REDUX STORE FOR CHART (TEMPORARY)
+    this.props.actions.addCompetitorData([24, 12]);
+    this.props.actions.addDailyCompetitorData([[5, 4, 2, 7, 3, 6, 8], [2, 3, 5, 9, 7, 2, 3]]);
   }
 
   routeTo(e, result, type) {
