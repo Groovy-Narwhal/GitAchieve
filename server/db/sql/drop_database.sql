@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-10 02:24:23.146
+-- Last modification date: 2016-05-13 00:26:00.819
 
 -- foreign keys
 ALTER TABLE IF EXISTS commits_repos
@@ -26,11 +26,14 @@ ALTER TABLE IF EXISTS repos_branches
 ALTER TABLE IF EXISTS repos_branches
     DROP CONSTRAINT repos_branches_repos;
 
-ALTER TABLE IF EXISTS repos_stats
-    DROP CONSTRAINT repos_stats_repos;
+ALTER TABLE IF EXISTS stats
+    DROP CONSTRAINT stats_orgs;
 
-ALTER TABLE IF EXISTS repos_stats
-    DROP CONSTRAINT repos_stats_stats;
+ALTER TABLE IF EXISTS stats
+    DROP CONSTRAINT stats_repos;
+
+ALTER TABLE IF EXISTS stats
+    DROP CONSTRAINT stats_users;
 
 ALTER TABLE IF EXISTS users_orgs
     DROP CONSTRAINT users_orgs_orgs;
@@ -43,6 +46,12 @@ ALTER TABLE IF EXISTS users_repos
 
 ALTER TABLE IF EXISTS users_repos
     DROP CONSTRAINT users_repos_users;
+
+ALTER TABLE IF EXISTS users_users
+    DROP CONSTRAINT users_users_primary_repos;
+
+ALTER TABLE IF EXISTS users_users
+    DROP CONSTRAINT users_users_repos;
 
 ALTER TABLE IF EXISTS users_users
     DROP CONSTRAINT users_users_users1;
@@ -66,8 +75,6 @@ DROP TABLE IF EXISTS pull_requests;
 DROP TABLE IF EXISTS repos;
 
 DROP TABLE IF EXISTS repos_branches;
-
-DROP TABLE IF EXISTS repos_stats;
 
 DROP TABLE IF EXISTS stats;
 
