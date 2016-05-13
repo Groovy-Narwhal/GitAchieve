@@ -28,10 +28,16 @@ class Request extends Component {
   }
 
   handleAccept(req) {
-    // search for user in users_users table they will be the secondary user id switch confirmed at flag to true.
-    const secondaryId = this.props.user.id;
+    const secondaryId = req.secondary_user_id;
     const primaryUserId = req.primary_user_id;
 
+    axios.patch(`${ROOT_URL}/api/v1/users/${secondaryId}/friends`, {
+      secondaryRepoId: 57168943, //DUMMY DATA
+      primaryUserId: primaryUserId
+    })
+    .then(response => {
+      console.log('RES', response);
+    });
   }
 
   render() {
@@ -45,8 +51,6 @@ class Request extends Component {
     </div>
   }
 }
-
-
 
 const mapStateToProps = state => state;
 

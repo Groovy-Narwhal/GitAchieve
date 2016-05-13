@@ -100,7 +100,7 @@ exports.confirmFriend = function(req, res) {
   const secondaryRepoId = req.body.secondaryRepoId;
   var confirmedAt = pgp.as.date(new Date());
   const lastActive = pgp.as.date(new Date());
-
+  console.log('REQ BODY', req.body)
   // find user_users connection
   db.oneOrNone(
     'SELECT * ' + 
@@ -109,18 +109,20 @@ exports.confirmFriend = function(req, res) {
     'AND uu.secondary_user_id=($2)', 
     [primaryUserId, secondaryUserId])
     .then(data => {
+      console.log('DATA', data)
       if (data !== null) {
         db.oneOrNone(
-          'UPDATE users_users uu ' + 
-          'SET confirmed_at =($1) AND ' +
-          'SET secondary_repo_id =($2) AND ' +
-          'SET last_active =($3) AND ' +
-          'WHERE uu.primary_user_id=($4) ' +
-          'AND uu.secondary_user_id=($5) ' +
+          'UPDATE users_users ' + 
+          'SET confirmed_at=($1), ' +
+          'secondary_repo_id=($2), ' +
+          'last_active=($3) ' +
+          'WHERE (users_users.primary_user_id=($4) ' +
+          'AND users_users.secondary_user_id=($5)) ' +
           'RETURNING *', 
           [confirmedAt, secondaryRepoId, lastActive, primaryUserId, secondaryUserId])
           .then(data => {
-            res.send(data);
+            console.log('DATA', data)
+      //       res.send(data);
           })
           .catch(error => {
             console.error(error);
