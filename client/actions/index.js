@@ -56,6 +56,16 @@ export const signinUser = () => {
         dispatch({ type: types.UPDATE_USER, payload: userProfile });
         // - Save the JWT token
         localStorage.setItem('token', response.data.token);
+
+        // connect to socket
+        const socket = io.connect(window.location.origin);
+        // join room 
+        socket.emit('join', userProfile);
+        // listen for incoming messages
+        socket.on('incoming_request', msg => {
+          console.log(msg.msg);
+        });
+
         // - redirect to the route '/'
         browserHistory.push('/');
         return userProfile.id;
