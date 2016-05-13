@@ -4,7 +4,7 @@
 module.exports = (data) => {
 
   // EXAMPLE OF DATA COMING IN:
-  data = [24, 12];
+  data = data || [24, 12];
 
   var mostCommits = Math.max(...data);
 
