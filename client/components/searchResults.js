@@ -42,8 +42,7 @@ class SearchResults extends Component {
         competitionStart: dummyData.competition_start
       });
     })
-
-  }
+  } 
 
   routeTo(e, result, type) {
     this.props.actions.chooseSearchResult(result);
