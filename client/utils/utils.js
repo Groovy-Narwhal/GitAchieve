@@ -1,3 +1,5 @@
+import configSettings from './../../server/config/config-settings';
+
 exports.utils = {
   debounce: function(func, wait, immediate) {
   var timeout;
@@ -12,5 +14,13 @@ exports.utils = {
       timeout = setTimeout(later, wait);
       if (callNow) func.apply(context, args);
     };
+  },
+  fetchLastYearGHContribs: function(user) {
+    var options = {
+      username: user
+    };
+    return fetch(configSettings.CALLBACKHOST + `/gh-fetch?username=${user}`)
+      .then((res) => res.text())
+      .then((data) => data.slice(data.indexOf('<span class="contrib-number">') + 29, data.indexOf('total</span>')));
   }
 };

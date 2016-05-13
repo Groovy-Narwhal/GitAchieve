@@ -34,5 +34,11 @@ export default {
       type: types.CHOOSE_SEARCH_RESULT,
       chosenSearchResult
     }
+  },
+  getUserContribs: contributions => {
+    return {
+      type: types.GET_USER_CONTRIBS,
+      contributions
+    }
   }
 };

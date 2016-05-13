@@ -38,19 +38,23 @@ class SearchResults extends Component {
       });
     browserHistory.push(routeTo);
   }
-
+  navToUserRepo(e, userData) {
+    browserHistory.push(`${userData.login}/repos`)
+    this.props.actions.chooseSearchResult(userData);
+  }
   getResult(result) {
     if (result.type === 'User') {
       return (
-        <div className="search-result-container">
+        <div className="data-result-container">
           <img className="user-avatar-1" src={result.avatar_url} />
           <h2 onClick={ (e) => { this.routeTo.call(this, e, result, 'user') }}>{result.login}</h2>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+          <input type="button" value="repos" onClick={(e) => { this.navToUserRepo(e, result) }} />
         </div>
       )      
     } else if (result.type === 'Organization') {
       return (
-        <div className="search-result-container">
+        <div className="data-result-container">
           <img className="user-avatar-1" src={result.avatar_url} />
           <h2 onClick={ (e) => { this.routeTo.call(this, e, result, 'org') }}>{result.login}</h2>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
@@ -58,7 +62,7 @@ class SearchResults extends Component {
         )
     } else {
       return (
-        <div className="search-result-container">
+        <div className="data-result-container">
           <h2 onClick={ (e) => { this.routeTo.call(this, e, result, 'repo') }}>{result.full_name}</h2>
           <p>Description: {result.description}</p>
           <p>Stargazers: {result.watchers}</p>
@@ -75,7 +79,7 @@ class SearchResults extends Component {
         return (
           <div>
             <SearchOptions />
-            <div id="search-results-container">
+            <div id="data-results-container">
               {searchResults.map((result, index) => {
                 return <div key={result.id}>{this.getResult(result)}</div>
               })}
