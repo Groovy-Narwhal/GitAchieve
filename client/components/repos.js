@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
-import CommitChart from './commitChart';
 import Repo1 from './repo1';
 
 class Repos extends Component {
@@ -12,12 +11,19 @@ class Repos extends Component {
     this.state = {
       fetched: false,
       repos: [],
+      reposObj: {},
+      selectedRepo: undefined,
       repoClicked: [],
       options: {}
     };
   }
   fetchRepos() {
-    return fetch(`https://api.github.com/users/${this.props.chosenSearchResult.login !== undefined ? this.props.chosenSearchResult.login : this.props.user.username}/repos?per_page=100`, this.state.options)
+    if (this.props.chosenSearchResult.login !== undefined && !window.location.pathname.includes('compete')) {
+      var url = this.props.chosenSearchResult.login;
+    } else { 
+      var url = this.props.user.username;
+    }
+    return fetch(`https://api.github.com/users/${url}/repos?per_page=100`, this.state.options)
       .then(res => res.json())
       .then(data => data)
       .catch(err => err);
@@ -27,9 +33,12 @@ class Repos extends Component {
       // awaits the promise from this.fetchRepos to resolve, then assigns repos to that value
       var repos = await this.fetchRepos();
       var selectableRepos = repos.map(repo => ({value: repo , label: repo.name}))
+      // Create reposObject for constant time lookup
+      var reposObj = {}
+      repos.forEach((repo) => {reposObj[repo.name] = repo})
+      this.setState({reposObj: reposObj});
       // Filter data to only include repos that the user has contributed to
       this.setState({repos: repos});
-      this.props.actions.chooseSearchResult({});
 
       var pad = 30;
       var w = 540;
@@ -83,14 +92,11 @@ class Repos extends Component {
       setTimeout(this.setStateFetchInit.bind(this), 250);
     }
   }
-  selectRepo(i) {
-    var newClickedState = this.state.repos.map(repo => false);
-    newClickedState[i] = !newClickedState[i];
-    this.setState({repoClicked: newClickedState});
-    this.log();
+  selectRepo(e) {
+    this.setState({selectedRepo: this.state.reposObj[e.target.value]});
   }
-  log() {
-    console.log('new state of repo click: ', this.state.repoClicked);
+  log(e) {
+    console.log('logging: ', e.target.value);
   }
   componentDidMount() {
     this.setStateFetchInit();
@@ -108,7 +114,7 @@ class Repos extends Component {
       if (window.location.pathname.includes('compete')) {
         return (
           <div className="data-results-container-flex full-width">
-            <select>
+            <select onChange={(e) => (this.selectRepo.call(this, e))}>
               {this.state.repos.map(repo => (<option>{repo.name}</option>))}
             </select>
           </div>

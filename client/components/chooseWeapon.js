@@ -3,12 +3,14 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
-import CommitChart from './commitChart';
 import Repos from './repos';
 
 class ChooseWeapon extends Component {
   compete() {
     browserHistory.push('/');
+    console.log('chosenSearchResult: ', this.props.chosenSearchResult);
+    this.props.actions.addCompetitor({myWeapon: this.propsthis.props.chosenSearchResult});
+    this.props.actions.chooseSearchResult({});
   }
   render() {
     return (
@@ -17,7 +19,7 @@ class ChooseWeapon extends Component {
         <Repos />
         <div className="spacer-10px"></div>
         <div className="block text-centered">
-          <input type="submit" value="COMPETE" className="button compete" onClick={this.compete} />
+          <input type="submit" value="COMPETE" className="button compete" onClick={this.compete.bind(this)} />
         </div>
       </div>
     );

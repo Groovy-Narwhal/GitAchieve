@@ -14,6 +14,7 @@ class SearchResults extends Component {
     this.props.actions.addCompetitorData([20, 11]);
     this.props.actions.addDailyCompetitorData([[5, 4, 2, 7, 3, 6, 8], [2, 3, 5, 9, 7, 2, 3]]);
     // END HARDCODE
+    this.props.actions.chooseSearchResult(result);
     browserHistory.push(`compete/choose-repo/${result.login}`);
   }
 
