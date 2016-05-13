@@ -43,30 +43,45 @@ exports.updateStats = function(req, res) {
       });
   };
   
-  // save stat to database
-  var saveStatToDb = function(combo, repo, stat) {
-    db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) ' +
-      'VALUES ($8, $9, $10, $11, $12, $13)',
-      ['stats', 'updated_ga', 'total', 'weeks', 'user_id', 'org_id', 'repo_id',
-      dbTimestamp, stat.total, stat.weeks, queryId, combo.orgId, repo.repoId])
-      .then(data => {
-        statsSaved++;
-        if (statsSaved === totalStats) {
-          console.log('Successfully saved stats for ' + totalStats + ' repos');
-          db.any('SELECT * FROM $1~ $2~' +
-            'WHERE $2~.$3~=$4',
-            ['stats', 's', 'user_id', queryId])
-            .then(stats => {
-              res.send(stats);
-            })
-            .catch(error => {
-              console.error('Error in retrieveStats: ', error);
-            });
-        }
+  // send the stats from the database for this queryId
+  var sendStatsFromDb = function() {
+    db.any('SELECT * FROM $1~ $2~' +
+      'WHERE $2~.$3~=$4',
+      ['stats', 's', 'user_id', queryId])
+      .then(stats => {
+        console.log('Successfully parsed stats for ' + totalStats + ' repos');
+        res.send(stats);
       })
       .catch(error => {
-        console.error('Error in saveStatsToDb: ', error);
+        console.error('Error in retrieveStats: ', error);
       });
+  };
+  
+  // save stat to database
+  var saveStatToDb = function(combo, repo, stat) {
+    // if this stat's author matches the queryId, add it to the database
+    if (stat.author.id === parseInt(queryId)) {
+      db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) ' +
+        'VALUES ($8, $9, $10, $11, $12, $13)',
+        ['stats', 'updated_ga', 'total', 'weeks', 'user_id', 'org_id', 'repo_id',
+        dbTimestamp, stat.total, stat.weeks, stat.author.id, combo.orgId, repo.repoId])
+        .then(data => {
+          statsSaved++;
+          // if this was the last stat to be processed, send the server response
+          if (statsSaved === totalStats) {
+            sendStatsFromDb();
+          }
+        })
+        .catch(error => {
+          console.error('Error in saveStatsToDb: ', error);
+        });
+    } else {
+      statsSaved++;
+      // if this was the last stat to be processed, send the server response
+      if (statsSaved === totalStats) {
+        sendStatsFromDb();
+      }
+    }
   };
   
   //  get the stats for a given owner & repo from GitHub
