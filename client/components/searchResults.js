@@ -9,9 +9,15 @@ class SearchResults extends Component {
 
   compete(e, result) {
     e.preventDefault();
-    fetch(`https://api.github.com/users/${result.login}/repos?per_page=100`)
+    fetch(`https://api.github.com/repos/alexnitta/GitAchieve/stats/participation`)
       .then((repos) => repos.json())
-      .then((res) => console.log(res));
+      .then((res) => {
+        // call an addCompetitorData action with data
+        this.props.actions.addCompetitorData(res);
+        // route to dashboard
+        // update dashboard to pass in competitorData if any
+        // refactor commitChart
+      });
   }
 
   routeTo(e, result, type) {
@@ -51,7 +57,7 @@ class SearchResults extends Component {
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
           <input type="button" value="repos" onClick={(e) => { this.navToUserRepo(e, result) }} />
         </div>
-      )      
+      )
     } else if (result.type === 'Organization') {
       return (
         <div className="data-result-container">

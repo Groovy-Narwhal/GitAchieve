@@ -27,6 +27,18 @@ class Repos extends Component {
       // Filter data to only include repos that the user has contributed to
       this.setState({repos: repos});
       this.props.actions.chooseSearchResult({});
+
+      var pad = 30;
+      var w = 600 - 2*pad;
+      var h = 360 - 2*pad;
+      d3.select('svg')
+        .append('text')
+        .text('select a repo!')
+        .attr('x', w/2)
+        .attr('y', h/2)
+        .attr('text-anchor', 'middle')
+        .style('font-size', '24px');
+
     };
     renderRepos.call(this);
   }
@@ -81,13 +93,19 @@ class Repos extends Component {
       );
     } else {
       return (
-        <div id="data-results-container">
-          <h3>Repos</h3>
-          {this.state.repos.map((repoData, i) => (
-            <div className="data-result-container" key={i} onClick={ (e) => (this.fetchRepoData(e.target, repoData)) } >
-              <h2>{repoData.name}</h2>
-            </div>
-            ))}
+        <div>
+          <div id="commit-charts">
+            <svg width={540} height={300}>
+            </svg>
+          </div>
+          <div id="data-results-container">
+            <h3>Repos</h3>
+            {this.state.repos.map((repoData, i) => (
+              <div className="data-result-container" key={i} onClick={ (e) => (this.fetchRepoData(e.target, repoData)) } >
+                <h2>{repoData.name}</h2>
+              </div>
+              ))}
+          </div>
         </div>
       );
     }

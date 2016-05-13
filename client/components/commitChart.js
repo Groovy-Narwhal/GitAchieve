@@ -4,8 +4,8 @@ module.exports = (data) => {
 
   var recentActivity = data.owner.slice(data.owner.length - 13, data.owner.length);
   var beginningOfActivityIndex = 0;
-  while (recentActivity[beginningOfActivityIndex] === 0) { 
-    beginningOfActivityIndex++; 
+  while (recentActivity[beginningOfActivityIndex] === 0) {
+    beginningOfActivityIndex++;
   }
   // show only the last 13 weeks of data, or last N weeks if commit activity is only in last N weeks,
   // but if all last 13 weeks had no data, just show a flat graph of 13 weeks of 0 activity
@@ -19,7 +19,7 @@ module.exports = (data) => {
     var timeAxis = [], lastSunday, timeString;
     if (recentActivity.length > 0) {
       timeAxis.push((today.getMonth()+1) + '/' + today.getDate());
-    
+
       for (var i = 1; i < recentActivity.length; i++) {
           var lastSunday = i === 1 ? new Date(today.setDate(today.getDate()-today.getDay())) : new Date(lastSunday - 604800000);
           timeString = (lastSunday.getMonth()+1) + '/' + lastSunday.getDate();
@@ -51,7 +51,7 @@ module.exports = (data) => {
   var w = 600 - 2*pad;
   var h = 360 - 2*pad;
   console.log('timeAxis.length')
-  var barWidth = Math.floor(w/timeAxis.length) - 10;
+  var barWidth = Math.floor((w-2*pad)/timeAxis.length);
 
   // create container / svg
   // if (!d3.select("#commit-charts svg")) {
@@ -126,7 +126,7 @@ module.exports = (data) => {
           .attr('fill', (d, i) => colors[i])
           .attr('x', (d, i) => {
             return length > 2 ? xScale(timeAxis[i]) + (j * skinnyBarWidth) : xScale(timeAxis[i])
-           }) 
+           })
           .attr('y', (d) => yScale(d))
           .attr('width', () => {
             return length > 2 ? skinnyBarWidth : barWidth
@@ -140,7 +140,7 @@ module.exports = (data) => {
         .attr('fill', (d, i) => colors[i])
         .attr('x', (d, i) => {
           return length > 2 ? xScale(timeAxis[i]) + (j * skinnyBarWidth) : xScale(timeAxis[i])
-         }) 
+         })
         .attr('y', (d) => yScale(d))
         .attr('width', () => {
           return length > 2 ? skinnyBarWidth : barWidth
@@ -176,7 +176,7 @@ module.exports = (data) => {
   //    D3 continued: the part dealing with the data
   //   *************/
 
-  //   
+  //
   //   // add text labels for # of commits (when greater than 0)
   //   svg.append('g')
   //     .selectAll('text')

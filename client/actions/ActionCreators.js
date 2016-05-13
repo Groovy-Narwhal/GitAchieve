@@ -40,5 +40,11 @@ export default {
       type: types.GET_USER_CONTRIBS,
       contributions
     }
+  },
+  addCompetitorData: competitorData => {
+    return {
+      type: types.ADD_COMPETITOR_DATA,
+      competitorData
+    }
   }
 };
