@@ -29,14 +29,10 @@ class Search extends Component {
 
   render() {
     return (
-      <div className="search-container text-centered">
-        <div className="block text-centered">
-          <form onSubmit={this.submitHandler.bind(this)} className="search-form">
-            <input type="search" placeholder="search" onChange={this.typeSearch.bind(this)} className="search-input"/>
-            <input type="submit" className="search-submit-button"/>
-          </form>
-        </div>
-      </div>
+      <form onSubmit={this.submitHandler.bind(this)} className="search-form">
+        <input type="search" placeholder="search" onChange={this.typeSearch.bind(this)} className="search-input"/>
+        <input type="submit" className="search-submit-button"/>
+      </form>
     )
   }
 }

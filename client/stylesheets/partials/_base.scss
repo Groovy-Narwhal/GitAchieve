@@ -52,7 +52,7 @@ body {
 .block {
   display: block;
 }
-#data-results-container {
+.data-results-container {
   padding: 10px;
   background-color: rgba(255, 255, 255, 0.5);
   width: 75%;
@@ -65,6 +65,26 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
 }
+.data-results-container-flex {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 75%;
+  min-width: 500px;
+  margin-top: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.data-results-container-clear {
+  width: 75%;
+  min-width: 500px;
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
 .user-result-container {
   background-color: #fff;
   width: 120px;
@@ -76,6 +96,7 @@ body {
   background-color: #fff;
   padding: 10px;
   margin-bottom: 10px;
+  margin-right: 10px;
   border-radius: 5px;
 }
 svg {
@@ -88,6 +109,9 @@ svg {
 }
 #commit-charts {
   text-align: center;
+}
+.full-width {
+  width: 100%;
 }
 .black-container-bg {
   background-color: #1C1D21;

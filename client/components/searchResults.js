@@ -13,6 +13,8 @@ class SearchResults extends Component {
     // HARDCODE DATA IN REDUX STORE FOR CHART (TEMPORARY)
     this.props.actions.addCompetitorData([20, 11]);
     this.props.actions.addDailyCompetitorData([[5, 4, 2, 7, 3, 6, 8], [2, 3, 5, 9, 7, 2, 3]]);
+    // END HARDCODE
+    browserHistory.push(`compete/choose-repo/${result.login}`);
   }
 
   routeTo(e, result, type) {
@@ -79,7 +81,7 @@ class SearchResults extends Component {
       if (searchResults.length > 0) {
         return (
           <div>
-            <div id="data-results-container">
+            <div className="data-results-container-flex">
               {searchResults.map((result, index) => {
                 return <div key={index}>{this.getResult(result)}</div>
               })}

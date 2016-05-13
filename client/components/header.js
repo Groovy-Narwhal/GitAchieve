@@ -5,6 +5,7 @@ import * as actions from './../actions/index';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import HeaderProfileButton from './headerProfileButton';
+import Search from './search';
 
 class Header extends Component {
   handleSignOut() {
@@ -14,11 +15,19 @@ class Header extends Component {
     if (!this.props.auth.authenticated) {
       return null;
     } else {
-      return (
-        <div className="header-buttons" >
-          <HeaderProfileButton />
-        </div>
-      );
+      if (window.location.pathname === '/') {
+        return (
+          <div className="header-buttons" >
+            <HeaderProfileButton />
+          </div>
+        );
+      } else { /* Show search bar in header if the path is not the index */
+        return (
+          <div className="header-buttons" >
+            <HeaderProfileButton />
+          </div>
+        );
+      }
     }
   }
 

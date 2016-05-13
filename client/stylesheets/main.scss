@@ -11,10 +11,12 @@
 @import "components/buttons";
 @import "components/images";
 @import "components/inputs";
+@import "components/spacers";
 
 // Layout
 @import "layout/header";
 @import "layout/dashboard";
+@import "layout/repos";
 
 .event-title {
   display: inline;

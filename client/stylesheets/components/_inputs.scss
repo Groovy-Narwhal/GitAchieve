@@ -10,7 +10,7 @@
   width: 300px;
   height: 30px;
   border-radius: 5px 0 0 5px;
-  display: inline-block;
+  display: inline;
 }
 
 .search-submit-button {
@@ -23,4 +23,18 @@
 
 .search-container {
   white-space: nowrap;
+}
+
+.button {
+  -webkit-appearance:caret;
+  background-color: #1d9;
+  border-radius: 5px;
+  padding: 5px;
+  color: $white;
+}
+
+.compete {
+  padding: 20px;
+  font-size: $semi-large-size;
+  font-weight: $semi-bold;
 }

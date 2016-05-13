@@ -14,3 +14,4 @@ export CumulativeChart from './../chartmakers/cumulativeChart';
 export DailyChart from './../chartmakers/dailyChart';
 export Organizations from './organizations';
 export UserAchievements from './UserAchievements';
+export ChooseWeapon from './chooseWeapon';

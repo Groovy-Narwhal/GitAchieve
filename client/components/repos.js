@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
+import CommitChart from './commitChart';
+import Repo1 from './repo1';
 
 class Repos extends Component {
   constructor(props) {
@@ -78,6 +80,10 @@ class Repos extends Component {
       setTimeout(this.setStateFetchInit.bind(this), 250);
     }
   }
+  selectRepo(e, repoData) {
+    console.log('In compete', e.target);
+    console.log(e);
+  }
   componentDidMount() {
     this.setStateFetchInit();
   }
@@ -91,18 +97,25 @@ class Repos extends Component {
         </div>
       );
     } else {
-      return (
-        <div>
-          <div id="data-results-container">
-            <h3>Repos</h3>
+      if (window.location.pathname.includes('compete')) {
+        return (
+          <div className="data-results-container-flex full-width">
+            {this.state.repos.map((repoData, i) => (
+              <Repo1 repoData={repoData} key={i} />
+              ))}
+          </div>
+        );
+      } else {
+        return (
+          <div className="data-results-container-flex full-width">
             {this.state.repos.map((repoData, i) => (
               <div className="data-result-container" key={i} onClick={ (e) => (this.fetchRepoData(e.target, repoData)) } >
                 <h2>{repoData.name}</h2>
               </div>
               ))}
           </div>
-        </div>
-      );
+        );
+      }
     }
   }
 }

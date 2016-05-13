@@ -53,7 +53,11 @@ class DashBoard extends Component {
               <h1 className="font-white">Search your Git opponent</h1>
               <h3 className="font-white">Your contributions: {this.props.userContributions}</h3>
             </div>
-            <Search />
+            <div className="search-container text-centered">
+              <div className="block text-centered">
+                <Search />
+              </div>
+            </div>
           </div>
           
           <button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>
