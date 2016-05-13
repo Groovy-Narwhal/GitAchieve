@@ -1,11 +1,9 @@
 export default (requests = [], action) => {
   switch (action.type) {
-    case 'REFRESH_FRIENDS':
-      return [action.friends];
-    // case 'ADD_FRIEND':
-    //   return [...requests, action.payload];
-    // case 'REMOVE_FRIEND':
-    //   return [...requests, action.payload];
+    case 'RECEIVED_FR':
+      return [action.receivedRequests];
+    case 'SENT_FR':
+      return [action.sentRequests];
     default:
       return requests;
   }

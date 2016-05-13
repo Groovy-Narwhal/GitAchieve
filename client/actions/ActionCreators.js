@@ -65,10 +65,16 @@ export default {
       weapon
     }
   },
-  refreshFriends: friends => {
+  receivedFriendRequests: friends => {
     return {
-      type: types.REFRESH_FRIENDS,
-      friends
+      type: types.RECEIVED_FR,
+      receivedRequests: friends
     }
-  }
+  },
+  sentFriendRequests: friends => {
+    return {
+      type: types.SENT_FR,
+      sentRequests: friends
+    }
+  },
 };

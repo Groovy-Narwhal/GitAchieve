@@ -231,3 +231,44 @@ exports.confirmOrRemoveFriend = function(req, res) {
       res.status(500).send('Error finding users_users connection');      
     });
 };
+
+
+// retrieve all entries in the user to user table in which someone else sent you a request to compete and you have not yet accepted the match
+// GET at /api/v1/users/:id/receivematches
+exports.checkForFriendRequests = function(req, res) {
+  // this is the current users id
+  var secondaryIdCheck = req.params.id;
+
+  db.any('Select * from users_users uu ' +
+    'WHERE uu.secondary_user_id=($1) ' +
+    'AND uu.confirmed_at IS NULL',
+    [secondaryIdCheck]
+  ).then(data => {
+    console.log('Data of friend Requests received not accepted', data);
+    res.send(data);
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  })
+}
+
+// retrieve all entries in the user to user table in which you sent a request to compete and they have not yet accepted the match
+// GET at /api/v1/users/:id/requestedmatches
+exports.checkForUnacceptedRequests = function(req, res) {
+  // this is the current users id
+  var primaryIdCheck = req.params.id;
+
+  db.any('Select * from users_users uu ' +
+    'WHERE uu.primary_user_id=($1) ' +
+    'AND uu.confirmed_at IS NULL',
+    [primaryIdCheck]
+  ).then(data => {
+    console.log('Data of friend Requests sent not accepted', data);
+    res.send(data);
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  })
+}

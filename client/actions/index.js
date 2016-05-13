@@ -21,14 +21,23 @@ export const signoutUser = () => {
   }
 }
 
-export const checkForFriendRequests = (id, dispatch) => {
-  return axios.get(`${ROOT_URL}/api/v1/users/${id}/checkfriends`)
+const checkForFriendRequests = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivematches`)
     .then(response => {
       dispatch({
-        type: types.REFRESH_FRIENDS,
-        friends: response.data
+        type: types.RECEIVED_FR,
+        receivedRequests: response.data
       });
+    });
+};
 
+const checkForSentRequests = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
+    .then(response => {
+      dispatch({
+        type: types.SENT_FR,
+        receivedRequests: response.data
+      });
     });
 };
 
@@ -53,6 +62,10 @@ export const signinUser = () => {
       })
       .then((id) => {
         checkForFriendRequests(id, dispatch);
+        return id;
+      })
+      .then((id) => {
+        checkForSentRequests(id, dispatch);
       })
       .catch((err) => {
         console.log('error', err);
