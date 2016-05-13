@@ -50,7 +50,15 @@ exports.updateStats = function(req, res) {
         statsSaved++;
         if (statsSaved === totalStats) {
           console.log('Successfully saved stats for ' + totalStats + ' repos');
-          res.send('Successfully saved stats for ' + totalStats + ' repos');
+          db.any('SELECT * FROM $1~ $2~' +
+            'WHERE $2~.$3~=$4',
+            ['stats', 's', 'user_id', queryId])
+            .then(stats => {
+              res.send(stats);
+            })
+            .catch(error => {
+              console.error('Error in retrieveStats: ', error);
+            });
         }
       })
       .catch(error => {
@@ -67,8 +75,8 @@ exports.updateStats = function(req, res) {
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': username,
         // Uncomment this line to make GET requests from within the site (not with Postman)
-        // 'Authorization': `token ${req.body.token}`
-        'Authorization': 'token ' + token
+        'Authorization': `token ${req.body.token}`
+        // 'Authorization': 'token ' + token
       }
     };
     request(options, (error, response, stats) => {
