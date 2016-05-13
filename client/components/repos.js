@@ -93,6 +93,7 @@ class Repos extends Component {
     }
   }
   selectRepo(e) {
+    this.props.actions.chooseWeapon(this.state.reposObj[e.target.value]);
     this.setState({selectedRepo: this.state.reposObj[e.target.value]});
   }
   log(e) {
@@ -114,8 +115,9 @@ class Repos extends Component {
       if (window.location.pathname.includes('compete')) {
         return (
           <div className="data-results-container-flex full-width">
-            <select onChange={(e) => (this.selectRepo.call(this, e))}>
-              {this.state.repos.map(repo => (<option>{repo.name}</option>))}
+            <select value="select repo" onChange={(e) => (this.selectRepo.call(this, e))}>
+              <option value="select repo" disabled>select a repo</option>
+              {this.state.repos.map(repo => (<option value={repo.name} key={repo.id}>{repo.name}</option>))}
             </select>
           </div>
         );
