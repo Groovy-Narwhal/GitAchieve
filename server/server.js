@@ -11,13 +11,14 @@ const app = express();
 require('./helpers/middleware.js')(app);
 require('./helpers/auth.js')(app);
 require('./helpers/userGHFetcher')(app);
+require('./helpers/invitationSender')(app);
 
 // Routers
 const userRouter = require('./routers/userRouter.js');
 const orgRouter = require('./routers/orgRouter.js');
 
 // Use routers for specific paths
-app.use('/api/v1/users', userRouter); 
+app.use('/api/v1/users', userRouter);
 app.use('/api/v1/orgs', orgRouter);
 
 app.use('/static', express.static(__dirname + '/../client'));
