@@ -46,18 +46,44 @@ table {
 body {
   font-family: "Open Sans", sans-serif; }
 
-.day {
+.font-white {
   color: #fff; }
 
-centered {
+.centered {
   margin-right: auto;
   margin-left: auto; }
 
-text-centered {
+.text-centered {
   text-align: center; }
 
-block {
+.block {
   display: block; }
+
+#data-results-container {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 75%;
+  min-width: 500px;
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; }
+
+.user-result-container {
+  background-color: #fff;
+  width: 120px;
+  padding: 0;
+  margin-bottom: 10px;
+  border-radius: 5px; }
+
+.data-result-container {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px; }
 
 svg {
   font: 10px;
@@ -85,6 +111,18 @@ svg {
 
 svg text {
   font-family: 'Garamond'; }
+
+h1 {
+  font-size: 20px;
+  font-weight: 700; }
+
+h2 {
+  font-size: 16px;
+  font-weight: 600; }
+
+h3 {
+  font-size: 16px;
+  font-weight: 400; }
 
 @font-face {
   font-family: 'Open Sans';
@@ -121,7 +159,7 @@ svg text {
   border-radius: 2px; }
 
 .user-avatar-1 {
-  width: 100px;
+  width: 120px;
   height: auto;
   border-radius: 5px; }
 
@@ -129,19 +167,25 @@ svg text {
   margin-bottom: 5px;
   margin-left: 2px; }
 
-.search-input {
-  width: 300px;
-  height: 75px;
-  display: inline-block; }
-
 .search-form {
   margin: 0 auto;
   padding-top: 5px;
   padding-top: 5px;
   width: 350px; }
 
+.search-input {
+  -webkit-appearance: caret;
+  width: 300px;
+  height: 30px;
+  border-radius: 5px 0 0 5px;
+  display: inline-block; }
+
 .search-submit-button {
-  border-radius: 0; }
+  -webkit-appearance: caret;
+  background-color: #1d9;
+  color: #fff;
+  height: 30px;
+  border-radius: 0 5px 5px 0; }
 
 .search-container {
   white-space: nowrap; }
@@ -196,14 +240,11 @@ svg text {
 .header-profile-dropdown-item:hover {
   background-color: #eee; }
 
-#data-results-container {
-  padding: 10px; }
+.main-search {
+  margin-top: 100px; }
 
-.data-result-container {
-  background-color: #fff;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px; }
+.dash-header-text {
+  margin-bottom: 10px; }
 
 .event-title {
   display: inline; }

@@ -48,9 +48,14 @@ class DashBoard extends Component {
     if (this.props.auth.authenticated) {
       return (
         <div className="dashboard">
-          <Search />
-          <h1>Your contributions: {this.props.userContributions}</h1>
-
+          <div className="main-search">
+            <div className="dash-header-text text-centered">
+              <h1 className="font-white">Search your Git opponent</h1>
+              <h3 className="font-white">Your contributions: {this.props.userContributions}</h3>
+            </div>
+            <Search />
+          </div>
+          
           <button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>
           <button onClick={this.makeDailyChart.bind(this)}> Tab 2: Daily </button>
 
@@ -64,8 +69,6 @@ class DashBoard extends Component {
           </div>
 
           <button onClick={this.addDailyChart.bind(this)}> See daily breakdown </button>
-
-          <div><Repos /></div>
         </div>
       )
     } else {
@@ -75,6 +78,14 @@ class DashBoard extends Component {
     }
   }
 }
+
+/*
+<div id="commit-charts">
+  <svg width={540} height={300}>
+  </svg>
+</div>
+<div><Repos /></div>
+*/
 
 const mapStateToProps = state => {
   return state;

@@ -26,7 +26,7 @@ class Header extends Component {
     return (
       <nav className="header-nav">
         <div className="header-components-container">
-          <h2 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h2>
+          <h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
           {this.renderLinks()}
         </div>
       </nav>
