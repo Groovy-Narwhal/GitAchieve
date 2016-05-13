@@ -40,6 +40,17 @@ class SearchResults extends Component {
 
   }
 
+  getResult(result) {
+      return (
+        <div className="user-result-container">
+          <img className="user-avatar-1" src={result.avatar_url} />
+          <h2>{result.login}</h2>
+          <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+        </div>
+      )
+
+  }
+
   render() {
     if (this.props.searchResults.length > 0) {
       const searchResults = this.props.searchResults[0].items;
