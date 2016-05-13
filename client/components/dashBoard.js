@@ -11,6 +11,7 @@ import Repos from './repos';
 import { CumulativeChart } from './index';
 import { DailyChart } from './index';
 import Search from './search';
+import ChallengesMiniView from './challengesMiniView';
 
 class DashBoard extends Component {
   constructor(props) {
@@ -58,6 +59,7 @@ class DashBoard extends Component {
                 <Search />
               </div>
             </div>
+            <ChallengesMiniView />
           </div>
           
           <button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>
