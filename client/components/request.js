@@ -27,10 +27,18 @@ class Request extends Component {
       });
   }
 
-  handleAccept(req) {
+  handleAccept(e, req) {
+    e.preventDefault();
+    const dummySecondaryUsername = 'ashley-austincoder';
+    const socket = io.connect(window.location.origin);
+    socket.emit('Accept Request', {
+      user1: this.props.user.username,
+      user2: dummySecondaryUsername
+    });
+
+
     const secondaryId = req.secondary_user_id;
     const primaryUserId = req.primary_user_id;
-    console.log(this.props.actions)
     axios.patch(`${ROOT_URL}/api/v1/users/${secondaryId}/friends`, {
       secondaryRepoId: 57168943, //DUMMY DATA
       primaryUserId: primaryUserId
@@ -49,7 +57,7 @@ class Request extends Component {
           <div>
             <img className="user-avatar-sm" src={this.state.avatar} />
             <span>You have a compete request from {this.state.username}</span>
-            <button onClick={this.handleAccept.bind(this, this.props.req)}>Accept</button>
+            <input onClick={(e) => {this.handleAccept(e, this.props.req)}} type="button" value="Accept" />
           </div> : <div></div> }
     </div>
   }

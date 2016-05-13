@@ -23,7 +23,7 @@ class SearchResults extends Component {
     var dummyData = {
       primary_user_id: this.props.user.id,
       secondary_user_id: 15220759,
-      secondaryUsername: 'alexnitta',
+      secondaryUsername: 'msmith9393',
       primary_repo_id: 57168943,
       competition_start: new Date()
     }
@@ -45,7 +45,15 @@ class SearchResults extends Component {
         .then((res) => { 
            this.props.actions.sentFriendRequests(res.data);
         }) 
-      });
+      })
+      .then(() => {
+        // connect to socket
+        const socket = io.connect(window.location.origin);
+        socket.emit('Compete Request', {
+          user1: this.props.user.username,
+          user2: dummyData.secondaryUsername
+        });
+      })
     })
   }
 
