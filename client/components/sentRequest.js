@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const ROOT_URL = 'http://127.0.0.1:8000';
 
-class Request extends Component {
+class SentRequest extends Component {
   
   constructor(props) {
     super(props);
@@ -18,20 +18,13 @@ class Request extends Component {
   }
 
   componentWillMount() {
-    axios.get(`${ROOT_URL}/api/v1/users/${this.props.req.primary_user_id}`)
+    axios.get(`${ROOT_URL}/api/v1/users/${this.props.req.secondary_user_id}`)
       .then(response => {
         this.setState({
           avatar: response.data.avatar_url,
           username: response.data.username
         })
-      });
-  }
-
-  handleAccept(req) {
-    // search for user in users_users table they will be the secondary user id switch confirmed at flag to true.
-    const secondaryId = this.props.user.id;
-    const primaryUserId = req.primary_user_id;
-
+      })
   }
 
   render() {
@@ -39,8 +32,7 @@ class Request extends Component {
       { !!this.state.avatar ? 
           <div>
             <img className="user-avatar-sm" src={this.state.avatar} />
-            <span>You have a compete request from {this.state.username}</span>
-            <button onClick={this.handleAccept.bind(this, this.props.req)}>Accept</button>
+            <span>Waiting for response from {this.state.username}</span>
           </div> : <div></div> }
     </div>
   }
@@ -56,4 +48,4 @@ const mapDispatchToProps = dispatch => (
   }
 );
 
-export default connect(mapStateToProps, mapDispatchToProps)(Request);
+export default connect(mapStateToProps, mapDispatchToProps)(SentRequest);
