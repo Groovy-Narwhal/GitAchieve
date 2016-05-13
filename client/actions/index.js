@@ -21,7 +21,7 @@ export const signoutUser = () => {
   }
 }
 
-const checkForFriendRequests = (id, dispatch) => {
+export const checkForFriendRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivedmatches`)
     .then(response => {
       dispatch({
@@ -31,7 +31,7 @@ const checkForFriendRequests = (id, dispatch) => {
     });
 };
 
-const checkForSentRequests = (id, dispatch) => {
+export const checkForSentRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
     .then(response => {
       dispatch({

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Header } from './index';
-import * as actions from './../actions/index';
+import actions from './../actions/ActionCreators';
 import axios from 'axios';
 
 const ROOT_URL = 'http://127.0.0.1:8000';
@@ -30,14 +30,17 @@ class Request extends Component {
   handleAccept(req) {
     const secondaryId = req.secondary_user_id;
     const primaryUserId = req.primary_user_id;
-
+    console.log(this.props.actions)
     axios.patch(`${ROOT_URL}/api/v1/users/${secondaryId}/friends`, {
       secondaryRepoId: 57168943, //DUMMY DATA
       primaryUserId: primaryUserId
     })
     .then(response => {
-      console.log('RES', response);
-    });
+      axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/receivedmatches`)
+        .then(response => {
+          this.props.actions.receivedFriendRequests(response.data);
+        });
+    })
   }
 
   render() {

@@ -100,7 +100,6 @@ exports.confirmFriend = function(req, res) {
   const secondaryRepoId = req.body.secondaryRepoId;
   var confirmedAt = pgp.as.date(new Date());
   const lastActive = pgp.as.date(new Date());
-  console.log('REQ BODY', req.body)
   // find user_users connection
   db.oneOrNone(
     'SELECT * ' + 
@@ -121,8 +120,7 @@ exports.confirmFriend = function(req, res) {
           'RETURNING *', 
           [confirmedAt, secondaryRepoId, lastActive, primaryUserId, secondaryUserId])
           .then(data => {
-            console.log('DATA', data)
-      //       res.send(data);
+            res.send(data);
           })
           .catch(error => {
             console.error(error);

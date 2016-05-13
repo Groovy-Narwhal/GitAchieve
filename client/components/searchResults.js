@@ -21,8 +21,8 @@ class SearchResults extends Component {
     browserHistory.push(`compete/choose-repo/${result.login}`);
 
     var dummyData = {
-      primary_user_id: 15220759,
-      secondary_user_id: 10040945,
+      primary_user_id: this.props.user.id,
+      secondary_user_id: 15220759,
       secondaryUsername: 'alexnitta',
       primary_repo_id: 57168943,
       competition_start: new Date()
@@ -39,6 +39,12 @@ class SearchResults extends Component {
         secondaryUserEmail: null,
         primaryRepoId: dummyData.primary_repo_id,
         competitionStart: dummyData.competition_start
+      })
+      .then(response => {
+        axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/requestedmatches`)
+        .then((res) => { 
+           this.props.actions.sentFriendRequests(res.data);
+        }) 
       });
     })
   }
