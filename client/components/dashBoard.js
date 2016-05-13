@@ -8,6 +8,8 @@ import d3 from 'd3';
 import { cumulativeChart } from './index';
 import ghFetch from './../utils/utils';
 import Repos from './repos';
+import { CumulativeChart } from './index';
+import { DailyChart } from './index';
 
 class DashBoard extends Component {
   constructor(props) {
@@ -25,12 +27,30 @@ class DashBoard extends Component {
     }
     getContribs.call(this);
   }
+  makeMainChart() {
+    if (this.props.competitorsData.length > 0){
+      CumulativeChart(this.props.competitorsData);
+    }
+  }
+  makeDailyChart() {
+    if (this.props.dailyCompetitorsData.length > 0) {
+      DailyChart(this.props.dailyCompetitorsData);
+    }
+  }
   render() {
     const { actions } = this.props;
     if (this.props.auth.authenticated) {
       return (
         <div className="dashboard">
           <h1>Your contributions: {this.props.userContributions}</h1>
+
+          <button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>
+          <button onClick={this.makeDailyChart.bind(this)}> Tab 2: Daily </button>
+
+          <div id="commit-charts">
+            <svg width={540} height={300}>
+            </svg>
+          </div>
           <div><Repos /></div>
         </div>
       )

@@ -11,7 +11,7 @@ class SearchResults extends Component {
     e.preventDefault();
 
     // HARDCODE DATA IN REDUX STORE FOR CHART (TEMPORARY)
-    this.props.actions.addCompetitorData([24, 12]);
+    this.props.actions.addCompetitorData([20, 11]);
     this.props.actions.addDailyCompetitorData([[5, 4, 2, 7, 3, 6, 8], [2, 3, 5, 9, 7, 2, 3]]);
   }
 

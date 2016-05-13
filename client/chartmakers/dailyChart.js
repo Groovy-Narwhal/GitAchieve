@@ -5,7 +5,6 @@ module.exports = (data) => {
 
   // EXAMPLE OF DATA COMING IN:
   data = data[0] || [ [2, 3, 5, 9, 7, 2, 3], [5, 4, 2, 7, 3, 6, 8] ];
-  console.log('data is:', data);
 
   var mostCommitsUser1 = Math.max(...data[0]);
   var mostCommitsUser2 = Math.max(...data[1]);
@@ -33,7 +32,6 @@ module.exports = (data) => {
   var w = 600 - 2*pad;
   var h = 360 - 2*pad;
   var barWidth = Math.floor( (w-3*pad) / (daysShown * users.length) );
-  console.log('barWidth is (should be ~36 or 510/14', barWidth);
 
   var svg = d3.select("#commit-charts svg");
 
