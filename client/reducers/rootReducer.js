@@ -8,6 +8,8 @@ import searchUserEvents from './userEventsReducer';
 import chosenSearchResult from './chosenSearchResultReducer';
 import userContributions from './userContributionsReducer';
 import competitorsData from './competitorDataReducer';
+import dailyCompetitorsData from './dailyCompetitorDataReducer';
+
 
 export default combineReducers({
   routing: routerReducer,
@@ -18,5 +20,6 @@ export default combineReducers({
   searchUserEvents,
   chosenSearchResult,
   userContributions,
-  competitorsData
+  competitorsData,
+  dailyCompetitorsData
 });

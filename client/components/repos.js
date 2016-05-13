@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
-import CommitChart from './commitChart';
 
 class Repos extends Component {
   constructor(props) {
@@ -29,8 +28,8 @@ class Repos extends Component {
       this.props.actions.chooseSearchResult({});
 
       var pad = 30;
-      var w = 600 - 2*pad;
-      var h = 360 - 2*pad;
+      var w = 540;
+      var h = 300;
       d3.select('svg')
         .append('text')
         .text('select a repo!')
@@ -52,7 +51,7 @@ class Repos extends Component {
       } else {
         return res.json()
       }})
-      .then(data => { CommitChart(data) })
+      .then(data => { return; })
       .catch(err => console.log(err));
   }
   setStateFetchInit() {
@@ -94,10 +93,6 @@ class Repos extends Component {
     } else {
       return (
         <div>
-          <div id="commit-charts">
-            <svg width={540} height={300}>
-            </svg>
-          </div>
           <div id="data-results-container">
             <h3>Repos</h3>
             {this.state.repos.map((repoData, i) => (

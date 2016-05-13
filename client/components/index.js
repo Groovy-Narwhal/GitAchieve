@@ -10,6 +10,7 @@ export UserProfile from './userProfile';
 export Repos from './repos';
 export RepoProfile from './repoProfile';
 export OrgProfile from './orgProfile';
-export CommitChart from './commitChart';
+export CumulativeChart from './../chartmakers/cumulativeChart';
+export DailyChart from './../chartmakers/dailyChart';
 export Organizations from './organizations';
 export UserAchievements from './UserAchievements';

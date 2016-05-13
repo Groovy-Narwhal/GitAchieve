@@ -46,5 +46,11 @@ export default {
       type: types.ADD_COMPETITOR_DATA,
       competitorData
     }
+  },
+  addDailyCompetitorData: dailyCompetitorData => {
+    return {
+      type: types.ADD_DAILY_COMPETITOR_DATA,
+      dailyCompetitorData
+    }
   }
 };
