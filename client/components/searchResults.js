@@ -4,6 +4,9 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import { SearchOptions } from './index';
+import axios from 'axios';
+
+const ROOT_URL = 'http://127.0.0.1:8000';
 
 class SearchResults extends Component {
 
@@ -16,6 +19,30 @@ class SearchResults extends Component {
     // END HARDCODE
     this.props.actions.chooseSearchResult(result);
     browserHistory.push(`compete/choose-repo/${result.login}`);
+
+    e.preventDefault();
+    var dummyData = {
+      primary_user_id: 15220759,
+      secondary_user_id: 10040945,
+      secondaryUsername: 'alexnitta',
+      primary_repo_id: 57168943,
+      competition_start: new Date()
+    }
+    // this will add opponent user to database if they don't already exist
+    axios.patch(`${ROOT_URL}/api/v1/users/${dummyData.secondary_user_id}`, {
+      username: dummyData.secondaryUsername
+    })
+    // this will add an entry to the users_users table
+    .then(() => {
+      axios.post(`${ROOT_URL}/api/v1/users/${dummyData.primary_user_id}/friends`, {
+        secondaryUserId: dummyData.secondary_user_id,
+        secondaryUsername: dummyData.secondaryUsername,
+        secondaryUserEmail: null,
+        primaryRepoId: dummyData.primary_repo_id,
+        competitionStart: dummyData.competition_start
+      });
+    })
+
   }
 
   routeTo(e, result, type) {

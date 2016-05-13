@@ -40,8 +40,9 @@ exports.retrieveFriends = function(req, res) {
     });
 };
 
-// POST at '/api/v1/users/:id/friends'
 
+
+// POST at '/api/v1/users/:id/friends'
 exports.addFriend = function(req, res) {
   // this is the person sending the invitation to compete
   const primaryUserId = req.params.id; 
@@ -49,11 +50,11 @@ exports.addFriend = function(req, res) {
   const secondaryUserId = req.body.secondaryUserId;
   const secondaryUsername = req.body.secondaryUsername;
   const secondaryUserEmail = req.body.secondaryUserEmail;
+  const primaryRepoId = req.body.primaryRepoId;
+  const competitionStart = pgp.as.date(new Date());
   const dbTimestamp = pgp.as.date(new Date());
-  
   // check if the secondary user exists
-  db.one(
-    'SELECT * FROM users WHERE id=($1)',
+  db.one('SELECT * FROM users WHERE id=($1)',
     secondaryUserId)
     .then(data => {
       // if secondary user doesn't exist, add to users table with signed_up = false
@@ -68,11 +69,11 @@ exports.addFriend = function(req, res) {
             // once the secondary user exists, add a connection in the user_users table
             // the confirmed_at column will be null, showing that the relationship has not been
             // confirmed by the secondary user yet
-            db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
-              'VALUES ($6, $7, $8) ' +
+            db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~) ' +
+              'VALUES ($9, $10, $11) ' +
               'RETURNING *',
-              ['users_users', 'uu', 'created_ga', 'primary_user_id', 'secondary_user_id', 
-              dbTimestamp, primaryUserId, secondaryUserId])
+              ['users_users', 'uu', 'created_ga', 'primary_user_id', 'secondary_user_id', 'competition_start', 'primary_repo_id',
+              dbTimestamp, primaryUserId, secondaryUserId, competitionStart, primaryRepoId])
               .then((data) => {
                 res.send(data);
               })
@@ -96,32 +97,35 @@ exports.addFriend = function(req, res) {
             // if there is not a connection between the users, add a connection in the user_users table
             // the confirmed_at column will be null, showing that the relationship has not been
             // confirmed by the secondary user yet
-            if (data.length === 0) {
-              db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
-                'VALUES ($6, $7, $8) ' +
-                'RETURNING *',
-                ['users_users', 'uu', 'created_ga', 'primary_user_id', 'secondary_user_id', 
-                dbTimestamp, primaryUserId, secondaryUserId]) 
-                .then((data) => {
-                  res.send(data);
-                })
-                .catch((error) => {
-                  console.error(error);
-                  res.status(500).send('Error adding user_user connnection');
-                });             
-            } else {
-              console.log('Connection already exists between primary user: ' 
-                + primaryUserId + ' and secondary user: ' + secondaryUserId);
-              res.send('Connection already exists');
-            }
-          })
-          .catch(error => {
-            console.error(error);
-            res.status(500).send('Error querying user_users table');     
+                if (data.length === 0) {
+                  db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~) ' +
+                    'VALUES ($8, $9, $10, $11, $12) ' +
+                    'RETURNING *',
+                    ['users_users', 'uu', 'created_ga', 'competition_start', 'primary_user_id', 'secondary_user_id', 'primary_repo_id',
+                    dbTimestamp, competitionStart, primaryUserId, secondaryUserId, primaryRepoId])
+                  .then((data) => {
+                    res.send(data);
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                    res.status(500).send('Error adding user_user connnection');
+                  });             
+              
+                } else {
+                  console.log('Connection already exists between primary user: ' 
+                  + primaryUserId + ' and secondary user: ' + secondaryUserId);
+                  res.send('Connection already exists');
+                }
+ 
           });
-      }
-    });
-};
+        }
+      });
+  };
+
+
+
+
+
 
 // this is an alternate version that uses transactions
 // it's not working yet
