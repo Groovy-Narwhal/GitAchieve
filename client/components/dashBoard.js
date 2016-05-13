@@ -34,7 +34,12 @@ class DashBoard extends Component {
   }
   makeDailyChart() {
     if (this.props.dailyCompetitorsData.length > 0) {
-      DailyChart(this.props.dailyCompetitorsData);
+      DailyChart(this.props.dailyCompetitorsData, 'same chart');
+    }
+  }
+  addDailyChart() {
+    if (this.props.dailyCompetitorsData.length > 0) {
+      DailyChart(this.props.dailyCompetitorsData, 'additional chart');
     }
   }
   render() {
@@ -50,7 +55,14 @@ class DashBoard extends Component {
           <div id="commit-charts">
             <svg width={540} height={300}>
             </svg>
+
+            <div id="optional-extra-chart">
+            </div>
+
           </div>
+
+          <button onClick={this.addDailyChart.bind(this)}> See daily breakdown </button>
+
           <div><Repos /></div>
         </div>
       )

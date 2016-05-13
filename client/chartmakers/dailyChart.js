@@ -1,7 +1,7 @@
 //@TODO: decide what to do in case of a tie!
 // The obvious thing is to opacity-1/2 (or 1/4) 2 exactly overlapping rects
 
-module.exports = (data) => {
+module.exports = (data, location) => {
 
   // EXAMPLE OF DATA COMING IN:
   data = data[0] || [ [2, 3, 5, 9, 7, 2, 3], [5, 4, 2, 7, 3, 6, 8] ];
@@ -33,7 +33,14 @@ module.exports = (data) => {
   var h = 360 - 2*pad;
   var barWidth = Math.floor( (w-3*pad) / (daysShown * users.length) );
 
-  var svg = d3.select("#commit-charts svg");
+  if (location === 'same chart') {
+    var svg = d3.select("#commit-charts svg");
+  } else { // location === 'additional chart'
+    var svg = d3.select("#optional-extra-chart")
+      .append('svg')
+      .attr('width', w)
+      .attr('height', h);
+  }
 
   // blank out the svg to re-render it
   svg.selectAll('*').remove();
