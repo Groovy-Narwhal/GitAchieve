@@ -64,5 +64,11 @@ export default {
       type: types.CHOOSE_WEAPON,
       weapon
     }
+  },
+  refreshFriends: friends => {
+    return {
+      type: types.REFRESH_FRIENDS,
+      friends
+    }
   }
 };

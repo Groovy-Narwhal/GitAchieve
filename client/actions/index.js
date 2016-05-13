@@ -21,6 +21,17 @@ export const signoutUser = () => {
   }
 }
 
+export const checkForFriendRequests = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/checkfriends`)
+    .then(response => {
+      dispatch({
+        type: types.REFRESH_FRIENDS,
+        friends: response.data
+      });
+
+    });
+};
+
 export const signinUser = () => {
   return dispatch => {
     // - Update state to indicate user is authenticated
@@ -38,6 +49,10 @@ export const signinUser = () => {
         localStorage.setItem('token', response.data.token);
         // - redirect to the route '/'
         browserHistory.push('/');
+        return userProfile.id;
+      })
+      .then((id) => {
+        checkForFriendRequests(id, dispatch);
       })
       .catch((err) => {
         console.log('error', err);
