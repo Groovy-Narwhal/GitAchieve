@@ -15,8 +15,8 @@ exports.retrieveAllUsers = function(req, res) {
     });
 };
 
-// POST at /api/v1/users to add a user manually
-exports.addUser = function(req, res) {  
+// POST at /api/v1/users
+exports.addUser = function(req, res) {
   var dbTimestamp = pgp.as.date(new Date());
   db.one('INSERT INTO users (username, email, id, created_ga) ' +
     'VALUES ($1, $2, $3, $4) ' +
@@ -44,9 +44,10 @@ exports.retrieveUser = function(req, res) {
 exports.updateUser = function(req, res) {
   var queryId = req.params.id;
   var dbTimestamp = pgp.as.date(new Date());
-  
+  var username = req.headers.username || req.body.username;
+
   // HELPER FUNCTIONS
-  
+
   // get username from database
   var getUserNameFromDb = function(id, callback) {
     db.one('SELECT * FROM users WHERE id=$1', queryId)
@@ -58,7 +59,7 @@ exports.updateUser = function(req, res) {
       res.status(500).send('Error searching database for user');
     });
   };
-  
+
   // get user info from GitHub
   var getUserFromGitHub = function(username) {
     var options = {
@@ -77,13 +78,13 @@ exports.updateUser = function(req, res) {
       }
     });
   };
-  
+
   // if user exists, update their info; otherwise, add them
   // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
   var upsertUser = function(body) {
     db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
       'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
-      'ON CONFLICT ($3~) ' + 
+      'ON CONFLICT ($3~) ' +
       'DO UPDATE SET ($17~, $5~, $6~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
       'WHERE $2~.$3~ = $10 ' +
       'RETURNING *',
@@ -102,7 +103,7 @@ exports.updateUser = function(req, res) {
       }
     });
   };
-  
+
   // CALL HELPERS
   getUserNameFromDb(queryId, getUserFromGitHub);
 };
@@ -123,4 +124,4 @@ exports.deleteUser = function(req, res) {
         res.status(500).send('Error searching database for user');
       }
     });
-};  
+};
