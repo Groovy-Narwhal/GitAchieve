@@ -17,3 +17,11 @@ export const receivedRequests = (requests = [], action) => {
   }
 };
 
+export const confirmedRequests = (requests = [], action) => {
+  switch (action.type) {
+    case 'CONFIRMED_FR':
+      return [action.confirmedRequests];
+    default:
+      return requests;
+  }
+};

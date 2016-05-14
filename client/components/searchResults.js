@@ -49,8 +49,10 @@ class SearchResults extends Component {
       } else {
         return <div></div>
       }
+    } else {
+     return <div></div> 
     }
-  }
+  } 
 }
 
 const mapStateToProps = (state) => {

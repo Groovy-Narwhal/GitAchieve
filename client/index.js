@@ -27,6 +27,7 @@ render(
         <Route path="/:username/repos" component={component.Repos} />
         <Route path="/:orgname/orgs" component={component.OrgProfile} />
         <Route path="/compete/choose-repo/:username" component={component.ChooseWeapon} />
+        <Route path="/compete/choose-second-repo/:userid" component={component.ChooseSecondWeapon} />
       </Route>
     </Router>
   </Provider>,

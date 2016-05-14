@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router';
 import { Header } from './index';
 import actions from './../actions/ActionCreators';
 import axios from 'axios';
@@ -12,7 +13,8 @@ class ReceivedCompetitorCard extends Component {
     super(props);
     this.state = {
       avatar: '',
-      username: ''
+      username: '',
+      userid: ''
     }
   }
 
@@ -21,41 +23,15 @@ class ReceivedCompetitorCard extends Component {
       .then(response => {
         this.setState({
           avatar: response.data.avatar_url,
-          username: response.data.username
+          username: response.data.username,
+          userid: response.data.id
         })
       });
   }
 
   handleAccept(e, req) {
-    console.log(this.props.c)
     e.preventDefault();
-    const socket = io.connect(window.location.origin);
-    socket.emit('Accept Request', {
-      user1: this.props.user.username,
-      user2: this.state.username
-    });
-
-    axios.patch(`${ROOT_URL}/api/v1/users/${this.props.user.id}/friends`, {
-      secondaryRepoId: 57168943, //DUMMY DATA
-      primaryUserId: this.props.c.primary_user_id
-    })
-    .then(response => {
-      console.log('RES', response)
-      axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/receivedmatches`)
-        .then(response => {
-          this.props.actions.receivedFriendRequests(response.data);
-        });
-    })
-  }
-
-  componentWillMount() {
-    axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}`)
-      .then(response => {
-        this.setState({
-          avatar: response.data.avatar_url,
-          username: response.data.username
-        })
-      })
+    browserHistory.push(`compete/choose-second-repo/${this.state.userid}`);
   }
 
   render() {

@@ -180,7 +180,6 @@ exports.checkForSentRequests = function(req, res) {
 // retrieve all entries in the user to user table in which confirmed at is not null
 // GET at /api/v1/users/:id/successmatches
 exports.checkApprovedRequests = function(req, res) {
-  // this is the current users id
    // this is the current users id
     var id = req.params.id;
 

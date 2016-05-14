@@ -77,4 +77,10 @@ export default {
       sentRequests: friends
     }
   },
+  confirmedFriendRequests: friends => {
+    return {
+      type: types.SENT_FR,
+      confirmedRequests: friends
+    }
+  }
 };
