@@ -23,7 +23,7 @@ class SearchResults extends Component {
 
     this.props.actions.chooseSearchResult(result);
 
-    axios.get(`${ROOT_URL}/send-email`);
+    axios.get(`${ROOT_URL}/send-email?competitor=${result.login}`);
 
     browserHistory.push(`compete/choose-repo/${result.login}`);
 
