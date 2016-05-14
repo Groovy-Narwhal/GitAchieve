@@ -152,7 +152,7 @@ CREATE TABLE users_users (
     competition_start timestamp  NULL,
     last_active timestamp  NULL,
     primary_repo_id int  NOT NULL,
-    secondary_repo_id int  NOT NULL,
+    secondary_repo_id int  NULL,
     CONSTRAINT users_users_pk PRIMARY KEY (id_ga)
 );
 

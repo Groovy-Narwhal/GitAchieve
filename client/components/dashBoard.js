@@ -1,22 +1,18 @@
 //@TODO: initially populate graph with logged-in user's 'contributions in last year' data
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
-import { cumulativeChart } from './index';
 import ghFetch from './../utils/utils';
-import Repos from './repos';
-import { CumulativeChart } from './index';
-import { DailyChart } from './index';
-import Search from './search';
-import CompetitorsMiniView from './competitorsMiniView';
+import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
+
 
 class DashBoard extends Component {
   constructor(props) {
     super(props);
   }
+
   componentDidUpdate() {
     if (this.props.auth.authenticated && this.props.userContributions[0] === 0) {
       this.getUserContribs();
@@ -44,6 +40,7 @@ class DashBoard extends Component {
       DailyChart(this.props.dailyCompetitorsData, 'additional chart');
     }
   }
+
   render() {
     const { actions } = this.props;
     if (this.props.auth.authenticated) {
@@ -91,24 +88,17 @@ class DashBoard extends Component {
 }
 
 /*
-
 // CHART //
 <button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>
 <button onClick={this.makeDailyChart.bind(this)}> Tab 2: Daily </button>
-
 <div id="commit-charts">
   <svg width={540} height={300}>
   </svg>
-
   <div id="optional-extra-chart">
   </div>
-
 </div>
-
 <button onClick={this.addDailyChart.bind(this)}> See daily breakdown </button>
 // END CHART //
-
-
 <div id="commit-charts">
   <svg width={540} height={300}>
   </svg>

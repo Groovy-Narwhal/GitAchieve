@@ -30,7 +30,8 @@
     "redux": "^3.5.2",
     "redux-actions": "^0.9.1",
     "redux-logger": "^2.6.1",
-    "redux-thunk": "^2.0.1"
+    "redux-thunk": "^2.0.1",
+    "socket.io": "^1.4.6"
   },
   "devDependencies": {
     "babel-cli": "^6.7.7",
@@ -52,6 +53,7 @@
     "eslint-plugin-jsx-a11y": "^1.0.3",
     "eslint-plugin-react": "^5.0.1",
     "expect": "^1.19.0",
+    "frisby": "^0.8.5",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
