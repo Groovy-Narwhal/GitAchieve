@@ -4,7 +4,9 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import ReceivedCompetitorCard from './ReceivedCompetitorCard';
-import CompetitorCard from './competitorCard';
+import SentCompetitorCard from './sentCompetitorCard';
+import AcceptedCompetitorCard from './acceptedCompetitorCard';
+import AcceptedCompetitorCard2 from './acceptedCompetitorCard2';
 
 class CompetitorsMiniView extends Component {
 
@@ -13,7 +15,7 @@ class CompetitorsMiniView extends Component {
   }
 
   checkIfCompetitors() {
-    if (this.props.competitors.length === 0) {
+    if (!!this.props.receivedRequests[0] && !!this.props.sentRequests[0] && !!this.props.confirmedRequests.length[0] <=0) {
       return (
         <div className="centered">
           <h2 className="font-white">Find an opponent!</h2>
@@ -36,6 +38,20 @@ class CompetitorsMiniView extends Component {
     </div>
   }
 
+  confirmedRequests() {
+    return <div>
+    { !!this.props.confirmedRequests[0] ? 
+      this.props.confirmedRequests[0].map((c, ind) => <AcceptedCompetitorCard key={ind} c={c} />) : <div></div> }
+    </div>
+  }
+
+  confirmedRequests2() {
+    return <div>
+    { !!this.props.confirmedRequests2[0] ? 
+      this.props.confirmedRequests2[0].map((c, ind) => <AcceptedCompetitorCard2 key={ind} c={c} />) : <div></div> }
+    </div>
+  }
+
   render() {
     return (
       <div className="data-results-container-clear">
@@ -44,6 +60,8 @@ class CompetitorsMiniView extends Component {
           {this.checkIfCompetitors()}
           {this.sentRequests()}
           {this.receivedRequests()}
+          {this.confirmedRequests()}
+          {this.confirmedRequests2()}
         </div>
       </div>
     );

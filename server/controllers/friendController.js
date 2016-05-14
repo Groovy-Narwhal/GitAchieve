@@ -177,7 +177,6 @@ exports.checkApprovedRequests = function(req, res) {
 
     db.any('Select * from users_users uu ' +
       'WHERE uu.primary_user_id=($1) ' +
-      'OR uu.secondary_user_id=($1) ' +
       'AND uu.confirmed_at IS NOT NULL',
       [id]
     ).then(data => res.send(data))
@@ -186,3 +185,20 @@ exports.checkApprovedRequests = function(req, res) {
       res.status(500).send('Error finding users_users connection');   
     })
   }
+
+  // retrieve all entries in the user to user table in which confirmed at is not null
+  // GET at /api/v1/users/:id/successmatches
+  exports.checkApprovedRequests2 = function(req, res) {
+     // this is the current users id
+      var id = req.params.id;
+
+      db.any('Select * from users_users uu ' +
+        'WHERE uu.secondary_user_id=($1) ' +
+        'AND uu.confirmed_at IS NOT NULL',
+        [id]
+      ).then(data => res.send(data))
+      .catch(error => {
+        console.error(error);
+        res.status(500).send('Error finding users_users connection');   
+      })
+    }

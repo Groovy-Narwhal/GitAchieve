@@ -8,19 +8,20 @@ import axios from 'axios';
 
 const ROOT_URL = 'http://127.0.0.1:8000';
 
-class ReceivedCompetitorCard extends Component {
+class AcceptedCompetitorCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       avatar: '',
-      username: '',
-      userid: ''
+      username: ''
     }
   }
 
   componentWillMount() {
-    axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}`)
+    console.log(this.props.c)
+    axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.secondary_user_id}`)
       .then(response => {
+
         this.setState({
           avatar: response.data.avatar_url,
           username: response.data.username,
@@ -29,19 +30,14 @@ class ReceivedCompetitorCard extends Component {
       });
   }
 
-  handleAccept(e, req) {
-    e.preventDefault();
-    browserHistory.push(`compete/choose-second-repo/${this.state.userid}`);
-  }
-
   render() {
     return <div>
       { !!this.state.avatar ? 
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
             <h2 className="font-white">{this.state.username}</h2>
-            <span>Incoming Request!</span>
-            <input onClick={(e) => {this.handleAccept(e, this.props.req)}} type="button" value="Accept" />
+            <span>Confirmed Request!</span>
+            <input onClick={(e) => {this.handleAccept(e, this.props.req)}} type="button" value="COMPETE!" />
           </div> : <div></div> }
     </div>
   }
@@ -55,4 +51,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReceivedCompetitorCard);
+export default connect(mapStateToProps, mapDispatchToProps)(AcceptedCompetitorCard);

@@ -25,3 +25,12 @@ export const confirmedRequests = (requests = [], action) => {
       return requests;
   }
 };
+
+export const confirmedRequests2 = (requests = [], action) => {
+  switch (action.type) {
+    case 'CONFIRMED_FR2':
+      return [action.confirmedRequests2];
+    default:
+      return requests;
+  }
+};

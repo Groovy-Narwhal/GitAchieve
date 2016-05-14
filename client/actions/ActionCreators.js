@@ -79,8 +79,14 @@ export default {
   },
   confirmedFriendRequests: friends => {
     return {
-      type: types.SENT_FR,
+      type: types.CONFIRMED_FR,
       confirmedRequests: friends
+    }
+  },
+  confirmedFriendRequests2: friends => {
+    return {
+      type: types.CONFIRMED_FR2,
+      confirmedRequests2: friends
     }
   }
 };

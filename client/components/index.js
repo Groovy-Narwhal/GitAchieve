@@ -16,5 +16,3 @@ export UserAchievements from './UserAchievements';
 export ChooseWeapon from './chooseWeapon';
 export ChooseSecondWeapon from './chooseSecondWeapon';
 export CompetitorsMiniView from './CompetitorsMiniView';
-import ReceivedCompetitorCard from './ReceivedCompetitorCard';
-import CompetitorCard from './competitorCard';

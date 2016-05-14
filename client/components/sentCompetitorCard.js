@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const ROOT_URL = 'http://127.0.0.1:8000';
 
-class CompetitorCard extends Component {
+class SentCompetitorCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,4 +47,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompetitorCard);
+export default connect(mapStateToProps, mapDispatchToProps)(SentCompetitorCard);

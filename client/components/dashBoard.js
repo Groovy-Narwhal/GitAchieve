@@ -13,13 +13,6 @@ class DashBoard extends Component {
     super(props);
   }
 
-  componentWillMount() {
-    // axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/receivedmatches`)
-    //   .then(response => {
-    //     this.props.actions.receivedFriendRequests(response.data);
-    //   })
-  }
-
   componentDidUpdate() {
     if (this.props.auth.authenticated && this.props.userContributions[0] === 0) {
       this.getUserContribs();

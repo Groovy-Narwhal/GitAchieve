@@ -44,10 +44,21 @@ const checkForSentRequests = (id, dispatch) => {
 const checkForConfirmedRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches`)
     .then(response => {
-      console.log('RES',response)
+      console.log('RES1',response)
       dispatch({
         type: types.CONFIRMED_FR,
         confirmedRequests: response.data
+      });
+    });
+};
+
+const checkForConfirmedRequests2 = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches2`)
+    .then(response => {
+      console.log('RES2',response)
+      dispatch({
+        type: types.CONFIRMED_FR2,
+        confirmedRequests2: response.data
       });
     });
 };
@@ -78,6 +89,7 @@ export const signinUser = () => {
           checkForFriendRequests(userProfile.id, dispatch);
           checkForSentRequests(userProfile.id, dispatch);
           checkForConfirmedRequests(userProfile.id, dispatch);
+          checkForConfirmedRequests2(userProfile.id, dispatch);
         });
 
         // - redirect to the route '/'
@@ -94,6 +106,10 @@ export const signinUser = () => {
       })
       .then((id) => {
         checkForConfirmedRequests(id, dispatch);
+        return id;
+      })
+      .then((id) => {
+        checkForConfirmedRequests2(id, dispatch);
         return id;
       })
       .catch((err) => {

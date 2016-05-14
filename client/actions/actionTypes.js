@@ -13,3 +13,4 @@ export const CHOOSE_WEAPON = 'CHOOSE_WEAPON';
 export const RECEIVED_FR = 'RECEIVED_FR';
 export const SENT_FR = 'SENT_FR';
 export const CONFIRMED_FR = 'CONFIRMED_FR';
+export const CONFIRMED_FR2 = 'CONFIRMED_FR2';
