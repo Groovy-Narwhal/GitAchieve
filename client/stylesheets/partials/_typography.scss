@@ -3,7 +3,18 @@ $font-stack:  'Open Sans', sans-serif;
 svg text {
   font-family: 'Garamond';
 }
-
+h1 {
+  font-size: $large-size;
+  font-weight: $bold;
+}
+h2 {
+  font-size: $semi-large-size;
+  font-weight: $semi-bold;
+}
+h3 {
+  font-size: $semi-large-size;
+  font-weight: $regular;
+}
 @font-face {
   font-family: 'Open Sans';
   font-weight: 300;

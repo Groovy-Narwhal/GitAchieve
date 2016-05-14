@@ -7,8 +7,10 @@ import searchInput from './searchInputReducer';
 import searchUserEvents from './userEventsReducer';
 import chosenSearchResult from './chosenSearchResultReducer';
 import userContributions from './userContributionsReducer';
+import competitors from './competitorsReducer';
 import competitorsData from './competitorDataReducer';
 import dailyCompetitorsData from './dailyCompetitorDataReducer';
+import chosenWeapons from './chosenWeaponsReducer';
 
 
 export default combineReducers({
@@ -20,6 +22,8 @@ export default combineReducers({
   searchUserEvents,
   chosenSearchResult,
   userContributions,
+  competitors,
   competitorsData,
-  dailyCompetitorsData
+  dailyCompetitorsData,
+  chosenWeapons
 });

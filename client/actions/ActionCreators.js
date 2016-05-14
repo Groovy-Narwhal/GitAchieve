@@ -52,5 +52,17 @@ export default {
       type: types.ADD_DAILY_COMPETITOR_DATA,
       dailyCompetitorData
     }
+  },
+  addCompetitor: competitor => {
+    return {
+      type: types.ADD_COMPETITOR,
+      competitor
+    }
+  },
+  chooseWeapon: weapon => {
+    return {
+      type: types.CHOOSE_WEAPON,
+      weapon
+    }
   }
 };

@@ -10,6 +10,8 @@ import ghFetch from './../utils/utils';
 import Repos from './repos';
 import { CumulativeChart } from './index';
 import { DailyChart } from './index';
+import Search from './search';
+import CompetitorsMiniView from './competitorsMiniView';
 
 class DashBoard extends Component {
   constructor(props) {
@@ -47,23 +49,37 @@ class DashBoard extends Component {
     if (this.props.auth.authenticated) {
       return (
         <div className="dashboard">
-          <h1>Your contributions: {this.props.userContributions}</h1>
-
-          <button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>
-          <button onClick={this.makeDailyChart.bind(this)}> Tab 2: Daily </button>
-
-          <div id="commit-charts">
-            <svg width={540} height={300}>
-            </svg>
-
-            <div id="optional-extra-chart">
+          <div className="main-search">
+            <div className="dash-header-text text-centered">
+              <h1 className="font-white">Search your Git opponent</h1>
+              <h3 className="font-white">Your contributions: {this.props.userContributions}</h3>
             </div>
-
+            <div className="search-container text-centered">
+              <div className="block text-centered">
+                <Search />
+              </div>
+            </div>
+            <div className="spacer-125px"></div>
+            <CompetitorsMiniView />
           </div>
+          <div className="data-results-container-clear">
+            <h2 className="font-white">Achievement Chart</h2>
+            <div className="data-results-container full-width">
+              <button onClick={this.makeMainChart.bind(this)} className="button"> Tab 1: Total </button>
+              <button onClick={this.makeDailyChart.bind(this)} className="button"> Tab 2: Daily </button>
 
-          <button onClick={this.addDailyChart.bind(this)}> See daily breakdown </button>
+              <div id="commit-charts">
+                <svg width={540} height={300}>
+                </svg>
 
-          <div><Repos /></div>
+                <div id="optional-extra-chart">
+                </div>
+
+              </div>
+
+              <button onClick={this.addDailyChart.bind(this)} className="button"> See daily breakdown </button>
+            </div>
+          </div>
         </div>
       )
     } else {
@@ -73,6 +89,32 @@ class DashBoard extends Component {
     }
   }
 }
+
+/*
+
+// CHART //
+<button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>
+<button onClick={this.makeDailyChart.bind(this)}> Tab 2: Daily </button>
+
+<div id="commit-charts">
+  <svg width={540} height={300}>
+  </svg>
+
+  <div id="optional-extra-chart">
+  </div>
+
+</div>
+
+<button onClick={this.addDailyChart.bind(this)}> See daily breakdown </button>
+// END CHART //
+
+
+<div id="commit-charts">
+  <svg width={540} height={300}>
+  </svg>
+</div>
+<div><Repos /></div>
+*/
 
 const mapStateToProps = state => {
   return state;

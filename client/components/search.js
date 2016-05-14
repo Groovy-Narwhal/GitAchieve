@@ -12,10 +12,6 @@ class Search extends Component {
       searchInput: ''
     }
   }
-
-  componentDidMount() {
-    // this.submitHandler = utils.utils.debounce(submitHandler);
-  }
   
   submitHandler(e) {
     let searchQuery = this.state.searchInput;
@@ -33,12 +29,10 @@ class Search extends Component {
 
   render() {
     return (
-      <div className="search-container">
-        <form onSubmit={this.submitHandler.bind(this)} className="search-form">
-          <input type="search" placeholder="search" onChange={this.typeSearch.bind(this)} className="search-input"/>
-          <input type="submit" className="search-submit-button"/>
-        </form>
-      </div>
+      <form onSubmit={this.submitHandler.bind(this)} className="search-form">
+        <input type="search" placeholder="search" onChange={this.typeSearch.bind(this)} className="search-input"/>
+        <input type="submit" className="search-submit-button"/>
+      </form>
     )
   }
 }
