@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import DatePicker from 'react-datepicker';
-import moment from './moment';
+import moment from 'moment';
 import actions from './../actions/ActionCreators';
 import Repos from './repos';
 import axios from 'axios';
@@ -79,8 +79,7 @@ class ChooseWeapon extends Component {
         <h2>Pick a start Date</h2>
         <DatePicker
           selected={this.state.startDate}
-          onChange={this.handleChange} />
-        <Repos />
+          onChange={this.handleChange.bind(this)} />
         <div className="spacer-10px"></div>
         <div className="block text-centered">
           <input type="submit" value="COMPETE" className="button compete" onClick={this.compete.bind(this)} />
