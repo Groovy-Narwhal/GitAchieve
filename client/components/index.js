@@ -17,3 +17,4 @@ export UserAchievements from './UserAchievements';
 export ChooseWeapon from './chooseWeapon';
 export Request from './request';
 export SentRequest from './sentRequest';
+export CompetitorsMiniView from './CompetitorsMiniView';

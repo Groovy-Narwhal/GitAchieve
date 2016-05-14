@@ -1,18 +1,11 @@
 //@TODO: initially populate graph with logged-in user's 'contributions in last year' data
-
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
-import { cumulativeChart } from './index';
 import ghFetch from './../utils/utils';
-import Repos from './repos';
-import { CumulativeChart } from './index';
-import { DailyChart } from './index';
-import Search from './search';
-import CompetitorsMiniView from './competitorsMiniView';
-import { Repos, CumulativeChart, DailyChart, SentRequest, Request } from './index';
+import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
 
 class DashBoard extends Component {

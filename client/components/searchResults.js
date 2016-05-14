@@ -4,12 +4,12 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import { SearchOptions } from './index';
-import axios from 'axios';
 
-const ROOT_URL = 'http://127.0.0.1:8000';
 
 class SearchResults extends Component {
-
+  constructor(props) {
+    super(props);
+  }
   compete(e, result) {
     e.preventDefault();
 
@@ -20,41 +20,6 @@ class SearchResults extends Component {
     this.props.actions.chooseSearchResult(result);
     browserHistory.push(`compete/choose-repo/${result.login}`);
 
-    var dummyData = {
-      primary_user_id: this.props.user.id,
-      secondary_user_id: 15220759,
-      secondaryUsername: 'msmith9393',
-      primary_repo_id: 57168943,
-      competition_start: new Date()
-    }
-    // this will add opponent user to database if they don't already exist
-    axios.patch(`${ROOT_URL}/api/v1/users/${dummyData.secondary_user_id}`, {
-      username: dummyData.secondaryUsername
-    })
-    // this will add an entry to the users_users table
-    .then(() => {
-      axios.post(`${ROOT_URL}/api/v1/users/${dummyData.primary_user_id}/friends`, {
-        secondaryUserId: dummyData.secondary_user_id,
-        secondaryUsername: dummyData.secondaryUsername,
-        secondaryUserEmail: null,
-        primaryRepoId: dummyData.primary_repo_id,
-        competitionStart: dummyData.competition_start
-      })
-      .then(response => {
-        axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/requestedmatches`)
-        .then((res) => { 
-           this.props.actions.sentFriendRequests(res.data);
-        }) 
-      })
-      .then(() => {
-        // connect to socket
-        const socket = io.connect(window.location.origin);
-        socket.emit('Compete Request', {
-          user1: this.props.user.username,
-          user2: dummyData.secondaryUsername
-        });
-      })
-    })
   }
 
   routeTo(e, result, type) {

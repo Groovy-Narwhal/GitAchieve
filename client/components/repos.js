@@ -95,6 +95,7 @@ class Repos extends Component {
   selectRepo(e) {
     this.props.actions.chooseWeapon(this.state.reposObj[e.target.value]);
     this.setState({selectedRepo: this.state.reposObj[e.target.value]});
+    
   }
   log(e) {
     console.log('logging: ', e.target.value);
