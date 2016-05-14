@@ -4,6 +4,7 @@ const repoController = require('./../controllers/repoController.js');
 const friendController = require('./../controllers/friendController.js');
 const statController = require('./../controllers/statController.js');
 const commitController = require('./../controllers/commitController.js');
+const commitStartController = require('./../controllers/commitStartController.js');
 
 
 // the following routes start from /api/v1/users
@@ -27,8 +28,11 @@ userRouter.route('/:id/stats')
   .patch(statController.updateStats);
   
 userRouter.route('/:id/commits')
-  // .get(commitController.retrieveCommits)
-  .patch(commitController.updateCommits);  
+  .get(commitController.retrieveCommits)
+  .patch(commitController.updateCommits);
+  
+userRouter.route('/:id/commits/start')
+  .get(commitStartController.retrieveCompetition);  
 
 userRouter.route('/:id/friends')
   .get(friendController.retrieveFriends)
