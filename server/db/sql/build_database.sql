@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-13 00:26:00.819
+-- Last modification date: 2016-05-13 19:16:42.467
 
 -- tables
 -- Table: branches
@@ -13,21 +13,20 @@ CREATE TABLE branches (
 
 -- Table: commits
 CREATE TABLE commits (
-    id_ga serial  NOT NULL,
+    sha varchar(40)  NOT NULL,
     updated_ga timestamp  NOT NULL,
-    sha varchar(40)  NULL,
-    commit_message varchar(100)  NULL,
-    commit_author_date timestamp  NULL,
+    date timestamp  NULL,
     user_id int  NOT NULL,
-    CONSTRAINT commits_pk PRIMARY KEY (id_ga)
+    commit_message text  NULL,
+    CONSTRAINT commits_pk PRIMARY KEY (sha)
 );
 
 -- Table: commits_repos
 CREATE TABLE commits_repos (
     id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
-    commit_id_ga int  NOT NULL,
     repo_id int  NOT NULL,
+    commit_sha varchar(40)  NOT NULL,
     CONSTRAINT commits_repos_pk PRIMARY KEY (id_ga)
 );
 
@@ -159,8 +158,8 @@ CREATE TABLE users_users (
 -- foreign keys
 -- Reference: commits_repos_commits (table: commits_repos)
 ALTER TABLE commits_repos ADD CONSTRAINT commits_repos_commits
-    FOREIGN KEY (commit_id_ga)
-    REFERENCES commits (id_ga)  
+    FOREIGN KEY (commit_sha)
+    REFERENCES commits (sha)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;
@@ -285,8 +284,8 @@ ALTER TABLE users_users ADD CONSTRAINT users_users_primary_repos
     INITIALLY IMMEDIATE
 ;
 
--- Reference: users_users_repos (table: users_users)
-ALTER TABLE users_users ADD CONSTRAINT users_users_repos
+-- Reference: users_users_secondary_repos (table: users_users)
+ALTER TABLE users_users ADD CONSTRAINT users_users_secondary_repos
     FOREIGN KEY (secondary_repo_id)
     REFERENCES repos (id)  
     NOT DEFERRABLE 
