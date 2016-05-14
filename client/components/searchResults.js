@@ -5,19 +5,27 @@ import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import { SearchOptions } from './index';
 
+// import axios, define root URL -- for email sending
+import axios from 'axios';
+const ROOT_URL = 'http://127.0.0.1:8000';
 
 class SearchResults extends Component {
   constructor(props) {
     super(props);
   }
+
   compete(e, result) {
     e.preventDefault();
 
     // HARDCODE DATA IN REDUX STORE FOR CHART (TEMPORARY)
     this.props.actions.addCompetitorData([20, 11]);
     this.props.actions.addDailyCompetitorData([[5, 4, 2, 7, 3, 6, 8], [2, 3, 5, 9, 7, 2, 3]]);
-    // END HARDCODE
+
     this.props.actions.chooseSearchResult(result);
+
+    // SEND EMAIL
+    axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${result.login}&competitor_id=${result.id}`)
+
     browserHistory.push(`compete/choose-repo/${result.login}`);
 
   }
@@ -30,7 +38,18 @@ class SearchResults extends Component {
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
         </div>
       )
-    
+
+  }
+
+  getResult(result) {
+      return (
+        <div className="user-result-container">
+          <img className="user-avatar-1" src={result.avatar_url} />
+          <h2>{result.login}</h2>
+          <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+        </div>
+      )
+
   }
 
   render() {
@@ -50,9 +69,9 @@ class SearchResults extends Component {
         return <div></div>
       }
     } else {
-     return <div></div> 
+     return <div></div>
     }
-  } 
+  }
 }
 
 const mapStateToProps = (state) => {
