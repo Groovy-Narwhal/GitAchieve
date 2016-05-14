@@ -59,6 +59,7 @@ class DashBoard extends Component {
                 <Search />
               </div>
             </div>
+            <div className="spacer-125px"></div>
             <CompetitorsMiniView />
           </div>
           <div className="data-results-container-clear">
