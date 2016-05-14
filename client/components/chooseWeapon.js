@@ -2,13 +2,31 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
+import DatePicker from 'react-datepicker';
+import moment from './moment';
 import actions from './../actions/ActionCreators';
 import Repos from './repos';
 import axios from 'axios';
 
+require('react-datepicker/dist/react-datepicker.css');
+
 const ROOT_URL = 'http://127.0.0.1:8000';
 
 class ChooseWeapon extends Component {
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      startDate: moment()
+    };
+  }
+
+  handleChange(date) {
+    this.setState({
+      startDate: date
+    });
+  }
+
   compete() {
     browserHistory.push('/');
     this.props.actions.addCompetitor({competitor: this.props.chosenSearchResult, myWeapon: this.props.chosenWeapons});
@@ -57,6 +75,11 @@ class ChooseWeapon extends Component {
     return (
       <div className="data-results-container-clear">
         <h2>Choose Your Weapon // Repos</h2>
+        <Repos />
+        <h2>Pick a start Date</h2>
+        <DatePicker
+          selected={this.state.startDate}
+          onChange={this.handleChange} />
         <Repos />
         <div className="spacer-10px"></div>
         <div className="block text-centered">
