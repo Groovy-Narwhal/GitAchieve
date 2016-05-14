@@ -25,6 +25,9 @@ app.use('/static', express.static(__dirname + '/../client'));
 app.get('/', function(req, res) {
   res.sendFile(path.resolve('./client/index.html'));
 });
+app.get('*', function (req, res){
+  res.sendFile(path.resolve('./client/index.html'))
+})
 
 // Run server listening on the local environment
 const port = process.env.PORT || 8000;

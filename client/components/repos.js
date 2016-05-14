@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
-import CommitChart from './commitChart';
+import Repo1 from './repo1';
 
 class Repos extends Component {
   constructor(props) {
@@ -11,11 +11,19 @@ class Repos extends Component {
     this.state = {
       fetched: false,
       repos: [],
+      reposObj: {},
+      selectedRepo: undefined,
+      repoClicked: [],
       options: {}
     };
   }
   fetchRepos() {
-    return fetch(`https://api.github.com/users/${this.props.chosenSearchResult.login !== undefined ? this.props.chosenSearchResult.login : this.props.user.username}/repos?per_page=100`, this.state.options)
+    if (this.props.chosenSearchResult.login !== undefined && !window.location.pathname.includes('compete')) {
+      var url = this.props.chosenSearchResult.login;
+    } else { 
+      var url = this.props.user.username;
+    }
+    return fetch(`https://api.github.com/users/${url}/repos?per_page=100`, this.state.options)
       .then(res => res.json())
       .then(data => data)
       .catch(err => err);
@@ -24,9 +32,26 @@ class Repos extends Component {
     async function renderRepos () {
       // awaits the promise from this.fetchRepos to resolve, then assigns repos to that value
       var repos = await this.fetchRepos();
+      var selectableRepos = repos.map(repo => ({value: repo , label: repo.name}))
+      // Create reposObject for constant time lookup
+      var reposObj = {}
+      repos.forEach((repo) => {reposObj[repo.name] = repo})
+      this.setState({reposObj: reposObj});
       // Filter data to only include repos that the user has contributed to
       this.setState({repos: repos});
-      this.props.actions.chooseSearchResult({});
+
+      var pad = 30;
+      var w = 540;
+      var h = 300;
+      d3.select('svg')
+        .append('text')
+        .text('select a repo!')
+        .attr('x', w/2)
+        .attr('y', h/2)
+        .attr('text-anchor', 'middle')
+        .style('font-size', '24px');
+
+      this.setState({repoClicked: this.state.repos.map(repo => false)});
     };
     renderRepos.call(this);
   }
@@ -40,7 +65,7 @@ class Repos extends Component {
       } else {
         return res.json()
       }})
-      .then(data => { CommitChart(data) })
+      .then(data => { return; })
       .catch(err => console.log(err));
   }
   setStateFetchInit() {
@@ -67,6 +92,13 @@ class Repos extends Component {
       setTimeout(this.setStateFetchInit.bind(this), 250);
     }
   }
+  selectRepo(e) {
+    this.props.actions.chooseWeapon(this.state.reposObj[e.target.value]);
+    this.setState({selectedRepo: this.state.reposObj[e.target.value]});
+  }
+  log(e) {
+    console.log('logging: ', e.target.value);
+  }
   componentDidMount() {
     this.setStateFetchInit();
   }
@@ -80,19 +112,35 @@ class Repos extends Component {
         </div>
       );
     } else {
-      return (
-        <div id="data-results-container">
-          <h3>Repos</h3>
-          {this.state.repos.map((repoData, i) => (
-            <div className="data-result-container" key={i} onClick={ (e) => (this.fetchRepoData(e.target, repoData)) } >
-              <h2>{repoData.name}</h2>
-            </div>
-            ))}
-        </div>
-      );
+      if (window.location.pathname.includes('compete')) {
+        return (
+          <div className="data-results-container-flex full-width">
+            <select onChange={(e) => (this.selectRepo.call(this, e))}>
+              <option disabled>select a repo</option>
+              {this.state.repos.map(repo => (<option value={repo.name} key={repo.id}>{repo.name}</option>))}
+            </select>
+          </div>
+        );
+      } else {
+        return (
+          <div className="data-results-container-flex full-width">
+            {this.state.repos.map((repoData, i) => (
+              <div className="data-result-container" key={repoData.id} onClick={ (e) => (this.fetchRepoData(e.target, repoData)) } >
+                <h2>{repoData.name}</h2>
+              </div>
+              ))}
+          </div>
+        );
+      }
     }
   }
 }
+
+// {this.state.repos.map((repoData, i) => (
+//   <div onClick={this.selectRepo.bind(this, i)}>
+//     <Repo1 repoData={repoData} key={repoData.id} index={i} selected={this.state.repoClicked[i]} />
+//   </div>
+//   ))}
 
 const mapStateToProps = (state) => {
   return state;

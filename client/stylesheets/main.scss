@@ -11,19 +11,13 @@
 @import "components/buttons";
 @import "components/images";
 @import "components/inputs";
+@import "components/spacers";
 
 // Layout
 @import "layout/header";
+@import "layout/dashboard";
+@import "layout/repos";
 
-#data-results-container {
-  padding: 10px;
-}
-.data-result-container {
-  background-color: #fff;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
 .event-title {
   display: inline;
 }

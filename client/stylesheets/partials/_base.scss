@@ -39,8 +39,62 @@ $primary-color: #445878;
 body {
   font-family: $base-font-family;
 }
-.day {
+.font-white {
   color: $white;
+}
+.centered {
+  margin-right: auto;
+  margin-left: auto;
+}
+.text-centered {
+  text-align: center;
+}
+.block {
+  display: block;
+}
+.data-results-container {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 75%;
+  min-width: 500px;
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+}
+.data-results-container-flex {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 75%;
+  min-width: 500px;
+  margin-top: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.data-results-container-clear {
+  width: 75%;
+  min-width: 500px;
+  margin-top: 20px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.user-result-container {
+  background-color: #fff;
+  width: 120px;
+  padding: 0;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+.data-result-container {
+  background-color: #fff;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 svg {
   font: 10px;
@@ -52,6 +106,9 @@ svg {
 }
 #commit-charts {
   text-align: center;
+}
+.full-width {
+  width: 100%;
 }
 .black-container-bg {
   background-color: #1C1D21;

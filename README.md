@@ -36,12 +36,14 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/api/v1/users/:id|PATCH|Update a user with current GitHub info|none|Updated user|
 |/api/v1/users/:id|DELETE|Delete a user by id|none|Deleted user|
 |/api/v1/users/:id/repos|GET|Get a user's repos|none|Array of repos|
-|/api/v1/users/:id/repos|POST|Add a repo for a user|repo id, created_at, watchers_count, stargazers_count, forks_count|Added repo|
-|/api/v1/users/:id/friends|GET|Get a user's friends|none|
-|/api/v1/users/:id/friends|POST|Primary user requests friendship with secondary user|primary user id, secondary user id, username and email|
-|/api/v1/users/:id/friends|PATCH|Confirm a friend request or remove a friendship|remove:true to remove friendship|
-|/api/v1/users/:id/stats|GET|Get stats for a user|none|
-|/api/v1/users/:id/stats|PATCH|Update stats for a user|none|
+|/api/v1/users/:id/repos|POST|Add a repo for a user|Object containing 'profile', an object of all updated values|Added repo, added join|
+|/api/v1/users/:id/friends|GET|Get a user's friends|none|Array of friends|
+|/api/v1/users/:id/friends|POST|Primary user requests friendship with secondary user|primary user id, secondary user id, username and email|Array containing join row in users_users|
+|/api/v1/users/:id/friends|PATCH|Confirm a friend request or remove a friendship|remove:true to remove friendship|Array containing join row in users_users|
+|/api/v1/users/:id/stats|GET|Get stats for a user by org and repo|Headers for `orgid` and `repoid`|Array containing stat object|
+|/api/v1/users/:id/stats|PATCH|Update stats for a user from GitHub |none|Array of stats updated - each has user_id, org_id and repo_id|
+|/api/v1/users/:id/commits|GET|Get commits for a user by repo|Header for `repoid`|Array containing commits|
+|/api/v1/users/:id/commits|PATCH|Update commits for a user from GitHub|none|Array of commits updated|
 
 ### Client Side Routes
 |Route|Description|Related Server Endpoints|

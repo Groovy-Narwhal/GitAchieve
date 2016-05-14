@@ -40,5 +40,29 @@ export default {
       type: types.GET_USER_CONTRIBS,
       contributions
     }
+  },
+  addCompetitorData: competitorData => {
+    return {
+      type: types.ADD_COMPETITOR_DATA,
+      competitorData
+    }
+  },
+  addDailyCompetitorData: dailyCompetitorData => {
+    return {
+      type: types.ADD_DAILY_COMPETITOR_DATA,
+      dailyCompetitorData
+    }
+  },
+  addCompetitor: competitor => {
+    return {
+      type: types.ADD_COMPETITOR,
+      competitor
+    }
+  },
+  chooseWeapon: weapon => {
+    return {
+      type: types.CHOOSE_WEAPON,
+      weapon
+    }
   }
 };

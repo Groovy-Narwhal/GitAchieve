@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-11 22:07:05.833
+-- Last modification date: 2016-05-13 00:26:00.819
 
 -- tables
 -- Table: branches
@@ -149,6 +149,10 @@ CREATE TABLE users_users (
     confirmed_at timestamp  NULL,
     primary_user_id int  NOT NULL,
     secondary_user_id int  NOT NULL,
+    competition_start timestamp  NULL,
+    last_active timestamp  NULL,
+    primary_repo_id int  NOT NULL,
+    secondary_repo_id int  NOT NULL,
     CONSTRAINT users_users_pk PRIMARY KEY (id_ga)
 );
 
@@ -269,6 +273,22 @@ ALTER TABLE users_repos ADD CONSTRAINT users_repos_repos
 ALTER TABLE users_repos ADD CONSTRAINT users_repos_users
     FOREIGN KEY (user_id)
     REFERENCES users (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_users_primary_repos (table: users_users)
+ALTER TABLE users_users ADD CONSTRAINT users_users_primary_repos
+    FOREIGN KEY (primary_repo_id)
+    REFERENCES repos (id)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
+-- Reference: users_users_repos (table: users_users)
+ALTER TABLE users_users ADD CONSTRAINT users_users_repos
+    FOREIGN KEY (secondary_repo_id)
+    REFERENCES repos (id)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;

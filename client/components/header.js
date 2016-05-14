@@ -4,8 +4,8 @@ import { browserHistory } from 'react-router';
 import * as actions from './../actions/index';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
-import Search from './search';
 import HeaderProfileButton from './headerProfileButton';
+import Search from './search';
 
 class Header extends Component {
   handleSignOut() {
@@ -15,19 +15,19 @@ class Header extends Component {
     if (!this.props.auth.authenticated) {
       return null;
     } else {
-      return [
-        <Search key={0} />,
-        <a key={1} onClick={() => browserHistory.push(`/${this.props.user.username}/repos`)} className="nav-link">
-          Repos
-        </a>,
-        <a key={2} onClick={() => browserHistory.push('/orgs')} className="nav-link">
-          Orgs
-        </a>,
-        <a key={3} onClick={this.handleSignOut.bind(this)} className="nav-link">
-          SignOut
-        </a>,
-        <HeaderProfileButton key={4} />
-      ];
+      if (window.location.pathname === '/') {
+        return (
+          <div className="header-buttons" >
+            <HeaderProfileButton />
+          </div>
+        );
+      } else { /* Show search bar in header if the path is not the index */
+        return (
+          <div className="header-buttons" >
+            <HeaderProfileButton />
+          </div>
+        );
+      }
     }
   }
 
@@ -35,14 +35,24 @@ class Header extends Component {
     return (
       <nav className="header-nav">
         <div className="header-components-container">
-          <h2 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h2>
+          <h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
           {this.renderLinks()}
         </div>
       </nav>
     );
   }
 }
-
+/*
+<a onClick={() => browserHistory.push(`/${this.props.user.username}/repos`)} className="nav-link">
+  Repos
+</a>
+<a onClick={() => browserHistory.push('/orgs')} className="nav-link">
+  Orgs
+</a>
+<a onClick={this.handleSignOut.bind(this)} className="nav-link">
+  SignOut
+</a>
+*/
 const mapStateToProps = state => (state)
 
 const mapDispatchToProps = dispatch => (

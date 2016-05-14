@@ -9,9 +9,13 @@ class SearchResults extends Component {
 
   compete(e, result) {
     e.preventDefault();
-    fetch(`https://api.github.com/users/${result.login}/repos?per_page=100`)
-      .then((repos) => repos.json())
-      .then((res) => console.log(res));
+
+    // HARDCODE DATA IN REDUX STORE FOR CHART (TEMPORARY)
+    this.props.actions.addCompetitorData([20, 11]);
+    this.props.actions.addDailyCompetitorData([[5, 4, 2, 7, 3, 6, 8], [2, 3, 5, 9, 7, 2, 3]]);
+    // END HARDCODE
+    this.props.actions.chooseSearchResult(result);
+    browserHistory.push(`compete/choose-repo/${result.login}`);
   }
 
   routeTo(e, result, type) {
@@ -45,16 +49,16 @@ class SearchResults extends Component {
   getResult(result) {
     if (result.type === 'User') {
       return (
-        <div className="data-result-container">
+        <div className="user-result-container">
           <img className="user-avatar-1" src={result.avatar_url} />
           <h2 onClick={ (e) => { this.routeTo.call(this, e, result, 'user') }}>{result.login}</h2>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
           <input type="button" value="repos" onClick={(e) => { this.navToUserRepo(e, result) }} />
         </div>
-      )      
+      )
     } else if (result.type === 'Organization') {
       return (
-        <div className="data-result-container">
+        <div className="user-result-container">
           <img className="user-avatar-1" src={result.avatar_url} />
           <h2 onClick={ (e) => { this.routeTo.call(this, e, result, 'org') }}>{result.login}</h2>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
@@ -62,7 +66,7 @@ class SearchResults extends Component {
         )
     } else {
       return (
-        <div className="data-result-container">
+        <div className="user-result-container">
           <h2 onClick={ (e) => { this.routeTo.call(this, e, result, 'repo') }}>{result.full_name}</h2>
           <p>Description: {result.description}</p>
           <p>Stargazers: {result.watchers}</p>
@@ -78,10 +82,9 @@ class SearchResults extends Component {
       if (searchResults.length > 0) {
         return (
           <div>
-            <SearchOptions />
-            <div id="data-results-container">
+            <div className="data-results-container-flex">
               {searchResults.map((result, index) => {
-                return <div key={result.id}>{this.getResult(result)}</div>
+                return <div key={index}>{this.getResult(result)}</div>
               })}
             </div>
           </div>
