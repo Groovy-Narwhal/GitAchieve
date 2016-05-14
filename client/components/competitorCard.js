@@ -7,8 +7,9 @@ import actions from './../actions/ActionCreators';
 class CompetitorCard extends Component {
   render() {
     return (
-      <div className="data-results-container">
-        <h2 className="font-white">My Challenges</h2>
+      <div className="competitor-card">
+        <img src={this.props.competitor.avatar_url} className="user-avatar-med" />
+        <h2 className="font-white">{this.props.competitor.login}</h2>
       </div>
     );
   }

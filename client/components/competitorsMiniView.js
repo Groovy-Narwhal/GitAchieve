@@ -8,9 +8,11 @@ import CompetitorCard from './competitorCard'
 class CompetitorsMiniView extends Component {
   render() {
     return (
-      <div className="data-results-container">
+      <div className="data-results-container-clear">
         <h2 className="font-white">My Challenges</h2>
-        <CompetitorCard />
+        <div className="data-results-container full-width">
+          {this.props.competitors.map((c, i) => (<CompetitorCard competitor={c.competitor} myWeapon={c.myWeapon} key={i} />))}
+        </div>
       </div>
     );
   }
