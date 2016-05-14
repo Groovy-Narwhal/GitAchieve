@@ -5,16 +5,19 @@ const token = require('../config/github.config').token;
 
 
 // GET at '/api/v1/users/:id/stats' to get a user's stats
+// the headers must include the 'orgid' and 'repoid'
 exports.retrieveStats = function(req, res) {
   var queryId = req.params.id;
   db.any('SELECT * FROM $1~ $2~' +
-    'WHERE $2~.$3~=$4',
-    ['stats', 's', 'user_id', queryId])
+    'WHERE $2~.$3~=$4 ' +
+    'AND $2~.$5~=$6 ' +
+    'AND $2~.$7~=$8',
+    ['stats', 's', 'user_id', queryId, 'repo_id', req.headers.repoid, 'org_id', req.headers.orgid])
     .then(stats => {
       res.send(stats);
     })
     .catch(error => {
-      console.error('Error in retrieveStats: ', error);
+      console.error('Error selecting stats: ', error);
     });
 };
 
@@ -40,22 +43,45 @@ exports.updateStats = function(req, res) {
       });
   };
   
-  // save stat to database
-  var saveStatToDb = function(combo, repo, stat) {
-    db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) ' +
-      'VALUES ($8, $9, $10, $11, $12, $13)',
-      ['stats', 'updated_ga', 'total', 'weeks', 'user_id', 'org_id', 'repo_id',
-      dbTimestamp, stat.total, stat.weeks, queryId, combo.orgId, repo.repoId])
-      .then(data => {
-        statsSaved++;
-        if (statsSaved === totalStats) {
-          console.log('Successfully saved stats for ' + totalStats + ' repos');
-          res.send('Successfully saved stats for ' + totalStats + ' repos');
-        }
+  // send the stats from the database for this queryId
+  var sendStatsFromDb = function() {
+    db.any('SELECT * FROM $1~ $2~' +
+      'WHERE $2~.$3~=$4',
+      ['stats', 's', 'user_id', queryId])
+      .then(stats => {
+        console.log('Successfully parsed stats for ' + totalStats + ' repos');
+        res.send(stats);
       })
       .catch(error => {
-        console.error('Error in saveStatsToDb: ', error);
+        console.error('Error in retrieveStats: ', error);
       });
+  };
+  
+  // save stat to database
+  var saveStatToDb = function(combo, repo, stat) {
+    // if this stat's author matches the queryId, add it to the database
+    if (stat.author.id === parseInt(queryId)) {
+      db.any('INSERT INTO $1~ ($2~, $3~, $4~, $5~, $6~, $7~) ' +
+        'VALUES ($8, $9, $10, $11, $12, $13)',
+        ['stats', 'updated_ga', 'total', 'weeks', 'user_id', 'org_id', 'repo_id',
+        dbTimestamp, stat.total, stat.weeks, stat.author.id, combo.orgId, repo.repoId])
+        .then(data => {
+          statsSaved++;
+          // if this was the last stat to be processed, send the server response
+          if (statsSaved === totalStats) {
+            sendStatsFromDb();
+          }
+        })
+        .catch(error => {
+          console.error('Error in saveStatsToDb: ', error);
+        });
+    } else {
+      statsSaved++;
+      // if this was the last stat to be processed, send the server response
+      if (statsSaved === totalStats) {
+        sendStatsFromDb();
+      }
+    }
   };
   
   //  get the stats for a given owner & repo from GitHub

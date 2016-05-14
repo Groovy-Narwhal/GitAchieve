@@ -3,6 +3,9 @@ const userController = require('./../controllers/userController.js');
 const repoController = require('./../controllers/repoController.js');
 const friendController = require('./../controllers/friendController.js');
 const statController = require('./../controllers/statController.js');
+const commitController = require('./../controllers/commitController.js');
+const commitStartController = require('./../controllers/commitStartController.js');
+
 
 // the following routes start from /api/v1/users
 
@@ -16,8 +19,9 @@ userRouter.route('/:id')
   .delete(userController.deleteUser);
 
 userRouter.route('/:id/repos')
+  .get(repoController.retrieveRepos)
   .post(repoController.addRepo)
-  .patch(repoController.retrieveRepos);
+  .patch(repoController.updateRepos);
 
 userRouter.route('/:id/friends')
   .get(friendController.retrieveFriends)
@@ -27,6 +31,13 @@ userRouter.route('/:id/friends')
 userRouter.route('/:id/stats')
   .get(statController.retrieveStats)
   .patch(statController.updateStats);
+  
+userRouter.route('/:id/commits')
+  .get(commitController.retrieveCommits)
+  .patch(commitController.updateCommits);
+  
+userRouter.route('/:id/commits/start')
+  .get(commitStartController.retrieveCompetition);  
 
 // userRouter.route('/:id/achievements')
 //   .get(userController.retrieveAchievements)

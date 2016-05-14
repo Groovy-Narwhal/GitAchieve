@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>183</Value>
+            <Value>185</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -24,7 +24,7 @@
         </Counter>
         <Counter>
             <Name>reference</Name>
-            <Value>53</Value>
+            <Value>54</Value>
             <Prefix>r</Prefix>
         </Counter>
         <Counter>
@@ -74,7 +74,7 @@
         </Counter>
         <Counter>
             <Name>referenceDisplay</Name>
-            <Value>52</Value>
+            <Value>53</Value>
             <Prefix>rd</Prefix>
         </Counter>
         <Counter>
@@ -597,7 +597,7 @@
                     <Name>secondary_repo_id</Name>
                     <Type>int</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -621,8 +621,8 @@
             <Description></Description>
             <Columns>
                 <Column Id="c58">
-                    <Name>id_ga</Name>
-                    <Type>serial</Type>
+                    <Name>sha</Name>
+                    <Type>varchar(40)</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -638,26 +638,8 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
-                <Column Id="c60">
-                    <Name>sha</Name>
-                    <Type>varchar(40)</Type>
-                    <Description>It's possible, but very unlikely, for two commits to have the same SHA.</Description>
-                    <Nullable>true</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
-                <Column Id="c59">
-                    <Name>commit_message</Name>
-                    <Type>varchar(100)</Type>
-                    <Description></Description>
-                    <Nullable>true</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
-                    <Properties/>
-                </Column>
-                <Column Id="c62">
-                    <Name>commit_author_date</Name>
+                <Column Id="c184">
+                    <Name>date</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
@@ -670,6 +652,15 @@
                     <Type>int</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c59">
+                    <Name>commit_message</Name>
+                    <Type>text</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -863,8 +854,8 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
-                <Column Id="c99">
-                    <Name>commit_id_ga</Name>
+                <Column Id="c102">
+                    <Name>repo_id</Name>
                     <Type>int</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
@@ -872,9 +863,9 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
-                <Column Id="c102">
-                    <Name>repo_id</Name>
-                    <Type>int</Type>
+                <Column Id="c185">
+                    <Name>commit_sha</Name>
+                    <Type>varchar(40)</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -1217,25 +1208,6 @@
             <OnDeleteAction>None</OnDeleteAction>
             <Properties/>
         </Reference>
-        <Reference Id="r28">
-            <Name>commits_repos_commits</Name>
-            <Description></Description>
-            <PKTable>t12</PKTable>
-            <FKTable>t15</FKTable>
-            <PKRole></PKRole>
-            <FKRole></FKRole>
-            <ReferenceColumns>
-                <ReferenceColumn>
-                    <PKColumn>c58</PKColumn>
-                    <FKColumn>c99</FKColumn>
-                </ReferenceColumn>
-            </ReferenceColumns>
-            <Cardinality>0..*</Cardinality>
-            <Mandatory>true</Mandatory>
-            <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
-            <Properties/>
-        </Reference>
         <Reference Id="r30">
             <Name>commits_repos_repos</Name>
             <Description></Description>
@@ -1484,7 +1456,7 @@
             <Properties/>
         </Reference>
         <Reference Id="r52">
-            <Name>users_users_repos</Name>
+            <Name>users_users_secondary_repos</Name>
             <Description></Description>
             <PKTable>t13</PKTable>
             <FKTable>t11</FKTable>
@@ -1494,6 +1466,25 @@
                 <ReferenceColumn>
                     <PKColumn>c101</PKColumn>
                     <FKColumn>c182</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>false</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r54">
+            <Name>commits_repos_commits</Name>
+            <Description></Description>
+            <PKTable>t12</PKTable>
+            <FKTable>t15</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c58</PKColumn>
+                    <FKColumn>c185</FKColumn>
                 </ReferenceColumn>
             </ReferenceColumns>
             <Cardinality>0..*</Cardinality>
@@ -1534,8 +1525,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td7">
-            <X>4274.5</X>
-            <Y>4309.5</Y>
+            <X>4247.5</X>
+            <Y>4318.5</Y>
             <Width>264.0</Width>
             <Height>202.0</Height>
             <LineColor>#000000</LineColor>
@@ -1574,10 +1565,10 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td11">
-            <X>4237.5</X>
-            <Y>4528.5</Y>
-            <Width>226.0</Width>
-            <Height>130.0</Height>
+            <X>4220.5</X>
+            <Y>4548.5</Y>
+            <Width>224.0</Width>
+            <Height>105.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t12</Table>
@@ -1585,7 +1576,7 @@
         </TableDisplay>
         <TableDisplay Id="td12">
             <X>4161.5</X>
-            <Y>4864.5</Y>
+            <Y>4808.5</Y>
             <Width>215.0</Width>
             <Height>174.0</Height>
             <LineColor>#000000</LineColor>
@@ -1594,8 +1585,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td13">
-            <X>4199.5</X>
-            <Y>4698.5</Y>
+            <X>4181.5</X>
+            <Y>4673.5</Y>
             <Width>162.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
@@ -1634,8 +1625,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td20">
-            <X>4191.5</X>
-            <Y>5127.5</Y>
+            <X>4387.5</X>
+            <Y>5024.5</Y>
             <Width>159.0</Width>
             <Height>130.0</Height>
             <LineColor>#000000</LineColor>
@@ -1644,8 +1635,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td22">
-            <X>3963.5</X>
-            <Y>5117.5</Y>
+            <X>4140.5</X>
+            <Y>5012.5</Y>
             <Width>156.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
@@ -1670,11 +1661,11 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4236.5</X>
-                    <Y>4369.5</Y>
+                    <Y>4378.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4306.5</X>
-                    <Y>4369.5</Y>
+                    <X>4279.5</X>
+                    <Y>4378.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1694,12 +1685,12 @@
                     <Y>4412.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4247.5</X>
+                    <X>4230.5</X>
                     <Y>4412.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4247.5</X>
-                    <Y>4538.5</Y>
+                    <X>4230.5</X>
+                    <Y>4558.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1712,19 +1703,19 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4171.5</X>
-                    <Y>4897.5</Y>
+                    <Y>4841.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4171.5</X>
                     <Y>4777.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4243.5</X>
+                    <X>4225.5</X>
                     <Y>4777.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4243.5</X>
-                    <Y>4733.5</Y>
+                    <X>4225.5</X>
+                    <Y>4708.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -1740,49 +1731,28 @@
                     <Y>4461.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4209.5</X>
+                    <X>4191.5</X>
                     <Y>4461.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4209.5</X>
-                    <Y>4708.5</Y>
+                    <X>4191.5</X>
+                    <Y>4683.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
             <FkTableDisplay>td13</FkTableDisplay>
             <Reference>r26</Reference>
         </ReferenceDisplay>
-        <ReferenceDisplay Id="rd27">
-            <Color>#000000</Color>
-            <Type>Cross_3CP</Type>
-            <ControlPoints>
-                <ControlPoint>
-                    <X>4369.5</X>
-                    <Y>4609.5</Y>
-                </ControlPoint>
-                <ControlPoint>
-                    <X>4369.5</X>
-                    <Y>4713.5</Y>
-                </ControlPoint>
-                <ControlPoint>
-                    <X>4442.5</X>
-                    <Y>4713.5</Y>
-                </ControlPoint>
-            </ControlPoints>
-            <PkTableDisplay>td11</PkTableDisplay>
-            <FkTableDisplay>td14</FkTableDisplay>
-            <Reference>r28</Reference>
-        </ReferenceDisplay>
         <ReferenceDisplay Id="rd29">
             <Color>#000000</Color>
             <Type>Cross_3CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4349.5</X>
-                    <Y>4880.5</Y>
+                    <X>4362.5</X>
+                    <Y>4824.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4349.5</X>
+                    <X>4362.5</X>
                     <Y>4745.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1800,11 +1770,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4328.5</X>
-                    <Y>4875.5</Y>
+                    <Y>4819.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4386.5</X>
-                    <Y>4875.5</Y>
+                    <Y>4819.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4386.5</X>
@@ -1930,15 +1900,15 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4096.5</X>
-                    <Y>4966.5</Y>
+                    <Y>4970.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4010.5</X>
-                    <Y>4966.5</Y>
+                    <X>4150.5</X>
+                    <Y>4970.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4010.5</X>
-                    <Y>5159.5</Y>
+                    <X>4150.5</X>
+                    <Y>5054.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td8</PkTableDisplay>
@@ -1951,15 +1921,15 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4224.5</X>
-                    <Y>5005.5</Y>
+                    <Y>4949.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4109.5</X>
-                    <Y>5005.5</Y>
+                    <X>4286.5</X>
+                    <Y>4949.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4109.5</X>
-                    <Y>5170.5</Y>
+                    <X>4286.5</X>
+                    <Y>5065.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -1976,11 +1946,11 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>3907.5</X>
-                    <Y>5241.5</Y>
+                    <Y>5138.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4248.5</X>
-                    <Y>5241.5</Y>
+                    <X>4444.5</X>
+                    <Y>5138.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1997,11 +1967,11 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>3934.5</X>
-                    <Y>5218.5</Y>
+                    <Y>5115.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4201.5</X>
-                    <Y>5218.5</Y>
+                    <X>4397.5</X>
+                    <Y>5115.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td8</PkTableDisplay>
@@ -2013,20 +1983,20 @@
             <Type>Vertical_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4371.5</X>
-                    <Y>5013.5</Y>
+                    <X>4366.5</X>
+                    <Y>4957.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4371.5</X>
-                    <Y>5036.5</Y>
+                    <X>4366.5</X>
+                    <Y>5046.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4342.5</X>
-                    <Y>5036.5</Y>
+                    <X>4397.5</X>
+                    <Y>5046.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4342.5</X>
-                    <Y>5247.5</Y>
+                    <X>4397.5</X>
+                    <Y>5144.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -2039,11 +2009,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4171.5</X>
-                    <Y>4874.5</Y>
+                    <Y>4818.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4139.5</X>
-                    <Y>4874.5</Y>
+                    <Y>4818.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4139.5</X>
@@ -2060,11 +2030,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4171.5</X>
-                    <Y>4900.5</Y>
+                    <Y>4844.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4122.5</X>
-                    <Y>4900.5</Y>
+                    <Y>4844.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4122.5</X>
@@ -2074,6 +2044,27 @@
             <PkTableDisplay>td12</PkTableDisplay>
             <FkTableDisplay>td10</FkTableDisplay>
             <Reference>r52</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd53">
+            <Color>#000000</Color>
+            <Type>Cross_3CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4431.5</X>
+                    <Y>4579.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4496.5</X>
+                    <Y>4579.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4496.5</X>
+                    <Y>4679.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td11</PkTableDisplay>
+            <FkTableDisplay>td14</FkTableDisplay>
+            <Reference>r54</Reference>
         </ReferenceDisplay>
     </ReferenceDisplays>
     <Properties>
