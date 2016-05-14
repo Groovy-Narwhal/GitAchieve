@@ -16,7 +16,7 @@ exports.retrieveAllUsers = function(req, res) {
 };
 
 // POST at /api/v1/users
-exports.addUser = function(req, res) {  
+exports.addUser = function(req, res) {
   var dbTimestamp = pgp.as.date(new Date());
   db.any('INSERT INTO users (username, email, id, created_ga) ' +
     'VALUES ($1, $2, $3, $4)',
@@ -42,12 +42,13 @@ exports.retrieveUser = function(req, res) {
 // PATCH at '/api/v1/users/:id' to update user with current GitHub data
 exports.updateUser = function(req, res) {
   var queryId = req.params.id;
-  var username = req.body.username;
+  // invitationSender.js uses req.headers
+  var username = req.headers.username || req.body.username;
   var dbTimestamp = pgp.as.date(new Date());
   console.log('in PATCH, username: ', username);
-  
+
   // HELPER FUNCTIONS
-  
+
   // get user info from GitHub
   var getUserFromGitHub = function(username, callback) {
     var options = {
@@ -66,13 +67,13 @@ exports.updateUser = function(req, res) {
       }
     });
   };
-  
+
   // if user exists, update their info; otherwise, add them
   // this is an 'upsert' - it will insert a record if it does not exist, or update it if it exists
   var upsertUser = function(body) {
     db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~, $9~) ' +
       'VALUES ($10, $11, $12, $13, $14, $15, $16) ' +
-      'ON CONFLICT ($3~) ' + 
+      'ON CONFLICT ($3~) ' +
       'DO UPDATE SET ($17~, $5~, $6~, $7~, $8~, $9~) = ($11, $12, $13, $14, $15, $16) ' +
       'WHERE $2~.$3~ = $10 ' +
       'RETURNING *',
@@ -91,7 +92,7 @@ exports.updateUser = function(req, res) {
       }
     });
   };
-  
+
   // CALL HELPERS
   getUserFromGitHub(username, upsertUser);
 };
@@ -112,4 +113,4 @@ exports.deleteUser = function(req, res) {
         res.status(500).send('Error searching database for user');
       }
     });
-};  
+};
