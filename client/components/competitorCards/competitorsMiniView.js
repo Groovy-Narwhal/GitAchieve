@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
-import actions from './../actions/ActionCreators';
+import actions from './../../actions/ActionCreators';
 import ReceivedCompetitorCard from './ReceivedCompetitorCard';
 import SentCompetitorCard from './sentCompetitorCard';
 import AcceptedCompetitorCard from './acceptedCompetitorCard';
@@ -10,12 +10,10 @@ import AcceptedCompetitorCard2 from './acceptedCompetitorCard2';
 
 class CompetitorsMiniView extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   checkIfCompetitors() {
-    if (!!this.props.receivedRequests[0] && !!this.props.sentRequests[0] && !!this.props.confirmedRequests.length[0] <=0) {
+    if (this.props.yesCompetitions) {
+      return <div></div>
+    } else {
       return (
         <div className="centered">
           <h2 className="font-white">Find an opponent!</h2>
@@ -34,7 +32,7 @@ class CompetitorsMiniView extends Component {
   sentRequests() {
     return <div>
     { !!this.props.sentRequests[0] ? 
-      this.props.sentRequests[0].map((c, ind) => <CompetitorCard key={ind} c={c} />) : <div></div> }
+      this.props.sentRequests[0].map((c, ind) => <SentCompetitorCard key={ind} c={c} />) : <div></div> }
     </div>
   }
 

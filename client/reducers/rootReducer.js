@@ -11,7 +11,7 @@ import competitors from './competitorsReducer';
 import competitorsData from './competitorDataReducer';
 import dailyCompetitorsData from './dailyCompetitorDataReducer';
 import chosenWeapons from './chosenWeaponsReducer';
-import {sentRequests, receivedRequests, confirmedRequests, confirmedRequests2 } from './friendRequestReducer.js';
+import {yesCompetitions, sentRequests, receivedRequests, confirmedRequests, confirmedRequests2 } from './friendRequestReducer.js';
 
 export default combineReducers({
   routing: routerReducer,
@@ -30,5 +30,6 @@ export default combineReducers({
   sentRequests,
   receivedRequests,
   confirmedRequests,
-  confirmedRequests2
+  confirmedRequests2,
+  yesCompetitions
 });

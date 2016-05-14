@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { browserHistory } from 'react-router';
-import { Header } from './index';
-import actions from './../actions/ActionCreators';
+import { Header } from './../index';
+import actions from './../../actions/ActionCreators';
 import axios from 'axios';
 
 const ROOT_URL = 'http://127.0.0.1:8000';
 
-class AcceptedCompetitorCard2 extends Component {
+class AcceptedCompetitorCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,10 +18,8 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props.c)
-    axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}`)
+    axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.secondary_user_id}`)
       .then(response => {
-
         this.setState({
           avatar: response.data.avatar_url,
           username: response.data.username,
@@ -51,4 +49,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AcceptedCompetitorCard2);
+export default connect(mapStateToProps, mapDispatchToProps)(AcceptedCompetitorCard);

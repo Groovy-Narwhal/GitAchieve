@@ -34,3 +34,12 @@ export const confirmedRequests2 = (requests = [], action) => {
       return requests;
   }
 };
+
+export const yesCompetitions = (competitions = false, action) => {
+  switch (action.type) {
+    case 'YES_COMPETITIONS':
+      return true;
+    default:
+      return competitions;
+  }
+};

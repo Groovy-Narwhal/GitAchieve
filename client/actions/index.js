@@ -24,6 +24,11 @@ export const signoutUser = () => {
 const checkForFriendRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivedmatches`)
     .then(response => {
+      if (response.data.length > 0) {
+        dispatch({
+          type: types.YES_COMPETITIONS
+        })
+      }
       dispatch({
         type: types.RECEIVED_FR,
         receivedRequests: response.data
@@ -34,6 +39,11 @@ const checkForFriendRequests = (id, dispatch) => {
 const checkForSentRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
     .then(response => {
+      if (response.data.length > 0) {
+        dispatch({
+          type: types.YES_COMPETITIONS
+        })
+      }
       dispatch({
         type: types.SENT_FR,
         sentRequests: response.data
@@ -44,7 +54,11 @@ const checkForSentRequests = (id, dispatch) => {
 const checkForConfirmedRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches`)
     .then(response => {
-      console.log('RES1',response)
+      if (response.data.length > 0) {
+        dispatch({
+          type: types.YES_COMPETITIONS
+        })
+      }
       dispatch({
         type: types.CONFIRMED_FR,
         confirmedRequests: response.data
@@ -55,7 +69,11 @@ const checkForConfirmedRequests = (id, dispatch) => {
 const checkForConfirmedRequests2 = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches2`)
     .then(response => {
-      console.log('RES2',response)
+      if (response.data.length > 0) {
+        dispatch({
+          type: types.YES_COMPETITIONS
+        })
+      }
       dispatch({
         type: types.CONFIRMED_FR2,
         confirmedRequests2: response.data

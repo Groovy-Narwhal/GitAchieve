@@ -88,5 +88,10 @@ export default {
       type: types.CONFIRMED_FR2,
       confirmedRequests2: friends
     }
+  },
+  yesCompetitions: () => {
+    return {
+      type: types.YES_COMPETITIONS
+    }
   }
 };

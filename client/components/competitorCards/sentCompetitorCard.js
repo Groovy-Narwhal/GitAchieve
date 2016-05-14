@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
-import { Header } from './index';
-import actions from './../actions/ActionCreators';
+import { Header } from './../index';
+import actions from './../../actions/ActionCreators';
 import axios from 'axios';
 
 const ROOT_URL = 'http://127.0.0.1:8000';
