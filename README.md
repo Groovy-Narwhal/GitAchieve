@@ -26,7 +26,9 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 ## Architecture
 ### Database Schema
 For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/1GPTzF5Bm_S3_2266Ib4b60NtqnQYp3_9fj6ODiP5INs/edit?usp=sharing)
+
 ![Schema](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/server/db/sql/schema.png)
+
 ### API Server Endpoints
 |Endpoint|Request Type|Description|JSON Required|Data Returned|
 |---|---|---|---|---|
@@ -45,11 +47,19 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/api/v1/users/:id/commits|GET|Get commits for a user by repo|Header for `repoid`|Array containing commits|
 |/api/v1/users/:id/commits|PATCH|Update commits for a user from GitHub|none|Array of commits updated|
 |/api/v1/users/:id/commits/start|GET|Get commits for a user by repo from start date|Header for `repoid` and `startdate`|Object containing days and commits in each day|
+|/api/v1/orgs/:id/orgs|PATCH|Update organizations for user|none|Array of organizations|
+|/api/v1/orgs/:id/pullrequests|PATCH|Update pull requests for user|none|Array of pull request data for user|
+|/api/v1/orgs/:username/orgs|GET|Get all of users organizations|none|Array of organizations data|
+|/api/v1/orgs/:username/pullrequests|GET|Get all of users pull requests|none|Array of pullrequest data|
 
 ### Client Side Routes
 |Route|Description|Related Server Endpoints|
 |---|---|---|
-|/login|Login page with logo, tagline, and GitHub login button|Handled via passport in auth.js|
+|/|Index route displaying Dashboard|?|
+|/signin|Login page with logo, tagline, and GitHub login button|Handled via passport in auth.js|
+|/about|About page|?|
+|/search-results|List of users search results|?|
+
 
 ## Technologies
 ### Front End
@@ -57,16 +67,23 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 - Redux
 - D3.js
 
+
 ### Back End
 - NodeJS
 - ExpressJS
 - Postgres
 
+
 ### Testing
-- Frisby.js - REST API Testing framework built on node.js and Jasmine
-  - npm install -g jasmine-node
-  - run from command line - jasmine-node test/server
-- Expect
+- Back End Tests
+  -  Frisby.js - [http://frisbyjs.com/]
+    - REST API Testing framework built on node.js and Jasmine
+    - npm install -g jasmine-node
+    - run from command line - jasmine-node test/server
+- Front End Tests
+  - Expect - [https://github.com/mjackson/expect]
+  - Enzyme with Mocha - [https://github.com/airbnb/enzyme]
+
 
 ### Deployment
 - AWS EC2

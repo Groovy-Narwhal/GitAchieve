@@ -31,3 +31,10 @@ frisby.create('Post user')
   }, {json: true})
   .expectHeaderContains('Content-Type', 'text/html; charset=utf-8')
 .toss()
+
+frisby.create('Get Orgs')
+  .get(`${CALLBACKHOST}/api/v1/orgs/msmith9393/orgs`)
+  .expectStatus(200)
+  .expectHeader('Content-Type', 'application/json; charset=utf-8')
+.toss();
+

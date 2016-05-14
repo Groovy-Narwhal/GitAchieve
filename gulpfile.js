@@ -22,7 +22,8 @@ gulp.task('lint', function() {
 
 // Test Task
 gulp.task('test', shell.task([
-  'mocha test/client/.setup.js test/client'
+  'mocha test/client/.setup.js test/client',
+  'jasmine-node spec/api/ --junitreport'
 ]));
 
 // Build Task
