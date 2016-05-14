@@ -21,7 +21,7 @@ export const signoutUser = () => {
   }
 }
 
-export const checkForFriendRequests = (id, dispatch) => {
+const checkForFriendRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivedmatches`)
     .then(response => {
       dispatch({
@@ -31,12 +31,23 @@ export const checkForFriendRequests = (id, dispatch) => {
     });
 };
 
-export const checkForSentRequests = (id, dispatch) => {
+const checkForSentRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
     .then(response => {
       dispatch({
         type: types.SENT_FR,
         sentRequests: response.data
+      });
+    });
+};
+
+const checkForConfirmedRequests = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches`)
+    .then(response => {
+      console.log('RES',response)
+      dispatch({
+        type: types.CONFIRMED_FR,
+        confirmedRequests: response.data
       });
     });
 };
@@ -66,6 +77,7 @@ export const signinUser = () => {
           console.log(msg.msg);
           checkForFriendRequests(userProfile.id, dispatch);
           checkForSentRequests(userProfile.id, dispatch);
+          checkForConfirmedRequests(userProfile.id, dispatch);
         });
 
         // - redirect to the route '/'
@@ -78,6 +90,11 @@ export const signinUser = () => {
       })
       .then((id) => {
         checkForSentRequests(id, dispatch);
+        return id;
+      })
+      .then((id) => {
+        checkForConfirmedRequests(id, dispatch);
+        return id;
       })
       .catch((err) => {
         console.log('error', err);

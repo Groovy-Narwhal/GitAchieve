@@ -119,9 +119,7 @@ exports.confirmFriend = function(req, res) {
           'AND users_users.secondary_user_id=($5)) ' +
           'RETURNING *', 
           [confirmedAt, secondaryRepoId, lastActive, primaryUserId, secondaryUserId])
-          .then(data => {
-            res.send(data);
-          })
+          .then(data => res.send(data))
           .catch(error => {
             console.error(error);
             res.status(500).send('Error updating users_users connection');                
@@ -147,10 +145,7 @@ exports.checkForFriendRequests = function(req, res) {
     'WHERE uu.secondary_user_id=($1) ' +
     'AND uu.confirmed_at IS NULL',
     [secondaryIdCheck]
-  ).then(data => {
-    console.log('Data of friend Requests received not accepted', data);
-    res.send(data);
-  })
+  ).then(data => res.send(data))
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
@@ -167,10 +162,7 @@ exports.checkForSentRequests = function(req, res) {
     'WHERE uu.primary_user_id=($1) ' +
     'AND uu.confirmed_at IS NULL',
     [primaryIdCheck]
-  ).then(data => {
-    console.log('Data of friend Requests sent not accepted', data);
-    res.send(data);
-  })
+  ).then(data => res.send(data))
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
@@ -186,12 +178,9 @@ exports.checkApprovedRequests = function(req, res) {
     db.any('Select * from users_users uu ' +
       'WHERE uu.primary_user_id=($1) ' +
       'OR uu.secondary_user_id=($1) ' +
-      'AND uu.confirmed_at IS NULL',
+      'AND uu.confirmed_at IS NOT NULL',
       [id]
-    ).then(data => {
-      console.log('Data of friend Requests sent not accepted', data);
-      res.send(data);
-    })
+    ).then(data => res.send(data))
     .catch(error => {
       console.error(error);
       res.status(500).send('Error finding users_users connection');   
