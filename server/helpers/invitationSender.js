@@ -1,4 +1,6 @@
+// @ISSUE: possible issue, pay attention to whether multiple email requests are sent
 // @TODO: add link that if clicked notifies the challenger their challenge was accepted
+
 const request = require('request');
 const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
@@ -18,7 +20,7 @@ var sendEmail = (competitorEmail) => {
     to:     competitorEmail,
     from:   'gitachieve@gmail.com',
     subject: `${user} wants to compete with you on GitAchieve`,
-    text:   "You've been challenged by ${user} on GitAchieve!\nAccept the invitation"
+    html:   `<h2>You\'ve received a challenge on GitAchieve!</h2><p>Github user ${user} wants to compete with you, meaning you each select one repo and see who can make more commits within the competition timeframe!</p><p><a>Create an account</a> at gitachieve.com in seconds with Github login.</p>`
   });
 
   sendgrid.send (email, function (err, json) {
