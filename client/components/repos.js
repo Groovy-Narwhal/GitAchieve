@@ -39,6 +39,7 @@ class Repos extends Component {
       this.setState({reposObj: reposObj});
       // Filter data to only include repos that the user has contributed to
       this.setState({repos: repos});
+      this.props.actions.chooseWeapon(this.state.repos[0]);
 
       var pad = 30;
       var w = 540;
@@ -95,7 +96,7 @@ class Repos extends Component {
   selectRepo(e) {
     this.props.actions.chooseWeapon(this.state.reposObj[e.target.value]);
     this.setState({selectedRepo: this.state.reposObj[e.target.value]});
-    
+
   }
   log(e) {
     console.log('logging: ', e.target.value);
