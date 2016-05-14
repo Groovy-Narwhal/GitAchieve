@@ -23,6 +23,7 @@ class ChooseWeapon extends Component {
       primary_repo_id: primaryRID,
       competition_start: new Date()
     };
+    
     // this will add opponent user to database if they don't already exist
     axios.patch(`${ROOT_URL}/api/v1/users/${competitionData.secondary_user_id}`, {
       username: competitionData.secondaryUsername

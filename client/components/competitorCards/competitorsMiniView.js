@@ -9,7 +9,6 @@ import AcceptedCompetitorCard from './acceptedCompetitorCard';
 import AcceptedCompetitorCard2 from './acceptedCompetitorCard2';
 
 class CompetitorsMiniView extends Component {
-
   checkIfCompetitors() {
     if (this.props.yesCompetitions) {
       return <div></div>
@@ -23,6 +22,7 @@ class CompetitorsMiniView extends Component {
   }
 
   receivedRequests() {
+
     return <div>
       { !!this.props.receivedRequests[0] ? 
         this.props.receivedRequests[0].map((c, ind) => <ReceivedCompetitorCard key={ind} c={c} />) : <div></div> }

@@ -60,31 +60,31 @@ ALTER TABLE users_users
     DROP CONSTRAINT users_users_users2;
 
 -- tables
-DROP TABLE branches;
+DROP TABLE branches CASCADE;
 
-DROP TABLE commits;
+DROP TABLE commits CASCADE;
 
-DROP TABLE commits_repos;
+DROP TABLE commits_repos CASCADE;
 
-DROP TABLE orgs;
+DROP TABLE orgs CASCADE;
 
-DROP TABLE orgs_repos;
+DROP TABLE orgs_repos CASCADE;
 
-DROP TABLE pull_requests;
+DROP TABLE pull_requests CASCADE;
 
-DROP TABLE repos;
+DROP TABLE repos CASCADE;
 
-DROP TABLE repos_branches;
+DROP TABLE repos_branches CASCADE;
 
-DROP TABLE stats;
+DROP TABLE stats CASCADE;
 
-DROP TABLE users;
+DROP TABLE users CASCADE;
 
-DROP TABLE users_orgs;
+DROP TABLE users_orgs CASCADE;
 
-DROP TABLE users_repos;
+DROP TABLE users_repos CASCADE;
 
-DROP TABLE users_users;
+DROP TABLE users_users CASCADE;
 
 -- sequences
 DROP SEQUENCE IF EXISTS Sequence_3;
