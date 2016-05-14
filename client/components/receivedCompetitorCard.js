@@ -17,7 +17,7 @@ class ReceivedCompetitorCard extends Component {
   }
 
   componentWillMount() {
-    axios.get(`${ROOT_URL}/api/v1/users/${this.props.req.primary_user_id}`)
+    axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}`)
       .then(response => {
         this.setState({
           avatar: response.data.avatar_url,
@@ -27,22 +27,20 @@ class ReceivedCompetitorCard extends Component {
   }
 
   handleAccept(e, req) {
+    console.log(this.props.c)
     e.preventDefault();
-    const dummySecondaryUsername = 'ashley-austincoder';
     const socket = io.connect(window.location.origin);
     socket.emit('Accept Request', {
       user1: this.props.user.username,
-      user2: dummySecondaryUsername
+      user2: this.state.username
     });
 
-
-    const secondaryId = req.secondary_user_id;
-    const primaryUserId = req.primary_user_id;
-    axios.patch(`${ROOT_URL}/api/v1/users/${secondaryId}/friends`, {
+    axios.patch(`${ROOT_URL}/api/v1/users/${this.props.user.id}/friends`, {
       secondaryRepoId: 57168943, //DUMMY DATA
-      primaryUserId: primaryUserId
+      primaryUserId: this.props.c.primary_user_id
     })
     .then(response => {
+      console.log('RES', response)
       axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/receivedmatches`)
         .then(response => {
           this.props.actions.receivedFriendRequests(response.data);
@@ -51,7 +49,7 @@ class ReceivedCompetitorCard extends Component {
   }
 
   componentWillMount() {
-    axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.secondary_user_id}`)
+    axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}`)
       .then(response => {
         this.setState({
           avatar: response.data.avatar_url,

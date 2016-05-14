@@ -30,11 +30,11 @@ class CompetitorCard extends Component {
   render() {
     return <div>
       { !!this.state.avatar ? 
-          <div className="competitor-card">
-            <img className="user-avatar-med" src={this.state.avatar} />
-            <h2 className="font-white">{this.state.username}</h2>
-            <span>Waiting...</span>
-          </div> : <div>huh</div> }
+        <div className="competitor-card">
+          <img className="user-avatar-med" src={this.state.avatar} />
+          <h2 className="font-white">{this.state.username}</h2>
+          <span>Waiting...</span>
+        </div> : <div></div> }
     </div>
   }
 }

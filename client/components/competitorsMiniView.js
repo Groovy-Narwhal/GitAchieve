@@ -32,7 +32,7 @@ class CompetitorsMiniView extends Component {
   sentRequests() {
     return <div>
     { !!this.props.sentRequests[0] ? 
-      this.props.sentRequests[0].map((c, ind) => <CompetitorCard key={ind} c={c} />) : <div>Up</div> }
+      this.props.sentRequests[0].map((c, ind) => <CompetitorCard key={ind} c={c} />) : <div></div> }
     </div>
   }
 
@@ -43,6 +43,7 @@ class CompetitorsMiniView extends Component {
         <div className="data-results-container-flex full-width">
           {this.checkIfCompetitors()}
           {this.sentRequests()}
+          {this.receivedRequests()}
         </div>
       </div>
     );
