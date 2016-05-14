@@ -1,3 +1,7 @@
+/*
+  This file is not being used anywhere.
+*/
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
@@ -44,7 +48,7 @@ class ReposWithContribs extends Component {
         contributors.push(await this.fetchContributors(repos[i]));
       }
       // Get user contributions for each repo
-      var userScoreArr = contributors.map((c) => { 
+      var userScoreArr = contributors.map((c) => {
         let res;
         c.forEach((user) => { if (user.author.login === this.props.user.username) res = user.total; });
         return res;
