@@ -63,8 +63,10 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 - Postgres
 
 ### Testing
-- Mocha/Chai
-- JSHint
+- Frisby.js - REST API Testing framework built on node.js and Jasmine
+  - npm install -g jasmine-node
+  - run from command line - jasmine-node test/server
+- Expect
 
 ### Deployment
 - AWS EC2
