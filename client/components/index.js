@@ -11,7 +11,7 @@ export RepoProfile from './repoProfile';
 export CumulativeChart from './../chartmakers/cumulativeChart';
 export DailyChart from './../chartmakers/dailyChart';
 export Organizations from './organizations';
-export UserAchievements from './UserAchievements';
+export UserAchievements from './userAchievements';
 export ChooseWeapon from './chooseWeapon';
 export ChooseSecondWeapon from './chooseSecondWeapon';
 export CompetitorsMiniView from './competitorCards/competitorsMiniView';

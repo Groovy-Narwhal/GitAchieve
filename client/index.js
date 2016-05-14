@@ -20,7 +20,6 @@ render(
         <IndexRoute component={RequireAuth(component.DashBoard)} />
         <Route path="/signin" component={component.Login} />
         <Route path="/about" component={component.About} />
-        <Route path="/orgs" component={component.Organizations} />
         <Route path="/search-results" component={component.SearchResults} />
         <Route path="/:username/profile" component={component.UserProfile} />
         <Route path="/:username/achievements" component={component.UserAchievements} />
