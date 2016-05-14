@@ -24,7 +24,6 @@ export const signoutUser = () => {
 export const checkForFriendRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivedmatches`)
     .then(response => {
-      console.log('Response in FR', response)
       dispatch({
         type: types.RECEIVED_FR,
         receivedRequests: response.data
@@ -35,7 +34,6 @@ export const checkForFriendRequests = (id, dispatch) => {
 export const checkForSentRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
     .then(response => {
-      console.log('Response in SR', response)
       dispatch({
         type: types.SENT_FR,
         sentRequests: response.data

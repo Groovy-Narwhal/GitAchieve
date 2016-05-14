@@ -13,7 +13,7 @@ class CompetitorsMiniView extends Component {
   }
 
   checkIfCompetitors() {
-    if (!this.props.sentRequests[0] && !this.props.receivedRequests[0]) {
+    if (this.props.competitors.length === 0) {
       return (
         <div className="centered">
           <h2 className="font-white">Find an opponent!</h2>

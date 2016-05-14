@@ -34,6 +34,9 @@ userRouter.route('/:id/receivedmatches')
 userRouter.route('/:id/requestedmatches')
   .get(friendController.checkForSentRequests); // using
 
+userRouter.route('/:id/successmatches')
+  .get(friendController.checkApprovedRequests); // using
+
 // userRouter.route('/:id/achievements')
 //   .get(userController.retrieveAchievements)
 //   .post(userController.addAchievements);
