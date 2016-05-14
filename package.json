@@ -31,7 +31,11 @@
     "redux-actions": "^0.9.1",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.0.1",
-    "socket.io": "^1.4.6"
+<<<<<<< d039cf654e486b96138f24afcf426c5196cddc92
+    "socket.io": "^1.4.6",
+=======
+>>>>>>> Add sendgrid email send capability
+    "sendgrid": "^2.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.7.7",
