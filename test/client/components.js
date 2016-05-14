@@ -6,6 +6,6 @@ import Login from '../../client/components/login.js';
 describe('<Login />', () => {
   it('should render login page', () => {
     const wrapper = shallow(<Login />);
-    expect(wrapper.contains(<p>Who's on top of their code game?</p>)).to.be.true;
+    expect(wrapper.contains(<h1 className="font-gray">Are you on top of your Git game?</h1>)).to.be.true;
   });
 });
