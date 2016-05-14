@@ -115,8 +115,8 @@ class Repos extends Component {
       if (window.location.pathname.includes('compete')) {
         return (
           <div className="data-results-container-flex full-width">
-            <select value="select repo" onChange={(e) => (this.selectRepo.call(this, e))}>
-              <option value="select repo" disabled>select a repo</option>
+            <select onChange={(e) => (this.selectRepo.call(this, e))}>
+              <option disabled>select a repo</option>
               {this.state.repos.map(repo => (<option value={repo.name} key={repo.id}>{repo.name}</option>))}
             </select>
           </div>
