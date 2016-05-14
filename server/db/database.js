@@ -34,6 +34,6 @@ db.tx(t=> t.one(sql.test)
   })
   .finally(pgp.end)
 );
-  
+
 exports.db = db;
 exports.pgp = pgp;
