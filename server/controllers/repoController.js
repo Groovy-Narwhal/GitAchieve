@@ -3,7 +3,7 @@ const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
 const token = require('../config/github.config').token;
 
-
+// GET at '/api/v1/users/:id/repos' to get a user's repos by user id
 exports.retrieveRepos = function(req, res) {
   var queryId = req.params.id;
   db.any(('SELECT r.id, r.updated_ga, r.created_at, r.name, r.owner_id, r.watchers_count, r.stargazers_count, r.forks_count, r.org_commit_activity ' + 
@@ -19,7 +19,7 @@ exports.retrieveRepos = function(req, res) {
     });
 };
 
-// PATCH at '/api/v1/users/:id/repos'
+// PATCH at '/api/v1/users/:id/repos' to update a user's repos from GitHub by user id
 exports.updateRepos = function(req, res) {
   var queryId = req.params.id;
   var queryUsername = req.body.profile.username;

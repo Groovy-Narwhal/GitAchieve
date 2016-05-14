@@ -5,7 +5,7 @@ const token = require('../config/github.config').token;
 
 
 // GET at '/api/v1/users/:id/stats' to get a user's stats
-// the headers must include the orgid and repoid
+// the headers must include the 'orgid' and 'repoid'
 exports.retrieveStats = function(req, res) {
   var queryId = req.params.id;
   db.any('SELECT * FROM $1~ $2~' +

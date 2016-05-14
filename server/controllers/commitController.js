@@ -6,7 +6,17 @@ const rp = require('request-promise');
 
 // GET at '/api/v1/users/:id/commits'
 exports.retrieveCommits = function(req, res) {
-
+  var queryId = req.params.id;
+  db.any('SELECT * FROM $1~ ' +
+    'WHERE $2~ = $3',
+    ['commits', 'user_id', queryId])
+    .then(commits => {
+      res.send(commits);
+    })
+    .catch(error => {
+      console.error('Error querying commits: ', error);
+      res.status(500).send;
+    }); 
 };
 
 // PATCH at '/api/v1/users/:id/commits'
