@@ -5,6 +5,7 @@ node_js:
   - "4"
   - "iojs"
 before_script:
+  - npm install -g jasmine-node
   - npm install -g gulp
 script: 'gulp test'
 sudo: false

@@ -21,6 +21,66 @@ export const signoutUser = () => {
   }
 }
 
+const checkForFriendRequests = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivedmatches`)
+    .then(response => {
+      if (response.data.length > 0) {
+        dispatch({
+          type: types.YES_COMPETITIONS
+        })
+      }
+      dispatch({
+        type: types.RECEIVED_FR,
+        receivedRequests: response.data
+      });
+    });
+};
+
+const checkForSentRequests = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
+    .then(response => {
+      if (response.data.length > 0) {
+        dispatch({
+          type: types.YES_COMPETITIONS
+        })
+      }
+      dispatch({
+        type: types.SENT_FR,
+        sentRequests: response.data
+      });
+    });
+};
+
+const checkForConfirmedRequests = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches`)
+    .then(response => {
+      if (response.data.length > 0) {
+        dispatch({
+          type: types.YES_COMPETITIONS
+        })
+      }
+      dispatch({
+        type: types.CONFIRMED_FR,
+        confirmedRequests: response.data
+      });
+    });
+};
+
+const checkForConfirmedRequests2 = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches2`)
+    .then(response => {
+      if (response.data.length > 0) {
+        dispatch({
+          type: types.YES_COMPETITIONS
+        })
+      }
+      dispatch({
+        type: types.CONFIRMED_FR2,
+        confirmedRequests2: response.data
+      });
+    });
+};
+
 export const signinUser = () => {
   return dispatch => {
     // - Update state to indicate user is authenticated
@@ -36,8 +96,39 @@ export const signinUser = () => {
         dispatch({ type: types.UPDATE_USER, payload: userProfile });
         // - Save the JWT token
         localStorage.setItem('token', response.data.token);
+
+        // connect to socket
+        const socket = io.connect(window.location.origin);
+        // join room 
+        socket.emit('join', userProfile);
+        // listen for incoming messages
+        socket.on('incoming_request', msg => {
+          console.log(msg.msg);
+          checkForFriendRequests(userProfile.id, dispatch);
+          checkForSentRequests(userProfile.id, dispatch);
+          checkForConfirmedRequests(userProfile.id, dispatch);
+          checkForConfirmedRequests2(userProfile.id, dispatch);
+        });
+
         // - redirect to the route '/'
         browserHistory.push('/');
+        return userProfile.id;
+      })
+      .then((id) => {
+        checkForFriendRequests(id, dispatch);
+        return id;
+      })
+      .then((id) => {
+        checkForSentRequests(id, dispatch);
+        return id;
+      })
+      .then((id) => {
+        checkForConfirmedRequests(id, dispatch);
+        return id;
+      })
+      .then((id) => {
+        checkForConfirmedRequests2(id, dispatch);
+        return id;
       })
       .catch((err) => {
         console.log('error', err);

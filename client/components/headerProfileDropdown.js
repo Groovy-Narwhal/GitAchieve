@@ -13,8 +13,8 @@ class HeaderUserButton extends Component {
   render() {
     return (
       <div className="header-profile-dropdown">
-        <div className="header-profile-dropdown-item" onClick={() => (browserHistory.push('user/profile'))}>profile</div>
-        <div className="header-profile-dropdown-item" onClick={() => (browserHistory.push('user/achievements'))}>achievements</div>
+        <div className="header-profile-dropdown-item" onClick={() => (browserHistory.push('/profile'))}>profile</div>
+        <div className="header-profile-dropdown-item" onClick={() => (browserHistory.push('/achievements'))}>achievements</div>
         <div className="header-profile-dropdown-item" onClick={this.props.actions.unAuthUser}>signout</div>
       </div>
     )

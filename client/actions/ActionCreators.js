@@ -64,5 +64,34 @@ export default {
       type: types.CHOOSE_WEAPON,
       weapon
     }
+  },
+  receivedFriendRequests: friends => {
+    return {
+      type: types.RECEIVED_FR,
+      receivedRequests: friends
+    }
+  },
+  sentFriendRequests: friends => {
+    return {
+      type: types.SENT_FR,
+      sentRequests: friends
+    }
+  },
+  confirmedFriendRequests: friends => {
+    return {
+      type: types.CONFIRMED_FR,
+      confirmedRequests: friends
+    }
+  },
+  confirmedFriendRequests2: friends => {
+    return {
+      type: types.CONFIRMED_FR2,
+      confirmedRequests2: friends
+    }
+  },
+  yesCompetitions: () => {
+    return {
+      type: types.YES_COMPETITIONS
+    }
   }
 };
