@@ -177,8 +177,9 @@ exports.updateCommits = function(req, res) {
         headers: {
           'User-Agent': repoOwner.userName,
           // Uncomment this line to make GET requests from within the site (not with Postman)
-          // 'Authorization': `token ${req.body.token}`
-          'Authorization': 'token ' + token
+          'Authorization': `token ${req.body.token}`
+          // Uncomment this line to make GET requests from Postman
+          // 'Authorization': 'token ' + token
         },
         json: true // Automatically parses the JSON string in the response 
       };
