@@ -44,6 +44,7 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/api/v1/users/:id/stats|PATCH|Update stats for a user from GitHub |none|Array of stats updated - each has user_id, org_id and repo_id|
 |/api/v1/users/:id/commits|GET|Get commits for a user by repo|Header for `repoid`|Array containing commits|
 |/api/v1/users/:id/commits|PATCH|Update commits for a user from GitHub|none|Array of commits updated|
+|/api/v1/users/:id/commits/start|GET|Get commits for a user by repo from start date|Header for `repoid` and `startdate`|Object containing days and commits in each day|
 
 ### Client Side Routes
 |Route|Description|Related Server Endpoints|
