@@ -49,6 +49,21 @@ body {
 .font-white {
   color: #fff; }
 
+.font-lightest-gray {
+  color: #eee; }
+
+.font-lighter-gray {
+  color: #ccc; }
+
+.font-light-gray {
+  color: #999; }
+
+.font-medium-gray {
+  color: #444; }
+
+.font-dark-gray {
+  color: #222; }
+
 .centered {
   margin-right: auto;
   margin-left: auto; }
@@ -169,6 +184,22 @@ h3 {
   font-style: normal;
   src: url("/fonts/Open-Sans-700/Open-Sans-700.eot");
   src: url("/fonts/Open-Sans-700/Open-Sans-700.eot?#iefix") format("embedded-opentype"), local("Open Sans Bold"), local("Open-Sans-700"), url("/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.woff2") format("woff2"), url("/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.woff") format("woff"), url("/static/stylesheets/partials/fonts/Open-Sans-700/Open-Sans-700.ttf") format("truetype"), url("/fonts/Open-Sans-700/Open-Sans-700.svg#OpenSans") format("svg"); }
+.button {
+  -webkit-appearance: caret;
+  background-color: #1d9;
+  border-radius: 5px;
+  padding: 5px;
+  color: #fff; }
+
+.signin {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 50px;
+  height: 50px;
+  padding-bottom: auto;
+  padding-top: auto;
+  vertical-align: middle; }
+
 .user-avatar-sm {
   width: 20px;
   height: 20px;
@@ -210,13 +241,6 @@ h3 {
 
 .search-container {
   white-space: nowrap; }
-
-.button {
-  -webkit-appearance: caret;
-  background-color: #1d9;
-  border-radius: 5px;
-  padding: 5px;
-  color: #fff; }
 
 .compete {
   padding: 20px;
