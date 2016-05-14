@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { browserHistory, Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import actions from './../actions/ActionCreators';
 
 class HeaderUserButton extends Component {

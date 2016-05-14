@@ -45,10 +45,8 @@ exports.updateUser = function(req, res) {
   var queryId = req.params.id;
   var username = req.body.username;
   var dbTimestamp = pgp.as.date(new Date());
-  var username = req.headers.username || req.body.username;
 
   // HELPER FUNCTIONS
-
   // get user info from GitHub
   var getUserFromGitHub = function() {
     var options = {
