@@ -1,12 +1,10 @@
-// @ISSUE: may be getting called twice (two 'in api' & json console logs)
-// @ISSUE: also seem to be getting rejected promises in console (may be related to twice-sending)
-// @TODO: add email to database in the cases that I fetch it
 // @TODO: add link that if clicked notifies the challenger their challenge was accepted
 const request = require('request');
 const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
 const SEND_GRID_API = require('./../../server/config/sendGridKey');
 const sendgrid  = require('sendgrid')(SEND_GRID_API.key);
+<<<<<<< 77a9bc76a0113f7d2efc85af110407db0d4d1ca1
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 var competitorEmail;
