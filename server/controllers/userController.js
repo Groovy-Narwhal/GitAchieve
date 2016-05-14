@@ -43,25 +43,12 @@ exports.retrieveUser = function(req, res) {
 // PATCH at '/api/v1/users/:id' to update user with current GitHub data
 exports.updateUser = function(req, res) {
   var queryId = req.params.id;
+  var username = req.body.username;
   var dbTimestamp = pgp.as.date(new Date());
-  var username = req.headers.username || req.body.username;
 
   // HELPER FUNCTIONS
-
-  // get username from database
-  var getUserNameFromDb = function(id, callback) {
-    db.one('SELECT * FROM users WHERE id=$1', queryId)
-    .then((data) => {
-      callback(data.username);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send('Error searching database for user');
-    });
-  };
-
   // get user info from GitHub
-  var getUserFromGitHub = function(username) {
+  var getUserFromGitHub = function() {
     var options = {
       url: 'https://api.github.com/users/' + username,
       method: 'GET',
@@ -89,7 +76,7 @@ exports.updateUser = function(req, res) {
       'WHERE $2~.$3~ = $10 ' +
       'RETURNING *',
       ['users', 'u', 'id', 'created_ga', 'username', 'email', 'avatar_url', 'followers', 'following',
-      queryId, dbTimestamp, body.username, body.email, body.avatar_url, body.followers, body.following, 'updated_ga'])
+      queryId, dbTimestamp, body.login, body.email, body.avatar_url, body.followers, body.following, 'updated_ga'])
     .then((data) => {
       res.send(data);
     })
@@ -105,13 +92,12 @@ exports.updateUser = function(req, res) {
   };
 
   // CALL HELPERS
-  getUserNameFromDb(queryId, getUserFromGitHub);
+  getUserFromGitHub(getUserFromGitHub);
 };
 
 // DELETE at '/api/v1/users/:id'
 exports.deleteUser = function(req, res) {
   var queryId = req.params.id;
-  console.log('queryId', queryId);
   // delete the user and return all deleted rows
   db.one('DELETE FROM users WHERE id=$1 RETURNING *', queryId)
     .then((data) => res.send(data))

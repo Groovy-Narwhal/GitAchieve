@@ -108,7 +108,6 @@ exports.confirmFriend = function(req, res) {
     'AND uu.secondary_user_id=($2)', 
     [primaryUserId, secondaryUserId])
     .then(data => {
-      console.log('DATA', data)
       if (data !== null) {
         db.oneOrNone(
           'UPDATE users_users ' + 
