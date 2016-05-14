@@ -23,16 +23,8 @@ class SearchResults extends Component {
 
     this.props.actions.chooseSearchResult(result);
 
-<<<<<<< 77a9bc76a0113f7d2efc85af110407db0d4d1ca1
-    axios.get(`${ROOT_URL}/send-email?competitor=${result.login}`);
-=======
     // SEND EMAIL
-    // ?from=${this.props.user.username}
-    axios.get(`${ROOT_URL}/send-email?competitor=${result.login}`)
-      .then(response => {
-        console.log('email sent!');
-      });
->>>>>>> (feat) For email invitations, look up competitor email in database, otherwise fetch it from Github
+    axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${result.login}&competitor_id=${result.id}`)
 
     browserHistory.push(`compete/choose-repo/${result.login}`);
 
