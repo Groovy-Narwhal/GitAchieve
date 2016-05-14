@@ -5,6 +5,9 @@ gitSpy/*
 server/logs/*
 server/config/github.config.js
 
+# SendGrid key
+server/config/sendGridKey.js
+
 # Concatenated and minified code
 dist/*
 
