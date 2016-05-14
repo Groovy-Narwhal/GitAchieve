@@ -30,35 +30,37 @@ exports.retrieveCompetition = function(req, res) {
         }       
       }, []);
       
-      // sort commits
-      var filteredAndSortedCommits = filteredCommits.sort((a, b) => {
-        return a.date - b.date;
-      });
-      
       // establish start of competition - this will be the start of the day of the timestamp given
       var startMoment = moment(startDate).startOf('day');
       
       // establish end of competition - this is the end of today
       var endMoment = moment().endOf('day');
       
+      // add each filtered commit to an object with the start of the day as the key
+        // set the value to an empty array to hold the commits
       var days = endMoment.diff(startMoment, 'days');
       var commitHistory = {};
-      // add each filtered commit to an object with the start of the day as the key
-        // and an array of commits in that day as the value
-      
-      // set up the keys of each day in the history by the start of each day
       for (var i = 0; i < days; i++) {
-        var dayStart = moment(startMoment).add(i, 'days');
+        var dayStart = moment(startMoment).add(i, 'days').toString();
         commitHistory[dayStart] = [];
       }
       
       // add each commit to the correct day in the history
-      filteredAndSortedCommits.forEach(commit => {
+      filteredCommits.forEach(commit => {
         var commitDay = moment(commit.date).startOf('day');
         commitHistory[commitDay].push(commit);
       });
       
-      res.send(commitHistory);
+      // put the history into an unsorted array
+      var unsortedHistory = [];
+      for (var key in commitHistory) {
+        var day = {day: new Date(key), commits: commitHistory[key]};
+        unsortedHistory.push(day);
+      }
+      
+      // sort the history by date and return
+      var sortedHistory = unsortedHistory.sort((a, b) => a.day - b.day);
+      res.send(sortedHistory);
       
     })
     .catch(error => {
@@ -66,4 +68,3 @@ exports.retrieveCompetition = function(req, res) {
       res.status(500).send;
     }); 
 };
-
