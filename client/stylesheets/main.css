@@ -67,10 +67,7 @@ body {
   margin-top: 20px;
   margin-right: auto;
   margin-left: auto;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap; }
+  border-radius: 5px; }
 
 .data-results-container-flex {
   padding: 10px;

@@ -61,6 +61,24 @@ class DashBoard extends Component {
             </div>
             <CompetitorsMiniView />
           </div>
+          <div className="data-results-container-clear">
+            <h2 className="font-white">Achievement Chart</h2>
+            <div className="data-results-container full-width">
+              <button onClick={this.makeMainChart.bind(this)} className="button"> Tab 1: Total </button>
+              <button onClick={this.makeDailyChart.bind(this)} className="button"> Tab 2: Daily </button>
+
+              <div id="commit-charts">
+                <svg width={540} height={300}>
+                </svg>
+
+                <div id="optional-extra-chart">
+                </div>
+
+              </div>
+
+              <button onClick={this.addDailyChart.bind(this)} className="button"> See daily breakdown </button>
+            </div>
+          </div>
         </div>
       )
     } else {

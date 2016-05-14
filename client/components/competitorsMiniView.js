@@ -19,7 +19,7 @@ class CompetitorsMiniView extends Component {
     return (
       <div className="data-results-container-clear">
         <h2 className="font-white">My Challenges</h2>
-        <div className="data-results-container full-width">
+        <div className="data-results-container-flex full-width">
           {this.checkIfCompetitors()}
           {this.props.competitors.map((c, i) => (<CompetitorCard competitor={c.competitor} myWeapon={c.myWeapon} key={i} />))}
         </div>
