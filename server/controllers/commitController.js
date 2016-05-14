@@ -9,18 +9,16 @@ exports.retrieveCommits = function(req, res) {
 
 };
 
-
 // PATCH at '/api/v1/users/:id/commits'
 exports.updateCommits = function(req, res) {
   var queryId = req.params.id;
   var dbTimestamp = pgp.as.date(new Date());
+  var repoCount = 0;
   
   // ** HELPER FUNCTIONS **
   
   // to be used once each commit's author has been added to the users table
-  var saveCommitsAndJoins = (commits, repo, repoCount, totalRepos) => {
-    var totalCommits = commits.length;
-    var commitCount = 0;
+  var saveCommitsAndJoins = (commits, repoId, totalRepos, userId) => {
     // save commits to database, using SHA as unique id
     db.tx(t => {
       queries = commits.map(commit => {
@@ -43,17 +41,27 @@ exports.updateCommits = function(req, res) {
             'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
             '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
             ['commits_repos', 'created_ga', 'repo_id', 'commit_sha',
-            dbTimestamp, repo.id, commit.sha]);
+            dbTimestamp, repoId, commit.sha]);
         });
         return t.batch(queries);
       }) 
       .then(data => {
-        commitCount++;
-        console.log('-----');
-        console.log('repoCount = ' + repoCount);
-        console.log('totalRepos = ' + totalRepos);
+        repoCount++;
+        // once all commits from all repos have been added,
         if (repoCount === totalRepos) {
-          res.send('success'); 
+          // query the database for this user's commits
+          db.any('SELECT * FROM $1~ ' +
+            'WHERE $2~ = $3',
+            ['commits', 'user_id', userId])
+          .then(commits => {
+            // send back the updated commits
+            console.log('Successfully patched commits for userId: ' + userId);
+            res.send(commits);
+          })
+          .catch(error => {
+            console.error('Error querying commits: ', error);
+            res.status(500).send;
+          }); 
         }
       })
       .catch(error => {
@@ -67,8 +75,9 @@ exports.updateCommits = function(req, res) {
     }); 
   };            
   
-  // gets all commits for the user's repos
-  var getCommitsAndSaveUsers = callback => {
+  // get the owner information for each repo
+  // this will allow us to set up the GitHub GET request
+  var getRepoOwners = callback => {
     // get the user for this queryId
     db.one('SELECT * from $1~ ' +
       'WHERE $2~=$3',
@@ -83,15 +92,12 @@ exports.updateCommits = function(req, res) {
           [queryId])
           // set up a GET request for each of this user's repos
           .then(repos => {
-            console.log('in commitController, repos: ', repos);
-            
             var repoCount = 0;
             var totalRepos = repos.length;
             var ownerName = user.username;
             var repoName = '';
-            
             var repoOwners = [];
-
+            // set up a hash of each repo's ownership info
             repos.forEach(repo => {
               db.oneOrNone('SELECT * FROM $1~ ' +
                 'WHERE $2~=$3',
@@ -100,23 +106,30 @@ exports.updateCommits = function(req, res) {
                   if (org !== null) {
                     repoOwners.push({
                       repoId: repo.id,
-                      username: user.username,
+                      repoName: repo.name,
+                      userName: user.username,
                       userId: user.id,
                       orgId: org.id,
+                      orgName: org.orgname,
                       repoOwnerId: repo.owner_id
                     });
                   } else {
                     repoOwners.push({
                       repoId: repo.id,
-                      username: user.username,
+                      repoName: repo.name,
+                      userName: user.username,
                       userId: user.id,
                       orgId: null,
+                      orgName: null,
                       repoOwnerId: repo.owner_id
                     });
                   }
                 })
                 .then(data => {
-                  console.log('repoOwners: ', repoOwners);
+                  repoCount++;
+                  if (repoCount === totalRepos) {
+                    callback(repoOwners);
+                  }
                 })  
                 .catch(error => {
                   console.error('Error selecting orgs: ', error);
@@ -125,75 +138,9 @@ exports.updateCommits = function(req, res) {
             });
           })  
           .catch(error => {
-            console.error('Error selecting orgs: ', error);
+            console.error('Error selecting repos: ', error);
             res.status(500).send;
-          });   
-
-            // for each repo:
-              // figure out whether the repo owner is a user or an org
-            // repos.forEach(repo => {
-            //   repoName = repo.name;            
-            //   db.oneOrNone('SELECT * FROM $1~ ' +
-            //     'WHERE $2~=$3',
-            //     ['orgs', 'id', repo.owner_id])
-            //     .then(orgs => {
-            //       // if the owner is an org, set the ownerName to the orgname
-            //       console.log('repoName: ', repoName);
-            //       console.log('orgs', orgs);
-            //     })
-            //     .then(data => {
-            //       // set up the GET request for this repo
-            //       var options = {
-            //         uri: 'https://api.github.com/repos/' + ownerName + '/' + repoName + '/commits',
-            //         headers: {
-            //           'User-Agent': user.username,
-            //           // Uncomment this line to make GET requests from within the site (not with Postman)
-            //           // 'Authorization': `token ${req.body.token}`
-            //           'Authorization': 'token ' + token
-            //         },
-            //         json: true // Automatically parses the JSON string in the response 
-            //       };
-                  
-            //       // invoke the GET request
-            //       rp(options)
-            //         .then(commits => {
-            //           db.tx(t => {
-            //             // insert each commit's author as a user if they don't exist in users table
-            //             var queries = commits.map(commit => {
-            //               return t.any ('INSERT INTO $1~ as $2~ ($3~, $4~, $5~, $6~, $7~, $8~) ' +
-            //                 'VALUES ($9, $10, $11, $12, $13, $14) ' +
-            //                 'ON CONFLICT ($3~) ' +
-            //                 'DO NOTHING',
-            //                 ['users', 'u', 'id', 'created_ga', 'username', 'signed_up', 'email', 'avatar_url',
-            //                 commit.author.id, dbTimestamp, commit.author.login, false, commit.commit.author.email, commit.author.avatar_url]);
-            //             });
-            //             return t.batch(queries);
-            //           })  
-            //           .then(data => {
-            //             repoCount++;
-            //             console.log('invoking callback with ' + commits.length + ' commits');
-            //             callback(commits, repo, repoCount, totalRepos);
-            //           })
-            //           .catch(error => {
-            //             console.error('Error adding users: ', error);
-            //             res.status(500).send;
-            //           }); 
-            //         })
-            //         .catch(error => {
-            //           console.error('Error in GET request: ', error);
-            //           res.status(500).send;
-            //         }); 
-            //     })
-            //     .catch(error => {
-            //       console.error('Error selecting repos: ', error);
-            //       res.status(500).send;
-            //     });            
-            // });
-          // })
-          // .catch(error => {
-          //   console.error('Error selecting orgs: ', error);
-          //   res.status(500).send;
-          // });      
+          });       
       })
       .catch(error => {
         console.error('Error selecting user: ', error);
@@ -201,10 +148,63 @@ exports.updateCommits = function(req, res) {
       });
   };
   
+  
+  var getCommitsFromGitHub = (repoOwners) => {
+    var totalRepos = repoOwners.length;
+    var repoCount = 0;
+    
+    repoOwners.forEach(repoOwner => {
+      var ownerName;
+      if (repoOwner.repoOwnerId === repoOwner.userId) {
+        ownerName = repoOwner.userName;
+      } else {
+        ownerName = repoOwner.orgName;
+      }
+      
+      // configuration of GitHub GET request
+      var options = {
+        uri: 'https://api.github.com/repos/' + ownerName + '/' + repoOwner.repoName + '/commits',
+        headers: {
+          'User-Agent': repoOwner.userName,
+          // Uncomment this line to make GET requests from within the site (not with Postman)
+          // 'Authorization': `token ${req.body.token}`
+          'Authorization': 'token ' + token
+        },
+        json: true // Automatically parses the JSON string in the response 
+      };
+      
+      // invoke the GET request
+      rp(options)
+        .then(commits => {
+          db.tx(t => {
+            // insert each commit's author as a user if they don't exist in users table
+            var queries = commits.map(commit => {
+              return t.any ('INSERT INTO $1~ as $2~ ($3~, $4~, $5~, $6~, $7~, $8~) ' +
+                'VALUES ($9, $10, $11, $12, $13, $14) ' +
+                'ON CONFLICT ($3~) ' +
+                'DO NOTHING',
+                ['users', 'u', 'id', 'created_ga', 'username', 'signed_up', 'email', 'avatar_url',
+                commit.author.id, dbTimestamp, commit.author.login, false, commit.commit.author.email, commit.author.avatar_url]);
+            });
+            return t.batch(queries);
+          })
+          .then(data => {
+            saveCommitsAndJoins(commits, repoOwner.repoId, totalRepos, repoOwner.userId);
+          })
+          .catch(error => {
+            console.error('Error adding commit authors: ', error);
+            res.status(500).send;
+          });
+        })
+      .catch(error => {
+        console.error('Error in GET from GitHub: ', error);
+        res.status(500).send;
+      });
+    });  
+  };
+  
   // CALL HELPER FUNCTIONS
   
-  getCommitsAndSaveUsers(saveCommitsAndJoins);
+  getRepoOwners(getCommitsFromGitHub);
   
 };
-
-
