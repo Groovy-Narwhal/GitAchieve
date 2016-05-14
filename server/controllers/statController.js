@@ -94,6 +94,7 @@ exports.updateStats = function(req, res) {
         'User-Agent': username,
         // Uncomment this line to make GET requests from within the site (not with Postman)
         'Authorization': `token ${req.body.token}`
+        // Uncomment this line to make GET requests from Postman
         // 'Authorization': 'token ' + token
       }
     };
