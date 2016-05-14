@@ -8,8 +8,9 @@ import Repos from './repos';
 class ChooseWeapon extends Component {
   compete() {
     browserHistory.push('/');
-    this.props.actions.addCompetitor({competitor: this.props.chosenSearchResult, myWeapon: this.props.chosenWeapon});
+    this.props.actions.addCompetitor({competitor: this.props.chosenSearchResult, myWeapon: this.props.chosenWeapons});
     this.props.actions.chooseSearchResult({});
+    this.props.actions.chooseWeapon({});
   }
   render() {
     return (
