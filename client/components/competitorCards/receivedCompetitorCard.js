@@ -6,7 +6,7 @@ import { Header } from './../index';
 import actions from './../../actions/ActionCreators';
 import axios from 'axios';
 
-const ROOT_URL = 'http://127.0.0.1:8000';
+const ROOT_URL = require('../../../server/config/config-settings').CALLBACKHOST;
 
 class ReceivedCompetitorCard extends Component {
   constructor(props) {
