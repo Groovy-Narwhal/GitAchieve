@@ -22,34 +22,6 @@ class SearchResults extends Component {
 
   }
 
-  routeTo(e, result, type) {
-    this.props.actions.chooseSearchResult(result);
-    let fetchTo, routeTo;
-    if (type === 'user') {
-      fetchTo = `https://api.github.com/users/${result.login}/events`;
-      routeTo = `${result.login}/profile`;
-    }
-    if (type === 'org') {
-      fetchTo = `https://api.github.com/orgs/${result.login}`;
-      routeTo = `${result.login}/orgs`;
-    }
-    if (type === 'repo') {
-      fetchTo = `https://api.github.com/repos/${result.owner.login}/${result.name}`;
-      routeTo = `${result.name}/repos`;
-    }
-    fetch(fetchTo)
-      .then((res) => res.json())
-      .then((res) => {
-        if (type === 'user') {
-          this.props.actions.searchUserEvents(res);
-        }
-      });
-    browserHistory.push(routeTo);
-  }
-  navToUserRepo(e, userData) {
-    browserHistory.push(`${userData.login}/repos`)
-    this.props.actions.chooseSearchResult(userData);
-  }
   getResult(result) {
     if (result.type === 'User') {
       return (

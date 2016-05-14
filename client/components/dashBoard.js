@@ -48,20 +48,6 @@ class DashBoard extends Component {
     }
   }
 
-  receivedRequests() {
-    return <div>
-      { !!this.props.receivedRequests[0] ? 
-        this.props.receivedRequests[0].map((req, ind) => <Request key={ind} req={req} />) : <div></div> }
-    </div>
-  }
-
-  sentRequests() {
-    return <div>
-      { !!this.props.sentRequests[0] ? 
-        this.props.sentRequests[0].map((req, ind) => <SentRequest key={ind} req={req} />) : <div></div> }
-    </div>
-  }
-
   render() {
     const { actions } = this.props;
     if (this.props.auth.authenticated) {
@@ -72,8 +58,6 @@ class DashBoard extends Component {
               <h1 className="font-white">Search your Git opponent</h1>
               <h3 className="font-white">Your contributions: {this.props.userContributions}</h3>
             </div>
-            {this.receivedRequests()}
-            {this.sentRequests()}
             <div className="search-container text-centered">
               <div className="block text-centered">
                 <Search />

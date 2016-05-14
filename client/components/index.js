@@ -18,3 +18,5 @@ export ChooseWeapon from './chooseWeapon';
 export Request from './request';
 export SentRequest from './sentRequest';
 export CompetitorsMiniView from './CompetitorsMiniView';
+import ReceivedCompetitorCard from './ReceivedCompetitorCard';
+import CompetitorCard from './competitorCard';
