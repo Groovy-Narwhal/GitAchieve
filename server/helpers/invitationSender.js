@@ -12,30 +12,28 @@ var user; // logged in user; used in the text of the sent email
 
 // sends email with SendGrid
 var sendEmail = (competitorEmail) => {
-  if (!!competitorEmail) {
-    var email = new sendgrid.Email({
-      to: competitorEmail,
-      from: 'gitachieve@gmail.com',
-      subject: `${user} wants to compete with you on GitAchieve`,
-      html: `<h2>You\'ve received a challenge on GitAchieve!</h2><p>Github user ${user} wants to compete with you. Select one repo and make more commits within the time limit to win! </p><p><a>Create an account</a> at gitachieve.com in seconds with Github login.</p>`
-    });
+  var email = new sendgrid.Email({
+    to: competitorEmail,
+    from: 'gitachieve@gmail.com',
+    subject: `${user} wants to compete with you on GitAchieve`,
+    html: `<h2>You\'ve received a challenge on GitAchieve!</h2><p>Github user ${user} wants to compete with you. Select one repo and make more commits within the time limit to win! </p><p><a>Create an account</a> at gitachieve.com in seconds with Github login.</p>`
+  });
 
-    sendgrid.send(email, function (err, json) {
-      if (err) {
-        console.error('sendGrid error:', err);
-      }
-      console.log('sendGrid sent an email (in invitationSender.js) with:', json);
-    });
-  }
+  sendgrid.send(email, function (err, json) {
+    if (err) {
+      console.error('sendGrid error:', err);
+    }
+    console.log('sendGrid sent an email (in invitationSender.js) with:', json);
+  });
 }
 // updates the database (if getEmail is called) with competitor's email
-var patchDatabase = (competitor, email) => {
+var patchDatabase = (competitor, email, user) => {
   var options = {
     url: CALLBACKHOST + '/api/v1/users/' + competitor_id,
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'username': competitor
+      'User-Agent': user
     }
   };
   return request(options, (error, response, body) => {
@@ -63,9 +61,9 @@ var getEmail = (competitor, user) => {
       console.error('error fetching competitor email from Github, in invitationSender.js: ', error);
     } else {
       competitorEmail = JSON.parse(body).email;
-      // and update the database
+      // and update the database if email exists
       if (!!competitorEmail) {
-        patchDatabase(user, competitorEmail);
+        patchDatabase(user, competitorEmail, user);
       }
     }
   });
@@ -96,7 +94,8 @@ module.exports = (app) => {
       }
     })
     .catch(err =>
-      console.log('error with db.one in invitationSender, user probably does not exist:',err)
+      console.log('error with db.one in invitationSender, user probably does not exist:', err)
     );
   });
+
 };
