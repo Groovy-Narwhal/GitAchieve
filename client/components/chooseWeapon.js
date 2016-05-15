@@ -33,7 +33,6 @@ class ChooseWeapon extends Component {
     const primaryRID = this.props.chosenWeapons.id;
     this.props.actions.chooseSearchResult({});
     this.props.actions.chooseWeapon({});
-
     var competitionData = {
       primary_user_id: this.props.user.id,
       secondary_user_id: this.props.chosenSearchResult.id,
@@ -41,14 +40,13 @@ class ChooseWeapon extends Component {
       primary_repo_id: primaryRID,
       competition_start: this.state.startDate._d
     };
-    
     // this will add opponent user to database if they don't already exist
     axios.patch(`${ROOT_URL}/api/v1/users/${competitionData.secondary_user_id}`, {
-      username: competitionData.secondaryUsername
+      username: this.props.user.username,
+      competitorUsername: competitionData.secondaryUsername
     })
     // this will add an entry to the users_users table
     .then(() => {
-      console.log('DATA',competitionData.competition_start)
       axios.post(`${ROOT_URL}/api/v1/users/${competitionData.primary_user_id}/friends`, {
         secondaryUserId: competitionData.secondary_user_id,
         secondaryUsername: competitionData.secondaryUsername,
@@ -61,6 +59,10 @@ class ChooseWeapon extends Component {
         .then((res) => { 
            this.props.actions.sentFriendRequests(res.data);
         }) 
+      })
+      .then((response) => {
+        // SEND EMAIL
+        axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${competitionData.secondaryUsername}&competitor_id=${competitionData.secondary_user_id}`)
       })
       .then(() => {
         // connect to socket
