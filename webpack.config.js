@@ -29,7 +29,8 @@ module.exports = {
         loaders: [ 'babel-loader' ],
         // only include js files from the client folder to avoid errors with server
         include: path.join(__dirname, 'client')
-      }
+      },
+      { test: /\.css$/, loader: "style-loader!css-loader" }
     ]
   }
 };

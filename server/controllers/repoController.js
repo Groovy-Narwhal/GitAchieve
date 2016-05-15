@@ -126,7 +126,6 @@ exports.updateRepos = function(req, res) {
   // gather the helper functions together into one asynchronous series
   var handleGitHubData = function(data) {
     var repos = JSON.parse(data);
-    console.log('in repoController, repos: ', repos);
     addReposToDb(repos, addJoinsToDb.bind(null, repos, patchReposResponse));
   };
   

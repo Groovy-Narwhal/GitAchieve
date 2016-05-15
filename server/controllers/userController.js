@@ -44,13 +44,14 @@ exports.retrieveUser = function(req, res) {
 exports.updateUser = function(req, res) {
   var queryId = req.params.id;
   var username = req.body.username;
+  var competitorUsername = req.body.competitorUsername;
   var dbTimestamp = pgp.as.date(new Date());
 
   // HELPER FUNCTIONS
   // get user info from GitHub
   var getUserFromGitHub = function() {
     var options = {
-      url: 'https://api.github.com/users/' + username,
+      url: 'https://api.github.com/users/' + competitorUsername,
       method: 'GET',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

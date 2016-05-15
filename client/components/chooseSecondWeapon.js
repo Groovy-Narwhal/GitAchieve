@@ -31,10 +31,8 @@ class ChooseSecondWeapon extends Component {
           primaryUserId: secondaryId
         })
         .then(response => {
-          console.log('RES', response)
           axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/successmatches`)
             .then(response => {
-              console.log('second', response)
               this.props.actions.confirmedFriendRequests(response.data);
             });
         })

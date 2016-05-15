@@ -4,9 +4,6 @@ import { browserHistory } from 'react-router';
 
 export default class Login extends Component {
 
-  componentWillUnmount() {
-    // dispatch action that sets loading to false
-  }
   render() {
     return (
       <div>
