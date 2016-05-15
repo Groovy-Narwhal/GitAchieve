@@ -50,8 +50,9 @@ exports.addFriend = function(req, res) {
   const secondaryUsername = req.body.secondaryUsername;
   const secondaryUserEmail = req.body.secondaryUserEmail;
   const primaryRepoId = req.body.primaryRepoId;
-  const competitionStart = pgp.as.date(new Date());
+  const competitionStart = pgp.as.date(new Date(req.body.competitionStart));
   const dbTimestamp = pgp.as.date(new Date());
+
   // check if the secondary user exists
   db.one('SELECT * FROM users WHERE id=($1)',
     secondaryUserId)

@@ -17,7 +17,7 @@ class ChooseWeapon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: moment()
+      startDate: moment().subtract(7, 'days')
     };
   }
 
@@ -39,7 +39,7 @@ class ChooseWeapon extends Component {
       secondary_user_id: this.props.chosenSearchResult.id,
       secondaryUsername: this.props.chosenSearchResult.login,
       primary_repo_id: primaryRID,
-      competition_start: new Date()
+      competition_start: this.state.startDate._d
     };
     
     // this will add opponent user to database if they don't already exist
@@ -48,6 +48,7 @@ class ChooseWeapon extends Component {
     })
     // this will add an entry to the users_users table
     .then(() => {
+      console.log('DATA',competitionData.competition_start)
       axios.post(`${ROOT_URL}/api/v1/users/${competitionData.primary_user_id}/friends`, {
         secondaryUserId: competitionData.secondary_user_id,
         secondaryUsername: competitionData.secondaryUsername,
@@ -77,9 +78,13 @@ class ChooseWeapon extends Component {
         <h2>Choose Your Weapon // Repos</h2>
         <Repos />
         <h2>Pick a start Date</h2>
-        <DatePicker
-          selected={this.state.startDate}
-          onChange={this.handleChange.bind(this)} />
+        <div className="data-results-container-flex full-width">
+          <DatePicker
+            maxDate={moment()}
+            selected={this.state.startDate}
+            onChange={this.handleChange.bind(this)}
+          />
+        </div>
         <div className="spacer-10px"></div>
         <div className="block text-centered">
           <input type="submit" value="COMPETE" className="button compete" onClick={this.compete.bind(this)} />
