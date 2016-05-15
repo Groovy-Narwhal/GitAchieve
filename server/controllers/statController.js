@@ -124,7 +124,6 @@ exports.updateStats = function(req, res) {
     'WHERE $3~=$4',
     ['username', 'users', 'id', queryId])
     .then(user => {
-      console.log('Stats Step 1: user: ', user);
       const username = user.username;
       // select all of this user's orgs
       db.any('SELECT o.id, o.updated_ga, o.orgname, o.avatar_url, o.followers, o.following, o.score ' + 
@@ -134,13 +133,11 @@ exports.updateStats = function(req, res) {
         'WHERE uo.user_id=$1', 
         [queryId])
         .then(orgs => {
-          console.log('Stats step 1: orgs: ', orgs);
           // find the repos associated with each org
           var orgsLeft = orgs.length;
-          // if there are no orgs, send empty response
-          if (orgsLeft = 0) {
-            console.log('No orgs, sending empty response');
-            res.send();
+          // if there are no orgs, send notification only
+          if (orgsLeft === 0) {
+            res.send('This user has no organizations, so their stats were not updated.');
           } else {
             orgs.forEach((org, index, orgs) => {
               var statCombo = {};
