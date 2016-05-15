@@ -34,13 +34,16 @@ exports.updateCommits = function(req, res) {
       var queries = [];
       if (commits.length > 0) {
         queries = commits.map(commit => {
-          return t.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~) ' +
-            'VALUES ($8, $9, $10, $11, $12) ' +
-            'ON CONFLICT ($3~) ' + 
-            'DO UPDATE SET ($4~, $5~, $6~, $7~) = ($9, $10, $11, $12) ' +
-            'WHERE $2~.$3~ = $8',
-            ['commits', 'c', 'sha', 'updated_ga', 'date', 'user_id', 'commit_message',
-            commit.sha, dbTimestamp, pgp.as.date(new Date(commit.commit.author.date)), commit.author.id, commit.commit.message]);
+          if (!!commit.author) {
+            return t.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~) ' +
+              'VALUES ($8, $9, $10, $11, $12) ' +
+              'ON CONFLICT ($3~) ' + 
+              'DO UPDATE SET ($4~, $5~, $6~, $7~) = ($9, $10, $11, $12) ' +
+              'WHERE $2~.$3~ = $8',
+              ['commits', 'c', 'sha', 'updated_ga', 'date', 'user_id', 'commit_message',
+              commit.sha, dbTimestamp, pgp.as.date(new Date(commit.commit.author.date)), commit.author.id, commit.commit.message]);  
+          }
+
         });
       }
       return t.batch(queries);
@@ -52,11 +55,13 @@ exports.updateCommits = function(req, res) {
         if (commits.length > 0) {
           queries = commits.map(commit => {
             // only add a join row if it doesn't exist already
-            return t.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
-              'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
-              '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
-              ['commits_repos', 'created_ga', 'repo_id', 'commit_sha',
-              dbTimestamp, repoId, commit.sha]);
+            if (!!commit.author) {
+              return t.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
+                'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
+                '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
+                ['commits_repos', 'created_ga', 'repo_id', 'commit_sha',
+                dbTimestamp, repoId, commit.sha]);
+            }
           });
         }
         return t.batch(queries);
@@ -176,16 +181,15 @@ exports.updateCommits = function(req, res) {
       } else {
         ownerName = repoOwner.orgName;
       }
-      
       // configuration of GitHub GET request
       var options = {
         uri: 'https://api.github.com/repos/' + ownerName + '/' + repoOwner.repoName + '/commits',
         headers: {
           'User-Agent': repoOwner.userName,
           // Uncomment this line to make GET requests from within the site (not with Postman)
-          // 'Authorization': `token ${req.body.token}`
+          'Authorization': `token ${req.body.token}`
           // Uncomment this line to make GET requests from Postman
-          'Authorization': 'token ' + token
+          // 'Authorization': 'token ' + token
         },
         json: true // Automatically parses the JSON string in the response 
       };
@@ -198,12 +202,14 @@ exports.updateCommits = function(req, res) {
             var queries = [];
             if (commits.length > 0) { 
               queries = commits.map(commit => {
-                return t.any ('INSERT INTO $1~ as $2~ ($3~, $4~, $5~, $6~, $7~, $8~) ' +
-                  'VALUES ($9, $10, $11, $12, $13, $14) ' +
-                  'ON CONFLICT ($3~) ' +
-                  'DO NOTHING',
-                  ['users', 'u', 'id', 'created_ga', 'username', 'signed_up', 'email', 'avatar_url',
-                  commit.author.id, dbTimestamp, commit.author.login, false, commit.commit.author.email, commit.author.avatar_url]);
+                if (!!commit.author) {
+                  return t.any('INSERT INTO $1~ as $2~ ($3~, $4~, $5~, $6~, $7~, $8~) ' +
+                    'VALUES ($9, $10, $11, $12, $13, $14) ' +
+                    'ON CONFLICT ($3~) ' +
+                    'DO NOTHING',
+                    ['users', 'u', 'id', 'created_ga', 'username', 'signed_up', 'email', 'avatar_url',
+                    commit.author.id, dbTimestamp, commit.author.login, false, commit.commit.author.email, commit.author.avatar_url]);
+                }
               });
             }
             return t.batch(queries);
