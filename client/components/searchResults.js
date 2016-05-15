@@ -8,6 +8,7 @@ import axios from 'axios';
 
 const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
 
+
 class SearchResults extends Component {
   constructor(props) {
     super(props);

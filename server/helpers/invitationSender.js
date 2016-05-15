@@ -27,13 +27,13 @@ var sendEmail = (competitorEmail) => {
   });
 }
 // updates the database (if getEmail is called) with competitor's email
-var patchDatabase = (competitor, email, user) => {
+var patchDatabase = (competitor, email) => {
   var options = {
-    url: CALLBACKHOST + '/api/v1/users/' + competitor_id,
+    url: `${CALLBACKHOST}/api/v1/users/${competitor_id}`,
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': user
+      'username': competitor
     }
   };
   return request(options, (error, response, body) => {
