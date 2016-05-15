@@ -4,10 +4,9 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import { SearchOptions } from './index';
-
-// import axios, define root URL -- for email sending
 import axios from 'axios';
-const ROOT_URL = 'http://127.0.0.1:8000';
+
+const ROOT_URL = require('../../../server/config/config-settings').CALLBACKHOST;
 
 class SearchResults extends Component {
   constructor(props) {

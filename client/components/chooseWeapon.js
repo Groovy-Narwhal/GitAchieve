@@ -10,7 +10,7 @@ import axios from 'axios';
 
 require('react-datepicker/dist/react-datepicker.css');
 
-const ROOT_URL = 'http://127.0.0.1:8000';
+const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
 
 class ChooseWeapon extends Component {
   
@@ -73,7 +73,7 @@ class ChooseWeapon extends Component {
       })
     });
   }
-  
+
   render() {
     return (
       <div className="data-results-container-clear">
