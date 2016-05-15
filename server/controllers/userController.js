@@ -47,6 +47,7 @@ exports.updateUser = function(req, res) {
   var competitorUsername = req.body.competitorUsername;
   var dbTimestamp = pgp.as.date(new Date());
 
+console.log(username, competitorUsername)
   // HELPER FUNCTIONS
   // get user info from GitHub
   var getUserFromGitHub = function() {

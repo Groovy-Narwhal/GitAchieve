@@ -56,13 +56,9 @@ class ChooseWeapon extends Component {
       })
       .then(response => {
         axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/requestedmatches`)
-        .then((res) => { 
+        .then((res) => {
            this.props.actions.sentFriendRequests(res.data);
-        }) 
-      })
-      .then((response) => {
-        // SEND EMAIL
-        axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${competitionData.secondaryUsername}&competitor_id=${competitionData.secondary_user_id}`)
+        })
       })
       .then(() => {
         // connect to socket
@@ -72,8 +68,12 @@ class ChooseWeapon extends Component {
           user2: competitionData.secondaryUsername
         });
       })
+      .then(() => {
+        axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${competitionData.secondaryUsername}&competitor_id=${competitionData.secondary_user_id}`)
+      })
     });
   }
+  
   render() {
     return (
       <div className="data-results-container-clear">
