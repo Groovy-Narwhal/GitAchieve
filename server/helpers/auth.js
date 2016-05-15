@@ -21,7 +21,25 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   const followers = profile._json.followers;
   const following = profile._json.following;
 
-  const updateStats = () => {
+  const updateCommits = () => {
+    var options = {
+      url: CALLBACKHOST + '/api/v1/users/' + id + '/commits',
+      method: 'PATCH',
+      form: { profile: profile, token: accessToken },
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    };
+    request(options, (error, response, body) => {
+      if (error) {
+        console.error('ERROR:', error);
+      } else {
+        console.log('Success in Auth updateCommits');
+      }
+    });
+  };
+
+  const updateStats = (updateCommitsCB) => {
     var options = {
       url: CALLBACKHOST + '/api/v1/users/' + id + '/stats',
       method: 'PATCH',
@@ -35,11 +53,12 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         console.error('ERROR:', error);
       } else {
         console.log('Success in Auth updateStats');
+        updateCommitsCB();
       }
     });
   };
 
-  const pullrequests = () => {
+  const updatePullRequests = (updateStatsCB) => {
     var options = {
       url: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
       method: 'PATCH',
@@ -54,12 +73,12 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         console.error('ERROR:', error);
       } else {
         console.log('Success in Auth get pull requests');
-        updateStats();
+        updateStatsCB(updateCommits);
       }
     });
   };
 
-  const getOrgs = (pullrequestsCB) => {
+  const updateOrgs = (updatePullRequestsCB) => {
     // update the user's orgs in our database   
     var options = {
       url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
@@ -75,12 +94,12 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         console.error('ERROR:', error);
       } else {
         console.log('Success in Auth get orgs');
-        pullrequestsCB();
+        updatePullRequestsCB(updateStats);
       }
     });
   };
 
-  const getRepos = (getOrgsCB) => {
+  const updateRepos = (updateOrgsCB) => {
     // update the user's repos in our database   
     var options = {
       url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
@@ -96,7 +115,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
         console.error('ERROR:', error);
       } else {
         console.log('Success in Auth get repos');
-        getOrgsCB(pullrequests);
+        updateOrgsCB(updatePullRequests);
       }
     });    
   };
@@ -112,7 +131,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       return callback(null, {data: profile._json, token: accessToken});    
     })
     .then(() => {
-      getRepos(getOrgs);
+      updateRepos(updateOrgs);
     })
     .catch((error) => {
       console.log('error in user upsert');

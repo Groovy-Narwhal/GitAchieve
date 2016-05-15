@@ -81,14 +81,17 @@ exports.retrievePullRequests = (req, res) => {
 
   const addMembers = (memberData, orgname, requestReposCB) => {
     db.tx(task => {
-      var queries = memberData.map(member => {
-        return task.any('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
-        'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ' +
-        'ON CONFLICT (id) ' +
-        'DO UPDATE SET (updated_ga) = ($4) ' +
-        'WHERE u.id = $1',
-        [member.id, member.login, null, dbTimestamp, null, false, member.avatar_url, null, null]);
-      });
+      var queries = [];
+      if (memberData.length > 0) {
+        queries = memberData.map(member => {
+          return task.any('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
+          'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ' +
+          'ON CONFLICT (id) ' +
+          'DO UPDATE SET (updated_ga) = ($4) ' +
+          'WHERE u.id = $1',
+          [member.id, member.login, null, dbTimestamp, null, false, member.avatar_url, null, null]);
+        });
+      }
       return task.batch(queries);
     })
     .then(() => {

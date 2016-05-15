@@ -135,46 +135,51 @@ exports.updateStats = function(req, res) {
         .then(orgs => {
           // find the repos associated with each org
           var orgsLeft = orgs.length;
-          orgs.forEach((org, index, orgs) => {
-            var statCombo = {};
-            statCombo.orgName = org.orgname;
-            statCombo.orgId = org.id;
-            statCombo.repos = [];
-            db.any('SELECT r.id, r.name ' + 
-              'FROM orgs_repos ogr ' +
-              'INNER JOIN repos r ' + 
-              'ON r.id = ogr.repo_id ' + 
-              'WHERE ogr.org_id=$1', 
-              [org.id])
-              // assemble all the combinations of each org with its repos
-              .then(repos => {
-                var reposLeft = repos.length;
-                repos.forEach((repo, index, repos) => {
-                  statCombo.repos.push({repoName: repo.name, repoId: repo.id});
-                  reposLeft--;
-                  if (reposLeft === 0) {
-                    statCombos.push(statCombo);
-                    orgsLeft--;
-                    if (orgsLeft === 0) {
-                      statCombos.forEach((combo) => {
-                        totalStats += combo.repos.length;
-                      });
-                      // once the combinations are set up, get the stats for each
-                        // the getStatsFromGitHub will use a callback to delete existing stats
-                        // and save updated stats
-                      statCombos.forEach((combo) => {
-                        combo.repos.forEach((repo) => {
-                          getStatsFromGitHub(username, combo, repo, deleteStatFromDb);
-                        });                            
-                      });
-                    }  
-                  }
+          // if there are no orgs, send notification only
+          if (orgsLeft === 0) {
+            res.send('This user has no organizations, so their stats were not updated.');
+          } else {
+            orgs.forEach((org, index, orgs) => {
+              var statCombo = {};
+              statCombo.orgName = org.orgname;
+              statCombo.orgId = org.id;
+              statCombo.repos = [];
+              db.any('SELECT r.id, r.name ' + 
+                'FROM orgs_repos ogr ' +
+                'INNER JOIN repos r ' + 
+                'ON r.id = ogr.repo_id ' + 
+                'WHERE ogr.org_id=$1', 
+                [org.id])
+                // assemble all the combinations of each org with its repos
+                .then(repos => {
+                  var reposLeft = repos.length;
+                  repos.forEach((repo, index, repos) => {
+                    statCombo.repos.push({repoName: repo.name, repoId: repo.id});
+                    reposLeft--;
+                    if (reposLeft === 0) {
+                      statCombos.push(statCombo);
+                      orgsLeft--;
+                      if (orgsLeft === 0) {
+                        statCombos.forEach((combo) => {
+                          totalStats += combo.repos.length;
+                        });
+                        // once the combinations are set up, get the stats for each
+                          // the getStatsFromGitHub will use a callback to delete existing stats
+                          // and save updated stats
+                        statCombos.forEach((combo) => {
+                          combo.repos.forEach((repo) => {
+                            getStatsFromGitHub(username, combo, repo, deleteStatFromDb);
+                          });                            
+                        });
+                      }  
+                    }
+                  });
+                })
+                .catch(error => {
+                  console.error('Error in orgs.forEach: ', error);
                 });
-              })
-              .catch(error => {
-                console.error('Error in orgs.forEach: ', error);
-              });
-          });
+            });
+          }
         })
         .catch(error => {
           res.status(500).send();
