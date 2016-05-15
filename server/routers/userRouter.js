@@ -35,7 +35,7 @@ userRouter.route('/:id/stats')
 userRouter.route('/:id/commits')
   .get(commitController.retrieveCommits)
   .patch(commitController.updateCommits);
-  
+
 userRouter.route('/:id/commits/start')
   .get(commitStartController.retrieveCompetition);  
 
