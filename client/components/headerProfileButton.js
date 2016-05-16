@@ -19,7 +19,6 @@ class HeaderUserButton extends Component {
       console.log('previous open: ', prevProps.open, 'current open: ', this.props.open)
       window.addEventListener('click', this.handleClickOutside.bind(this));
     } else if(!this.props.open && prevProps.open) {
-      console.log('looptydoo');
       window.removeEventListener('click', this.handleClickOutside.bind(this));
     }
   }

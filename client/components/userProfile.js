@@ -3,67 +3,34 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
+import axios from 'axios';
 
 class UserProfile extends Component {
-  
+  constructor(props) {
+    super(props);
+    this.state = {
+      friends: []
+    };
+  }
   componentWillUnmount() {
     this.props.actions.searchUserEvents([]);
   }
-
-  eventTypeFilter(event) {
-    switch (event.type) {
-      case 'PushEvent':
-        return (
-          <div className="event-commits">
-            <strong>{event.payload.commits.length} commits</strong>
-            {event.payload.commits.map((commit, index) => (
-              <div key={index}>
-                <p>author: {commit.author.name}</p>
-                <p>commit message: {commit.message}</p>
-              </div>
-            ))}
-          </div>
-          );
-      case 'PullRequestEvent':
-        return (
-          <div>
-            <strong>action: {event.payload.action}</strong>
-            <p>number of commits: {event.payload.pull_request.commits}</p>
-            <p>number of changed files: {event.payload.pull_request.changed_files}</p>
-            <p>number of additions: {event.payload.pull_request.additions}</p>
-            <p>number of deletions: {event.payload.pull_request.deletions}</p>
-          </div>
-        );
-      case 'GollumEvent':
-        return (<div></div>);
-      case 'IssueCommentEvent':
-        return (<div></div>);
-      case 'DeleteEvent':
-        return (<div></div>);
-      default:
-        return (<div></div>);
-    }
+  componentWillMount() {
+    this.getCompetitors();
+  }
+  getCompetitors() {
+    axios.get(`http://127.0.0.1:8000/api/v1/users/${this.props.user.id}/friends`)
+      .then(data => this.setState({friends: data.data}))
   }
 
   render() {
     return (
-      <div>
-        <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1" />
-        <h2>{this.props.chosenSearchResult.login}</h2>
-        <div id="search-results-container">
-          {this.props.searchUserEvents.map((event, index) => {
-            if (event.type === 'PushEvent' || event.type === 'PullRequestEvent') {
-              return (
-                <div key={index} className="search-result-container" >
-                  <h3 className="event-title">{event.type}</h3>
-                  <span className="event-title"> at </span>
-                  <h3 className="event-title">{event.repo.name}</h3>
-                  <span>{event.created_at}</span>
-                  {this.eventTypeFilter(event)}
-                </div>
-              )
-            }
-          })}
+      <div className="data-results-container">
+        <img src={this.props.user.avatar_url} className="user-avatar-1" />
+        <h2 className="font-white">{this.props.user.username}</h2>
+        <div>
+          <h2>Friends</h2>
+          {this.state.friends.length !== 0 ? this.state.friends.map(friend => (<div key={friend.id}><p>{friend.username}</p></div>)) : <div></div>}
         </div>
       </div>
     )
