@@ -98,8 +98,9 @@ class DashBoard extends Component {
       )
     } else {
       return (
-        <div></div>
-      )
+        <div>
+        </div>
+      );
     }
   }
 }

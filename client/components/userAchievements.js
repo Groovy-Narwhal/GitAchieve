@@ -19,21 +19,22 @@ class UserAchievements extends Component {
     axios.get(`${ROOT_URL}/api/v1/orgs/${this.props.user.id}/pullrequests`)
       .then((response) => {
         this.setState({
-          pullRequests: response.data
+          pullRequests: response.data.length
         })
       })
   }
 
   render() {
     return (
-      <div className="achievements">
-        <div>Achievements</div>
-        <img src="../static/assets/medal.svg" alt="medal image" height="50px" width="50px" />
-        <div>Pull Requests</div>
-        {this.state.pullRequests.map((pr, ind) => {
-          console.log(pr);
-          return <div>Hello</div>
-        })}
+      <div>
+        <div className="text-centered data-results-container">
+          <div className="spacer-10px"/>
+          <h1 className="font-gray">{this.props.user.username}'s Achievements</h1>
+          <img className="badge" src="../static/assets/medal.svg" alt="medal image" height="50px" width="50px" />
+          <div className="spacer-10px"/>
+          <div>Contributions: {this.props.userContributions}</div>
+          <div>Pull Requests: {this.state.pullRequests}</div>
+        </div>
       </div>
     )
   }

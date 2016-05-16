@@ -35,13 +35,12 @@ class ReceivedCompetitorCard extends Component {
   }
 
   render() {
-    return <div>
+    return <div className="competitor-card">
       { !!this.state.avatar ? 
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
             <h2 className="font-white">{this.state.username}</h2>
-            <span>Incoming Request!</span>
-            <input onClick={(e) => {this.handleAccept(e, this.props.req)}} type="button" value="Accept" />
+            <button onClick={(e) => {this.handleAccept(e, this.props.req)}} className="button">ACCEPT!</button>
           </div> : <div></div> }
     </div>
   }
