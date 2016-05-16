@@ -77,6 +77,7 @@ exports.updateCommits = function(req, res) {
           .then(commits => {
             // send back the updated commits
             console.log('Successfully patched commits for userId: ' + userId);
+            console.log('sending commits: ', commits);
             res.send(commits);
           })
           .catch(error => {
@@ -193,7 +194,6 @@ exports.updateCommits = function(req, res) {
         },
         json: true // Automatically parses the JSON string in the response 
       };
-      
       // invoke the GET request
       rp(options)
         .then(commits => {
@@ -216,7 +216,6 @@ exports.updateCommits = function(req, res) {
           })
           .then(data => {
             repoCountGetCommits++;
-            console.log('DATA: ', data);
             saveCommitsAndJoins(commits, repoOwner.repoId, totalRepos, repoOwner.userId);
           })
           .catch(error => {
