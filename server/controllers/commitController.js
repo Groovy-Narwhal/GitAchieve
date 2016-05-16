@@ -23,7 +23,7 @@ exports.retrieveCommits = function(req, res) {
 exports.updateCommits = function(req, res) {
   var queryId = req.params.id;
   var dbTimestamp = pgp.as.date(new Date());
-  var repoCount = 0;
+  var repoCountUpdateCommits = 0;
   
   // ** HELPER FUNCTIONS **
   
@@ -67,9 +67,9 @@ exports.updateCommits = function(req, res) {
         return t.batch(queries);
       }) 
       .then(data => {
-        repoCount++;
+        repoCountUpdateCommits++;
         // once all commits from all repos have been added,
-        if (repoCount === totalRepos) {
+        if (repoCountUpdateCommits === totalRepos) {
           // query the database for this user's commits
           db.any('SELECT * FROM $1~ ' +
             'WHERE $2~ = $3',
@@ -113,7 +113,7 @@ exports.updateCommits = function(req, res) {
           [queryId])
           // set up a GET request for each of this user's repos
           .then(repos => {
-            var repoCount = 0;
+            var repoCountGetRepoOwners = 0;
             var totalRepos = repos.length;
             var ownerName = user.username;
             var repoName = '';
@@ -147,8 +147,8 @@ exports.updateCommits = function(req, res) {
                   }
                 })
                 .then(data => {
-                  repoCount++;
-                  if (repoCount === totalRepos) {
+                  repoCountGetRepoOwners++;
+                  if (repoCountGetRepoOwners === totalRepos) {
                     callback(repoOwners);
                   }
                 })  
@@ -172,7 +172,7 @@ exports.updateCommits = function(req, res) {
   
   var getCommitsFromGitHub = (repoOwners) => {
     var totalRepos = repoOwners.length;
-    var repoCount = 0;
+    var repoCountGetCommits = 0;
     
     repoOwners.forEach(repoOwner => {
       var ownerName;
@@ -215,6 +215,8 @@ exports.updateCommits = function(req, res) {
             return t.batch(queries);
           })
           .then(data => {
+            repoCountGetCommits++;
+            console.log('DATA: ', data);
             saveCommitsAndJoins(commits, repoOwner.repoId, totalRepos, repoOwner.userId);
           })
           .catch(error => {
@@ -223,8 +225,16 @@ exports.updateCommits = function(req, res) {
           });
         })
       .catch(error => {
-        console.error('Error in GET from GitHub: ', error);
-        res.status(500).send;
+        if (error.statusCode === 404) {
+          repoCountGetCommits++;
+          console.log('Error in getCommitsFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
+          if (repoCountGetCommits === totalRepos) {
+            res.status(500).send();
+          }
+        } else {
+          console.error('Error in GET from GitHub: ', error);
+          res.status(500).send;
+        }
       });
     });  
   };
