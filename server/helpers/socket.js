@@ -2,11 +2,11 @@
 module.exports = io => {
   io.on('connection', socket => {
     socket.on('join', data => {
-      socket.join(data.username)
+      socket.join(data.username);
     });
 
     function broadcast(username, msg) {
-      io.sockets.in(username).emit('incoming_request', msg)
+      io.sockets.in(username).emit('incoming_request', msg);
     }
 
     socket.on('Accept Request', data => {
