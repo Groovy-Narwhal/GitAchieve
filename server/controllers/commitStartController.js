@@ -11,7 +11,9 @@ exports.retrieveCompetition = function(req, res) {
   var queryId = req.params.id;
   var startDate = new Date (req.headers.startdate);
   var repoId = req.headers.repoid;
-  
+
+  console.log("startDate and repoID:", startDate, repoId);
+
   db.any('SELECT sha, updated_ga, date, user_id, commit_message ' +
     'FROM commits_repos cr ' +
     'INNER JOIN commits c ' +
@@ -27,12 +29,12 @@ exports.retrieveCompetition = function(req, res) {
           return filtered;
         } else {
           return filtered;
-        }       
+        }
       }, []);
-      
+
       // establish start of competition - this will be the start of the day of the timestamp given
       var startMoment = moment(startDate).startOf('day');
-      
+
       // establish end of competition - this is the end of today
       var endMoment = moment().endOf('day');
       console.log('endMoment: ', endMoment);
@@ -44,27 +46,27 @@ exports.retrieveCompetition = function(req, res) {
         var dayStart = moment(startMoment).add(i, 'days').toString();
         commitHistory[dayStart] = [];
       }
-      
+
       // add each commit to the correct day in the history
       filteredCommits.forEach(commit => {
         var commitDay = moment(commit.date).startOf('day');
         commitHistory[commitDay].push(commit);
       });
-      
+
       // put the history into an unsorted array
       var unsortedHistory = [];
       for (var key in commitHistory) {
         var day = {day: new Date(key), commits: commitHistory[key]};
         unsortedHistory.push(day);
       }
-      
+
       // sort the history by date and return
       var sortedHistory = unsortedHistory.sort((a, b) => a.day - b.day);
       res.send(sortedHistory);
-      
+
     })
     .catch(error => {
       console.error('Error querying commits: ', error);
       res.status(500).send;
-    }); 
+    });
 };

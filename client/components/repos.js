@@ -4,6 +4,8 @@ import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import Repo1 from './repo1';
+const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
+import axios from 'axios';
 
 class Repos extends Component {
   constructor(props) {
@@ -18,20 +20,25 @@ class Repos extends Component {
     };
   }
   fetchRepos() {
-    if (this.props.chosenSearchResult.login !== undefined && !window.location.pathname.includes('compete')) {
-      var url = this.props.chosenSearchResult.login;
-    } else { 
-      var url = this.props.user.username;
+    if (this.props.chosenSearchResult.id !== undefined && !window.location.pathname.includes('compete')) {
+      var id = this.props.chosenSearchResult.id;
+    } else {
+      var id = this.props.user.id;
     }
-    return fetch(`https://api.github.com/users/${url}/repos?per_page=100`, this.state.options)
-      .then(res => res.json())
-      .then(data => data)
-      .catch(err => err);
+
+    return axios.get(`${ROOT_URL}/api/v1/users/${id}/repos`)
+      .then(response => response.data);
+
+    // return fetch(`${ROOT_URL}/api/v1/users/${id}/repos`, this.state.options)
+    //   .then(res => res.json())
+    //   .then(data => data)
+    //   .catch(err => err);
   }
   fetchAllRepos() {
     async function renderRepos () {
       // awaits the promise from this.fetchRepos to resolve, then assigns repos to that value
       var repos = await this.fetchRepos();
+
       var selectableRepos = repos.map(repo => ({value: repo , label: repo.name}))
       // Create reposObject for constant time lookup
       var reposObj = {}
