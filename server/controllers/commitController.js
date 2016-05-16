@@ -225,7 +225,7 @@ exports.updateCommits = function(req, res) {
           });
         })
       .catch(error => {
-        if (error.statusCode === 404) {
+        if (error.statusCode !== 500) {
           repoCountGetCommits++;
           console.log('Error in getCommitsFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
           if (repoCountGetCommits === totalRepos) {
