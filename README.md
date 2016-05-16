@@ -2,19 +2,22 @@
 A webapp to promote positive Git behavior through friendly competition.
 See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 
+
 ## Team
- - ![](https://avatars.githubusercontent.com/u/4149515?v=3&s=48)[**Inje Yeo**](https://github.com/byeo630)
+ - ![](https://avatars.githubusercontent.com/u/4149515?v=3&s=48) [**Inje Yeo**](https://github.com/byeo630)
 
- - ![](https://avatars.githubusercontent.com/u/15864056?v=3&s=48)[**Alex Nitta**](https://github.com/alexnitta)
+ - ![](https://avatars.githubusercontent.com/u/15864056?v=3&s=48) [**Alex Nitta**](https://github.com/alexnitta)
 
- - ![](https://avatars.githubusercontent.com/u/10492144?v=3&s=48)[**Adam Isom**](https://github.com/adamrgisom)
+ - ![](https://avatars.githubusercontent.com/u/10492144?v=3&s=48) [**Adam Isom**](https://github.com/adamrgisom)
 
- - ![](https://avatars.githubusercontent.com/u/15220759?v=3&s=48)[**Megan Smith**](https://github.com/msmith9393)
+ - ![](https://avatars.githubusercontent.com/u/15220759?v=3&s=48) [**Megan Smith**](https://github.com/msmith9393)
+
 
 ## Table of Contents
 1. [How to get started](#how-to-get-started)
 1. [Architecture](#architecture)
 1. [Technologies](#technologies)
+
 
 ## How to get started
 1. Clone down the repo `git clone https://github.com/Groovy-Narwhal/GitAchieve.git`
@@ -22,6 +25,7 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 3. Install dependencies `npm install`
 4. Run the server `npm run serve`
 5. Open your browser to `localhost:8000`
+
 
 ## Architecture
 ### Database Schema
@@ -42,6 +46,10 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/api/v1/users/:id/friends|GET|Get a user's friends|none|Array of friends|
 |/api/v1/users/:id/friends|POST|Primary user requests friendship with secondary user|primary user id, secondary user id, username and email|Array containing join row in users_users|
 |/api/v1/users/:id/friends|PATCH|Confirm a friend request or remove a friendship|remove:true to remove friendship|Array containing join row in users_users|
+|/api/v1/users/:id/receivedmatches|GET|Retrieve all friendships in which you were requested to compete|none|Array of users_users|
+|/api/v1/users/:id/requestedmatches|GET|Retrieve all friendships in which you requested to compete with someone|none|Array of users_users|
+|/api/v1/users/:id/successmatches|GET|Retrieve all friendships that have been accepted in which you sent the request|none|Array of users_users|
+|/api/v1/users/:id/successmatches2|GET|Retrieve all friendships that have been accepted in which you were sent the request|none|Array of users_users|
 |/api/v1/users/:id/stats|GET|Get stats for a user by org and repo|Headers for `orgid` and `repoid`|Array containing stat object|
 |/api/v1/users/:id/stats|PATCH|Update stats for a user from GitHub |none|Array of stats updated - each has user_id, org_id and repo_id|
 |/api/v1/users/:id/commits|GET|Get commits for a user by repo|Header for `repoid`|Array containing commits|
@@ -55,10 +63,14 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 ### Client Side Routes
 |Route|Description|Related Server Endpoints|
 |---|---|---|
-|/|Index route displaying Dashboard|?|
 |/signin|Login page with logo, tagline, and GitHub login button|Handled via passport in auth.js|
-|/about|About page|?|
+|/about|About page with info on what GitAchieve is and the team|None|
+|/|Index route displaying search for opponent, achievement chart, competitor challenges |?|
 |/search-results|List of users search results|?|
+|/compete/choose-repo/:username|Dropdown for first user to select repo and start time of competition|?|
+|/compete/choose-second-repo/:id|Dropdown for second user to select repo|?|
+|:username/profile|Users profile page|?|
+|/achievements/:id|Users achievement profile|?|
 
 
 ## Technologies
