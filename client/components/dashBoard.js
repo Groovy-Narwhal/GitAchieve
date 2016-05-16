@@ -11,11 +11,16 @@ import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRe
 class DashBoard extends Component {
   constructor(props) {
     super(props);
+    console.log('', this.props.competitorsData)
   }
 
   componentDidUpdate() {
     if (this.props.auth.authenticated && this.props.userContributions[0] === 0) {
       this.getUserContribs();
+    }
+    if (this.props.competitorsData.length > 0){
+      console.log('We\'re making the CumulativeChart');
+      CumulativeChart(this.props.competitorsData);
     }
   }
   getUserContribs() {
@@ -26,6 +31,7 @@ class DashBoard extends Component {
     getContribs.call(this);
   }
   makeMainChart() {
+      console.log('makeMainChart called');
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
     }
@@ -41,9 +47,19 @@ class DashBoard extends Component {
     }
   }
 
+
+
+  // <button onClick={this.makeMainChart.bind(this)} className="button"> Tab 1: Total </button>
+  // <button onClick={this.makeDailyChart.bind(this)} className="button"> Tab 2: Daily </button>
+
+
   render() {
     const { actions } = this.props;
+
     if (this.props.auth.authenticated) {
+
+      // this.makeMainChart();
+
       return (
         <div className="dashboard">
           <div className="main-search">
@@ -62,8 +78,6 @@ class DashBoard extends Component {
           <div className="data-results-container-clear">
             <h2 className="font-white">Achievement Chart</h2>
             <div className="data-results-container full-width">
-              <button onClick={this.makeMainChart.bind(this)} className="button"> Tab 1: Total </button>
-              <button onClick={this.makeDailyChart.bind(this)} className="button"> Tab 2: Daily </button>
 
               <div id="commit-charts">
                 <svg width={540} height={300}>
