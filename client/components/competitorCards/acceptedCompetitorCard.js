@@ -86,13 +86,24 @@ class AcceptedCompetitorCard extends Component {
       });
   }
 
+  handleAccept2(e, c) {
+    // console.log('token', localStorage.token)
+    // console.log(c);
+    // axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
+    //   token: localStorage.token
+    // })
+    // .then(response => {
+    //   console.log('RESPONSE', response);
+    // });
+  }
+
   render() {
     return <div className="competitor-card">
       { !!this.state.avatar ? 
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
             <h2 className="font-white">{this.state.username}</h2>
-            <input onClick={(e) => {this.handleAccept(e, this.props.req)}} className="button" value="COMPETE!" />
+            <button onClick={(e) => {this.handleAccept(e, this.props.c)}} className="button">COMPETE!</button>
           </div> : <div></div> }
     </div>
   }

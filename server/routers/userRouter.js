@@ -8,6 +8,8 @@ const commitStartController = require('./../controllers/commitStartController.js
 const branchController = require('./../controllers/branchController.js');
 
 
+const update = require('./../helpers/competitionUpdate.js');
+
 // the following routes start from /api/v1/users
 
 userRouter.route('/')
@@ -37,7 +39,7 @@ userRouter.route('/:id/commits')
   .patch(commitController.updateCommits);
 
 userRouter.route('/:id/commits/start')
-  .get(commitStartController.retrieveCompetition);  
+  .get(commitStartController.retrieveCompetition); 
 
 userRouter.route('/:id/friends')
   .get(friendController.retrieveFriends)
@@ -56,6 +58,9 @@ userRouter.route('/:id/successmatches')
 userRouter.route('/:id/successmatches2')
   .get(friendController.checkApprovedRequests2); // using
 
+// WORKER
+userRouter.route('/:primaryid/:secondaryid/update')
+  .patch(update.updateCompetition);
 
 // userRouter.route('/:id/achievements')
 //   .get(userController.retrieveAchievements)

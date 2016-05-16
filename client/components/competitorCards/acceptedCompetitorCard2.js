@@ -85,6 +85,16 @@ class AcceptedCompetitorCard2 extends Component {
       });
   }
 
+  handleAccept2(e, c) {
+    // clearInterval(window.interval);
+    // window.interval = setInterval(() => {
+    //   console.log('hello');
+    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
+    //     token: localStorage.token
+    //   })
+    // }, 10000);
+  }
+
   render() {
     return <div className="competitor-card">
       { !!this.state.avatar ? 
