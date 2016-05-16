@@ -69,7 +69,7 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/search-results|List of users search results|?|
 |/compete/choose-repo/:username|Dropdown for first user to select repo and start time of competition|?|
 |/compete/choose-second-repo/:id|Dropdown for second user to select repo|?|
-|:username/profile|Users profile page|?|
+|/:username/profile|Users profile page|?|
 |/achievements/:id|Users achievement profile|?|
 
 
