@@ -8,6 +8,7 @@ const keys = require('./../config/github.config.js');
 const session = require('express-session');
 const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
+const massiveFetch = require('./massiveFetch');
 
 // helper function to be used in Passport authentication as a callback
 // adds a user to the database, if they don't already exist
@@ -21,104 +22,6 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
   const followers = profile._json.followers;
   const following = profile._json.following;
 
-  const updateCommits = () => {
-    var options = {
-      url: CALLBACKHOST + '/api/v1/users/' + id + '/commits',
-      method: 'PATCH',
-      form: { profile: profile, token: accessToken },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }
-    };
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error('ERROR:', error);
-      } else {
-        console.log('Success in Auth updateCommits');
-      }
-    });
-  };
-
-  const updateStats = (updateCommitsCB) => {
-    var options = {
-      url: CALLBACKHOST + '/api/v1/users/' + id + '/stats',
-      method: 'PATCH',
-      form: { profile: profile, token: accessToken },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }
-    };
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error('ERROR:', error);
-      } else {
-        console.log('Success in Auth updateStats');
-        updateCommitsCB();
-      }
-    });
-  };
-
-  const updatePullRequests = (updateStatsCB) => {
-    var options = {
-      url: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
-      method: 'PATCH',
-      form: { profile: profile, token: accessToken },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': username
-      }
-    };
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error('ERROR:', error);
-      } else {
-        console.log('Success in Auth get pull requests');
-        updateStatsCB(updateCommits);
-      }
-    });
-  };
-
-  const updateOrgs = (updatePullRequestsCB) => {
-    // update the user's orgs in our database   
-    var options = {
-      url: CALLBACKHOST + '/api/v1/orgs/' + id + '/orgs',
-      method: 'PATCH',
-      form: { profile: profile, token: accessToken },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': username
-      }
-    };
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error('ERROR:', error);
-      } else {
-        console.log('Success in Auth get orgs');
-        updatePullRequestsCB(updateStats);
-      }
-    });
-  };
-
-  const updateRepos = (updateOrgsCB) => {
-    // update the user's repos in our database   
-    var options = {
-      url: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
-      method: 'PATCH',
-      form: { profile: profile, token: accessToken },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': username
-      }
-    };
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error('ERROR:', error);
-      } else {
-        console.log('Success in Auth get repos');
-        updateOrgsCB(updatePullRequests);
-      }
-    });    
-  };
 
   // add the user to our database, or update them if they already exist
   db.any('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
@@ -131,11 +34,12 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       return callback(null, {data: profile._json, token: accessToken});    
     })
     .then(() => {
-      updateRepos(updateOrgs);
+      // call massive fetch to update our database with user's GitHub data for repos, orgs, pull
+      // requests, stats, and commits
+      massiveFetch(id, username, accessToken, profile);
     })
     .catch((error) => {
-      console.log('error in user upsert');
-      console.error(error);
+      console.error('Error in auth user upsert: ', error);
     });
 
 };
