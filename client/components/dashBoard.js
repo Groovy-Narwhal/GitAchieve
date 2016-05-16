@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
-import ghFetch from './../utils/utils';
+import utils from './../utils/utils';
 import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
 
@@ -25,7 +25,7 @@ class DashBoard extends Component {
   }
   getUserContribs() {
     async function getContribs() {
-      var numContribs = await ghFetch.utils.fetchLastYearGHContribs(this.props.user.username);
+      var numContribs = await utils.fetchLastYearGHContribs(this.props.user.username);
       this.props.actions.getUserContribs(numContribs);
     }
     getContribs.call(this);

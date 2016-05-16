@@ -15,6 +15,51 @@ h3 {
   font-size: $semi-large-size;
   font-weight: $regular;
 }
+.font-white {
+  color: $white;
+}
+.font-lightest-gray {
+  color: $lightest-gray;
+}
+.font-lighter-gray {
+  color: $lighter-gray;
+}
+.font-light-gray {
+  color: $light-gray;
+}
+.font-medium-gray {
+  color: $medium-gray;
+}
+.font-dark-gray {
+  color: $dark-gray;
+}
+.font-weight-light {
+  font-weight: 100;
+}
+.font-weight-regular {
+  font-weight: $regular;
+}
+.font-weight-semi-bold {
+  font-weight: $semi-bold;
+}
+.font-weight-bold {
+  font-weight: $bold;
+}
+.fonts-size-light {
+  font-size: $light-size;
+}
+.fonts-size-regular {
+  font-size: $regular-size;
+}
+.fonts-size-semi-large {
+  font-size: $semi-large-size;
+}
+.fonts-size-large {
+  font-size: $large-size;
+}
+.fonts-size-x-large {
+  font-size: $x-large-size;
+}
 @font-face {
   font-family: 'Open Sans';
   font-weight: 300;

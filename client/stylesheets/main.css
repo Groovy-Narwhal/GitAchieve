@@ -46,24 +46,6 @@ table {
 body {
   font-family: "Open Sans", sans-serif; }
 
-.font-white {
-  color: #fff; }
-
-.font-lightest-gray {
-  color: #eee; }
-
-.font-lighter-gray {
-  color: #ccc; }
-
-.font-light-gray {
-  color: #999; }
-
-.font-medium-gray {
-  color: #444; }
-
-.font-dark-gray {
-  color: #222; }
-
 .centered {
   margin-right: auto;
   margin-left: auto; }
@@ -159,6 +141,51 @@ h2 {
 h3 {
   font-size: 16px;
   font-weight: 400; }
+
+.font-white {
+  color: #fff; }
+
+.font-lightest-gray {
+  color: #eee; }
+
+.font-lighter-gray {
+  color: #ccc; }
+
+.font-light-gray {
+  color: #999; }
+
+.font-medium-gray {
+  color: #444; }
+
+.font-dark-gray {
+  color: #222; }
+
+.font-weight-light {
+  font-weight: 100; }
+
+.font-weight-regular {
+  font-weight: 400; }
+
+.font-weight-semi-bold {
+  font-weight: 600; }
+
+.font-weight-bold {
+  font-weight: 700; }
+
+.fonts-size-light {
+  font-size: 8px; }
+
+.fonts-size-regular {
+  font-size: 12px; }
+
+.fonts-size-semi-large {
+  font-size: 16px; }
+
+.fonts-size-large {
+  font-size: 20px; }
+
+.fonts-size-x-large {
+  font-size: 24px; }
 
 @font-face {
   font-family: 'Open Sans';
