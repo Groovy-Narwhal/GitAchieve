@@ -23,6 +23,10 @@ userRouter.route('/:id/repos')
   .post(repoController.addRepo)
   .patch(repoController.updateRepos);
 
+userRouter.route('/:id/repos/branches')
+  // .get(userController.retrieveBranches)
+  .patch(userController.updateBranches);
+
 userRouter.route('/:id/stats')
   .get(statController.retrieveStats)
   .patch(statController.updateStats);
@@ -50,6 +54,7 @@ userRouter.route('/:id/successmatches')
 
 userRouter.route('/:id/successmatches2')
   .get(friendController.checkApprovedRequests2); // using
+
 
 // userRouter.route('/:id/achievements')
 //   .get(userController.retrieveAchievements)
