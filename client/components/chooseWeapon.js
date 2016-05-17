@@ -36,12 +36,11 @@ class ChooseWeapon extends Component {
   }
 
   compete() {
-    // browserHistory.push('/');
+    browserHistory.push('/');
     this.props.actions.addCompetitor({competitor: this.props.chosenSearchResult, myWeapon: this.props.chosenWeapons});
     const primaryRID = this.props.chosenWeapons.id;
     this.props.actions.chooseSearchResult({});
     this.props.actions.chooseWeapon({});
-    console.log('COMPETITION END', this.state.endDate._d)
     var competitionData = {
       primary_user_id: this.props.user.id,
       secondary_user_id: this.props.chosenSearchResult.id,

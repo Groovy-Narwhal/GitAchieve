@@ -87,6 +87,7 @@ class DashBoard extends Component {
             <div className="data-results-container full-width">
 
               <div id="commit-charts">
+                <div>HELLO</div>
                 <svg width={540} height={300}>
                 </svg>
 

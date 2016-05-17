@@ -35,7 +35,7 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   handleAccept(c) {
-    console.log('hey', c)
+    console.log('hey', c.competition_end);
     var user_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
 
     axios({
