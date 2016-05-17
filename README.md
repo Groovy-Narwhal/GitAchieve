@@ -41,6 +41,7 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/api/v1/users/:id|GET|Get a user by id|none|User|
 |/api/v1/users/:id|PATCH|Update a user with current GitHub info|none|Updated user|
 |/api/v1/users/:id|DELETE|Delete a user by id|none|Deleted user|
+|/api/v1/users/:id/repo|GET|Get a single repo by id for a user|Header for `repoid`|Array containing repo|
 |/api/v1/users/:id/repos|GET|Get a user's repos|none|Array of repos|
 |/api/v1/users/:id/repos|POST|Add a repo for a user|Object containing 'profile', an object of all updated values|Added repo, added join|
 |/api/v1/users/:id/repos/branches|GET|Get a repo's branches by user id and repo id|Header for `repoid`|Array of branches|
