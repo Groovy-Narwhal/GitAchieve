@@ -50,6 +50,7 @@ class AcceptedCompetitorCard2 extends Component {
     */
     var user = this.props.user.username;
     var competitor = this.state.username;
+
     var user_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
     var comp_url = `${ROOT_URL}/api/v1/users/${c.primary_user_id}/commits/start`;
 
