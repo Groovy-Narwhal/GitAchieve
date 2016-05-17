@@ -1,30 +1,40 @@
-//@TODO: decide what to do in case of a tie!
-// The obvious thing is to opacity-1/2 (or 1/4) 2 exactly overlapping rects
+import moment from 'moment';
 
 module.exports = (data, location) => {
 
-  // EXAMPLE OF DATA COMING IN:
-  data = data[0] || [ [2, 3, 5, 9, 7, 2, 3], [5, 4, 2, 7, 3, 6, 8] ];
+  // get the data in the right 'shape'
+  data = data[0];
 
-  var mostCommitsUser1 = Math.max(...data[0]);
-  var mostCommitsUser2 = Math.max(...data[1]);
+  var users = [ data[0][0], data[1][0] ];
+  var commits = [ data[0][1], data[1][1] ];
+
+  console.log('users, commits', users, commits);
+
+  var mostCommitsUser1 = Math.max(...commits[0]);
+  var mostCommitsUser2 = Math.max(...commits[1]);
   var mostCommits = Math.max(mostCommitsUser1, mostCommitsUser2);
-  var daysShown = data[0].length;
 
-  // HARDCODED FOR NOW
-  var days = ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  // start the ordering of the week based on what day it is right now
+  // NOTE: I foresee a problem slicing off 'Mon', 'Tues' etc if they have 0 days
+  // AFTER doing this sorting, if the current day is Monday
+  var daysOfTheWeek = ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  var dayOfTheWeekNow = moment().isoWeekday() - 1; // should be -1
+  var days = daysOfTheWeek.slice(dayOfTheWeekNow, 7);
+  days = days.concat(...daysOfTheWeek.slice(0, dayOfTheWeekNow));
 
-  // HARDCODED FOR NOW
-  var users = ['@adamrgisom', '@msmith9393'];
+  // NEXT: start the # of commits from the right place
+  // We don't want to show leading-zero days (the first few days if they have zero commits)
 
+
+  // this block SHOULD be unnecessary now that we know for sure how data is coming in
   // if the data is coming in like [ user1 -> [array with daily data], user 2 -> [...same]],
   // just change it to be tuples like [ day1 -> [user1 that day, user2 that day], day2 -> [user1, user2], ...]
-  if (data.length === users.length) {
+  if (commits.length === users.length) {
     var reconstructData = [];
-    for (var i = 0; i < data[0].length; i++) {
-      reconstructData.push([ data[0][i], data[1][i] ]);
+    for (var i = 0; i < commits[0].length; i++) {
+      reconstructData.push([ commits[0][i], commits[1][i] ]);
     }
-    data = reconstructData;
+    commits = reconstructData;
   }
 
   // set dimensions
@@ -47,7 +57,7 @@ module.exports = (data, location) => {
 
   // if there is NO recent activity, don't draw a graph
   // just write text saying 'no recent activity' in an ellipse (?)
-  if (data.length === 0) {
+  if (commits.length === 0) {
     svg.append('text')
       .text('no recent activity on this repo!')
       .attr('x', w/2)
@@ -92,7 +102,7 @@ module.exports = (data, location) => {
 
   // add the bars in the bar graph
   var g = svg.selectAll(".bars")
-    .data(data)
+    .data(commits)
     .enter()
       .append("g")
       for (var j = 0; j < users.length; j++) {
@@ -108,7 +118,7 @@ module.exports = (data, location) => {
   // add text labels for # of commits (when greater than 0)
   svg.append('g')
     .selectAll('text')
-    .data(data)
+    .data(commits)
     .enter()
       .append("g")
       for (var j = 0; j < users.length; j++) {
@@ -121,7 +131,7 @@ module.exports = (data, location) => {
   // add text labels for winner placeholder for winner that day
     svg.append('g')
     .selectAll('text')
-    .data(data)
+    .data(commits)
     .enter()
       .append('text')
       .attr('x', (d, i) => {
@@ -130,7 +140,9 @@ module.exports = (data, location) => {
       .attr('y', (d) => {
         return d[0] > d[1] ? yScale(d[0]) -25 : yScale(d[1]) -25;
       })
-      .text('winner');
+      .text((d) => {
+        return d[0] > 0 || d[1] > 0 ? 'winner' : '';
+      });
 
   // add a legend associating usernames with colors on the graph
     for (j = 0; j < users.length; j++) {
