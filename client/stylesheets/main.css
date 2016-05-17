@@ -330,7 +330,8 @@ h3 {
 .header-user-button {
   border-radius: 5px;
   border: 1px solid #eee;
-  padding: 5px; }
+  padding: 5px;
+  background-color: #fff; }
 
 .header-profile-dropdown {
   background-color: #fff;
