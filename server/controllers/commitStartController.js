@@ -37,7 +37,6 @@ exports.retrieveCompetition = function(req, res) {
 
       // establish end of competition - this is the end of today
       var endMoment = moment().endOf('day');
-      console.log('endMoment: ', endMoment);
       // add each filtered commit to an object with the start of the day as the key
         // set the value to an empty array to hold the commits
       var days = endMoment.diff(startMoment, 'days');

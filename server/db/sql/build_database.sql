@@ -1,14 +1,13 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-13 19:16:42.467
+-- Last modification date: 2016-05-17 02:43:25.013
 
 -- tables
 -- Table: branches
 CREATE TABLE branches (
-    id_ga serial  NOT NULL,
+    sha varchar(40)  NOT NULL,
     updated_ga timestamp  NOT NULL,
-    sha varchar(40)  NULL,
     name varchar(100)  NULL,
-    CONSTRAINT branches_pk PRIMARY KEY (id_ga)
+    CONSTRAINT branches_pk PRIMARY KEY (sha)
 );
 
 -- Table: commits
@@ -86,7 +85,7 @@ CREATE TABLE repos_branches (
     id_ga serial  NOT NULL,
     created_ga timestamp  NOT NULL,
     repo_id int  NOT NULL,
-    branch_id_ga int  NOT NULL,
+    branch_sha varchar(40)  NOT NULL,
     CONSTRAINT repos_branches_pk PRIMARY KEY (id_ga)
 );
 
@@ -206,8 +205,8 @@ ALTER TABLE pull_requests ADD CONSTRAINT pull_requests_users
 
 -- Reference: repos_branches_branches (table: repos_branches)
 ALTER TABLE repos_branches ADD CONSTRAINT repos_branches_branches
-    FOREIGN KEY (branch_id_ga)
-    REFERENCES branches (id_ga)  
+    FOREIGN KEY (branch_sha)
+    REFERENCES branches (sha)  
     NOT DEFERRABLE 
     INITIALLY IMMEDIATE
 ;

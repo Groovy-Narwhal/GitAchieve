@@ -5,7 +5,7 @@ const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
-// /api/v1/users/orgs/:id/pullrequsts
+// PATCH at '/api/v1/users/orgs/:id/pullrequests'
 exports.retrievePullRequests = (req, res) => {
   const dbTimestamp = pgp.as.date(new Date());
   const username = req.body.profile.username;
