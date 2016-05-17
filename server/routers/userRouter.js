@@ -20,6 +20,9 @@ userRouter.route('/:id')
   .get(userController.retrieveUser) // using
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
+  
+userRouter.route('/:id/repo')
+  .get(repoController.retrieveRepoById);  
 
 userRouter.route('/:id/repos')
   .get(repoController.retrieveRepos)
