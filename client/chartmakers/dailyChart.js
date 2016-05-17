@@ -4,12 +4,11 @@ module.exports = (data, location) => {
 
   // get the data in the right 'shape'
   data = data[0];
-
   var users = [ data[0][0], data[1][0] ];
   var commits = [ data[0][1], data[1][1] ];
+  console.log('commits:', commits);
 
-  console.log('users, commits', users, commits);
-
+  // calculate most commits for scaling
   var mostCommitsUser1 = Math.max(...commits[0]);
   var mostCommitsUser2 = Math.max(...commits[1]);
   var mostCommits = Math.max(mostCommitsUser1, mostCommitsUser2);
@@ -24,7 +23,14 @@ module.exports = (data, location) => {
 
   // NEXT: start the # of commits from the right place
   // We don't want to show leading-zero days (the first few days if they have zero commits)
-
+  var leadingZeroDays = 0, i = 0;
+  while (commits[0][i] === 0 && commits[1][i] === 0 && i < 7) {
+    leadingZeroDays++;
+    i++;
+  }
+  days = days.slice(0, 7 - leadingZeroDays);
+  commits[0] = commits[0].slice(leadingZeroDays, 7);
+  commits[1] = commits[1].slice(leadingZeroDays, 7);
 
   // this block SHOULD be unnecessary now that we know for sure how data is coming in
   // if the data is coming in like [ user1 -> [array with daily data], user 2 -> [...same]],
@@ -41,7 +47,7 @@ module.exports = (data, location) => {
   var pad = 30;
   var w = 600 - 2*pad;
   var h = 360 - 2*pad;
-  var barWidth = Math.floor( (w-3*pad) / (daysShown * users.length) );
+  var barWidth = Math.floor( (w-3*pad) / (days.length * users.length) );
 
   if (location === 'same chart') {
     var svg = d3.select("#commit-charts svg");
