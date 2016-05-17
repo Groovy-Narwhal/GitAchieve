@@ -25,7 +25,7 @@ userRouter.route('/:id/repos')
 
 userRouter.route('/:id/repos/branches')
   // .get(userController.retrieveBranches)
-  .patch(userController.updateBranches);
+  // .patch(userController.updateBranches);
 
 userRouter.route('/:id/stats')
   .get(statController.retrieveStats)
