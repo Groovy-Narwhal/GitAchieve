@@ -3,10 +3,31 @@ const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
 const token = require('../config/github.config').token;
 
+// GET at '/api/v1/users/:id/repo' to get a single repo for a user id by a repo id
+// header for 'repoid' must be included in the request
+exports.retrieveRepoById = function(req, res) {
+  var queryId = req.params.id;
+  var repoid = req.headers.repoid;
+  db.any(('SELECT r.id, r.updated_ga, r.created_at, r.name, r.owner_id, r.watchers_count, ' +
+    'r.stargazers_count, r.forks_count, r.org_commit_activity ' + 
+    'FROM users_repos ur ' +
+    'INNER JOIN repos r ' + 
+    'ON r.id = ur.repo_id ' + 
+    'WHERE ur.user_id=$1 ' +
+    'AND r.id = $2'), 
+    [queryId, repoid])
+    .then((data) => res.send(data))
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error querying repos table');
+    });
+};
+
 // GET at '/api/v1/users/:id/repos' to get a user's repos by user id
 exports.retrieveRepos = function(req, res) {
   var queryId = req.params.id;
-  db.any(('SELECT r.id, r.updated_ga, r.created_at, r.name, r.owner_id, r.watchers_count, r.stargazers_count, r.forks_count, r.org_commit_activity ' + 
+  db.any(('SELECT r.id, r.updated_ga, r.created_at, r.name, r.owner_id, r.watchers_count, ' + 
+    'r.stargazers_count, r.forks_count, r.org_commit_activity ' + 
     'FROM users_repos ur ' +
     'INNER JOIN repos r ' + 
     'ON r.id = ur.repo_id ' + 
