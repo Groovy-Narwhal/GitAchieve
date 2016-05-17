@@ -5,7 +5,12 @@
   padding: 5px;
   color: $white;
 }
-
+.button:hover {
+  background-color: #1bcc88;
+}
+.button:active {
+  background-color: #1fb574;
+}
 .signin {
   font-weight: $light;
   font-size: $semi-large-size;
@@ -14,4 +19,9 @@
   padding-bottom: auto;
   padding-top: auto;
   vertical-align: middle;
+}
+.compete {
+  padding: 20px;
+  font-size: $semi-large-size;
+  font-weight: $semi-bold;
 }

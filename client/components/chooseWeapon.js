@@ -87,28 +87,45 @@ class ChooseWeapon extends Component {
 
   render() {
     return (
-      <div className="data-results-container-clear">
-        <h2>Choose Your Weapon // Repos</h2>
-        <Repos />
-        <h2>Pick a start Date</h2>
-        <div className="data-results-container-flex full-width">
-          <DatePicker
-            maxDate={moment()}
-            selected={this.state.startDate}
-            onChange={this.handleStartChange.bind(this)}
-          />
-        </div>
-        <h2>Pick an end Date</h2>
-        <div className="data-results-container-flex full-width">
-          <DatePicker
-            minDate={moment()}
-            selected={this.state.endDate}
-            onChange={this.handleEndChange.bind(this)}
-          />
-        </div>
-        <div className="spacer-10px"></div>
-        <div className="block text-centered">
-          <input type="submit" value="COMPETE" className="button compete" onClick={this.compete.bind(this)} />
+      <div className="data-results-container">
+        <div className="data-results-container-clear">
+          <h2 className="font-white bottom-border">Compete</h2>
+          <div className="data-results-container-clear text-centered">
+            <img src={this.props.user.avatar_url} className="user-avatar-1 border-1px-white" />
+            <img src="/static/assets/sword-vs-1-1.png" className="vs-swords" />
+            <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1 border-1px-white" />
+          </div>
+          <div className="data-results-container-flex-clear flex-center">
+            <span className="font-white">{this.props.user.username} <span className="font-dark-gray">vs</span> {this.props.chosenSearchResult.login}</span>
+          </div>
+          <div className="spacer-10px" />
+          <h3 className="font-dark-gray">Choose Your Weapon // Repos</h3>
+          <div className="spacer-5px" />
+          <div className="data-result-container full-width">
+            <Repos />
+          </div>
+          <h3 className="font-dark-gray">Pick a start Date</h3>
+          <div className="spacer-5px" />
+          <div className="data-result-container full-width">
+            <DatePicker
+              maxDate={moment()}
+              selected={this.state.startDate}
+              onChange={this.handleStartChange.bind(this)}
+            />
+          </div>
+          <h3 className="font-dark-gray">Pick an end Date</h3>
+          <div className="spacer-5px" />
+          <div className="data-result-container full-width">
+            <DatePicker
+              minDate={moment()}
+              selected={this.state.endDate}
+              onChange={this.handleEndChange.bind(this)}
+            />
+          </div>
+          <div className="spacer-10px"></div>
+          <div className="block text-centered">
+            <input type="submit" value="Compete" className="button compete" onClick={this.compete.bind(this)} />
+          </div>
         </div>
       </div>
     );

@@ -62,12 +62,10 @@ class Repos extends Component {
 
   render() {
       return (
-        <div className="data-results-container-flex full-width">
-          <select onChange={(e) => (this.selectRepo.call(this, e))}>
-            <option disabled>select a repo</option>
-            {this.state.repos.map(repo => (<option value={repo.name} key={repo.id}>{repo.name}</option>))}
-          </select>
-        </div>
+        <select onChange={(e) => (this.selectRepo.call(this, e))}>
+          <option disabled>select a repo</option>
+          {this.state.repos.map(repo => (<option value={repo.name} key={repo.id}>{repo.name}</option>))}
+        </select>
       );
   }
 }
