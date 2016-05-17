@@ -24,7 +24,9 @@ exports.retrieveCompetition = function(req, res) {
     .then(commits => {
       // filter out commits that are before the start date
       var filteredCommits = commits.reduce((filtered, commit) => {
-        if (new Date(commit.date) - startDate > 0) {
+        console.log('commit.date', commit)
+        if (new Date(commit.date) - startDate >= 0) {
+          console.log('filtered', filtered)
           filtered.push(commit);
           return filtered;
         } else {
@@ -34,14 +36,14 @@ exports.retrieveCompetition = function(req, res) {
 
       // establish start of competition - this will be the start of the day of the timestamp given
       var startMoment = moment(startDate).startOf('day');
-
       // establish end of competition - this is the end of today
       var endMoment = moment().endOf('day');
       // add each filtered commit to an object with the start of the day as the key
         // set the value to an empty array to hold the commits
       var days = endMoment.diff(startMoment, 'days');
+      console.log('days', days)
       var commitHistory = {};
-      for (var i = 0; i <= days; i++) {
+      for (var i = 0; i < days + 1; i++) {
         var dayStart = moment(startMoment).add(i, 'days').toString();
         commitHistory[dayStart] = [];
       }
@@ -49,7 +51,10 @@ exports.retrieveCompetition = function(req, res) {
       // add each commit to the correct day in the history
       filteredCommits.forEach(commit => {
         var commitDay = moment(commit.date).startOf('day');
-        commitHistory[commitDay].push(commit);
+        console.log('COMMIT DAY', commitDay);
+        if (commitHistory[commitDay] !== undefined) {
+          commitHistory[commitDay].push(commit);
+        }
       });
 
       // put the history into an unsorted array
@@ -61,6 +66,7 @@ exports.retrieveCompetition = function(req, res) {
 
       // sort the history by date and return
       var sortedHistory = unsortedHistory.sort((a, b) => a.day - b.day);
+      console.log('SORTED HISTORY', sortedHistory)
       res.send(sortedHistory);
 
     })

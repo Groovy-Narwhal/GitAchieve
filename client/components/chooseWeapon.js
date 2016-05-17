@@ -17,14 +17,22 @@ class ChooseWeapon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: moment().subtract(7, 'days')
+      startDate: moment().subtract(7, 'days'),
+      endDate: moment().add(7, 'days')
     };
   }
 
-  handleChange(date) {
+  handleStartChange(date) {
     this.setState({
       startDate: date
     });
+  }
+
+  handleEndChange(date) {
+    this.setState({
+      endDate: date
+    });
+    console.log(this.state);
   }
 
   compete() {
@@ -46,11 +54,11 @@ class ChooseWeapon extends Component {
       competitorUsername: competitionData.secondaryUsername
     })
     // this will add an entry to the users_users table
-    .then(() => {
+    .then((res) => {
       axios.post(`${ROOT_URL}/api/v1/users/${competitionData.primary_user_id}/friends`, {
-        secondaryUserId: competitionData.secondary_user_id,
-        secondaryUsername: competitionData.secondaryUsername,
-        secondaryUserEmail: null,
+        secondaryUserId: res.data.id,
+        secondaryUsername: res.data.username,
+        secondaryUserEmail: res.data.email,
         primaryRepoId: competitionData.primary_repo_id,
         competitionStart: competitionData.competition_start
       })
@@ -71,6 +79,9 @@ class ChooseWeapon extends Component {
       .then(() => {
         axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${competitionData.secondaryUsername}&competitor_id=${competitionData.secondary_user_id}`)
       })
+    })
+    .catch((err) => {
+      console.log('error', err);
     });
   }
 
@@ -84,7 +95,15 @@ class ChooseWeapon extends Component {
           <DatePicker
             maxDate={moment()}
             selected={this.state.startDate}
-            onChange={this.handleChange.bind(this)}
+            onChange={this.handleStartChange.bind(this)}
+          />
+        </div>
+        <h2>Pick an end Date</h2>
+        <div className="data-results-container-flex full-width">
+          <DatePicker
+            minDate={moment()}
+            selected={this.state.endDate}
+            onChange={this.handleEndChange.bind(this)}
           />
         </div>
         <div className="spacer-10px"></div>

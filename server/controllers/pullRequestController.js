@@ -145,12 +145,14 @@ exports.retrievePullRequests = (req, res) => {
 
 };
 
-// '/github/:username/pullrequests'
+// /api/v1/users/orgs/:id/pullrequsts
 exports.retrieveAllPRSForUser = function(req, res) {
-  // db.any('SELECT * FROM pull_requests WHERE pull_requests.username=$1 AND pull_requests.closed_at != null', [req.params.username])
-  //   .then(data => res.send(data))
-  //   .catch(error => {
-  //     console.error(error);
-  //     res.status(500).send('Error reading pull_requests table');
-  //   });
+  const id = req.params.id;
+  console.log('id', id)
+  db.any('SELECT * FROM pull_requests WHERE pull_requests.user_id=$1 AND pull_requests.closed_at IS NOT NULL', [id])
+    .then(data => res.send(data))
+    .catch(error => {
+      console.error(error);
+      res.status(500).send('Error reading pull_requests table');
+    });
 };

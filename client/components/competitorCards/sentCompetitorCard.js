@@ -28,12 +28,12 @@ class SentCompetitorCard extends Component {
   }
 
   render() {
-    return <div>
+    return <div className="competitor-card">
       { !!this.state.avatar ? 
-        <div className="competitor-card">
+        <div >
           <img className="user-avatar-med" src={this.state.avatar} />
           <h2 className="font-white">{this.state.username}</h2>
-          <span>Waiting...</span>
+          <span className="font-green">Waiting...</span>
         </div> : <div></div> }
     </div>
   }

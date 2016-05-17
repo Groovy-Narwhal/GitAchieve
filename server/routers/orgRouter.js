@@ -12,7 +12,7 @@ orgRouter.route('/:id/pullrequests')
 orgRouter.route('/:username/orgs')
   .get(orgController.retrieveAllOrgsForUser);
 
-orgRouter.route('/:username/pullrequests')
+orgRouter.route('/:id/pullrequests')
   .get(pullRequestController.retrieveAllPRSForUser);
 
 // orgRouter.route('/:orgname')

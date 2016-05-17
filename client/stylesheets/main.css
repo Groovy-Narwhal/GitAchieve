@@ -370,6 +370,33 @@ h3 {
   font-weight: 700;
   color: #222; }
 
+.team-table {
+  margin: 0 auto; }
+
+.team-table td {
+  width: 25%;
+  padding: 4px; }
+
+.team-table td a {
+  text-decoration: none;
+  color: black;
+  font-weight: bold; }
+
+.instructions {
+  padding: 0 30px;
+  line-height: 1.2em; }
+
+.instructions li span {
+  font-weight: bold; }
+
+.competitor-card {
+  text-align: center;
+  margin: 5px;
+  display: inline-block; }
+
+.badge {
+  display: inline-block; }
+
 .event-title {
   display: inline; }
 
