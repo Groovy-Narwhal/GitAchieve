@@ -6,7 +6,6 @@ module.exports = (data, location) => {
   data = data[0];
   var users = [ data[0][0], data[1][0] ];
   var commits = [ data[0][1], data[1][1] ];
-  console.log('commits:', commits);
 
   // calculate most commits for scaling
   var mostCommitsUser1 = Math.max(...commits[0]);

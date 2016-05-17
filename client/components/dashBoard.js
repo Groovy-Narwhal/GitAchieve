@@ -19,11 +19,10 @@ class DashBoard extends Component {
       this.getUserContribs();
     }
     if (this.props.competitorsData.length > 0){
-    // if (this.props.dailyCompetitorsData.length > 0){
-      console.log('We\'re making the CumulativeChart');
-      // console.log('We\'re making the DailyChart');
       CumulativeChart(this.props.competitorsData);
-      // DailyChart(this.props.dailyCompetitorsData, 'same chart');
+    }
+    if (this.props.dailyCompetitorsData.length > 0) {
+      DailyChart(this.props.dailyCompetitorsData, 'additional chart');
     }
   }
   getUserContribs() {
