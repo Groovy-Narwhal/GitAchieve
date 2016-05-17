@@ -36,6 +36,7 @@ class AcceptedCompetitorCard2 extends Component {
 
 
   handleAccept(c) {
+<<<<<<< 0c586997d49a29f936efece51e439e0fe81459e7
     /* handleAccept uses data from the competitor clicked as this.props.c, which has
       - both repo ids
       - both user ids
@@ -51,6 +52,10 @@ class AcceptedCompetitorCard2 extends Component {
     var user = this.props.user.username;
     var competitor = this.state.username;
 
+||||||| merged common ancestors
+    console.log('hey', c.competition_end);
+=======
+>>>>>>> (feat) Add corresponding end date to countdown
     var user_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
     var comp_url = `${ROOT_URL}/api/v1/users/${c.primary_user_id}/commits/start`;
 
@@ -81,6 +86,7 @@ class AcceptedCompetitorCard2 extends Component {
           repoid: c.primary_repo_id
         },
       })
+<<<<<<< 0c586997d49a29f936efece51e439e0fe81459e7
         .then(response => {
 
           // update commit data for other user
@@ -141,6 +147,65 @@ class AcceptedCompetitorCard2 extends Component {
 
         });
     });
+||||||| merged common ancestors
+      .then(response => {
+
+        var totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+
+        var user = this.props.user.username;
+        var competitor = this.state.username;
+
+        // store the cumulative data in the store
+        // totalCommitsForUser andis populated in the first axios .then
+        var data = [
+          [user, totalCommitsForUser],
+          [competitor, totalCommitsForComp]
+        ];
+        this.props.actions.addCompetitorData(data);
+
+        // store the daily data in the store
+        // dailyDataUser is populated in the first axios .then
+        var dailyCompetitorData = response.data.map( (item) => item.commits.length);
+
+        var dailyData = [
+          [user, dailyUserData],
+          [competitor, dailyCompetitorData]
+        ];
+        this.props.actions.addDailyCompetitorData(dailyData);
+
+      })
+    });
+=======
+      .then(response => {
+
+        var totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+
+        var user = this.props.user.username;
+        var competitor = this.state.username;
+
+        // store the cumulative data in the store
+        // totalCommitsForUser andis populated in the first axios .then
+        var data = [
+          [user, totalCommitsForUser],
+          [competitor, totalCommitsForComp],
+          [c.competition_end]
+        ];
+        this.props.actions.addCompetitorData(data);
+
+        // store the daily data in the store
+        // dailyDataUser is populated in the first axios .then
+        var dailyCompetitorData = response.data.map( (item) => item.commits.length);
+
+        var dailyData = [
+          [user, dailyUserData],
+          [competitor, dailyCompetitorData]
+        ];
+        this.props.actions.addDailyCompetitorData(dailyData);
+
+      });
+    })
+
+>>>>>>> (feat) Add corresponding end date to countdown
   }
 
   componentWillMount() {

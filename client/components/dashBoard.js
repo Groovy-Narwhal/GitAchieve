@@ -43,7 +43,6 @@ class DashBoard extends Component {
     }
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
-      this.setState({showCountdown: true});
     }
     if (this.props.dailyCompetitorsData.length > 0) {
       DailyChart(this.props.dailyCompetitorsData);
@@ -57,7 +56,6 @@ class DashBoard extends Component {
     getContribs.call(this);
   }
   makeMainChart() {
-      console.log('makeMainChart called');
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
     }
@@ -86,6 +84,13 @@ class DashBoard extends Component {
     const { actions } = this.props;
 
     if (this.props.auth.authenticated) {
+<<<<<<< 0c586997d49a29f936efece51e439e0fe81459e7
+||||||| merged common ancestors
+      // this.makeMainChart();
+=======
+      // this.makeMainChart();
+
+>>>>>>> (feat) Add corresponding end date to countdown
       return (
         <div className="dashboard">
           <div className="main-search">
@@ -109,6 +114,7 @@ class DashBoard extends Component {
             <div className="data-results-container full-width">
 
               <div id="commit-charts">
+                { this.props.competitorsData.length > 0 ? <Countdown /> : <div></div> }
                 <svg height={360}>
                 </svg>
                 <div id="second-chart">

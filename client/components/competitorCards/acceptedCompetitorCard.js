@@ -106,7 +106,8 @@ class AcceptedCompetitorCard extends Component {
           data = [
             [], // add the repo names after getting them
             [user, totalCommitsForUser],
-            [competitor, totalCommitsForComp]
+            [competitor, totalCommitsForComp],
+            [c.competition_end]
           ];
           dailyData = [
             [],

@@ -32,7 +32,6 @@ class ChooseWeapon extends Component {
     this.setState({
       endDate: date
     });
-    console.log(this.state);
   }
 
   compete() {
