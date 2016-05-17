@@ -36,17 +36,19 @@ class ChooseWeapon extends Component {
   }
 
   compete() {
-    browserHistory.push('/');
+    // browserHistory.push('/');
     this.props.actions.addCompetitor({competitor: this.props.chosenSearchResult, myWeapon: this.props.chosenWeapons});
     const primaryRID = this.props.chosenWeapons.id;
     this.props.actions.chooseSearchResult({});
     this.props.actions.chooseWeapon({});
+    console.log('COMPETITION END', this.state.endDate._d)
     var competitionData = {
       primary_user_id: this.props.user.id,
       secondary_user_id: this.props.chosenSearchResult.id,
       secondaryUsername: this.props.chosenSearchResult.login,
       primary_repo_id: primaryRID,
-      competition_start: this.state.startDate._d
+      competition_start: this.state.startDate._d,
+      competition_end: this.state.endDate._d
     };
     // this will add opponent user to database if they don't already exist
     axios.patch(`${ROOT_URL}/api/v1/users/${competitionData.secondary_user_id}`, {
@@ -60,7 +62,8 @@ class ChooseWeapon extends Component {
         secondaryUsername: res.data.username,
         secondaryUserEmail: res.data.email,
         primaryRepoId: competitionData.primary_repo_id,
-        competitionStart: competitionData.competition_start
+        competitionStart: competitionData.competition_start,
+        competitionEnd: competitionData.competition_end
       })
       .then(response => {
         axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/requestedmatches`)
