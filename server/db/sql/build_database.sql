@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-17 18:30:38.748
+-- Last modification date: 2016-05-17 19:31:44.304
 
 -- tables
 -- Table: branches
@@ -149,7 +149,7 @@ CREATE TABLE users_users (
     primary_user_id int  NOT NULL,
     secondary_user_id int  NOT NULL,
     competition_start timestamp  NULL,
-    competition_end timestamp  NOT NULL,
+    competition_end timestamp  NULL,
     last_active timestamp  NULL,
     primary_repo_id int  NOT NULL,
     secondary_repo_id int  NULL,
