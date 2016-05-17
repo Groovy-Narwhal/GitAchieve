@@ -54,7 +54,7 @@ module.exports = (data, location) => {
     var svg = d3.select("#optional-extra-chart")
       .append('svg')
       .attr('width', w)
-      .attr('height', h);
+      .attr('height', h + 35); // change + 50 here
   }
 
   // blank out the svg to re-render it
@@ -153,15 +153,16 @@ module.exports = (data, location) => {
       });
 
   // add a legend associating usernames with colors on the graph
+  // TO DO: also show repo-names
     for (j = 0; j < users.length; j++) {
       svg.append('rect')
         .attr('fill', () => colors[j])
-        .attr('x', 110 + (w/3) * j)
-        .attr('y', h - pad + 15)
+        .attr('x', 70)
+        .attr('y', h - pad + 25 * (j+1))
         .attr('width', 8)
         .attr('height', 8);
       svg.append('text')
-        .attr('transform', 'translate(' + (125 + (w/3) * j) + ',' + (h - 7) + ')')
+        .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j) + ')')
         .text(() => users[j]);
     }
 

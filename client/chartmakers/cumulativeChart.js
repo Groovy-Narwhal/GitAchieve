@@ -2,14 +2,18 @@ module.exports = (data) => {
 
   // get the right data in the right places
   data = data[0];
-  var users = [ data[0][0], data[1][0] ];
-  var commits = [ data[0][1], data[1][1] ];
+  var repos = [ data[0][0], data[0][1] ];
+  var users = [ data[1][0], data[2][0] ];
+  var commits = [ data[1][1], data[2][1] ];
+
+  console.log('repos, users, commits:', repos, users, commits);
 
   // get most commits for scaling
   var mostCommits = Math.max(...commits);
 
   // set dimensions
   var pad = 30;
+  var top = 60;
   var w = 600 - 2*pad;
   var h = 360 - 2*pad;
   var barWidth = Math.floor((w-3*pad)/users.length) - 3;
@@ -102,12 +106,28 @@ module.exports = (data) => {
         .attr('y', (d) => yScale(d) - 11)
         .text((d) => d > 0 ? d.toString() : '');
 
-    // display placeholder for winner graphic
+    // display winner graphic
     var placeOfWinner_x = commits[0]===mostCommits ? 0 : 1;
     var placeOfWinner_y = commits[placeOfWinner_x];
 
-    svg.append('text')
+    svg.append('image')
+      .attr('xlink:href', 'static/assets/trophy.png' )
       .attr('x', () => xScale(users[placeOfWinner_x]) + barWidth/2 + 40)
       .attr('y', () => yScale(placeOfWinner_y) - 11)
-      .text('winner');
+      .attr('height', '25')
+      .attr('width', '22');
+
+    // add a legend associating usernames with colors on the graph
+    // TO DO: also show repo-names
+    for (j = 0; j < users.length; j++) {
+      svg.append('rect')
+        .attr('fill', () => colors[j])
+        .attr('x', 70)
+        .attr('y', h - pad + 25 * (j+1))
+        .attr('width', 8)
+        .attr('height', 8);
+      svg.append('text')
+        .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j) + ')')
+        .text(() => users[j]);
+    }
 };

@@ -78,10 +78,13 @@ class AcceptedCompetitorCard extends Component {
 
           var user = this.props.user.username;
           var competitor = this.state.username;
+          var userRepo = c.primary_repo_id;
+          var competitorRepo = c.secondary_repo_id;
 
           // store the cumulative data in the store
           // totalCommitsForUser andis populated in the first axios .then
           var data = [
+            [userRepo, competitorRepo],
             [user, totalCommitsForUser],
             [competitor, totalCommitsForComp]
           ];
@@ -103,7 +106,7 @@ class AcceptedCompetitorCard extends Component {
 
   render() {
     return <div className="competitor-card data-result-container">
-      { !!this.state.avatar ? 
+      { !!this.state.avatar ?
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
             <h3 className="font-dark-gray">{this.state.username}</h3>
@@ -111,7 +114,7 @@ class AcceptedCompetitorCard extends Component {
             <p className="font-lighter-gray font-size-regular">Competing</p>
             <div className="spacer-2px"/>
             <button onClick={(e) => {this.handleAccept(this.props.c)}} className="button block centered">View</button>
-          </div> : 
+          </div> :
           <div className="text-centered"><img src="/static/assets/spinner.gif" /></div> }
     </div>
   }

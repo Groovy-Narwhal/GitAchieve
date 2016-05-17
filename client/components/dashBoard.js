@@ -54,18 +54,15 @@ class DashBoard extends Component {
     } else if (contribs.length < 10) {
        return (<span className="font-active">{this.props.userContributions}</span>);
     } else {
-      return (<span className="font-active">Couldn't get your contributions. Try again in a few seconds</span>);
+      return (<span className="font-active">'Couldn\'t get your contributions. Try again in a few seconds'</span>);
     }
   }
-  // <button onClick={this.makeMainChart.bind(this)} className="button"> Tab 1: Total </button>
-  // <button onClick={this.makeDailyChart.bind(this)} className="button"> Tab 2: Daily </button>
 
 
   render() {
     const { actions } = this.props;
 
     if (this.props.auth.authenticated) {
-      // this.makeMainChart();
       return (
         <div className="dashboard">
           <div className="main-search">
@@ -89,7 +86,7 @@ class DashBoard extends Component {
             <div className="data-results-container full-width">
 
               <div id="commit-charts">
-                <svg width={540} height={300}>
+                <svg width={540} height={360}>
                 </svg>
 
                 <div id="optional-extra-chart">
