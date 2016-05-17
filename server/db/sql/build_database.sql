@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-17 02:43:25.013
+-- Last modification date: 2016-05-17 18:30:38.748
 
 -- tables
 -- Table: branches
@@ -17,6 +17,7 @@ CREATE TABLE commits (
     date timestamp  NULL,
     user_id int  NOT NULL,
     commit_message text  NULL,
+    branch_sha varchar(40)  NOT NULL,
     CONSTRAINT commits_pk PRIMARY KEY (sha)
 );
 
@@ -148,13 +149,23 @@ CREATE TABLE users_users (
     primary_user_id int  NOT NULL,
     secondary_user_id int  NOT NULL,
     competition_start timestamp  NULL,
+    competition_end timestamp  NOT NULL,
     last_active timestamp  NULL,
     primary_repo_id int  NOT NULL,
     secondary_repo_id int  NULL,
+    last_email_invite timestamp  NULL,
     CONSTRAINT users_users_pk PRIMARY KEY (id_ga)
 );
 
 -- foreign keys
+-- Reference: commits_branches (table: commits)
+ALTER TABLE commits ADD CONSTRAINT commits_branches
+    FOREIGN KEY (branch_sha)
+    REFERENCES branches (sha)  
+    NOT DEFERRABLE 
+    INITIALLY IMMEDIATE
+;
+
 -- Reference: commits_repos_commits (table: commits_repos)
 ALTER TABLE commits_repos ADD CONSTRAINT commits_repos_commits
     FOREIGN KEY (commit_sha)

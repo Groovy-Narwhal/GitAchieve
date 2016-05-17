@@ -1,7 +1,10 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-17 02:43:25.013
+-- Last modification date: 2016-05-17 18:30:38.748
 
 -- foreign keys
+ALTER TABLE IF EXISTS commits
+    DROP CONSTRAINT commits_branches;
+
 ALTER TABLE IF EXISTS commits_repos
     DROP CONSTRAINT commits_repos_commits;
 
