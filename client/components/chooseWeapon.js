@@ -77,7 +77,7 @@ class ChooseWeapon extends Component {
         });
       })
       .then(() => {
-        axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${competitionData.secondaryUsername}&competitor_id=${competitionData.secondary_user_id}`)
+        axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${competitionData.secondaryUsername}&competitor_id=${competitionData.secondary_user_id}`);
       })
     })
     .catch((err) => {

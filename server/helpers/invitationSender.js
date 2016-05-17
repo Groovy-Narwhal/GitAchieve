@@ -95,7 +95,6 @@ module.exports = (app) => {
     user = req.query.user;
     competitor = req.query.competitor;
     competitor_id = req.query.competitor_id;
-
     db.one(
       'SELECT u.id, u.username, u.email ' +
       'FROM users u ' +
