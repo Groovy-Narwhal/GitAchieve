@@ -67,7 +67,7 @@ var getEmail = (competitor, user) => {
       }
     }
   });
-}
+};
 
 // sends email after ensuring competitor email exists
 module.exports = (app) => {
