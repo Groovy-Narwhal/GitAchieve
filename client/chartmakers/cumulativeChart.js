@@ -40,8 +40,11 @@ module.exports = (data) => {
     .range( [pad, h-pad*2] );
 
   // set the axes
+  // .ticks is used because we only want to display whole numbers
   var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-  var yAxis = d3.svg.axis().scale(yScale).orient("left");
+  var yAxis = d3.svg.axis()
+    .ticks(Math.min(mostCommits, 10))
+    .scale(yScale).orient("left");
 
   // draw the axes
   svg.append("g")

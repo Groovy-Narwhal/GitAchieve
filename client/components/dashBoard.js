@@ -18,12 +18,12 @@ class DashBoard extends Component {
     if (this.props.auth.authenticated && this.props.userContributions[0] === 0) {
       this.getUserContribs();
     }
-    // if (this.props.competitorsData.length > 0){
-    if (this.props.dailyCompetitorsData.length > 0){
-      // console.log('We\'re making the CumulativeChart');
-      console.log('We\'re making the DailyChart');
-      //CumulativeChart(this.props.competitorsData);
-      DailyChart(this.props.dailyCompetitorsData, 'same chart');
+    if (this.props.competitorsData.length > 0){
+    // if (this.props.dailyCompetitorsData.length > 0){
+      console.log('We\'re making the CumulativeChart');
+      // console.log('We\'re making the DailyChart');
+      CumulativeChart(this.props.competitorsData);
+      // DailyChart(this.props.dailyCompetitorsData, 'same chart');
     }
   }
   getUserContribs() {
