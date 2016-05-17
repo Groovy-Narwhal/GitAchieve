@@ -97,7 +97,6 @@ body {
   background-color: #fff;
   padding: 10px;
   margin-bottom: 10px;
-  margin-right: 10px;
   border-radius: 5px; }
 
 svg {
@@ -274,6 +273,9 @@ h3 {
   font-size: 16px;
   font-weight: 600; }
 
+.spacer-5px {
+  margin: 5px 0; }
+
 .spacer-10px {
   margin: 10px 0; }
 
@@ -361,6 +363,11 @@ h3 {
 .repo-green {
   background-color: #1d9;
   color: #fff; }
+
+.profile-username {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222; }
 
 .event-title {
   display: inline; }
