@@ -40,7 +40,6 @@ class ChooseWeapon extends Component {
       primary_repo_id: primaryRID,
       competition_start: this.state.startDate._d
     };
-    console.log(this.props.user.username);
     // this will add opponent user to database if they don't already exist
     axios.patch(`${ROOT_URL}/api/v1/users/${competitionData.secondary_user_id}`, {
       username: this.props.user.username,
@@ -48,7 +47,6 @@ class ChooseWeapon extends Component {
     })
     // this will add an entry to the users_users table
     .then((res) => {
-      console.log('RES', res);
       axios.post(`${ROOT_URL}/api/v1/users/${competitionData.primary_user_id}/friends`, {
         secondaryUserId: res.data.id,
         secondaryUsername: res.data.uesername,
@@ -57,7 +55,6 @@ class ChooseWeapon extends Component {
         competitionStart: competitionData.competition_start
       })
       .then(response => {
-        console.log('RESPONSE', response)
         axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/requestedmatches`)
         .then((res) => {
            this.props.actions.sentFriendRequests(res.data);

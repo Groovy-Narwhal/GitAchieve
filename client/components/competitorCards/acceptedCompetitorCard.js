@@ -13,8 +13,9 @@ class AcceptedCompetitorCard extends Component {
     super(props);
     this.state = {
       avatar: '',
-      username: ''
-    }
+      username: '',
+      toggleUpdate: false
+    };
   }
 
   componentWillMount() {
@@ -24,23 +25,29 @@ class AcceptedCompetitorCard extends Component {
           avatar: response.data.avatar_url,
           username: response.data.username,
           userid: response.data.id
-        })
+        });
       });
   }
 
-  updateCompetitionInterval(c) {
-    // window.interval = setInterval(() => {
-    //   console.log('primary user id1', c.primary_user_id);
-    //   console.log('secondary_user_id1', c.secondary_user_id);
-    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
-    //     token: localStorage.token
-    //   })
-    // }, 10000);
+  componentWillUnmount() {
+    clearInterval(window.interval);
   }
 
-  handleAccept(e, c) {
+  competitionUpdateInterval(c) {
+    clearInterval(window.interval);
+    window.interval = setInterval(() => {
+      console.log('primary user id2', c.primary_user_id);
+      console.log('secondary_user_id2', c.secondary_user_id);
+      axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
+        token: localStorage.token
+      });
+      this.setState({toggleUpdate: !this.state.toggleUpdate});
+    }, 10000);
+  }
+
+  handleAccept(c) {
     // clearInterval(window.interval);
-    var user_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
+    var user_url = `${ROOT_URL}/api/v1/users/${c.primary_user_id}/commits/start`;
 
     axios({
       method: 'get',
@@ -78,7 +85,6 @@ class AcceptedCompetitorCard extends Component {
             [user, totalCommitsForUser],
             [competitor, totalCommitsForComp]
           ];
-          console.log('DATA', data)
           this.props.actions.addCompetitorData(data);
 
           // store the daily data in the store
@@ -91,9 +97,7 @@ class AcceptedCompetitorCard extends Component {
           ];
           this.props.actions.addDailyCompetitorData(dailyData);
 
-        }).then(() => {
-          // this.updateCompetitionInterval(c);
-        })
+        });
     });
   }
 
@@ -103,7 +107,7 @@ class AcceptedCompetitorCard extends Component {
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
             <h2 className="font-white">{this.state.username}</h2>
-            <button onClick={(e) => {this.handleAccept(e, this.props.c)}} className="button">COMPETE!</button>
+            <button onClick={(e) => {this.handleAccept(this.props.c)}} className="button">COMPETE!</button>
           </div> : <div></div> }
     </div>
   }

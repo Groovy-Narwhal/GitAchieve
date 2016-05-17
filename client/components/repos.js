@@ -46,10 +46,7 @@ class Repos extends Component {
   }
 
   setStateFetchInit() {
-    if (this.props.user.username && !this.state.fetched) {
-      this.setState({
-        fetched: true,
-      });
+    if (this.props.user.username) {
       // Initiates fetching of all repo data for the user
       this.fetchAllRepos();
     }
