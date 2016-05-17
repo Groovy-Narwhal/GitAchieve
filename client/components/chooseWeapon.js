@@ -49,7 +49,7 @@ class ChooseWeapon extends Component {
     .then((res) => {
       axios.post(`${ROOT_URL}/api/v1/users/${competitionData.primary_user_id}/friends`, {
         secondaryUserId: res.data.id,
-        secondaryUsername: res.data.uesername,
+        secondaryUsername: res.data.username,
         secondaryUserEmail: res.data.email,
         primaryRepoId: competitionData.primary_repo_id,
         competitionStart: competitionData.competition_start
