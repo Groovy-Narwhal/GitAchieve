@@ -21,7 +21,13 @@ class ChooseWeapon extends Component {
     };
   }
 
-  handleChange(date) {
+  handleStartChange(date) {
+    this.setState({
+      startDate: date
+    });
+  }
+
+  handleEndChange(date) {
     this.setState({
       startDate: date
     });
@@ -88,6 +94,14 @@ class ChooseWeapon extends Component {
             maxDate={moment()}
             selected={this.state.startDate}
             onChange={this.handleChange.bind(this)}
+          />
+        </div>
+        <h2>Pick an end Date</h2>
+        <div className="data-results-container-flex full-width">
+          <DatePicker
+            maxDate={moment()}
+            selected={this.state.endDate}
+            onChange={this.handleChange2.bind(this)}
           />
         </div>
         <div className="spacer-10px"></div>

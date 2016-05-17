@@ -46,27 +46,6 @@ table {
 body {
   font-family: "Open Sans", sans-serif; }
 
-.font-white {
-  color: #fff; }
-
-.font-lightest-gray {
-  color: #eee; }
-
-.font-lighter-gray {
-  color: #ccc; }
-
-.font-light-gray {
-  color: #999; }
-
-.font-medium-gray {
-  color: #444; }
-
-.font-dark-gray {
-  color: #222; }
-  
-.font-green {
-  color: #1d9 }
-  
 .centered {
   margin-right: auto;
   margin-left: auto; }
@@ -236,8 +215,7 @@ h3 {
   background-color: #1d9;
   border-radius: 5px;
   padding: 5px;
-  color: #fff;
-  cursor: pointer; }
+  color: #fff; }
 
 .signin {
   font-weight: 300;
@@ -392,40 +370,34 @@ h3 {
   font-weight: 700;
   color: #222; }
 
-.event-title {
-  display: inline; }
-
 .team-table {
-  margin: 0 auto;
-}
+  margin: 0 auto; }
 
 .team-table td {
   width: 25%;
-  padding: 4px;
-}
+  padding: 4px; }
 
 .team-table td a {
   text-decoration: none;
   color: black;
-  font-weight: bold;
-}
+  font-weight: bold; }
 
 .instructions {
   padding: 0 30px;
-  line-height: 1.2em;
-}
+  line-height: 1.2em; }
 
 .instructions li span {
-  font-weight: bold;
-}
+  font-weight: bold; }
 
 .competitor-card {
   text-align: center;
   margin: 5px;
-  display: inline-block;
-}
+  display: inline-block; }
 
 .badge {
-  display: inline-block;
-}
+  display: inline-block; }
+
+.event-title {
+  display: inline; }
+
 /*# sourceMappingURL=main.css.map */
