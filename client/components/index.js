@@ -14,3 +14,4 @@ export UserAchievements from './userAchievements';
 export ChooseWeapon from './chooseWeapon';
 export ChooseSecondWeapon from './chooseSecondWeapon';
 export CompetitorsMiniView from './competitorCards/competitorsMiniView';
+export Countdown from './countdown';

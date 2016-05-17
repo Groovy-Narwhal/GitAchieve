@@ -6,11 +6,23 @@ import { browserHistory, Link } from 'react-router';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
 import utils from './../utils/utils';
+<<<<<<< ee76c4dc9358929ff00a4aaf3a824208da4202cf
 import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
+||||||| merged common ancestors
+import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
+
+
+=======
+import { Countdown, Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
+
+>>>>>>> (feat) Implement countdown
 class DashBoard extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showCountdown: false
+    }
   }
 
   componentDidMount() {
@@ -31,6 +43,7 @@ class DashBoard extends Component {
     }
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
+      this.setState({showCountdown: true});
     }
     if (this.props.dailyCompetitorsData.length > 0) {
       DailyChart(this.props.dailyCompetitorsData);
