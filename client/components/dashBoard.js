@@ -67,7 +67,7 @@ class DashBoard extends Component {
               <h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
               <h1 className="font-white">Search your Git opponent</h1>
               <div className="spacer-5px" />
-              <h3 className="font-white">Your contributions: {this.props.userContributions}</h3>
+              <span className="font-white">Your public contributions: </span><span className="font-active">{this.props.userContributions}</span>
             </div>
             <div className="search-container text-centered">
               <div className="block text-centered">

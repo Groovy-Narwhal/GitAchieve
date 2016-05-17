@@ -99,6 +99,9 @@ body {
   flex-direction: row;
   flex-wrap: wrap; }
 
+.flex-center {
+  justify-content: center; }
+
 .user-result-container {
   background-color: #fff;
   width: 120px;
@@ -168,6 +171,9 @@ h3 {
 
 .font-white {
   color: #fff; }
+
+.font-active {
+  color: #1d9; }
 
 .font-lightest-gray {
   color: #eee; }

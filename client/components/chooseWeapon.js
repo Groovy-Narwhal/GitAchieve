@@ -95,7 +95,7 @@ class ChooseWeapon extends Component {
             <img src="/static/assets/sword-vs-1-1.png" className="vs-swords" />
             <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1 border-1px-white" />
           </div>
-          <div className="data-results-container-flex-clear">
+          <div className="data-results-container-flex-clear flex-center">
             <span className="font-white">{this.props.user.username}</span>
             <span className="font-white">{this.props.chosenSearchResult.login}</span>
           </div>

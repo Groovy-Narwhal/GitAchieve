@@ -35,6 +35,7 @@ $header-font-weight: $bold;
 
 // Base Colors
 $primary-color: #445878;
+$active-color: #1d9;
 
 body {
   font-family: $base-font-family;
@@ -91,6 +92,9 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+}
+.flex-center {
+  justify-content: center;
 }
 .user-result-container {
   background-color: #fff;
