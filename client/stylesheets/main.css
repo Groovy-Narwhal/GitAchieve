@@ -86,6 +86,19 @@ body {
   margin-right: auto;
   margin-left: auto; }
 
+.data-results-container-flex-clear {
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0);
+  width: 75%;
+  min-width: 500px;
+  margin-top: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; }
+
 .user-result-container {
   background-color: #fff;
   width: 120px;
@@ -98,6 +111,12 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px; }
+
+.left-border {
+  border-left: 1px solid #fff; }
+
+.bottom-border {
+  border-bottom: 1px solid #fff; }
 
 svg {
   font: 10px;
@@ -126,15 +145,21 @@ svg {
 .float-right {
   float: right; }
 
+.border-1px-white {
+  border: 1px solid #fff; }
+
+.border-2px-white {
+  border: 2px solid #fff; }
+
 svg text {
   font-family: 'Garamond'; }
 
 h1 {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700; }
 
 h2 {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600; }
 
 h3 {
@@ -244,6 +269,9 @@ h3 {
 .drop-arrow {
   margin-bottom: 5px;
   margin-left: 2px; }
+
+.vs-swords {
+  margin: 0 20px; }
 
 .search-form {
   margin: 0 auto;
