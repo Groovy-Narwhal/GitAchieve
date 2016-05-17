@@ -51,6 +51,14 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     }
   };
 
+  const updateBranches = {
+    uri: CALLBACKHOST + '/api/v1/users/' + id + '/repos/branches',
+    method: 'PATCH',
+    form: { profile: profile, token: accessToken },
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    }
+  };
 
   const updateCommits = {
     uri: CALLBACKHOST + '/api/v1/users/' + id + '/commits',
@@ -62,14 +70,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
   };
 
 
-  const updateBranches = {
-    uri: CALLBACKHOST + '/api/v1/users/' + id + '/repos/branches',
-    method: 'PATCH',
-    form: { profile: profile, token: accessToken },
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    }
-  };
 
 
   // if async is false or undefined, run each PATCH request independently
@@ -81,7 +81,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
       .catch(error => {
         console.error('MF 1: Error in updateRepos: ', error);
       });
-    
     rp(updateOrgs)
       .then(orgs => {
         console.log('MF 2: Success in updateOrgs');
@@ -89,7 +88,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
       .catch(error =>{
         console.error('MF 2: Error in updateOrgs: ', error);
       });
-    
     rp(updatePullRequests)
       .then(pullRequests => {
         console.log('MF 3: Success in updatePullRequests');
@@ -97,7 +95,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
       .catch(error => {
         console.error('MF 3: Error in updatePullRequests: ', error);
       });
-    
     rp(updateStats)
       .then(stats => {
         console.log('MF 4: Success in updateStats');
@@ -105,23 +102,20 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
       .catch(error => {
         console.error('MF 4: Error in updateStats: ', error);
       });
-      
-    rp(updateCommits)
-      .then(commits => {
-        console.log('MF 5: Success in updateCommits');
-      })
-      .catch(error => {
-        console.error('MF 5: Error in updateCommits: ', error);
-      });            
-
     rp(updateBranches)
       .then(branches => {
-        console.log('MF 6: Success in in updateBranches');
+        console.log('MF 5: Success in in updateBranches');
       })
       .catch(error => {
-        console.error('MF 6: Error in in updateBranches: ', error);
+        console.error('MF 5: Error in in updateBranches: ', error);
       });  
-            
+    rp(updateCommits)
+      .then(commits => {
+        console.log('MF 6: Success in updateCommits');
+      })
+      .catch(error => {
+        console.error('MF 6: Error in updateCommits: ', error);
+      });            
   } else {
   // if async is true, run each PATCH request one after the other\
   // if any of them fail, the rest will not run
@@ -137,35 +131,43 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
                 rp(updateStats)
                   .then(stats => {
                     console.log('MF 4: Success in updateStats');
-                    rp(updateCommits)
+                    rp(updateBranches)
                       .then(commits => {
-                        console.log('MF 5: Success in updateCommits');
-                        rp(updateBranches)
+                        console.log('MF 5: Success in updateBranches');
+                        rp(updateCommits)
                           .then(branches => {
-                            console.log('MF 6: Success in in updateBranches');
+                            console.log('MF 6: Success in in updateCommits');
+                            // if all PATCH requests were successful, return true
+                            return true;
                           })
                           .catch(error => {
-                            console.error('MF 6: Error in in updateBranches: ', error);
+                            console.error('MF 6: Error in in updateCommits: ', error);
+                            return false;
                           });
                       })
                       .catch(error =>{
-                        console.error('MF 5: Error in updateCommits: ', error);
+                        console.error('MF 5: Error in updateBranches: ', error);
+                        return false;
                       });
                   })
                   .catch(error =>{
                     console.error('MF 4: Error in updateStats: ', error);
+                    return false; 
                   });
               })
               .catch(error =>{
                 console.error('MF 3: Error in updatePullRequests: ', error);
+                return false;
               });
           })
           .catch(error => {
             console.error('MF 2: Error in updateOrgs: ', error);
+            return false;
           });
       })
       .catch(error => {
         console.error('MF 1: Error in updateRepos: ', error);
+        return false;
       });
   }
 };
