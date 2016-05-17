@@ -12,19 +12,19 @@ var user; // logged in user; used in the text of the sent email
 
 // sends email with SendGrid
 var sendEmail = (competitorEmail) => {
-  // var email = new sendgrid.Email({
-  //   to: competitorEmail,
-  //   from: 'gitachieve@gmail.com',
-  //   subject: `${user} wants to compete with you on GitAchieve`,
-  //   html: `<h2>You\'ve received a challenge on GitAchieve!</h2><p>Github user ${user} wants to compete with you. Select one repo and make more commits within the time limit to win! </p><p><a>Create an account</a> at gitachieve.com in seconds with Github login.</p>`
-  // });
+  var email = new sendgrid.Email({
+    to: competitorEmail,
+    from: 'gitachieve@gmail.com',
+    subject: `${user} wants to compete with you on GitAchieve`,
+    html: `<h2>You\'ve received a challenge on GitAchieve!</h2><p>Github user ${user} wants to compete with you. Select one repo and make more commits within the time limit to win! </p><p><a>Create an account</a> at gitachieve.com in seconds with Github login.</p>`
+  });
 
-  // sendgrid.send(email, function (err, json) {
-  //   if (err) {
-  //     console.error('sendGrid error:', err);
-  //   }
-  //   console.log('sendGrid sent an email (in invitationSender.js) with:', json);
-  // });
+  sendgrid.send(email, function (err, json) {
+    if (err) {
+      console.error('sendGrid error:', err);
+    }
+    console.log('sendGrid sent an email (in invitationSender.js) with:', json);
+  });
 }
 // updates the database (if getEmail is called) with competitor's email
 var patchDatabase = (competitor, email) => {

@@ -18,7 +18,7 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   handleAccept(e, c) {
-    var user_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
+    var user_url = `${ROOT_URL}/api/v1/users/${this.props.c.secondary_user_id}/commits/start`;
     console.log('user url:', user_url);
 
     axios({
@@ -26,7 +26,7 @@ class AcceptedCompetitorCard2 extends Component {
       url: user_url,
       headers: {
         startdate: c.competition_start,
-        repoid: c.primary_repo_id
+        repoid: c.secondary_repo_id
       },
     })
       .then(response => {
@@ -35,14 +35,14 @@ class AcceptedCompetitorCard2 extends Component {
         var dailyUserData = response.data.map( (item) => item.commits.length);
 
         // get second set of data
-        var comp_url = `${ROOT_URL}/api/v1/users/${this.props.c.secondary_user_id}/commits/start`;
+        var comp_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
         console.log('comp url:', comp_url);
         axios({
           method: 'get',
           url: comp_url,
           headers: {
             startdate: c.competition_start,
-            repoid: c.secondary_repo_id
+            repoid: c.primary_repo_id
           },
         })
           .then(response => {
