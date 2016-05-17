@@ -51,6 +51,7 @@ exports.addFriend = function(req, res) {
   const secondaryUserEmail = req.body.secondaryUserEmail;
   const primaryRepoId = req.body.primaryRepoId;
   const competitionStart = pgp.as.date(new Date(req.body.competitionStart));
+  const competitionEnd = pgp.as.date(new Date(req.body.competitionEnd));
   const dbTimestamp = pgp.as.date(new Date());
 
   // check if the secondary user exists
@@ -69,11 +70,11 @@ exports.addFriend = function(req, res) {
           // the confirmed_at column will be null, showing that the relationship has not been
           // confirmed by the secondary user yet
           if (data.length === 0) {
-            db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~) ' +
-              'VALUES ($8, $9, $10, $11, $12) ' +
+            db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~) ' +
+              'VALUES ($9, $10, $11, $12, $13, $14) ' +
               'RETURNING *',
-              ['users_users', 'uu', 'created_ga', 'competition_start', 'primary_user_id', 'secondary_user_id', 'primary_repo_id',
-              dbTimestamp, competitionStart, primaryUserId, secondaryUserId, primaryRepoId])
+              ['users_users', 'uu', 'created_ga', 'competition_start', 'primary_user_id', 'secondary_user_id', 'primary_repo_id', 'competition_end',
+              dbTimestamp, competitionStart, primaryUserId, secondaryUserId, primaryRepoId, competitionEnd])
             .then((data) => {
               res.send(data);
             })
