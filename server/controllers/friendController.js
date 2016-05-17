@@ -7,7 +7,7 @@ exports.retrieveFriends = function(req, res) {
   var queryId = req.params.id;
   // select all the secondary users associated with this user
   db.any(
-    'SELECT u.id, u.username, u.email ' + 
+    'SELECT u.id, u.username, u.email, u.avatar_url ' + 
     'FROM users_users uu ' +
     'INNER JOIN users u ' +
     'ON u.id = uu.secondary_user_id ' +
@@ -17,7 +17,7 @@ exports.retrieveFriends = function(req, res) {
     // select all the primary users associated with this user
     .then(data1 => {
       db.any(
-        'SELECT u.id, u.username, u.email ' + 
+        'SELECT u.id, u.username, u.email, u.avatar_url ' + 
         'FROM users_users uu ' +
         'INNER JOIN users u ' +
         'ON u.id = uu.primary_user_id ' +
@@ -88,7 +88,7 @@ exports.addFriend = function(req, res) {
             res.send('Connection already exists');
           }
         });
-  });
+    });
 };
 
 
