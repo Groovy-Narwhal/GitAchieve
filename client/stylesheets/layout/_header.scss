@@ -1,23 +1,23 @@
 .header-nav {
-  background-color: $white;
-  border-bottom: 1px solid #ddd;
+  background-color: rgba(255, 255, 255, 0);
   padding: 20px 20px;
 }
 
 .header-components-container {
   margin-right: auto;
   margin-left: auto;
-  width: 80%;
+  width: 75%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .logo {
   font-weight: $bold;
-  font-size: 26px;
+  font-size: 75px;
   cursor: pointer;
+  color: $white;
 }
 
 .nav-link {

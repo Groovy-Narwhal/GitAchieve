@@ -35,7 +35,7 @@ class Header extends Component {
     return (
       <nav className="header-nav">
         <div className="header-components-container">
-          <h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
+          <img src="./../static/assets/GitAchieveLogo-white-1-1.svg" height="50px" width="50px" onClick={() => browserHistory.push('/')} className="logo"/>
           {this.renderLinks()}
         </div>
       </nav>
@@ -43,6 +43,9 @@ class Header extends Component {
   }
 }
 /*
+<h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
+
+
 <a onClick={() => browserHistory.push(`/${this.props.user.username}/repos`)} className="nav-link">
   Repos
 </a>
