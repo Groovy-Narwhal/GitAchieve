@@ -12,8 +12,6 @@ exports.retrieveCompetition = function(req, res) {
   var startDate = new Date (req.headers.startdate);
   var repoId = req.headers.repoid;
 
-  console.log("startDate and repoID:", startDate, repoId);
-
   db.any('SELECT sha, updated_ga, date, user_id, commit_message ' +
     'FROM commits_repos cr ' +
     'INNER JOIN commits c ' +
