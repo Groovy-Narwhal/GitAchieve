@@ -88,7 +88,8 @@ class AcceptedCompetitorCard2 extends Component {
   handleAccept2(e, c) {
     // clearInterval(window.interval);
     // window.interval = setInterval(() => {
-    //   console.log('hello');
+    //   console.log('primary user id2', c.primary_user_id);
+    //   console.log('secondary_user_id2', c.secondary_user_id);
     //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
     //     token: localStorage.token
     //   })

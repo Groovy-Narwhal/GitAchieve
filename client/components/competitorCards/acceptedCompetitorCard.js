@@ -29,7 +29,6 @@ class AcceptedCompetitorCard extends Component {
   }
 
   handleAccept(e, c) {
-
     var user_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
     console.log('user url:', user_url);
 
@@ -87,14 +86,14 @@ class AcceptedCompetitorCard extends Component {
   }
 
   handleAccept2(e, c) {
-    // console.log('token', localStorage.token)
-    // console.log(c);
-    // axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
-    //   token: localStorage.token
-    // })
-    // .then(response => {
-    //   console.log('RESPONSE', response);
-    // });
+    // clearInterval(window.interval);
+    // window.interval = setInterval(() => {
+    //   console.log('primary user id1', c.primary_user_id);
+    //   console.log('secondary_user_id1', c.secondary_user_id);
+    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
+    //     token: localStorage.token
+    //   })
+    // }, 10000);
   }
 
   render() {
