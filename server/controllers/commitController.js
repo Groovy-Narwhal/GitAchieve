@@ -101,67 +101,92 @@ exports.updateCommits = function(req, res) {
     var totalRepos = repoOwners.length;
     var repoCountGetCommits = 0;
     
-    repoOwners.forEach(repoOwner => {
+    repoOwners.forEach(repoOwner => { // START OF REPOOWNERS FOR EACH
       var ownerName;
       if (repoOwner.repoOwnerId === repoOwner.userId) {
         ownerName = repoOwner.userName;
       } else {
         ownerName = repoOwner.orgName;
       }
-      // configuration of GitHub GET request
-      var options = {
-        uri: 'https://api.github.com/repos/' + ownerName + '/' + repoOwner.repoName + '/commits',
-        headers: {
-          'User-Agent': repoOwner.userName,
-          // Uncomment this line to make GET requests from within the site (not with Postman)
-          'Authorization': `token ${req.body.token}`
-          // Uncomment this line to make GET requests from Postman
-          // 'Authorization': 'token ' + token
-        },
-        json: true // Automatically parses the JSON string in the response 
-      };
-      // invoke the GET request
-      rp(options)
-        .then(commits => {
-          db.tx(t => {
-            // insert each commit's author as a user if they don't exist in users table
-            var queries = [];
-            if (commits.length > 0) { 
-              queries = commits.map(commit => {
-                if (!!commit.author) {
-                  return t.any('INSERT INTO $1~ as $2~ ($3~, $4~, $5~, $6~, $7~, $8~) ' +
-                    'VALUES ($9, $10, $11, $12, $13, $14) ' +
-                    'ON CONFLICT ($3~) ' +
-                    'DO NOTHING',
-                    ['users', 'u', 'id', 'created_ga', 'username', 'signed_up', 'email', 'avatar_url',
-                    commit.author.id, dbTimestamp, commit.author.login, false, commit.commit.author.email, commit.author.avatar_url]);
+      
+      // get the branches associated with this repo
+      db.any('SELECT b.sha, b.updated_ga, b.name ' + 
+        'FROM repos_branches rb ' +
+        'INNER JOIN branches b ' +
+        'ON b.sha = rb.branch_sha ' +
+        'WHERE rb.repo_id =($1)', 
+        repoOwner.repoId)
+        .then(branches => {
+          var totalBranches = branches.length;
+          // if there are no branches, just increment the count
+          if (totalBranches === 0) {
+            repoCountGetCommits++;
+          } else {
+            // if there are branches, continue processing each one
+            branches.forEach(branch => {
+              // configure a GitHub GET request get retrieve the commits for each branch of this repo
+              var options = {
+                uri: 'https://api.github.com/repos/' + ownerName + '/' + repoOwner.repoName + 
+                '/commits?sha=' + branch.sha,
+                headers: {
+                  'User-Agent': repoOwner.userName,
+                  // Uncomment this line to make GET requests from within the site (not with Postman)
+                  'Authorization': `token ${req.body.token}`
+                  // Uncomment this line to make GET requests from Postman
+                  // 'Authorization': 'token ' + token
+                },
+                json: true // Automatically parses the JSON string in the response 
+              };
+              // invoke the GET request
+              rp(options)
+                .then(commits => {
+                  db.tx(t => {
+                    // insert each commit's author as a user if they don't exist in users table
+                    var queries = [];
+                    if (commits.length > 0) { 
+                      queries = commits.map(commit => {
+                        if (!!commit.author) {
+                          return t.any('INSERT INTO $1~ as $2~ ($3~, $4~, $5~, $6~, $7~, $8~) ' +
+                            'VALUES ($9, $10, $11, $12, $13, $14) ' +
+                            'ON CONFLICT ($3~) ' +
+                            'DO NOTHING',
+                            ['users', 'u', 'id', 'created_ga', 'username', 'signed_up', 'email', 'avatar_url',
+                            commit.author.id, dbTimestamp, commit.author.login, false, commit.commit.author.email, commit.author.avatar_url]);
+                        }
+                      });
+                    }
+                    return t.batch(queries);
+                  })
+                  .then(data => {
+                    repoCountGetCommits++;
+                    saveCommitsAndJoins(commits, repoOwner.repoId, totalRepos, repoOwner.userId);
+                  })
+                  .catch(error => {
+                    console.error('Error adding commit authors: ', error);
+                    res.status(500).send;
+                  });
+                })
+              .catch(error => {
+                if (error.statusCode !== 500) {
+                  repoCountGetCommits++;
+                  console.log('Error in getCommitsFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
+                  if (repoCountGetCommits === totalRepos) {
+                    res.status(500).send();
+                  }
+                } else {
+                  console.error('Error in GET from GitHub: ', error);
+                  res.status(500).send;
                 }
               });
-            }
-            return t.batch(queries);
-          })
-          .then(data => {
-            repoCountGetCommits++;
-            saveCommitsAndJoins(commits, repoOwner.repoId, totalRepos, repoOwner.userId);
-          })
-          .catch(error => {
-            console.error('Error adding commit authors: ', error);
-            res.status(500).send;
-          });
-        })
-      .catch(error => {
-        if (error.statusCode !== 500) {
-          repoCountGetCommits++;
-          console.log('Error in getCommitsFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
-          if (repoCountGetCommits === totalRepos) {
-            res.status(500).send();
-          }
-        } else {
-          console.error('Error in GET from GitHub: ', error);
+            }); // END OF BRANCHES FOREACH
+          } 
+        }) 
+        .catch(error => {
+          console.error('Error adding commit authors: ', error);
           res.status(500).send;
-        }
-      });
-    });  
+        });      
+    }); // END OF REPOOWNERS FOREACH
+      
   };
   
   // CALL HELPER FUNCTIONS
