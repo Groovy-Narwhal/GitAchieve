@@ -23,7 +23,6 @@ class ChooseWeapon extends Component {
   }
 
   handleStartChange(date) {
-    console.log('STATE', this.state)
     this.setState({
       startDate: date
     });
@@ -33,6 +32,7 @@ class ChooseWeapon extends Component {
     this.setState({
       endDate: date
     });
+    console.log(this.state);
   }
 
   compete() {
@@ -102,7 +102,7 @@ class ChooseWeapon extends Component {
         <div className="data-results-container-flex full-width">
           <DatePicker
             minDate={moment()}
-            selected={this.state.startDate}
+            selected={this.state.endDate}
             onChange={this.handleEndChange.bind(this)}
           />
         </div>
