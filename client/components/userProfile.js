@@ -101,7 +101,10 @@ class UserProfile extends Component {
   renderFriends() {
   if (this.state.friends.length !== 0) {
     return this.state.friends.map(friend => (
-      <div key={friend.id} className="data-result-container"><p><Link to={`/${friend.username}/profile`}>{friend.username}</Link></p></div>
+      <div key={friend.id} className="data-result-container">
+        <img src={friend.avatar_url} className="user-avatar-med" />
+        <p><Link to={`/${friend.username}/profile`}>{friend.username}</Link></p>
+      </div>
     ))
   }
   }
