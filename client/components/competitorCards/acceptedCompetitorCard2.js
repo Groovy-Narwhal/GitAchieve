@@ -35,7 +35,6 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   handleAccept(c) {
-    console.log('hey', c.competition_end);
     var user_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
 
     axios({
@@ -73,7 +72,8 @@ class AcceptedCompetitorCard2 extends Component {
         // totalCommitsForUser andis populated in the first axios .then
         var data = [
           [user, totalCommitsForUser],
-          [competitor, totalCommitsForComp]
+          [competitor, totalCommitsForComp],
+          [c.competition_end]
         ];
         this.props.actions.addCompetitorData(data);
 
@@ -87,8 +87,9 @@ class AcceptedCompetitorCard2 extends Component {
         ];
         this.props.actions.addDailyCompetitorData(dailyData);
 
-      })
-    });
+      });
+    })
+
   }
 
   componentWillMount() {

@@ -6,7 +6,7 @@ import actions from './../actions/ActionCreators';
 class Countdown extends Component {
   constructor(props) {
     super(props);
-    var competitionEndDate = "2016-05-24 20:30:52";
+    var competitionEndDate = this.props.competitorsData[0][2];
     var formattedDate = new Date(competitionEndDate);
     var time = formattedDate/1000;
     var today = new Date();
@@ -25,13 +25,17 @@ class Countdown extends Component {
     };
   }
 
+  componentWillUnmount() {
+    clearInterval(this.decrement);
+  }
+
   update() {
     if (this.state.time === 0) {
       clearInterval(this.decrement);
     }
     var newTime = this.state.time - 1; // minus one sec from initial time
     var today = new Date();
-    var msDiff = new Date("2016-05-24 20:30:52") - today;
+    var msDiff = new Date(this.props.competitorsData[0][2]) - today;
     var days = parseInt(msDiff/(24*3600*1000));
     var hours =parseInt(msDiff/(3600*1000)-(days*24));
     var mins = parseInt(msDiff/(60*1000)-(days*24*60)-(hours*60));
@@ -50,12 +54,13 @@ class Countdown extends Component {
   }
 
   render() {
-
+    console.log(new Date())
+    console.log(new Date("2016-05-24 20:30:52"))
     return (
       <div className="countdown-container">
         <h1>Competition Countdown</h1>
         <div className="spacer-10px"/>
-        <p>{this.state.days} days, {this.state.hours} hours, {this.state.mins} minutes, {this.state.secs}, seconds</p>
+        <p>{this.state.days} days, {this.state.hours} hours, {this.state.mins} minutes, {this.state.secs} seconds</p>
       </div>
     )
   }

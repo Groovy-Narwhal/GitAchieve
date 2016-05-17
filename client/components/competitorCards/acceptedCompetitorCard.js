@@ -83,7 +83,8 @@ class AcceptedCompetitorCard extends Component {
           // totalCommitsForUser andis populated in the first axios .then
           var data = [
             [user, totalCommitsForUser],
-            [competitor, totalCommitsForComp]
+            [competitor, totalCommitsForComp],
+            [c.competition_end]
           ];
           this.props.actions.addCompetitorData(data);
 
