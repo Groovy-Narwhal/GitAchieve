@@ -1,24 +1,25 @@
 const rp = require('request-promise');
 const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
-const PORT = require('../config/config-settings').PORT;
-const HOST = require('../config/config-settings').HOST;
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 const getRepoOwners = require('../helpers/getRepoOwners');
 const token = require('../config/github.config').token;
 
 
-// GET at /api/v1/users/:id/repos/branches
+// GET at /api/v1/users/:id/repos/branches to get a repo's branches by user id and repo id
+// headers must include 'repoid'
 exports.retrieveBranches = (req, res) => {
   const queryId = req.params.id;
+  const repoId = req.headers.repoid;
   const dbTimestamp = pgp.as.date(new Date());
   
-  db.any(('SELECT r.id, r.updated_ga, r.created_at, r.name, r.owner_id, r.watchers_count, r.stargazers_count, r.forks_count, r.org_commit_activity ' + 
+  db.any(('SELECT r.id, r.updated_ga, r.created_at, r.name, r.owner_id, r.watchers_count, ' +
+    'r.stargazers_count, r.forks_count, r.org_commit_activity ' + 
     'FROM users_repos ur ' +
     'INNER JOIN repos r ' + 
     'ON r.id = ur.repo_id ' + 
-    'WHERE ur.user_id=$1'), 
-    [queryId])
+    'WHERE ur.user_id=$1 ' +
+    'AND r.id =$2'), 
+    [queryId, repoId])
     .then((repos) => {
       db.tx(t => {
         var queries = [];
@@ -50,7 +51,7 @@ exports.retrieveBranches = (req, res) => {
   
 };
 
-// PATCH at /api/v1/users/:id/repos/branches
+// PATCH at /api/v1/users/:id/repos/branches to update all of the branches for all of a user's repos
 exports.updateBranches = (req, res) => {
   const queryId = req.params.id;
   const dbTimestamp = pgp.as.date(new Date());
@@ -73,13 +74,13 @@ exports.updateBranches = (req, res) => {
         headers: {
           'User-Agent': repoOwner.userName,
           // Uncomment this line to make GET requests from within the site (not with Postman)
-          // 'Authorization': `token ${req.body.token}`
+          'Authorization': `token ${req.body.token}`
           // Uncomment this line to make GET requests from Postman
-          'Authorization': 'token ' + token
+          // 'Authorization': 'token ' + token
         },
         json: true // Automatically parses the JSON string in the response 
       };
-      // invoke the GET request
+      // invoke the GET request from GitHub
       rp(options)
         .then(branches => {
           db.tx(t => {
@@ -118,6 +119,8 @@ exports.updateBranches = (req, res) => {
             repoOwner.repoId)
               .then(branches => {
                 updatedBranches.push(branches);
+                // since this happens for each of the user's repos,
+                // wait until all repos have been added to send the server response
                 repoCountGetBranches++;
                 if (repoCountGetBranches === totalRepos) {
                   res.send(updatedBranches);
@@ -134,9 +137,13 @@ exports.updateBranches = (req, res) => {
           });
         })
         .catch(error => {
+          // if the GitHub request results in a non-500 status code, it may mean a repo has been
+          // deleted - keep processing the rest, and increment count
           if (error.statusCode !== 500) {
             repoCountGetCommits++;
-            console.log('Error in getBranchesFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
+            console.log('Error in getBranchesFromGitHub - repo: "' + repoOwner.repoName 
+            + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
+            // if all repos have been added, send the server response
             if (repoCountGetCommits === totalRepos) {
               res.status(500).send();
             }
@@ -151,4 +158,3 @@ exports.updateBranches = (req, res) => {
   getRepoOwners(queryId, getAndSaveBranchesFromGitHub);
   
 };
-

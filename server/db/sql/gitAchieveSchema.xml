@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>187</Value>
+            <Value>191</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -24,7 +24,7 @@
         </Counter>
         <Counter>
             <Name>reference</Name>
-            <Value>56</Value>
+            <Value>57</Value>
             <Prefix>r</Prefix>
         </Counter>
         <Counter>
@@ -74,7 +74,7 @@
         </Counter>
         <Counter>
             <Name>referenceDisplay</Name>
-            <Value>55</Value>
+            <Value>56</Value>
             <Prefix>rd</Prefix>
         </Counter>
         <Counter>
@@ -575,6 +575,15 @@
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
+                <Column Id="c190">
+                    <Name>competition_end</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
                 <Column Id="c178">
                     <Name>last_active</Name>
                     <Type>timestamp</Type>
@@ -596,6 +605,15 @@
                 <Column Id="c182">
                     <Name>secondary_repo_id</Name>
                     <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c191">
+                    <Name>last_email_invite</Name>
+                    <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
@@ -661,6 +679,15 @@
                     <Type>text</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c189">
+                    <Name>branch_sha</Name>
+                    <Type>varchar(40)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -1484,6 +1511,25 @@
             <OnDeleteAction>None</OnDeleteAction>
             <Properties/>
         </Reference>
+        <Reference Id="r57">
+            <Name>commits_branches</Name>
+            <Description></Description>
+            <PKTable>t16</PKTable>
+            <FKTable>t12</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c105</PKColumn>
+                    <FKColumn>c189</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>None</OnDeleteAction>
+            <Properties/>
+        </Reference>
     </References>
     <Sequences>
         <Sequence Id="s3">
@@ -1547,9 +1593,9 @@
         </TableDisplay>
         <TableDisplay Id="td10">
             <X>3949.5</X>
-            <Y>4618.5</Y>
+            <Y>4610.5</Y>
             <Width>209.0</Width>
-            <Height>174.0</Height>
+            <Height>188.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t11</Table>
@@ -1557,9 +1603,9 @@
         </TableDisplay>
         <TableDisplay Id="td11">
             <X>4220.5</X>
-            <Y>4548.5</Y>
+            <Y>4533.5</Y>
             <Width>224.0</Width>
-            <Height>105.0</Height>
+            <Height>116.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t12</Table>
@@ -1596,8 +1642,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td15">
-            <X>4413.5</X>
-            <Y>4890.5</Y>
+            <X>4426.5</X>
+            <Y>4891.5</Y>
             <Width>172.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
@@ -1606,8 +1652,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td16">
-            <X>4409.5</X>
-            <Y>4779.5</Y>
+            <X>4397.5</X>
+            <Y>4776.5</Y>
             <Width>177.0</Width>
             <Height>87.0</Height>
             <LineColor>#000000</LineColor>
@@ -1681,7 +1727,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4230.5</X>
-                    <Y>4558.5</Y>
+                    <Y>4543.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1769,11 +1815,11 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4386.5</X>
-                    <Y>4846.5</Y>
+                    <Y>4843.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4445.5</X>
-                    <Y>4846.5</Y>
+                    <X>4433.5</X>
+                    <Y>4843.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -1840,7 +1886,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4004.5</X>
-                    <Y>4688.5</Y>
+                    <Y>4680.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1857,7 +1903,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4113.5</X>
-                    <Y>4703.5</Y>
+                    <Y>4695.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1991,7 +2037,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4139.5</X>
-                    <Y>4782.5</Y>
+                    <Y>4774.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -2012,7 +2058,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4122.5</X>
-                    <Y>4782.5</Y>
+                    <Y>4774.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -2025,11 +2071,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4431.5</X>
-                    <Y>4579.5</Y>
+                    <Y>4564.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4496.5</X>
-                    <Y>4579.5</Y>
+                    <Y>4564.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4496.5</X>
@@ -2046,16 +2092,37 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4517.5</X>
-                    <Y>4942.5</Y>
+                    <Y>4943.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4517.5</X>
-                    <Y>4842.5</Y>
+                    <Y>4839.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td15</PkTableDisplay>
             <FkTableDisplay>td16</FkTableDisplay>
             <Reference>r56</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd56">
+            <Color>#000000</Color>
+            <Type>Cross_3CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>4588.5</X>
+                    <Y>4901.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4588.5</X>
+                    <Y>4553.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>4364.5</X>
+                    <Y>4553.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td15</PkTableDisplay>
+            <FkTableDisplay>td11</FkTableDisplay>
+            <Reference>r57</Reference>
         </ReferenceDisplay>
     </ReferenceDisplays>
     <Properties>
