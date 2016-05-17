@@ -12,7 +12,6 @@ import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRe
 class DashBoard extends Component {
   constructor(props) {
     super(props);
-    console.log('', this.props.competitorsData)
   }
 
   componentDidUpdate() {

@@ -28,9 +28,19 @@ class AcceptedCompetitorCard extends Component {
       });
   }
 
+  updateCompetitionInterval(c) {
+    // window.interval = setInterval(() => {
+    //   console.log('primary user id1', c.primary_user_id);
+    //   console.log('secondary_user_id1', c.secondary_user_id);
+    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
+    //     token: localStorage.token
+    //   })
+    // }, 10000);
+  }
+
   handleAccept(e, c) {
+    // clearInterval(window.interval);
     var user_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
-    console.log('user url:', user_url);
 
     axios({
       method: 'get',
@@ -40,60 +50,51 @@ class AcceptedCompetitorCard extends Component {
         repoid: c.primary_repo_id
       },
     })
-      .then(response => {
+    .then(response => {
 
-        var totalCommitsForUser = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-        var dailyUserData = response.data.map( (item) => item.commits.length);
+      var totalCommitsForUser = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+      var dailyUserData = response.data.map( (item) => item.commits.length);
 
-        // get second set of data
-        var comp_url = `${ROOT_URL}/api/v1/users/${this.props.c.secondary_user_id}/commits/start`;
-        console.log('comp url:', comp_url);
-        axios({
-          method: 'get',
-          url: comp_url,
-          headers: {
-            startdate: c.competition_start,
-            repoid: c.secondary_repo_id
-          },
+      // get second set of data
+      var comp_url = `${ROOT_URL}/api/v1/users/${this.props.c.secondary_user_id}/commits/start`;
+      axios({
+        method: 'get',
+        url: comp_url,
+        headers: {
+          startdate: c.competition_start,
+          repoid: c.secondary_repo_id
+        },
+      })
+        .then(response => {
+
+          var totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+
+          var user = this.props.user.username;
+          var competitor = this.state.username;
+
+          // store the cumulative data in the store
+          // totalCommitsForUser andis populated in the first axios .then
+          var data = [
+            [user, totalCommitsForUser],
+            [competitor, totalCommitsForComp]
+          ];
+          console.log('DATA', data)
+          this.props.actions.addCompetitorData(data);
+
+          // store the daily data in the store
+          // dailyDataUser is populated in the first axios .then
+          var dailyCompetitorData = response.data.map( (item) => item.commits.length);
+
+          var dailyData = [
+            [user, dailyUserData],
+            [competitor, dailyCompetitorData]
+          ];
+          this.props.actions.addDailyCompetitorData(dailyData);
+
+        }).then(() => {
+          // this.updateCompetitionInterval(c);
         })
-          .then(response => {
-
-            var totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-
-            var user = this.props.user.username;
-            var competitor = this.state.username;
-
-            // store the cumulative data in the store
-            // totalCommitsForUser andis populated in the first axios .then
-            var data = [
-              [user, totalCommitsForUser],
-              [competitor, totalCommitsForComp]
-            ];
-            this.props.actions.addCompetitorData(data);
-
-            // store the daily data in the store
-            // dailyDataUser is populated in the first axios .then
-            var dailyCompetitorData = response.data.map( (item) => item.commits.length);
-
-            var dailyData = [
-              [user, dailyUserData],
-              [competitor, dailyCompetitorData]
-            ];
-            this.props.actions.addDailyCompetitorData(dailyData);
-
-          });
-      });
-  }
-
-  handleAccept2(e, c) {
-    // clearInterval(window.interval);
-    // window.interval = setInterval(() => {
-    //   console.log('primary user id1', c.primary_user_id);
-    //   console.log('secondary_user_id1', c.secondary_user_id);
-    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
-    //     token: localStorage.token
-    //   })
-    // }, 10000);
+    });
   }
 
   render() {
