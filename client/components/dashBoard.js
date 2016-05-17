@@ -6,12 +6,14 @@ import { browserHistory, Link } from 'react-router';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
 import utils from './../utils/utils';
-import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
-
+import { Countdown, Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
 class DashBoard extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showCountdown: false
+    }
   }
 
   componentDidUpdate() {
@@ -19,8 +21,8 @@ class DashBoard extends Component {
       this.getUserContribs();
     }
     if (this.props.competitorsData.length > 0){
-      console.log('We\'re making the CumulativeChart');
       CumulativeChart(this.props.competitorsData);
+      this.setState({showCountdown: true});
     }
   }
   getUserContribs() {
@@ -87,7 +89,7 @@ class DashBoard extends Component {
             <div className="data-results-container full-width">
 
               <div id="commit-charts">
-                <div>HELLO</div>
+                <Countdown endDate ={"2016-06-04 07:00:00"} />
                 <svg width={540} height={300}>
                 </svg>
 
