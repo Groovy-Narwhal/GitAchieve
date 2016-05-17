@@ -17,11 +17,13 @@ class ChooseWeapon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: moment().subtract(7, 'days')
+      startDate: moment().subtract(7, 'days'),
+      endDate: moment().add(7, 'days')
     };
   }
 
   handleStartChange(date) {
+    console.log('STATE', this.state)
     this.setState({
       startDate: date
     });
@@ -29,7 +31,7 @@ class ChooseWeapon extends Component {
 
   handleEndChange(date) {
     this.setState({
-      startDate: date
+      endDate: date
     });
   }
 
@@ -93,15 +95,15 @@ class ChooseWeapon extends Component {
           <DatePicker
             maxDate={moment()}
             selected={this.state.startDate}
-            onChange={this.handleChange.bind(this)}
+            onChange={this.handleStartChange.bind(this)}
           />
         </div>
         <h2>Pick an end Date</h2>
         <div className="data-results-container-flex full-width">
           <DatePicker
-            maxDate={moment()}
-            selected={this.state.endDate}
-            onChange={this.handleChange2.bind(this)}
+            minDate={moment()}
+            selected={this.state.startDate}
+            onChange={this.handleEndChange.bind(this)}
           />
         </div>
         <div className="spacer-10px"></div>
