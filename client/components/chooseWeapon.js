@@ -96,8 +96,7 @@ class ChooseWeapon extends Component {
             <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1 border-1px-white" />
           </div>
           <div className="data-results-container-flex-clear flex-center">
-            <span className="font-white">{this.props.user.username}</span>
-            <span className="font-white">{this.props.chosenSearchResult.login}</span>
+            <span className="font-white">{this.props.user.username} <span className="font-dark-gray">vs</span> {this.props.chosenSearchResult.login}</span>
           </div>
           <div className="spacer-10px" />
           <h3 className="font-dark-gray">Choose Your Weapon // Repos</h3>
@@ -125,7 +124,7 @@ class ChooseWeapon extends Component {
           </div>
           <div className="spacer-10px"></div>
           <div className="block text-centered">
-            <input type="submit" value="COMPETE" className="button compete" onClick={this.compete.bind(this)} />
+            <input type="submit" value="Compete" className="button compete" onClick={this.compete.bind(this)} />
           </div>
         </div>
       </div>

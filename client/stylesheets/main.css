@@ -248,6 +248,12 @@ h3 {
   padding: 5px;
   color: #fff; }
 
+.button:hover {
+  background-color: #1bcc88; }
+
+.button:active {
+  background-color: #1fb574; }
+
 .signin {
   font-weight: 300;
   font-size: 16px;
@@ -256,6 +262,11 @@ h3 {
   padding-bottom: auto;
   padding-top: auto;
   vertical-align: middle; }
+
+.compete {
+  padding: 20px;
+  font-size: 16px;
+  font-weight: 600; }
 
 .user-avatar-sm {
   width: 20px;
@@ -301,11 +312,6 @@ h3 {
 
 .search-container {
   white-space: nowrap; }
-
-.compete {
-  padding: 20px;
-  font-size: 16px;
-  font-weight: 600; }
 
 .spacer-5px {
   margin: 5px 0; }
