@@ -102,7 +102,7 @@ class ChooseWeapon extends Component {
         <div className="data-results-container-flex full-width">
           <DatePicker
             minDate={moment()}
-            selected={this.state.startDate}
+            selected={this.state.endDate}
             onChange={this.handleEndChange.bind(this)}
           />
         </div>
