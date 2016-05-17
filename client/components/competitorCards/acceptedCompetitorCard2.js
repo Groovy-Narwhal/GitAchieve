@@ -18,11 +18,6 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   handleAccept(e, c) {
-    // get user's data
-
-    console.log('primaryID, secondaryID, primaryREPO, secondaryREPO, competitionSTART:',
-      c.primary_user_id, c.secondary_user_id, c.primary_repo_id, c.secondary_repo_id, c.competition_start);
-
     var user_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
     console.log('user url:', user_url);
 
@@ -35,7 +30,9 @@ class AcceptedCompetitorCard2 extends Component {
       },
     })
       .then(response => {
-        console.log('response from user axios:', response);
+
+        var totalCommitsForUser = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+        var dailyUserData = response.data.map( (item) => item.commits.length);
 
         // get second set of data
         var comp_url = `${ROOT_URL}/api/v1/users/${this.props.c.secondary_user_id}/commits/start`;
@@ -49,12 +46,30 @@ class AcceptedCompetitorCard2 extends Component {
           },
         })
           .then(response => {
-            console.log('response from competitor axios:', response);
 
-            // change Redux store - which should re-render graph data automagically
-            // (WAIT! it shouldn't because Tab 1)
-            // this.props.actions.addCompetitorData([20, 11]);
-            // this.props.actions.addDailyCompetitorData([[5, 4, 2, 7, 3, 6, 8], [2, 3, 5, 9, 7, 2, 3]]);
+            var totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+
+            var user = this.props.user.username;
+            var competitor = this.state.username;
+
+            // store the cumulative data in the store
+            // totalCommitsForUser andis populated in the first axios .then
+            var data = [
+              [user, totalCommitsForUser],
+              [competitor, totalCommitsForComp]
+            ];
+            this.props.actions.addCompetitorData(data);
+
+            // store the daily data in the store
+            // dailyDataUser is populated in the first axios .then
+            var dailyCompetitorData = response.data.map( (item) => item.commits.length);
+
+            var dailyData = [
+              [user, dailyUserData],
+              [competitor, dailyCompetitorData]
+            ];
+            this.props.actions.addDailyCompetitorData(dailyData);
+
           });
       });
   }

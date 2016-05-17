@@ -101,25 +101,6 @@ class DashBoard extends Component {
   }
 }
 
-/*
-// CHART //
-<button onClick={this.makeMainChart.bind(this)}> Tab 1: Total </button>
-<button onClick={this.makeDailyChart.bind(this)}> Tab 2: Daily </button>
-<div id="commit-charts">
-  <svg width={540} height={300}>
-  </svg>
-  <div id="optional-extra-chart">
-  </div>
-</div>
-<button onClick={this.addDailyChart.bind(this)}> See daily breakdown </button>
-// END CHART //
-<div id="commit-charts">
-  <svg width={540} height={300}>
-  </svg>
-</div>
-<div><Repos /></div>
-*/
-
 const mapStateToProps = state => {
   return state;
 }
