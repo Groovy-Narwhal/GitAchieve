@@ -5,7 +5,6 @@ import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
 import axios from 'axios';
 import moment from 'moment';
-import classNames from 'classnames';
 
 class UserProfile extends Component {
   constructor(props) {
@@ -89,7 +88,7 @@ class UserProfile extends Component {
         if (event.type === 'PushEvent' || event.type === 'PullRequestEvent') {
           return (
             <div key={index} className="search-result-container" >
-              <span className={classNames("font-medium-gray font-weight-light fonts-size-regular")}>{moment(new Date(event.created_at)).fromNow()}</span>
+              <span className="font-medium-gray font-weight-light fonts-size-regular">{moment(new Date(event.created_at)).fromNow()}</span>
               <div className="spacer-5px"/>
               {this.eventTypeFilter(event)}
             </div>
