@@ -46,24 +46,6 @@ table {
 body {
   font-family: "Open Sans", sans-serif; }
 
-.font-white {
-  color: #fff; }
-
-.font-lightest-gray {
-  color: #eee; }
-
-.font-lighter-gray {
-  color: #ccc; }
-
-.font-light-gray {
-  color: #999; }
-
-.font-medium-gray {
-  color: #444; }
-
-.font-dark-gray {
-  color: #222; }
-
 .centered {
   margin-right: auto;
   margin-left: auto; }
@@ -115,7 +97,6 @@ body {
   background-color: #fff;
   padding: 10px;
   margin-bottom: 10px;
-  margin-right: 10px;
   border-radius: 5px; }
 
 svg {
@@ -136,7 +117,7 @@ svg {
   background-color: #1C1D21; }
 
 .main-img-container-bg {
-  background: url(../../static/assets/valley-dusting-1-2.jpg) no-repeat center center fixed;
+  background: url(../../static/assets/8bit-landscape-1-2.jpg) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -159,6 +140,51 @@ h2 {
 h3 {
   font-size: 16px;
   font-weight: 400; }
+
+.font-white {
+  color: #fff; }
+
+.font-lightest-gray {
+  color: #eee; }
+
+.font-lighter-gray {
+  color: #ccc; }
+
+.font-light-gray {
+  color: #999; }
+
+.font-medium-gray {
+  color: #444; }
+
+.font-dark-gray {
+  color: #222; }
+
+.font-weight-light {
+  font-weight: 100; }
+
+.font-weight-regular {
+  font-weight: 400; }
+
+.font-weight-semi-bold {
+  font-weight: 600; }
+
+.font-weight-bold {
+  font-weight: 700; }
+
+.fonts-size-light {
+  font-size: 8px; }
+
+.fonts-size-regular {
+  font-size: 12px; }
+
+.fonts-size-semi-large {
+  font-size: 16px; }
+
+.fonts-size-large {
+  font-size: 20px; }
+
+.fonts-size-x-large {
+  font-size: 24px; }
 
 @font-face {
   font-family: 'Open Sans';
@@ -247,6 +273,9 @@ h3 {
   font-size: 16px;
   font-weight: 600; }
 
+.spacer-5px {
+  margin: 5px 0; }
+
 .spacer-10px {
   margin: 10px 0; }
 
@@ -272,23 +301,23 @@ h3 {
   margin: 150px 0; }
 
 .header-nav {
-  background-color: #fff;
-  border-bottom: 1px solid #ddd;
+  background-color: rgba(255, 255, 255, 0);
   padding: 20px 20px; }
 
 .header-components-container {
   margin-right: auto;
   margin-left: auto;
-  width: 80%;
+  width: 75%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  justify-content: space-around; }
+  justify-content: space-between; }
 
 .logo {
   font-weight: 700;
-  font-size: 26px;
-  cursor: pointer; }
+  font-size: 75px;
+  cursor: pointer;
+  color: #fff; }
 
 .nav-link {
   margin: 0 10px;
@@ -301,7 +330,8 @@ h3 {
 .header-user-button {
   border-radius: 5px;
   border: 1px solid #eee;
-  padding: 5px; }
+  padding: 5px;
+  background-color: #fff; }
 
 .header-profile-dropdown {
   background-color: #fff;
@@ -334,6 +364,11 @@ h3 {
 .repo-green {
   background-color: #1d9;
   color: #fff; }
+
+.profile-username {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222; }
 
 .event-title {
   display: inline; }

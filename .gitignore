@@ -19,6 +19,7 @@ node_modules/*
 
 #SCSS
 .sass-cache/*
+client/stylesheets/.sass-cache/*
 
 #NPM logs
 npm-debug.log

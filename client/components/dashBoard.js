@@ -2,9 +2,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { browserHistory, Link } from 'react-router';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
-import ghFetch from './../utils/utils';
+import utils from './../utils/utils';
 import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
 
@@ -25,7 +26,7 @@ class DashBoard extends Component {
   }
   getUserContribs() {
     async function getContribs() {
-      var numContribs = await ghFetch.utils.fetchLastYearGHContribs(this.props.user.username);
+      var numContribs = await utils.fetchLastYearGHContribs(this.props.user.username);
       this.props.actions.getUserContribs(numContribs);
     }
     getContribs.call(this);
@@ -64,7 +65,9 @@ class DashBoard extends Component {
         <div className="dashboard">
           <div className="main-search">
             <div className="dash-header-text text-centered">
+              <h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
               <h1 className="font-white">Search your Git opponent</h1>
+              <div className="spacer-5px" />
               <h3 className="font-white">Your contributions: {this.props.userContributions}</h3>
             </div>
             <div className="search-container text-centered">
