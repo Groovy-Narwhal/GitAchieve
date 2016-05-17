@@ -36,7 +36,9 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
     .then(() => {
       // call massive fetch to update our database with user's GitHub data for repos, orgs, pull
       // requests, stats, and commits
-      massiveFetch(id, username, accessToken, profile);
+      // we are sending false as the last argument to run the requests independently - if any of
+      // them fail, the rest will still run
+      massiveFetch(id, username, accessToken, profile, false);
     })
     .catch((error) => {
       console.error('Error in auth user upsert: ', error);
