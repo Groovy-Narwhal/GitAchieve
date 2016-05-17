@@ -22,7 +22,7 @@ render(
         <Route path="/about" component={component.About} />
         <Route path="/search-results" component={component.SearchResults} />
         <Route path="/:username/profile" component={component.UserProfile} />
-        <Route path="/achievements/:id" component={component.UserAchievements} />
+        <Route path="/:username/achievements" component={component.UserAchievements} />
         <Route path="/:username/repos" component={component.Repos} />
         <Route path="/compete/choose-repo/:username" component={component.ChooseWeapon} />
         <Route path="/compete/choose-second-repo/:userid" component={component.ChooseSecondWeapon} />

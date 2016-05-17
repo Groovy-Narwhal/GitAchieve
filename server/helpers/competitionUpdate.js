@@ -6,9 +6,7 @@ exports.updateCompetition = (req, res) => {
   var primaryid = req.params.primaryid;
   var secondaryid = req.params.secondaryid;
   var token = req.body.token;
-  console.log('primaryid', primaryid)
-  console.log('secondaryid', secondaryid)
-  console.log('token', token)
+
   const updateCommits = (id) => {
     var options = {
       url: CALLBACKHOST + '/api/v1/users/' + id + '/commits',
@@ -55,9 +53,6 @@ exports.updateCompetition = (req, res) => {
   }
 
   updateStatsAsync(primaryid).then(updateStatsAsync(secondaryid))
-
-  // updateStats(primaryid);
-  // updateStats(secondaryid);
 
 }
 

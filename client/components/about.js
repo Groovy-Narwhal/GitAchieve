@@ -1,6 +1,7 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
 
+// FEEL FREE TO EDIT
 export default () => {
   return (
     <div>
@@ -48,18 +49,3 @@ export default () => {
     </div>
   )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
