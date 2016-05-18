@@ -51,7 +51,7 @@ class AcceptedCompetitorCard2 extends Component {
     var user = this.props.user.username;
     var competitor = this.state.username;
     var user_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
-    var comp_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
+    var comp_url = `${ROOT_URL}/api/v1/users/${c.primary_user_id}/commits/start`;
 
     var userRepo, competitorRepo;
     var data, totalCommitsForUser, totalCommitsForComp;
@@ -141,68 +141,6 @@ class AcceptedCompetitorCard2 extends Component {
         });
     });
   }
-
-
-
-  // handleAccept(c) {
-  //   console.log('hey', c)
-  //   var user_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
-
-  //   axios({
-  //     method: 'get',
-  //     url: user_url,
-  //     headers: {
-  //       startdate: c.competition_start,
-  //       repoid: c.secondary_repo_id
-  //     },
-  //   })
-  //   .then(response => {
-
-  //     var totalCommitsForUser = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-  //     var dailyUserData = response.data.map( (item) => item.commits.length);
-
-  //     // get second set of data
-  //     var comp_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
-
-  //     axios({
-  //       method: 'get',
-  //       url: comp_url,
-  //       headers: {
-  //         startdate: c.competition_start,
-  //         repoid: c.primary_repo_id
-  //       },
-  //     })
-  //     .then(response => {
-
-  //       var totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-
-  //       var user = this.props.user.username;
-  //       var competitor = this.state.username;
-  //       var userRepo = c.primary_repo_id;
-  //       var competitorRepo = c.secondary_repo_id;
-
-  //       // store the cumulative data in the store
-  //       // totalCommitsForUser andis populated in the first axios .then
-  //       var data = [
-  //         [userRepo, competitorRepo],
-  //         [user, totalCommitsForUser],
-  //         [competitor, totalCommitsForComp]
-  //       ];
-  //       this.props.actions.addCompetitorData(data);
-
-  //       // store the daily data in the store
-  //       // dailyDataUser is populated in the first axios .then
-  //       var dailyCompetitorData = response.data.map( (item) => item.commits.length);
-
-  //       var dailyData = [
-  //         [user, dailyUserData],
-  //         [competitor, dailyCompetitorData]
-  //       ];
-  //       this.props.actions.addDailyCompetitorData(dailyData);
-
-  //     })
-  //   });
-  // }
 
   componentWillMount() {
     axios.get(`${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}`)
