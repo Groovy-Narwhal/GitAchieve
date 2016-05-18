@@ -1,6 +1,9 @@
 const request = require('request');
 const db = require('../db/database.js').db;
 const pgp = require('../db/database.js').pgp;
+const rp = require('request-promise');
+const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+
 
 // GET at '/api/v1/users/:id/friends'
 exports.retrieveFriends = function(req, res) {
@@ -51,12 +54,13 @@ exports.addFriend = function(req, res) {
   const secondaryUserEmail = req.body.secondaryUserEmail;
   const primaryRepoId = req.body.primaryRepoId;
   const competitionStart = pgp.as.date(new Date(req.body.competitionStart));
+  const competitionEnd = pgp.as.date(new Date(req.body.competitionEnd));
   const dbTimestamp = pgp.as.date(new Date());
-
   // check if the secondary user exists
   db.one('SELECT * FROM users WHERE id=($1)',
     secondaryUserId)
     .then(data => {
+
       db.any(
         'SELECT * FROM $1~ AS $2~ ' +
         'WHERE ($2~.$3~ = $4 ' +
@@ -69,11 +73,11 @@ exports.addFriend = function(req, res) {
           // the confirmed_at column will be null, showing that the relationship has not been
           // confirmed by the secondary user yet
           if (data.length === 0) {
-            db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~) ' +
-              'VALUES ($8, $9, $10, $11, $12) ' +
+            db.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $8~) ' +
+              'VALUES ($9, $10, $11, $12, $13, $14) ' +
               'RETURNING *',
-              ['users_users', 'uu', 'created_ga', 'competition_start', 'primary_user_id', 'secondary_user_id', 'primary_repo_id',
-              dbTimestamp, competitionStart, primaryUserId, secondaryUserId, primaryRepoId])
+              ['users_users', 'uu', 'created_ga', 'competition_start', 'primary_user_id', 'secondary_user_id', 'primary_repo_id', 'competition_end',
+              dbTimestamp, competitionStart, primaryUserId, secondaryUserId, primaryRepoId, competitionEnd])
             .then((data) => {
               res.send(data);
             })
@@ -98,7 +102,8 @@ exports.confirmFriend = function(req, res) {
   var secondaryUserId = req.params.id; 
   // this is the person who sent the invitation to compete
   var primaryUserId = req.body.primaryUserId;
-  const secondaryRepoId = req.body.secondaryRepoId;
+  // 0 is for testing purposes there will normally be a secondary repo id present otherwise it must be an integer type
+  const secondaryRepoId = req.body.secondaryRepoId || 57168943;
   var confirmedAt = pgp.as.date(new Date());
   const lastActive = pgp.as.date(new Date());
   // find user_users connection
@@ -143,7 +148,8 @@ exports.checkForFriendRequests = function(req, res) {
 
   db.any('Select * from users_users uu ' +
     'WHERE uu.secondary_user_id=($1) ' +
-    'AND uu.confirmed_at IS NULL',
+    'AND uu.confirmed_at IS NULL ' +
+    'AND uu.winner IS NULL',
     [secondaryIdCheck]
   ).then(data => res.send(data))
   .catch(error => {
@@ -160,7 +166,8 @@ exports.checkForSentRequests = function(req, res) {
 
   db.any('Select * from users_users uu ' +
     'WHERE uu.primary_user_id=($1) ' +
-    'AND uu.confirmed_at IS NULL',
+    'AND uu.confirmed_at IS NULL ' +
+    'AND uu.winner IS NULL',
     [primaryIdCheck]
   ).then(data => res.send(data))
   .catch(error => {
@@ -177,7 +184,8 @@ exports.checkApprovedRequests = function(req, res) {
 
     db.any('Select * from users_users uu ' +
       'WHERE uu.primary_user_id=($1) ' +
-      'AND uu.confirmed_at IS NOT NULL',
+      'AND uu.confirmed_at IS NOT NULL ' +
+      'AND uu.winner IS NULL',
       [id]
     ).then(data => res.send(data))
     .catch(error => {
@@ -186,19 +194,139 @@ exports.checkApprovedRequests = function(req, res) {
     })
   }
 
-  // retrieve all entries in the user to user table in which confirmed at is not null
-  // GET at /api/v1/users/:id/successmatches
-  exports.checkApprovedRequests2 = function(req, res) {
-     // this is the current users id
-      var id = req.params.id;
+// retrieve all entries in the user to user table in which confirmed at is not null
+// GET at /api/v1/users/:id/successmatches
+exports.checkApprovedRequests2 = function(req, res) {
+  // this is the current users id
+  var id = req.params.id;
 
-      db.any('Select * from users_users uu ' +
-        'WHERE uu.secondary_user_id=($1) ' +
-        'AND uu.confirmed_at IS NOT NULL',
-        [id]
-      ).then(data => res.send(data))
-      .catch(error => {
-        console.error(error);
-        res.status(500).send('Error finding users_users connection');   
-      })
-    }
+  db.any('Select * from users_users uu ' +
+    'WHERE uu.secondary_user_id=($1) ' +
+    'AND uu.confirmed_at IS NOT NULL ' +
+    'AND uu.winner IS NULL',
+    [id]
+  ).then(data => res.send(data))
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  })
+}
+
+// retrieve all entries in the user to user table in which competition date is in the past and update them to have a winner
+// GET at /api/v1/users/:id/pastCompetitions
+exports.checkPastCompetitions = function(req, res) {
+  // this is the current users id
+  const id = req.params.id;
+
+
+  db.any('Select * from users_users uu ' +
+    'WHERE uu.primary_user_id=($1) OR ' +
+    'uu.secondary_user_id=($1)', [id])
+  .then(data => {
+    const currentDate = new Date();
+    // for each data we want to make sure that they have a winner
+    const filteredData = data.map(comp => {
+      if (currentDate > new Date(comp.competition_end)) {
+        return comp;
+      }
+    })
+    var updatedCompetitions = [];
+    const length = filteredData.reduce((acc, curr) => {return (curr !== undefined) ? acc + 1 : acc }, 0);
+    var counter = 0;
+    filteredData.forEach(comp => {
+      if (comp !== undefined) {
+        counter = counter + 1;
+        const winner = comp.winner;
+        if (winner) {
+          updatedCompetitions.push(comp);
+          
+          if (counter === length) {
+            res.send(updatedCompetitions);
+          }
+        } else {
+          const primary_user_id = comp.primary_user_id;
+          const primary_repo_id = comp.primary_repo_id;
+          const secondary_user_id = comp.secondary_user_id;
+          const secondary_repo_id = comp.secondary_repo_id || 19366327;
+          const competition_start = comp.competition_start;
+
+          const primaryOptions = {
+            uri: `${CALLBACKHOST}/api/v1/users/${primary_user_id}/commits/start`,
+            method: 'GET',
+            headers: {
+              startdate: competition_start,
+              repoid: primary_repo_id
+            }
+          };
+
+          const secondaryOptions = {
+            uri: `${CALLBACKHOST}/api/v1/users/${secondary_user_id}/commits/start`,
+            method: 'GET',
+            headers: {
+              startdate: competition_start,
+              repoid: secondary_repo_id
+            }
+          };
+
+          rp(primaryOptions)
+            .then(res => {
+              const data = JSON.parse(res);
+              const primaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+              return primaryCommitCount;
+            }).
+            then(primaryCommitCount => {
+              rp(secondaryOptions)
+                .then(res => {
+                  const data = JSON.parse(res);
+                  const secondaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+                  const winner;
+                  if (primaryCommitCount > secondaryCommitCount) {
+                   return primary_user_id;
+                  } else if (primaryCommitCount < secondaryCommitCount) {
+                    return secondary_user_id;
+                  }
+                  return 1;
+                })
+                .then(winner => {
+                  db.oneOrNone(
+                    'SELECT * ' + 
+                    'FROM users_users uu ' +
+                    'WHERE uu.primary_user_id=($1) ' +
+                    'AND uu.secondary_user_id=($2) ' +
+                    'OR uu.primary_user_id=($2) ' +
+                    'AND uu.secondary_user_id=($1)',
+                    [primary_user_id, secondary_user_id])
+                    .then(data => {
+                      if (data !== null) {
+                        db.oneOrNone(
+                          'UPDATE users_users ' + 
+                          'SET winner=($1) ' +
+                          'WHERE (users_users.primary_user_id=($2) ' +
+                          'AND users_users.secondary_user_id=($3)) ' +
+                          'RETURNING *', 
+                          [winner, primary_user_id, secondary_user_id])
+                          .then(data => {
+                            updatedCompetitions.push(data);
+                            if (counter === length) {
+                              res.send(updatedCompetitions);
+                            }
+                          })
+                          .catch(error => {
+                            console.error(error);
+                            res.status(500).send('Error updating users_users connection');                
+                          });
+                        }
+                    })
+                })
+            })
+            .catch(err => console.error(err));
+        }
+        
+      }
+    })
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  });
+}

@@ -32,7 +32,6 @@ class ChooseWeapon extends Component {
     this.setState({
       endDate: date
     });
-    console.log(this.state);
   }
 
   compete() {
@@ -46,7 +45,8 @@ class ChooseWeapon extends Component {
       secondary_user_id: this.props.chosenSearchResult.id,
       secondaryUsername: this.props.chosenSearchResult.login,
       primary_repo_id: primaryRID,
-      competition_start: this.state.startDate._d
+      competition_start: this.state.startDate._d,
+      competition_end: this.state.endDate._d
     };
     // this will add opponent user to database if they don't already exist
     axios.patch(`${ROOT_URL}/api/v1/users/${competitionData.secondary_user_id}`, {
@@ -60,7 +60,8 @@ class ChooseWeapon extends Component {
         secondaryUsername: res.data.username,
         secondaryUserEmail: res.data.email,
         primaryRepoId: competitionData.primary_repo_id,
-        competitionStart: competitionData.competition_start
+        competitionStart: competitionData.competition_start,
+        competitionEnd: competitionData.competition_end
       })
       .then(response => {
         axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/requestedmatches`)
@@ -77,7 +78,7 @@ class ChooseWeapon extends Component {
         });
       })
       .then(() => {
-        axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${competitionData.secondaryUsername}&competitor_id=${competitionData.secondary_user_id}`)
+        axios.get(`${ROOT_URL}/send-email?user=${this.props.user.username}&competitor=${competitionData.secondaryUsername}&competitor_id=${competitionData.secondary_user_id}`);
       })
     })
     .catch((err) => {
@@ -108,7 +109,7 @@ class ChooseWeapon extends Component {
           <div className="spacer-5px" />
           <div className="data-result-container full-width">
             <DatePicker
-              maxDate={moment()}
+              // maxDate={moment().subtract(1, 'day')}
               selected={this.state.startDate}
               onChange={this.handleStartChange.bind(this)}
             />
@@ -117,7 +118,7 @@ class ChooseWeapon extends Component {
           <div className="spacer-5px" />
           <div className="data-result-container full-width">
             <DatePicker
-              minDate={moment()}
+              // minDate={moment().add(1, 'day')}
               selected={this.state.endDate}
               onChange={this.handleEndChange.bind(this)}
             />

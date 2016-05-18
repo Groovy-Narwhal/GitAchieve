@@ -19,23 +19,22 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(window.interval);
+    // clearInterval(window.interval);
   }
 
   competitionUpdateInterval(c) {
-    clearInterval(window.interval);
-    window.interval = setInterval(() => {
-      console.log('primary user id2', c.primary_user_id);
-      console.log('secondary_user_id2', c.secondary_user_id);
-      axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
-        token: localStorage.token
-      }).then(this.handleAccept.bind(this, c))
-      this.setState({toggleUpdate: !this.state.toggleUpdate})
-    }, 10000);
+    // clearInterval(window.interval);
+    // window.interval = setInterval(() => {
+    //   console.log('primary user id2', c.primary_user_id);
+    //   console.log('secondary_user_id2', c.secondary_user_id);
+    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
+    //     token: localStorage.token
+    //   }).then(this.handleAccept.bind(this, c))
+    //   this.setState({toggleUpdate: !this.state.toggleUpdate})
+    // }, 10000);
   }
 
   handleAccept(c) {
-    console.log('hey', c)
     var user_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
 
     axios({
@@ -73,7 +72,8 @@ class AcceptedCompetitorCard2 extends Component {
         // totalCommitsForUser andis populated in the first axios .then
         var data = [
           [user, totalCommitsForUser],
-          [competitor, totalCommitsForComp]
+          [competitor, totalCommitsForComp],
+          [c.competition_end]
         ];
         this.props.actions.addCompetitorData(data);
 
@@ -87,8 +87,9 @@ class AcceptedCompetitorCard2 extends Component {
         ];
         this.props.actions.addDailyCompetitorData(dailyData);
 
-      })
-    });
+      });
+    })
+
   }
 
   componentWillMount() {

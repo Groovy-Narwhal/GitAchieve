@@ -2,7 +2,7 @@ import axios from 'axios';
 import { browserHistory } from 'react-router';
 import * as types from './actionTypes';
 
-const ROOT_URL = 'http://127.0.0.1:8000';
+const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
 
 export const signoutUser = () => {
   return dispatch => {
@@ -24,6 +24,7 @@ export const signoutUser = () => {
 const checkForFriendRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivedmatches`)
     .then(response => {
+      console.log('Received requests not accepted', response.data);
       if (response.data.length > 0) {
         dispatch({
           type: types.YES_COMPETITIONS
@@ -39,6 +40,7 @@ const checkForFriendRequests = (id, dispatch) => {
 const checkForSentRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
     .then(response => {
+      console.log('Sent requests not accetped', response.data);
       if (response.data.length > 0) {
         dispatch({
           type: types.YES_COMPETITIONS
@@ -54,6 +56,7 @@ const checkForSentRequests = (id, dispatch) => {
 const checkForConfirmedRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches`)
     .then(response => {
+      console.log('confirmed request in which logged in user sent the request', response.data);
       if (response.data.length > 0) {
         dispatch({
           type: types.YES_COMPETITIONS
@@ -69,6 +72,7 @@ const checkForConfirmedRequests = (id, dispatch) => {
 const checkForConfirmedRequests2 = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches2`)
     .then(response => {
+      console.log('confirmed request in which logged in received the request', response.data);
       if (response.data.length > 0) {
         dispatch({
           type: types.YES_COMPETITIONS
@@ -77,6 +81,17 @@ const checkForConfirmedRequests2 = (id, dispatch) => {
       dispatch({
         type: types.CONFIRMED_FR2,
         confirmedRequests2: response.data
+      });
+    });
+};
+
+const checkForPastCompetitions = (id, dispatch) => {
+  return axios.get(`${ROOT_URL}/api/v1/users/${id}/pastcompetitions`)
+    .then(response => {
+      console.log('past Competitions', response.data);
+      dispatch({
+        type: types.PAST_COMPETITIONS,
+        pastCompetitions: response.data
       });
     });
 };
@@ -104,15 +119,23 @@ export const signinUser = () => {
         // listen for incoming messages
         socket.on('incoming_request', msg => {
           console.log(msg.msg);
-          checkForFriendRequests(userProfile.id, dispatch);
-          checkForSentRequests(userProfile.id, dispatch);
-          checkForConfirmedRequests(userProfile.id, dispatch);
-          checkForConfirmedRequests2(userProfile.id, dispatch);
+          axios.all([
+            checkForFriendRequests(userProfile.id, dispatch),
+            checkForSentRequests(userProfile.id, dispatch),
+            checkForConfirmedRequests(userProfile.id, dispatch),
+            checkForConfirmedRequests2(userProfile.id, dispatch),
+            checkForPastCompetitions(userProfile.id, dispatch)
+          ])
+
         });
 
         // - redirect to the route '/'
         browserHistory.push('/');
         return userProfile.id;
+      })
+      .then((id) => {
+        checkForPastCompetitions(id, dispatch);
+        return id;
       })
       .then((id) => {
         checkForFriendRequests(id, dispatch);

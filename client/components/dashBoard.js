@@ -6,12 +6,14 @@ import { browserHistory, Link } from 'react-router';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
 import utils from './../utils/utils';
-import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
-
+import { Countdown, Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
 class DashBoard extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showCountdown: false
+    }
   }
 
   componentDidUpdate() {
@@ -19,7 +21,6 @@ class DashBoard extends Component {
       this.getUserContribs();
     }
     if (this.props.competitorsData.length > 0){
-      console.log('We\'re making the CumulativeChart');
       CumulativeChart(this.props.competitorsData);
     }
   }
@@ -31,7 +32,6 @@ class DashBoard extends Component {
     getContribs.call(this);
   }
   makeMainChart() {
-      console.log('makeMainChart called');
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
     }
@@ -55,15 +55,13 @@ class DashBoard extends Component {
       return (<span className="font-active">Couldn't get your contributions. Try again in a few seconds</span>);
     }
   }
-  // <button onClick={this.makeMainChart.bind(this)} className="button"> Tab 1: Total </button>
-  // <button onClick={this.makeDailyChart.bind(this)} className="button"> Tab 2: Daily </button>
-
 
   render() {
     const { actions } = this.props;
 
     if (this.props.auth.authenticated) {
       // this.makeMainChart();
+
       return (
         <div className="dashboard">
           <div className="main-search">
@@ -87,6 +85,7 @@ class DashBoard extends Component {
             <div className="data-results-container full-width">
 
               <div id="commit-charts">
+                { this.props.competitorsData.length > 0 ? <Countdown /> : <div></div> }
                 <svg width={540} height={300}>
                 </svg>
 

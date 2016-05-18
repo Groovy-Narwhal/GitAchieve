@@ -72,31 +72,31 @@ var getEmail = (competitor, user) => {
 // sends email after ensuring competitor email exists
 module.exports = (app) => {
 
-  app.get('/send-email', (req, res) => {
-    user = req.query.user;
-    competitor = req.query.competitor;
-    competitor_id = req.query.competitor_id;
-    db.one(
-      'SELECT u.id, u.username, u.email ' +
-      'FROM users u ' +
-      'WHERE u.username = $1',
-      competitor
-    )
-    .then(data => {
-      competitorEmail = data.email;
-      // if competitor's email is not in the database, get it
-      if (!competitorEmail) {
-        getEmail(competitor, user);
-      }
-      // otherwise send email immediately
-      else {
-        sendEmail(competitorEmail);
-      }
-    })
-    .catch(err =>
-      console.log('error with db.one in invitationSender, user probably does not exist:', err)
-    );
-  });
+  // app.get('/send-email', (req, res) => {
+  //   user = req.query.user;
+  //   competitor = req.query.competitor;
+  //   competitor_id = req.query.competitor_id;
+  //   db.one(
+  //     'SELECT u.id, u.username, u.email ' +
+  //     'FROM users u ' +
+  //     'WHERE u.username = $1',
+  //     competitor
+  //   )
+  //   .then(data => {
+  //     competitorEmail = data.email;
+  //     // if competitor's email is not in the database, get it
+  //     if (!competitorEmail) {
+  //       getEmail(competitor, user);
+  //     }
+  //     // otherwise send email immediately
+  //     else {
+  //       sendEmail(competitorEmail);
+  //     }
+  //   })
+  //   .catch(err =>
+  //     console.log('error with db.one in invitationSender, user probably does not exist:', err)
+  //   );
+  // });
 
 };
 
