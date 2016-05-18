@@ -17,11 +17,14 @@ dist/*
 # Dependency directories
 node_modules/*
 
-#SCSS
+# SCSS
 .sass-cache/*
 client/stylesheets/.sass-cache/*
 
-#NPM logs
+# NPM logs
 npm-debug.log
 server/npm-debug.log
 server/db/npm-debug.log
+
+# Environment Variable
+.env.json
