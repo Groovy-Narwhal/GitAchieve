@@ -11,7 +11,7 @@ class Header extends Component {
   handleSignOut() {
     this.props.actions.signoutUser();
   }
-  renderLinks() {
+  renderSearch() {
     if (!this.props.auth.authenticated) {
       return null;
     } else {
@@ -29,14 +29,22 @@ class Header extends Component {
       }
     }
   }
-
+  renderProfileButton() {
+    if (!this.props.auth.authenticated) {
+      return null;
+    } else {
+      return (
+        <HeaderProfileButton />
+      );
+    }
+  }
   render() {
     return (
       <nav className="header-nav">
         <div className="header-components-container">
           <img src="./../static/assets/GitAchieveLogo-white-1-1.svg" height="50px" width="50px" onClick={() => browserHistory.push('/')} className="logo"/>
-          {this.renderLinks()}
-          <HeaderProfileButton />
+          {this.renderSearch()}
+          {this.renderProfileButton()}
         </div>
       </nav>
     );
