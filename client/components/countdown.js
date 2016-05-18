@@ -26,21 +26,58 @@ class Countdown extends Component {
       mins: mins,
       secs: secs
     };
-    console.log('THIS PROPS', this.props);
   }
 
   componentWillUnmount() {
     clearInterval(this.decrement);
   }
 
+  updateDB() {
+    function pastCompetitions() {
+      return axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/pastcompetitions`)
+        .then(response => {
+          console.log('RES1', response.data)
+          this.props.actions.pastCompetitions(response.data);
+        });
+    };
+    function checkForFriendRequests() {
+      return axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/receivedmatches`)
+        .then(response => {
+          console.log('RES2', response.data)
+          this.props.actions.receivedFriendRequests(response.data);
+        });
+    }
+    function checkForSentRequests() {
+      return axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/requestedmatches`)
+        .then(response => {
+          console.log('RES3', response.data)
+          this.props.actions.sentFriendRequests(response.data);
+        });
+    }
+    function checkForConfirmedRequests() {
+      return axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/successmatches`)
+        .then(response => {
+          console.log('RES4', response.data)
+          this.props.actions.confirmedFriendRequests(response.data);
+        });
+    }
+    function checkForConfirmedRequests2() {
+      return axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/successmatches2`)
+        .then(response => {
+          console.log('RES5', response.data)
+          this.props.actions.confirmedFriendRequests2(response.data);
+        });
+    }
+    axios.all([pastCompetitions.apply(this), checkForFriendRequests.apply(this), checkForSentRequests.apply(this), checkForConfirmedRequests.apply(this), checkForConfirmedRequests2.apply(this)])
+  }
+
   update() {
     if (this.state.time <= 0) {
-
       clearInterval(this.decrement);
-      console.log('hi', hi)
-      // database update users_users table to have winner
-      // axios.patch(`${ROOT_URL}/api/v1/users/competitionend`)
+      // database update users_users table
+      this.updateDB.bind(this);
     }
+
     var newTime = this.state.time - 1; // minus one sec from initial time
     var today = new Date();
     var msDiff = new Date(this.props.competitorsData[0][2]) - today;
@@ -66,6 +103,7 @@ class Countdown extends Component {
       <div className="countdown-container">
         <h1>Competition Countdown</h1>
         <div className="spacer-10px"/>
+        <button onClick={this.updateDB.bind(this)}>test</button>
         <p>{this.state.days} days, {this.state.hours} hours, {this.state.mins} minutes, {this.state.secs} seconds</p>
       </div>
     )
