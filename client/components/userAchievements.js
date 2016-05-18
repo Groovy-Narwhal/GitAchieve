@@ -5,10 +5,6 @@ import actions from './../actions/ActionCreators';
 import { cumulativeChart } from './index';
 
 class DashBoard extends Component {
-
-  componentDidMount() {
-  }
-
   render() {
     var achievements = [
     {title:'won a competition', wins: 1, img_url: '/static/assets/trophies/trophy-1-1.png'}, 

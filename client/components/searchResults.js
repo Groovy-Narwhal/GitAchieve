@@ -37,7 +37,9 @@ class SearchResults extends Component {
   getResult(result) {
       return (
         <div className="user-result-container">
-          <img className="user-avatar-1" src={result.avatar_url} />
+          <div className="avatar-container">
+            <img className="user-avatar-1" src={result.avatar_url} />
+          </div>
           <h2>{result.login}</h2>
           <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
         </div>
