@@ -80,7 +80,7 @@ body {
   flex-wrap: wrap; }
 
 .flex-justify-space-around {
-  justify-content: space-around; }
+  justify-content: flex-start; }
 
 .data-results-container-clear {
   width: 75%;
