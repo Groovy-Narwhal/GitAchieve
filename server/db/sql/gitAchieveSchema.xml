@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>191</Value>
+            <Value>192</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -579,7 +579,7 @@
                     <Name>competition_end</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
-                    <Nullable>false</Nullable>
+                    <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
@@ -614,6 +614,15 @@
                 <Column Id="c191">
                     <Name>last_email_invite</Name>
                     <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c192">
+                    <Name>winner</Name>
+                    <Type>int</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
                     <DefaultValue></DefaultValue>
@@ -1592,10 +1601,10 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td10">
-            <X>3949.5</X>
-            <Y>4610.5</Y>
+            <X>3951.5</X>
+            <Y>4596.5</Y>
             <Width>209.0</Width>
-            <Height>188.0</Height>
+            <Height>202.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t11</Table>
@@ -1831,16 +1840,16 @@
             <Type>Vertical_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>3926.5</X>
+                    <X>3915.5</X>
                     <Y>4460.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>3926.5</X>
-                    <Y>4702.5</Y>
+                    <X>3915.5</X>
+                    <Y>4700.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>3939.5</X>
-                    <Y>4702.5</Y>
+                    <Y>4700.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>3939.5</X>
@@ -1886,7 +1895,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4004.5</X>
-                    <Y>4680.5</Y>
+                    <Y>4666.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1903,7 +1912,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>4113.5</X>
-                    <Y>4695.5</Y>
+                    <Y>4681.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -2032,12 +2041,12 @@
                     <Y>4841.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4139.5</X>
+                    <X>4141.5</X>
                     <Y>4841.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4139.5</X>
-                    <Y>4774.5</Y>
+                    <X>4141.5</X>
+                    <Y>4760.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>
@@ -2053,12 +2062,12 @@
                     <Y>4861.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4122.5</X>
+                    <X>4124.5</X>
                     <Y>4861.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4122.5</X>
-                    <Y>4774.5</Y>
+                    <X>4124.5</X>
+                    <Y>4760.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td12</PkTableDisplay>

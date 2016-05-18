@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
+import axios from 'axios';
+
+const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
 
 class Countdown extends Component {
   constructor(props) {
@@ -23,15 +26,20 @@ class Countdown extends Component {
       mins: mins,
       secs: secs
     };
+    console.log('THIS PROPS', this.props);
   }
 
   componentWillUnmount() {
-    clearInterval(this.decrement);
+    // clearInterval(this.decrement);
   }
 
   update() {
-    if (this.state.time === 0) {
+    if (this.state.time <= 0) {
+
       clearInterval(this.decrement);
+      console.log('hi', hi)
+      // database update users_users table to have winner
+      axios.patch(`${ROOT_URL}/api/v1/users/competitionend`)
     }
     var newTime = this.state.time - 1; // minus one sec from initial time
     var today = new Date();

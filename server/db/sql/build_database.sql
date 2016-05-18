@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-17 19:31:44.304
+-- Last modification date: 2016-05-18 01:58:26.012
 
 -- tables
 -- Table: branches
@@ -154,6 +154,7 @@ CREATE TABLE users_users (
     primary_repo_id int  NOT NULL,
     secondary_repo_id int  NULL,
     last_email_invite timestamp  NULL,
+    winner int  NULL,
     CONSTRAINT users_users_pk PRIMARY KEY (id_ga)
 );
 
