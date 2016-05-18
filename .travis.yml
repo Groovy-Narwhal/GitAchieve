@@ -24,6 +24,7 @@ before_script:
   - npm install gulp-util
   - npm install webpack-stream
   - echo '{"NODE_ENV":"production"}'> ./server/config/.env.json
+  - gulp start
   
 script: 'gulp test'
 sudo: false
