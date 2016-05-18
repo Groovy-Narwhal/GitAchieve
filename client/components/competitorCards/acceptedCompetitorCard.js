@@ -87,6 +87,7 @@ class AcceptedCompetitorCard extends Component {
       dailyUserData = response.data.map( (item) => item.commits.length);
 
       // get second set of data
+      var comp_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
       axios({
         method: 'get',
         url: comp_url,
