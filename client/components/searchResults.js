@@ -36,12 +36,15 @@ class SearchResults extends Component {
 
   getResult(result) {
       return (
-        <div className="user-result-container">
+        <div className="user-result-container text-centered">
           <div className="avatar-container">
             <img className="user-avatar-1" src={result.avatar_url} />
           </div>
-          <h2>{result.login}</h2>
-          <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
+          <div className="spacer-2px" />
+          <h3 className="font-dark-gray">{result.login.length <= 10 ? result.login : result.login.slice(0, 10) + '...'}</h3>
+          <div className="spacer-2px" />
+          <input type="button" value="compete" className="button block centered" onClick={(e) => { this.compete(e, result) }} />
+          <div className="spacer-2px" />
         </div>
       )
 
@@ -52,8 +55,9 @@ class SearchResults extends Component {
       const searchResults = this.props.searchResults[0].items;
       if (searchResults.length > 0) {
         return (
-          <div>
-            <div className="data-results-container-flex">
+          <div className="data-results-container-clear">
+            <h2 className="font-white">Competitors</h2>
+            <div className="data-results-container-flex flex-justify-space-around full-width">
               {searchResults.map((result, index) => {
                 return <div key={index}>{this.getResult(result)}</div>
               })}

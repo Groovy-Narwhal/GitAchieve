@@ -79,6 +79,9 @@ body {
   flex-direction: row;
   flex-wrap: wrap; }
 
+.flex-justify-space-around {
+  justify-content: space-around; }
+
 .data-results-container-clear {
   width: 75%;
   min-width: 500px;
