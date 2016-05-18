@@ -114,7 +114,25 @@ exports.updateRepos = function(req, res) {
       'ON r.id = ur.repo_id ' + 
       'WHERE ur.user_id=$1'), 
       [queryId])
-      .then((data) => res.send(data))
+      .then((repos) => {
+        // update the repos_count for this user
+        db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
+          'VALUES ($6, $7, $8) ' +
+          'ON CONFLICT ($3~) ' +
+          'DO UPDATE SET ($4~) = ($7) ' +
+          'WHERE $2~.$3~ = $6 ' +
+          'RETURNING *',
+          ['users', 'u', 'id', 'repos_count', 'created_ga',
+          queryId, repos.length, dbTimestamp])
+          .then(data => {
+            // send the server response
+            res.send(repos);
+          })
+          .catch(error => {
+            console.error('Error updating repos_count: ', error);
+            res.status(500).send;
+          });
+      })
       .catch((error) => {
         console.error(error);
         res.status(500).send('Error querying repos table');

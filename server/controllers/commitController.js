@@ -90,10 +90,11 @@ exports.updateCommits = function(req, res) {
               ['users', 'u', 'id', 'commits_count', 'created_ga',
               queryId, commits.length, dbTimestamp])
               .then((data) => {
+                // send the server response
                 res.send(commits);
               })
               .catch(error => {
-                console.error('Error updating commit_count: ', error);
+                console.error('Error updating commits_count: ', error);
                 res.status(500).send;
               });
           })
