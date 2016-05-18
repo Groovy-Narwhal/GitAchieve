@@ -79,6 +79,9 @@ body {
   flex-direction: row;
   flex-wrap: wrap; }
 
+.flex-justify-space-around {
+  justify-content: flex-start; }
+
 .data-results-container-clear {
   width: 75%;
   min-width: 500px;
@@ -114,6 +117,12 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px; }
+
+.margin-5px {
+  margin: 5px; }
+
+.no-wrap {
+  white-space: nowrap; }
 
 .left-border {
   border-left: 1px solid #fff; }
@@ -312,6 +321,12 @@ h3 {
   height: auto;
   border-radius: 5px; }
 
+.avatar-container {
+  width: 120px;
+  height: 120px;
+  background-color: #ddd;
+  background-image: url("/static/assets/github-02.svg"); }
+
 .drop-arrow {
   margin-bottom: 5px;
   margin-left: 2px; }
@@ -388,7 +403,6 @@ h3 {
 .logo {
   font-weight: 700;
   font-size: 75px;
-  cursor: pointer;
   color: #fff; }
 
 .nav-link {

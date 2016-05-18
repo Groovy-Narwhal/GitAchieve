@@ -112,7 +112,8 @@ class AcceptedCompetitorCard2 extends Component {
             <p className="font-lighter-gray font-size-regular">Competing</p>
             <div className="spacer-2px"/>
             <button onClick={(e) => {this.handleAccept(this.props.c)}} className="button block centered">View</button>
-          </div> : <div></div> }
+          </div> : 
+          <div className="text-centered"><img src="/static/assets/spinner.gif" /></div>}
     </div>
   }
 }

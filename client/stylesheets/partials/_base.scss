@@ -75,6 +75,9 @@ body {
   flex-direction: row;
   flex-wrap: wrap;
 }
+.flex-justify-space-around {
+  justify-content: flex-start;
+}
 .data-results-container-clear {
   width: 75%;
   min-width: 500px;
@@ -110,6 +113,12 @@ body {
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
+}
+.margin-5px {
+  margin: 5px;
+}
+.no-wrap {
+  white-space: nowrap;
 }
 .left-border {
   border-left: 1px solid #fff;

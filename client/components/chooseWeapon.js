@@ -126,6 +126,10 @@ class ChooseWeapon extends Component {
           <div className="block text-centered">
             <input type="submit" value="Compete" className="button compete" onClick={this.compete.bind(this)} />
           </div>
+          <div className="spacer-5px"/>
+          <div className="text-centered">
+            <i className="font-medium-gray font-size-regular">If competitor is not on GitAchieve, pressing 'Compete' will email an invite to compete with you!</i>
+          </div>
         </div>
       </div>
     );

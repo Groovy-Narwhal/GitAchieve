@@ -17,14 +17,13 @@ class Header extends Component {
     } else {
       if (window.location.pathname === '/') {
         return (
-          <div className="header-buttons" >
-            <HeaderProfileButton />
+          <div>
           </div>
         );
       } else { /* Show search bar in header if the path is not the index */
         return (
-          <div className="header-buttons" >
-            <HeaderProfileButton />
+          <div className="no-wrap">
+            <Search />
           </div>
         );
       }
@@ -37,6 +36,7 @@ class Header extends Component {
         <div className="header-components-container">
           <img src="./../static/assets/GitAchieveLogo-white-1-1.svg" height="50px" width="50px" onClick={() => browserHistory.push('/')} className="logo"/>
           {this.renderLinks()}
+          <HeaderProfileButton />
         </div>
       </nav>
     );

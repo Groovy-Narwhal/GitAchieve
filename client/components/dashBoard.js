@@ -63,13 +63,12 @@ class DashBoard extends Component {
     const { actions } = this.props;
 
     if (this.props.auth.authenticated) {
-      console.log('this is this.props.userContributions.length[0]', this.props.userContributions[0])
       // this.makeMainChart();
       return (
         <div className="dashboard">
           <div className="main-search">
             <div className="dash-header-text text-centered">
-              <h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
+              <h1 className="logo">GitAchieve</h1>
               <h1 className="font-white">Search your Git opponent</h1>
               <div className="spacer-5px" />
               <span className="font-white">Your public contributions: </span>

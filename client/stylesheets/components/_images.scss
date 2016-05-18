@@ -16,6 +16,13 @@
   border-radius: 5px;
 }
 
+.avatar-container {
+  width: 120px;
+  height: 120px;
+  background-color: #ddd;
+  background-image: url('/static/assets/github-02.svg');
+}
+
 .drop-arrow {
   margin-bottom: 5px;
   margin-left: 2px;

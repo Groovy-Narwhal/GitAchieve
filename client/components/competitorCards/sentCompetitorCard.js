@@ -36,7 +36,8 @@ class SentCompetitorCard extends Component {
           <span className="font-light-gray font-size-regular">Waiting...</span>
           <div className="spacer-2px"/>
           <button className="button-inactive block centered">View</button>
-        </div> : <div></div> }
+        </div> :
+        <div className="text-centered"><img src="/static/assets/spinner.gif" /></div> }
     </div>
   }
 }
