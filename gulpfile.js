@@ -1,26 +1,28 @@
 // Include Gulp
-var gulp = require('gulp');
+const gulp = require('gulp');
 
 // Include Our Plugins
-var babel = require('gulp-babel');
-var clean = require('gulp-clean');
-var env = require('gulp-env');
-var eslint = require('gulp-eslint');
-var sass = require('gulp-sass');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var mocha = require('gulp-mocha');
-var nodemon = require('gulp-nodemon');
-var util = require('gulp-util');
-var shell = require('gulp-shell');
-var webpack = require('webpack-stream');
-var webpackOptions = require('./webpack.config.production.js');
-var mochaPhantomJs = require('gulp-mocha-phantomjs');
+const babel = require('gulp-babel');
+const clean = require('gulp-clean');
+const env = require('gulp-env');
+const eslint = require('gulp-eslint');
+const sass = require('gulp-sass');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const mocha = require('gulp-mocha');
+const nodemon = require('gulp-nodemon');
+const util = require('gulp-util');
+const shell = require('gulp-shell');
+const webpack = require('webpack-stream');
+const webpackOptions = require('./webpack.config.production.js');
+const mochaPhantomJs = require('gulp-mocha-phantomjs');
 
-var paths = {
+const paths = {
   scripts: ['server/**/*.js']
 };
+
+const envConfig = require('./server/config/.env.json');
 
 // Lint Task
 gulp.task('lint', function() {
@@ -52,12 +54,12 @@ gulp.task('clean', function () {
 gulp.task('build-client', ['clean'], function() {
   return gulp.src('client/index.js')
     .pipe(webpack(webpackOptions))
-    .pipe(rename('bundle.js'))
+    .pipe(rename('bundle.big.js'))
     .pipe(gulp.dest('dist'))
     .pipe(babel({
       presets: ['es2015']
     }))
-    .pipe(rename('bundle.min.js'))
+    .pipe(rename('bundle.js'))
     .pipe(uglify())
     .pipe(gulp.dest('dist'))
     .on('error', util.log);
@@ -84,19 +86,30 @@ gulp.task('watch', function() {
   // gulp.watch('scss/*.scss', ['sass']);
 });
 
-gulp.task('run', function() {
+// if the NODE_ENV is 'development', use the un-minified server file
+// otherwise use the minified version
+gulp.task('run', ['build'], function() {
   env({
     file: './server/config/.env.json'
   });
-  nodemon({
-    script: './server/server.js'
-  });
+  if (envConfig.NODE_ENV === 'development') {
+    nodemon({
+      script: './server/server.js'
+    });
+  } else {
+    nodemon({
+      script: './dist/server-all.min.js'
+    });
+  }
 });
+
 
 // Default Task
 gulp.task('default', ['lint', 'test', 'watch']);
 
 gulp.task('build', ['clean', 'build-client', 'build-server']);
+
+gulp.task('start', ['build', 'run']);
 
 // Compile Our Sass // Commented out for now since Sass is not integrated yet.
 // gulp.task('sass', function() {
