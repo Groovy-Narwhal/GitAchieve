@@ -125,7 +125,7 @@ module.exports = (data) => {
         .attr('fill', () => colors[j])
         .attr('x', 70)
         .attr('y', h - pad + 25 * (j+1))
-        .attr('width', 8)
+      .attr('width', 8)
         .attr('height', 8);
       svg.append('text')
         .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j) + ')')

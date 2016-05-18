@@ -14,6 +14,37 @@ class DashBoard extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    // On initial dashboard render, display text (until competitor selected)
+    var svg = d3.select('svg');
+    if (svg) {
+
+      svg.append('text')
+        .text('make more commits to win')
+        .classed('commit-to-win', true)
+        .attr('x', 100)
+        .attr('y', 50)
+        .style('font-size', '21px');
+
+      var text = [];
+      text.push('');
+      text.push('how to create a new challenge...');
+      text.push('');
+      text.push('1:      search your competitor');
+      text.push('2:      choose your weapon (repo)');
+      text.push('3:      select start and end dates');
+      text.push('4:      compete to invite by email');
+
+      var group = svg.append('g')
+      for (var i = 0; i < text.length; i++) {
+        group.append('text')
+          .text(text[i])
+          .attr('x', 70)
+          .attr('y', 80 + 20 * i)
+          .style('font-size', '11px');
+      }
+    }
+  }
   componentDidUpdate() {
     if (this.props.auth.authenticated && this.props.userContributions[0] === 0) {
       this.getUserContribs();
@@ -101,11 +132,28 @@ class DashBoard extends Component {
       )
     } else {
       return (
-        <div></div>
+        <div>
+        </div>
       );
     }
   }
 }
+
+// <image xLinkHref="static/assets/trophy.png" x="100" y="100"></image>
+// svg.append('image')
+//   .attr('xlink:href', 'static/assets/trophy.png' )
+//   .attr('x', () => xScale(users[placeOfWinner_x])-11 + barWidth/2)
+//   .attr('y', () => yScale(placeOfWinner_y) - 25)
+//   .attr('height', '25')
+//   .attr('width', '22');
+// x="100" y="100" width="22" height="25"
+// svg.append('image')
+//   .attr('xlink:href', 'static/assets/trophy.png' )
+//   .attr('x', () => xScale(users[placeOfWinner_x])-11 + barWidth/2)
+//   .attr('y', () => yScale(placeOfWinner_y) - 25)
+//   .attr('height', '25')
+//   .attr('width', '22');
+// <text x="10" y="54" text-anchor="middle">Hello!</text>
 
 const mapStateToProps = state => {
   return state;
