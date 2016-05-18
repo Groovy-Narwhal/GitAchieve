@@ -28,3 +28,6 @@ server/db/npm-debug.log
 
 # Environment Variable
 .env.json
+
+# Testing reports
+reports
