@@ -125,10 +125,6 @@ class AcceptedCompetitorCard extends Component {
 
           .then(response => {
 
-
-            console.log('response is:', response);
-
-
             userRepo = response.data[0] ? response.data[0].name : 'repo name not found';
 
             // get repo name for other user's repo

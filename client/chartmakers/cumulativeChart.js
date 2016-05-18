@@ -12,10 +12,14 @@ module.exports = (data) => {
   // set dimensions
   var pad = 30;
   var top = 60;
-  var w = 600 - 2*pad;
+  // find the actual width of the element, then slice off the 'px' at the end
+  // this still will not change live if the user resizes
+  var grabWidth = d3.select("#commit-charts svg").style('width').slice(0, -2);
+  var w = parseInt(grabWidth,10) - 2*pad;
   var h = 360 - 2*pad;
   var barWidth = Math.floor((w-3*pad)/users.length) - 3;
 
+  // get reference to svg
   var svg = d3.select("#commit-charts svg");
 
   // blank out the svg to re-render it
@@ -67,7 +71,7 @@ module.exports = (data) => {
     .call(yAxis);
 
   // declare colors array
-  var colors = [ 'red', 'steelblue'];
+  var colors = ['#9fb4cc', '#cccc9f'];
 
   // add the bars in the bar graph
   var g = svg.selectAll(".bars")
@@ -117,7 +121,7 @@ module.exports = (data) => {
 
 
     // add a legend associating usernames with colors on the graph
-    // TO DO: also show repo-names
+    // repo names are clickable
     var repoLinks = svg.append('g');
 
     for (j = 0; j < users.length; j++) {
@@ -155,33 +159,3 @@ module.exports = (data) => {
         .text(() => repos[j].toString());
     }
 };
-
-// .button {
-//   -webkit-appearance:caret;
-//   background-color: #1d9;
-//   border-radius: 5px;
-//   padding: 5px;
-//   color: $white;
-// }
-// <a xlink:href='http://www.gmail.com'>
-// draw a rectangle
-// holder.append("a")
-//     .attr("xlink:href", "http://en.wikipedia.org/wiki/"+word)
-//     .append("rect")
-//     .attr("x", 100)
-//     .attr("y", 50)
-//     .attr("height", 100)
-//     .attr("width", 200)
-//     .style("fill", "lightgreen")
-//     .attr("rx", 10)
-//     .attr("ry", 10);
-// draw text on the screen
-// holder.append("text")
-//     .attr("x", 200)
-//     .attr("y", 100)
-//     .style("fill", "black")
-//     .style("font-size", "20px")
-//     .attr("dy", ".35em")
-//     .attr("text-anchor", "middle")
-//     .style("pointer-events", "none")
-//     .text(word);

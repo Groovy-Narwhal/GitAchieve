@@ -16,33 +16,33 @@ class DashBoard extends Component {
 
   componentDidMount() {
     // On initial dashboard render, display text (until competitor selected)
-    var svg = d3.select('svg');
+    var svg = d3.selectAll('svg');
     if (svg) {
-
       svg.append('text')
-        .text('make more commits to win')
-        .classed('commit-to-win', true)
-        .attr('x', 100)
+        .text('select one of your competitions from My Challenges')
+      //   .classed('commit-to-win', true)
+        .attr('x', 200)
         .attr('y', 50)
-        .style('font-size', '21px');
+        .attr('text-anchor', 'middle')
+        .style('font-size', '15px');
 
-      var text = [];
-      text.push('');
-      text.push('how to create a new challenge:');
-      text.push('');
-      text.push('1: search your competitor');
-      text.push('2: choose your weapon (repo)');
-      text.push('3: select start and end dates');
-      text.push('4: compete to invite by email');
+      // var text = [];
+      // text.push('');
+      // text.push('how to create a new challenge:');
+      // text.push('');
+      // text.push('1: search your competitor');
+      // text.push('2: choose your weapon (repo)');
+      // text.push('3: select start and end dates');
+      // text.push('4: compete to invite by email');
 
-      var group = svg.append('g')
-      for (var i = 0; i < text.length; i++) {
-        group.append('text')
-          .text(text[i])
-          .attr('x', 70)
-          .attr('y', 80 + 20 * i)
-          .style('font-size', '13px');
-      }
+      // var group = svg.append('g')
+      // for (var i = 0; i < text.length; i++) {
+      //   group.append('text')
+      //     .text(text[i])
+      //     .attr('x', 70)
+      //     .attr('y', 80 + 20 * i)
+      //     .style('font-size', '13px');
+      // }
     }
   }
   componentDidUpdate() {
@@ -53,7 +53,7 @@ class DashBoard extends Component {
       CumulativeChart(this.props.competitorsData);
     }
     if (this.props.dailyCompetitorsData.length > 0) {
-      DailyChart(this.props.dailyCompetitorsData, 'additional chart');
+      DailyChart(this.props.dailyCompetitorsData);
     }
   }
   getUserContribs() {
@@ -89,7 +89,6 @@ class DashBoard extends Component {
     }
   }
 
-
   render() {
     const { actions } = this.props;
 
@@ -113,16 +112,16 @@ class DashBoard extends Component {
             <CompetitorsMiniView />
           </div>
           <div className="data-results-container-clear">
-            <h2 className="font-white">Achievement Chart</h2>
+            <h2 className="font-white">Achievement Charts</h2>
             <div className="data-results-container full-width">
 
               <div id="commit-charts">
-                <svg width={540} height={360}>
+                <svg height={360}>
                 </svg>
-
-                <div id="optional-extra-chart">
+                <div id="second-chart">
+                  <svg height={360}>
+                  </svg>
                 </div>
-
               </div>
 
             </div>
@@ -137,8 +136,6 @@ class DashBoard extends Component {
     }
   }
 }
-
-// <button onClick={this.addDailyChart.bind(this)} className="button"> See daily breakdown </button>
 
 const mapStateToProps = state => {
   return state;
