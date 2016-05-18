@@ -35,6 +35,15 @@ export const confirmedRequests2 = (requests = [], action) => {
   }
 };
 
+export const pastCompetitions = (history = [], action) => {
+  switch (action.type) {
+    case 'PAST_COMPETITIONS':
+      return [action.pastCompetitions];
+    default:
+      return history;
+  }
+};
+
 export const yesCompetitions = (competitions = false, action) => {
   switch (action.type) {
     case 'YES_COMPETITIONS':
