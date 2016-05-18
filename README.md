@@ -4,13 +4,13 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 
 
 ## Team
- - ![](https://avatars.githubusercontent.com/u/4149515?v=3&s=48) [**Inje Yeo**](https://github.com/byeo630)
+- <img src="https://avatars.githubusercontent.com/u/4149515?v=3" width="64"> [**Inje Yeo**] (https://github.com/byeo630)
 
- - ![](https://avatars.githubusercontent.com/u/15864056?v=3&s=48) [**Alex Nitta**](https://github.com/alexnitta)
+- <img src="https://avatars.githubusercontent.com/u/15864056?v=3" width="64"> [**Alex Nitta**](https://github.com/alexnitta)
 
- - ![](https://avatars.githubusercontent.com/u/10492144?v=3&s=48) [**Adam Isom**](https://github.com/adamrgisom)
+- <img src="https://avatars.githubusercontent.com/u/10492144?v=3" width="64"> [**Adam Isom**](https://github.com/adamrgisom)
 
- - ![](https://avatars.githubusercontent.com/u/15220759?v=3&s=48) [**Megan Smith**](https://github.com/msmith9393)
+- <img src="https://avatars.githubusercontent.com/u/15220759?v=3" width="64"> [**Megan Smith**](https://github.com/msmith9393)
 
 
 ## Table of Contents
