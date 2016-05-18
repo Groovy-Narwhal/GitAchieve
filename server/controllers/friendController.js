@@ -124,7 +124,10 @@ exports.confirmFriend = function(req, res) {
           'AND users_users.secondary_user_id=($5)) ' +
           'RETURNING *', 
           [confirmedAt, secondaryRepoId, lastActive, primaryUserId, secondaryUserId])
-          .then(data => res.send(data))
+          .then(data => {
+            console.log('data', data);
+            res.send(data)
+          })
           .catch(error => {
             console.error(error);
             res.status(500).send('Error updating users_users connection');                
@@ -151,7 +154,23 @@ exports.checkForFriendRequests = function(req, res) {
     'AND uu.confirmed_at IS NULL ' +
     'AND uu.winner IS NULL',
     [secondaryIdCheck]
-  ).then(data => res.send(data))
+  ).then(data => {
+    const currentDate = new Date();
+    // for each data we want to make sure that they have a winner
+    var filteredData = data.map(comp => {
+      if (currentDate < new Date(comp.competition_end)) {
+        return comp;
+      }
+    });
+    if (filteredData.length === 0) {
+      res.send([]);
+    } else {
+      console.log('WHAT UP')
+      res.send(filteredData.reduce((acc, curr) => {
+        return (curr !== undefined) ? acc.concat(curr) : acc;
+      }, []));
+    }
+  })
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
@@ -169,7 +188,22 @@ exports.checkForSentRequests = function(req, res) {
     'AND uu.confirmed_at IS NULL ' +
     'AND uu.winner IS NULL',
     [primaryIdCheck]
-  ).then(data => res.send(data))
+  ).then(data => {
+    const currentDate = new Date();
+    // for each data we want to make sure that they have a winner
+    var filteredData = data.map(comp => {
+      if (currentDate < new Date(comp.competition_end)) {
+        return comp;
+      }
+    });
+    if (filteredData.length === 0) {
+      res.send([]);
+    } else {
+      res.send(filteredData.reduce((acc, curr) => {
+        return (curr !== undefined) ? acc.concat(curr) : acc;
+      }, []));
+    }
+  })
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
@@ -187,7 +221,22 @@ exports.checkApprovedRequests = function(req, res) {
       'AND uu.confirmed_at IS NOT NULL ' +
       'AND uu.winner IS NULL',
       [id]
-    ).then(data => res.send(data))
+    ).then(data => {
+      const currentDate = new Date();
+      // for each data we want to make sure that they have a winner
+      var filteredData = data.map(comp => {
+        if (currentDate < new Date(comp.competition_end)) {
+          return comp;
+        }
+      });
+      if (filteredData.length === 0) {
+        res.send([]);
+      } else {
+        res.send(filteredData.reduce((acc, curr) => {
+          return (curr !== undefined) ? acc.concat(curr) : acc;
+        }, []));
+      }
+    })
     .catch(error => {
       console.error(error);
       res.status(500).send('Error finding users_users connection');   
@@ -205,7 +254,22 @@ exports.checkApprovedRequests2 = function(req, res) {
     'AND uu.confirmed_at IS NOT NULL ' +
     'AND uu.winner IS NULL',
     [id]
-  ).then(data => res.send(data))
+  ).then(data => {
+    const currentDate = new Date();
+    // for each data we want to make sure that they have a winner
+    var filteredData = data.map(comp => {
+      if (currentDate < new Date(comp.competition_end)) {
+        return comp;
+      }
+    });
+    if (filteredData.length === 0) {
+      res.send([]);
+    } else {
+      res.send(filteredData.reduce((acc, curr) => {
+        return (curr !== undefined) ? acc.concat(curr) : acc;
+      }, []));
+    }
+  })
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
@@ -229,10 +293,13 @@ exports.checkPastCompetitions = function(req, res) {
       if (currentDate > new Date(comp.competition_end)) {
         return comp;
       }
-    })
+    });
     var updatedCompetitions = [];
     const length = filteredData.reduce((acc, curr) => {return (curr !== undefined) ? acc + 1 : acc }, 0);
     var counter = 0;
+    if (length === 0) {
+      res.send([]);
+    }
     filteredData.forEach(comp => {
       if (comp !== undefined) {
         counter = counter + 1;

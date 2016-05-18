@@ -120,12 +120,12 @@ export const signinUser = () => {
         socket.on('incoming_request', msg => {
           console.log(msg.msg);
           axios.all([
+            checkForPastCompetitions(userProfile.id, dispatch),
             checkForFriendRequests(userProfile.id, dispatch),
             checkForSentRequests(userProfile.id, dispatch),
             checkForConfirmedRequests(userProfile.id, dispatch),
-            checkForConfirmedRequests2(userProfile.id, dispatch),
-            checkForPastCompetitions(userProfile.id, dispatch)
-          ])
+            checkForConfirmedRequests2(userProfile.id, dispatch)
+          ]).then(() => {console.log('HOORAY')})
 
         });
 
