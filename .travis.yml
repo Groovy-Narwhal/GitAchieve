@@ -24,6 +24,7 @@ before_script:
   - npm install gulp-shell
   - npm install gulp-uglify
   - npm install gulp-util
+  - npm install webpack-stream
   
 script: 'gulp test'
 sudo: false
