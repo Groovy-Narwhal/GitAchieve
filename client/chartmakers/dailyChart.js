@@ -6,13 +6,10 @@ module.exports = (data) => {
   var users = [ data[1][0], data[2][0] ];
   var commits = [ data[1][1], data[2][1] ];
 
-  var weekMode = false;
 
   // if the competition has been over a week,
   // show weekly view, otherwise daily view
   if (commits[0].length > 6) { // CHANGE THIS TO 7 OR 8
-
-    var weekMode = true;
 
     var numWeeks = Math.ceil(commits[0].length / 7);
 
@@ -77,6 +74,18 @@ module.exports = (data) => {
   var mostCommitsUser1 = Math.max(...commits[0]);
   var mostCommitsUser2 = Math.max(...commits[1]);
   var mostCommits = Math.max(mostCommitsUser1, mostCommitsUser2);
+
+  // commit data comes in sorted by user rather than time,
+  // like [ user1 -> [array with daily data], user 2 -> [...same]],
+  // and we want it to be tuples like [ day1 -> [user1 that day, user2 that day], day2 -> [user1, user2], ...]
+  var sortCommitsByTime = (commits) => {
+    var reconstructed = [];
+    for (var i = 0; i < commits[0].length; i++) {
+      reconstructed.push([ commits[0][i], commits[1][i] ]);
+    }
+    return reconstructed;
+  };
+  commits = sortCommitsByTime(commits);
 
   /**************************************************
     Actual D3 stuff
@@ -146,13 +155,18 @@ module.exports = (data) => {
   var colors = ['#9fb4cc', '#cccc9f'];
 
   // add the bars in the bar graph
+  console.log('commits is:', commits);
+
   var g = svg.selectAll(".bars")
     .data(commits)
     .enter()
       .append("g")
       for (var j = 0; j < users.length; j++) {
         g.append("rect")
-          .attr('fill', (d, i) => colors[j])
+          .attr('fill', (d, i) => {
+            console.log('d, i, j & colors[j] is: ', d, i, j, colors[j]);
+            return colors[j];
+          })
           .attr('x', (d, i) => xScale(timeScale[i]) + (j * barWidth))
           .attr('y', (d, i) => yScale(d[j]))
           .attr('width', () => barWidth)
