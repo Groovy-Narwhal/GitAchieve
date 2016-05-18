@@ -85,7 +85,7 @@ exports.updateCommits = function(req, res) {
             res.send(commits);
           })
           .catch(error => {
-            console.error('Error querying commits: ', error);
+            console.error('Error querying commits CC: ', error);
             res.status(500).send;
           }); 
         }
