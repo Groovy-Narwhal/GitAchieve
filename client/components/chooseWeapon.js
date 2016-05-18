@@ -109,7 +109,7 @@ class ChooseWeapon extends Component {
           <div className="spacer-5px" />
           <div className="data-result-container full-width">
             <DatePicker
-              maxDate={moment()}
+              // maxDate={moment()}
               selected={this.state.startDate}
               onChange={this.handleStartChange.bind(this)}
             />
@@ -118,7 +118,7 @@ class ChooseWeapon extends Component {
           <div className="spacer-5px" />
           <div className="data-result-container full-width">
             <DatePicker
-              minDate={moment()}
+              // minDate={moment()}
               selected={this.state.endDate}
               onChange={this.handleEndChange.bind(this)}
             />

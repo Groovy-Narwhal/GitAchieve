@@ -144,7 +144,8 @@ exports.checkForFriendRequests = function(req, res) {
 
   db.any('Select * from users_users uu ' +
     'WHERE uu.secondary_user_id=($1) ' +
-    'AND uu.confirmed_at IS NULL',
+    'AND uu.confirmed_at IS NULL ' +
+    'AND uu.competition_end > NOW()',
     [secondaryIdCheck]
   ).then(data => res.send(data))
   .catch(error => {
@@ -161,7 +162,8 @@ exports.checkForSentRequests = function(req, res) {
 
   db.any('Select * from users_users uu ' +
     'WHERE uu.primary_user_id=($1) ' +
-    'AND uu.confirmed_at IS NULL',
+    'AND uu.confirmed_at IS NULL ' +
+    'AND uu.competition_end > NOW()',
     [primaryIdCheck]
   ).then(data => res.send(data))
   .catch(error => {
@@ -178,7 +180,8 @@ exports.checkApprovedRequests = function(req, res) {
 
     db.any('Select * from users_users uu ' +
       'WHERE uu.primary_user_id=($1) ' +
-      'AND uu.confirmed_at IS NOT NULL',
+      'AND uu.confirmed_at IS NOT NULL ' +
+      'AND uu.competition_end > NOW()',
       [id]
     ).then(data => res.send(data))
     .catch(error => {
@@ -187,19 +190,38 @@ exports.checkApprovedRequests = function(req, res) {
     })
   }
 
-  // retrieve all entries in the user to user table in which confirmed at is not null
-  // GET at /api/v1/users/:id/successmatches
-  exports.checkApprovedRequests2 = function(req, res) {
-     // this is the current users id
-      var id = req.params.id;
+// retrieve all entries in the user to user table in which confirmed at is not null
+// GET at /api/v1/users/:id/successmatches
+exports.checkApprovedRequests2 = function(req, res) {
+  // this is the current users id
+  var id = req.params.id;
 
-      db.any('Select * from users_users uu ' +
-        'WHERE uu.secondary_user_id=($1) ' +
-        'AND uu.confirmed_at IS NOT NULL',
-        [id]
-      ).then(data => res.send(data))
-      .catch(error => {
-        console.error(error);
-        res.status(500).send('Error finding users_users connection');   
-      })
-    }
+  db.any('Select * from users_users uu ' +
+    'WHERE uu.secondary_user_id=($1) ' +
+    'AND uu.confirmed_at IS NOT NULL ' +
+    'AND uu.competition_end > NOW()',
+    [id]
+  ).then(data => res.send(data))
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  })
+}
+
+// retrieve all entries in the user to user table in which competition date is in the past
+// GET at /api/v1/users/:id/pastCompetitions
+exports.checkPastCompetitions = function(req, res) {
+  // this is the current users id
+  var id = req.params.id;
+
+  db.any('Select * from users_users uu ' +
+    'WHERE uu.secondary_user_id=($1) ' +
+    'OR uu.primary_user_id=($1) ' +
+    'AND uu.competition_end <= NOW()',
+    [id]
+  ).then(data => res.send(data))
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  })
+}

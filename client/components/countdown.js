@@ -54,8 +54,6 @@ class Countdown extends Component {
   }
 
   render() {
-    console.log(new Date())
-    console.log(new Date("2016-05-24 20:30:52"))
     return (
       <div className="countdown-container">
         <h1>Competition Countdown</h1>
