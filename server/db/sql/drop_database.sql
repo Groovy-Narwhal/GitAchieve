@@ -1,93 +1,93 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-17 19:31:44.304
+-- Last modification date: 2016-05-18 01:58:26.012
 
 -- foreign keys
-ALTER TABLE IF EXISTS commits
+ALTER TABLE commits
     DROP CONSTRAINT commits_branches;
 
-ALTER TABLE IF EXISTS commits_repos
+ALTER TABLE commits_repos
     DROP CONSTRAINT commits_repos_commits;
 
-ALTER TABLE IF EXISTS commits_repos
+ALTER TABLE commits_repos
     DROP CONSTRAINT commits_repos_repos;
 
-ALTER TABLE IF EXISTS commits
+ALTER TABLE commits
     DROP CONSTRAINT commits_users;
 
-ALTER TABLE IF EXISTS orgs_repos
+ALTER TABLE orgs_repos
     DROP CONSTRAINT orgs_repos_orgs;
 
-ALTER TABLE IF EXISTS orgs_repos
+ALTER TABLE orgs_repos
     DROP CONSTRAINT orgs_repos_repos;
 
-ALTER TABLE IF EXISTS pull_requests
+ALTER TABLE pull_requests
     DROP CONSTRAINT pull_requests_users;
 
-ALTER TABLE IF EXISTS repos_branches
+ALTER TABLE repos_branches
     DROP CONSTRAINT repos_branches_branches;
 
-ALTER TABLE IF EXISTS repos_branches
+ALTER TABLE repos_branches
     DROP CONSTRAINT repos_branches_repos;
 
-ALTER TABLE IF EXISTS stats
+ALTER TABLE stats
     DROP CONSTRAINT stats_orgs;
 
-ALTER TABLE IF EXISTS stats
+ALTER TABLE stats
     DROP CONSTRAINT stats_repos;
 
-ALTER TABLE IF EXISTS stats
+ALTER TABLE stats
     DROP CONSTRAINT stats_users;
 
-ALTER TABLE IF EXISTS users_orgs
+ALTER TABLE users_orgs
     DROP CONSTRAINT users_orgs_orgs;
 
-ALTER TABLE IF EXISTS users_orgs
+ALTER TABLE users_orgs
     DROP CONSTRAINT users_orgs_users;
 
-ALTER TABLE IF EXISTS users_repos
+ALTER TABLE users_repos
     DROP CONSTRAINT users_repos_repos;
 
-ALTER TABLE IF EXISTS users_repos
+ALTER TABLE users_repos
     DROP CONSTRAINT users_repos_users;
 
-ALTER TABLE IF EXISTS users_users
+ALTER TABLE users_users
     DROP CONSTRAINT users_users_primary_repos;
 
-ALTER TABLE IF EXISTS users_users
+ALTER TABLE users_users
     DROP CONSTRAINT users_users_secondary_repos;
 
-ALTER TABLE IF EXISTS users_users
+ALTER TABLE users_users
     DROP CONSTRAINT users_users_users1;
 
-ALTER TABLE IF EXISTS users_users
+ALTER TABLE users_users
     DROP CONSTRAINT users_users_users2;
 
 -- tables
-DROP TABLE IF EXISTS branches CASCADE;
+DROP TABLE branches;
 
-DROP TABLE IF EXISTS commits CASCADE;
+DROP TABLE commits;
 
-DROP TABLE IF EXISTS commits_repos CASCADE;
+DROP TABLE commits_repos;
 
-DROP TABLE IF EXISTS orgs CASCADE;
+DROP TABLE orgs;
 
-DROP TABLE IF EXISTS orgs_repos CASCADE;
+DROP TABLE orgs_repos;
 
-DROP TABLE IF EXISTS pull_requests CASCADE;
+DROP TABLE pull_requests;
 
-DROP TABLE IF EXISTS repos CASCADE;
+DROP TABLE repos;
 
-DROP TABLE IF EXISTS repos_branches CASCADE;
+DROP TABLE repos_branches;
 
-DROP TABLE IF EXISTS stats CASCADE;
+DROP TABLE stats;
 
-DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE users;
 
-DROP TABLE IF EXISTS users_orgs CASCADE;
+DROP TABLE users_orgs;
 
-DROP TABLE IF EXISTS users_repos CASCADE;
+DROP TABLE users_repos;
 
-DROP TABLE IF EXISTS users_users CASCADE;
+DROP TABLE users_users;
 
 -- sequences
 DROP SEQUENCE IF EXISTS Sequence_3;

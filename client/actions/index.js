@@ -2,7 +2,7 @@ import axios from 'axios';
 import { browserHistory } from 'react-router';
 import * as types from './actionTypes';
 
-const ROOT_URL = 'http://127.0.0.1:8000';
+const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
 
 export const signoutUser = () => {
   return dispatch => {

@@ -53,11 +53,11 @@ exports.addFriend = function(req, res) {
   const competitionStart = pgp.as.date(new Date(req.body.competitionStart));
   const competitionEnd = pgp.as.date(new Date(req.body.competitionEnd));
   const dbTimestamp = pgp.as.date(new Date());
-
   // check if the secondary user exists
   db.one('SELECT * FROM users WHERE id=($1)',
     secondaryUserId)
     .then(data => {
+
       db.any(
         'SELECT * FROM $1~ AS $2~ ' +
         'WHERE ($2~.$3~ = $4 ' +
