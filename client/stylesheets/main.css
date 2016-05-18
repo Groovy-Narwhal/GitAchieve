@@ -121,6 +121,9 @@ body {
 .margin-5px {
   margin: 5px; }
 
+.no-wrap {
+  white-space: nowrap; }
+
 .left-border {
   border-left: 1px solid #fff; }
 
@@ -400,7 +403,6 @@ h3 {
 .logo {
   font-weight: 700;
   font-size: 75px;
-  cursor: pointer;
   color: #fff; }
 
 .nav-link {

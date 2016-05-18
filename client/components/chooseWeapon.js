@@ -128,7 +128,7 @@ class ChooseWeapon extends Component {
           </div>
           <div className="spacer-5px"/>
           <div className="text-centered">
-            <i className="font-medium-gray font-size-regular">If competitor is not on GitAchieve, pressing 'Compete' will email an invite to compete with you.</i>
+            <i className="font-medium-gray font-size-regular">If competitor is not on GitAchieve, pressing 'Compete' will email an invite to compete with you!</i>
           </div>
         </div>
       </div>
