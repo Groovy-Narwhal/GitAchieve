@@ -9,8 +9,22 @@ node_js:
 before_script:
   - npm install -g jasmine-node
   - npm install -g gulp
-  - npm install --save-dev gulp
-  - npm install --save-dev gulp-babel
+  - npm install gulp
+  - npm install gulp-babel
+  - npm install gulp-clean
+  - npm install gulp-concat
+  - npm install gulp-env
+  - npm install gulp-eslint
+  - npm install gulp-filesize
+  - npm install gulp-mocha
+  - npm install gulp-mocha-phantomjs
+  - npm install gulp-nodemon
+  - npm install gulp-rename
+  - npm install gulp-sass
+  - npm install gulp-shell
+  - npm install gulp-uglify
+  - npm install gulp-util
+  
 script: 'gulp test'
 sudo: false
 matrix:
