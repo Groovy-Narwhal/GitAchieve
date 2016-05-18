@@ -34,9 +34,28 @@ class AcceptedCompetitorCard2 extends Component {
     }, 10000);
   }
 
+
   handleAccept(c) {
-    console.log('hey', c)
+    /* handleAccept uses data from the competitor clicked as this.props.c, which has
+      - both repo ids
+      - both user ids
+      - competition start date
+
+      This information is stored in users_users, the competitions table.
+      For now at least, repo name info is not stored in users_users.
+      This function makes two calls to /users/:id/commits/start to grab commit
+      info, one per user, and similarly two calls to grab just the repo name.
+
+      Four axios calls, so buckle up. (May be refactored with axios.all)
+    */
+    var user = this.props.user.username;
+    var competitor = this.state.username;
     var user_url = `${ROOT_URL}/api/v1/users/${c.secondary_user_id}/commits/start`;
+    var comp_url = `${ROOT_URL}/api/v1/users/${c.primary_user_id}/commits/start`;
+
+    var userRepo, competitorRepo;
+    var data, totalCommitsForUser, totalCommitsForComp;
+    var dailyData, dailyUserData, dailyCompetitorData;
 
     axios({
       method: 'get',
@@ -48,12 +67,11 @@ class AcceptedCompetitorCard2 extends Component {
     })
     .then(response => {
 
-      var totalCommitsForUser = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-      var dailyUserData = response.data.map( (item) => item.commits.length);
+      // update commit data for one user
+      totalCommitsForUser = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+      dailyUserData = response.data.map( (item) => item.commits.length);
 
       // get second set of data
-      var comp_url = `${ROOT_URL}/api/v1/users/${this.props.c.primary_user_id}/commits/start`;
-
       axios({
         method: 'get',
         url: comp_url,
@@ -62,32 +80,65 @@ class AcceptedCompetitorCard2 extends Component {
           repoid: c.primary_repo_id
         },
       })
-      .then(response => {
+        .then(response => {
 
-        var totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+          // update commit data for other user
+          totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+          dailyCompetitorData = response.data.map( (item) => item.commits.length);
 
-        var user = this.props.user.username;
-        var competitor = this.state.username;
+          // update the cumulative data and the daily data
+          // the repo name data will be added after the next two axios.get's
+          data = [
+            [], // add the repo names after getting them
+            [user, totalCommitsForUser],
+            [competitor, totalCommitsForComp]
+          ];
+          dailyData = [
+            [],
+            [user, dailyUserData],
+            [competitor, dailyCompetitorData]
+          ];
 
-        // store the cumulative data in the store
-        // totalCommitsForUser andis populated in the first axios .then
-        var data = [
-          [user, totalCommitsForUser],
-          [competitor, totalCommitsForComp]
-        ];
-        this.props.actions.addCompetitorData(data);
+          // get repo name for one user's repo
+          axios({
+            method: 'get',
+            url: `/api/v1/users/${c.primary_user_id}/repo`,
+            headers: {
+              repoid: c.primary_repo_id
+            },
+          })
 
-        // store the daily data in the store
-        // dailyDataUser is populated in the first axios .then
-        var dailyCompetitorData = response.data.map( (item) => item.commits.length);
+          .then(response => {
 
-        var dailyData = [
-          [user, dailyUserData],
-          [competitor, dailyCompetitorData]
-        ];
-        this.props.actions.addDailyCompetitorData(dailyData);
+            userRepo = response.data[0] ? response.data[0].name : 'repo name not found';
 
-      })
+            // get repo name for other user's repo
+            axios({
+              method: 'get',
+              url: `/api/v1/users/${c.secondary_user_id}/repo`,
+              headers: {
+                repoid: c.secondary_repo_id
+              },
+            })
+
+            .then(response => {
+
+              competitorRepo = response.data[0] ? response.data[0].name : 'repo name not found';
+
+              //update cumulative and daily data with repo names
+              data[0].push(userRepo);
+              data[0].push(competitorRepo);
+              dailyData[0].push(userRepo);
+              dailyData[0].push(competitorRepo);
+
+              // FINAL STEP: Now we have all the data, update the store,
+              // which will trigger (in Dashboard component) graph draws
+              this.props.actions.addCompetitorData(data);
+              this.props.actions.addDailyCompetitorData(dailyData);
+            });
+          });
+
+        });
     });
   }
 
@@ -104,7 +155,7 @@ class AcceptedCompetitorCard2 extends Component {
 
   render() {
     return <div className="competitor-card data-result-container">
-      { !!this.state.avatar ? 
+      { !!this.state.avatar ?
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
             <h3 className="font-dark-gray">{this.state.username}</h3>
@@ -112,7 +163,7 @@ class AcceptedCompetitorCard2 extends Component {
             <p className="font-lighter-gray font-size-regular">Competing</p>
             <div className="spacer-2px"/>
             <button onClick={(e) => {this.handleAccept(this.props.c)}} className="button block centered">View</button>
-          </div> : 
+          </div> :
           <div className="text-centered"><img src="/static/assets/spinner.gif" /></div>}
     </div>
   }

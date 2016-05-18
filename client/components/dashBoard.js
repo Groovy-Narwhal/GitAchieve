@@ -8,19 +8,32 @@ import d3 from 'd3';
 import utils from './../utils/utils';
 import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
-
 class DashBoard extends Component {
   constructor(props) {
     super(props);
   }
 
+  componentDidMount() {
+    // On initial dashboard render, display text (until competitor selected)
+    var svg = d3.selectAll('svg');
+    if (svg) {
+      svg.append('text')
+        .text('select one of your competitions from My Challenges')
+        .attr('x', 200)
+        .attr('y', 50)
+        .attr('text-anchor', 'middle')
+        .style('font-size', '15px');
+    }
+  }
   componentDidUpdate() {
     if (this.props.auth.authenticated && this.props.userContributions[0] === 0) {
       this.getUserContribs();
     }
     if (this.props.competitorsData.length > 0){
-      console.log('We\'re making the CumulativeChart');
       CumulativeChart(this.props.competitorsData);
+    }
+    if (this.props.dailyCompetitorsData.length > 0) {
+      DailyChart(this.props.dailyCompetitorsData);
     }
   }
   getUserContribs() {
@@ -52,18 +65,14 @@ class DashBoard extends Component {
     } else if (contribs.length < 10) {
        return (<span className="font-active">{this.props.userContributions}</span>);
     } else {
-      return (<span className="font-active">Couldn't get your contributions. Try again in a few seconds</span>);
+      return (<span className="font-active">'Couldn\'t get your contributions. Try again in a few seconds'</span>);
     }
   }
-  // <button onClick={this.makeMainChart.bind(this)} className="button"> Tab 1: Total </button>
-  // <button onClick={this.makeDailyChart.bind(this)} className="button"> Tab 2: Daily </button>
-
 
   render() {
     const { actions } = this.props;
 
     if (this.props.auth.authenticated) {
-      // this.makeMainChart();
       return (
         <div className="dashboard">
           <div className="main-search">
@@ -83,26 +92,26 @@ class DashBoard extends Component {
             <CompetitorsMiniView />
           </div>
           <div className="data-results-container-clear">
-            <h2 className="font-white">Achievement Chart</h2>
+            <h2 className="font-white">Achievement Charts</h2>
             <div className="data-results-container full-width">
 
               <div id="commit-charts">
-                <svg width={540} height={300}>
+                <svg height={360}>
                 </svg>
-
-                <div id="optional-extra-chart">
+                <div id="second-chart">
+                  <svg height={360}>
+                  </svg>
                 </div>
-
               </div>
 
-              <button onClick={this.addDailyChart.bind(this)} className="button"> See daily breakdown </button>
             </div>
           </div>
         </div>
       )
     } else {
       return (
-        <div></div>
+        <div>
+        </div>
       );
     }
   }

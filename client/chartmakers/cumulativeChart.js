@@ -2,18 +2,24 @@ module.exports = (data) => {
 
   // get the right data in the right places
   data = data[0];
-  var users = [ data[0][0], data[1][0] ];
-  var commits = [ data[0][1], data[1][1] ];
+  var repos = [ data[0][0], data[0][1] ];
+  var users = [ data[1][0], data[2][0] ];
+  var commits = [ data[1][1], data[2][1] ];
 
   // get most commits for scaling
   var mostCommits = Math.max(...commits);
 
   // set dimensions
   var pad = 30;
-  var w = 600 - 2*pad;
+  var top = 60;
+  // find the actual width of the element, then slice off the 'px' at the end
+  // this still will not change live if the user resizes
+  var grabWidth = d3.select("#commit-charts svg").style('width').slice(0, -2);
+  var w = parseInt(grabWidth,10) - 2*pad;
   var h = 360 - 2*pad;
   var barWidth = Math.floor((w-3*pad)/users.length) - 3;
 
+  // get reference to svg
   var svg = d3.select("#commit-charts svg");
 
   // blank out the svg to re-render it
@@ -40,8 +46,11 @@ module.exports = (data) => {
     .range( [pad, h-pad*2] );
 
   // set the axes
+  // .ticks is used because we only want to display whole numbers
   var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-  var yAxis = d3.svg.axis().scale(yScale).orient("left");
+  var yAxis = d3.svg.axis()
+    .ticks(Math.min(mostCommits, 10))
+    .scale(yScale).orient("left");
 
   // draw the axes
   svg.append("g")
@@ -62,7 +71,7 @@ module.exports = (data) => {
     .call(yAxis);
 
   // declare colors array
-  var colors = [ 'red', 'steelblue'];
+  var colors = ['#9fb4cc', '#cccc9f'];
 
   // add the bars in the bar graph
   var g = svg.selectAll(".bars")
@@ -95,16 +104,58 @@ module.exports = (data) => {
       .data(commits)
       .enter()
         .append('text')
-        .attr('x', (d, i) => xScale(users[i]) + barWidth/2 + 4)
+        .attr('x', (d, i) => xScale(users[i]) + barWidth/2 + barWidth/6)
         .attr('y', (d) => yScale(d) - 11)
         .text((d) => d > 0 ? d.toString() : '');
 
-    // display placeholder for winner graphic
+    // display winner graphic
     var placeOfWinner_x = commits[0]===mostCommits ? 0 : 1;
     var placeOfWinner_y = commits[placeOfWinner_x];
 
-    svg.append('text')
-      .attr('x', () => xScale(users[placeOfWinner_x]) + barWidth/2 + 40)
-      .attr('y', () => yScale(placeOfWinner_y) - 11)
-      .text('winner');
+    svg.append('image')
+      .attr('xlink:href', 'static/assets/trophy.png' )
+      .attr('x', () => xScale(users[placeOfWinner_x])-11 + barWidth/2)
+      .attr('y', () => yScale(placeOfWinner_y) - 25)
+      .attr('height', '25')
+      .attr('width', '22');
+
+
+    // add a legend associating usernames with colors on the graph
+    // repo names are clickable
+    var repoLinks = svg.append('g');
+
+    for (j = 0; j < users.length; j++) {
+      svg.append('rect')
+        .attr('fill', () => colors[j])
+        .attr('x', 70)
+        .attr('y', h - pad + 25 * (j+1))
+      .attr('width', 8)
+        .attr('height', 8);
+
+      svg.append('text')
+        .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j + 3) + ')')
+        .text(() => users[j]);
+
+
+      repoLinks
+        .append('a')
+        .attr('xlink:href', 'http://github.com/' + users[j] + '/' + repos[j])
+          .append('rect')
+          .attr('x', 200)
+          .attr('y', h + 25 * j - 14)
+          .attr('height', 20)
+          .attr('width', 200)
+          .style('fill', '#1d9')
+          .style('border-radius', '5px');
+
+      repoLinks
+        .append('text')
+        .attr('x', 300)
+        .attr('y', h - pad + 25 * (j+1))
+        .style('fill', 'white')
+        .attr('dy', '.35em')
+        .attr('text-anchor', 'middle')
+        .style('pointer-events', 'none')
+        .text(() => repos[j].toString());
+    }
 };
