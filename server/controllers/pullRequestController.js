@@ -10,21 +10,44 @@ exports.retrievePullRequests = (req, res) => {
   const dbTimestamp = pgp.as.date(new Date());
   const username = req.body.profile.username;
   const id = req.params.id;
+  var orgCount = 0;
+  var totalOrgs = 0;
 
   // helper functions
   const addPR = (prs) => {
+    var pullRequestsTotal = prs.length;
+    var pullRequestsCount = 0;
     prs.forEach((pr, index) => {
       db.any('SELECT * FROM users WHERE users.id = ($1)', [pr.user.id])
         .then((data) => {
           db.any('SELECT COUNT(*) FROM users WHERE users.id = ($1)', [pr.user.id])
             .then((data) => {
               if (data[0].count !== '0') {
-                db.any('INSERT INTO pull_requests AS pr (id, created_at, updated_ga, user_id, state, diff_url, closed_at, milestone, base_ref, base_repo_watchers_count, base_repo_stargazers_count) ' +
+                db.any('INSERT INTO pull_requests AS pr (id, created_at, updated_ga, user_id, ' +
+                  'state,diff_url, closed_at, milestone, base_ref, base_repo_watchers_count, ' + 
+                  'base_repo_stargazers_count) ' +
                   'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ' +
                   'ON CONFLICT (id) ' +
-                  'DO UPDATE SET (updated_ga, user_id, state, diff_url, closed_at, milestone, base_ref, base_repo_watchers_count, base_repo_stargazers_count) = ($3, $4, $5, $6, $7, $8, $9, $10, $11) ' +
-                  'WHERE pr.id = ($1)',
-                  [pr.id, dbTimestamp, dbTimestamp, pr.user.id, pr.state, pr.diff_url, pr.merged_at, pr.milestone, pr.base.ref, pr.base.repo.watchers_count, pr.base.repo.stargazers_count]);
+                  'DO UPDATE SET (updated_ga, user_id, state, diff_url, closed_at, milestone, ' +
+                  'base_ref, base_repo_watchers_count, base_repo_stargazers_count) = ' +
+                  '($3, $4, $5, $6, $7, $8, $9, $10, $11) ' +
+                  'WHERE pr.id = ($1) ' +
+                  'RETURNING *',
+                  [pr.id, dbTimestamp, dbTimestamp, pr.user.id, pr.state, pr.diff_url, pr.merged_at,
+                  pr.milestone, pr.base.ref, pr.base.repo.watchers_count,
+                  pr.base.repo.stargazers_count])
+                  .then(pullRequest => {
+                    pullRequestsCount++;
+                    if (pullRequestsCount === pullRequestsTotal) {
+                      orgCount++;
+                    } 
+                    if (orgCount === totalOrgs) {
+                      res.send('success');
+                    }
+                  })
+                  .catch(error => {
+                    console.error('Error in inserting pull requests: ', error);
+                  });
               }
             });
         })
@@ -95,7 +118,6 @@ exports.retrievePullRequests = (req, res) => {
       return task.batch(queries);
     })
     .then(() => {
-      console.log('successfully added members');
       requestReposCB(orgname, gotAllRepos);
     })
     .catch(error => {
@@ -106,6 +128,7 @@ exports.retrievePullRequests = (req, res) => {
 
 
   const requestMembers = (orgData, addMembersCB) => {
+    totalOrgs = orgData.length;
     orgData.forEach(org => {
       var membersOptions = {
         url: `https://api.github.com/orgs/${org.orgname}/members`,
@@ -141,14 +164,16 @@ exports.retrievePullRequests = (req, res) => {
     });
   };
 
-  return selectOrg(requestMembers, (data)=> {res.send(data)} );
+  return selectOrg(requestMembers, data => {
+    console.log('Data in retrieveAllPRSForUser: ', data);
+  });
 
 };
 
-// /api/v1/users/orgs/:id/pullrequsts
+// /api/v1/users/orgs/:id/pullrequests
 exports.retrieveAllPRSForUser = function(req, res) {
   const id = req.params.id;
-  console.log('id', id)
+  console.log('id', id);
   db.any('SELECT * FROM pull_requests WHERE pull_requests.user_id=$1 AND pull_requests.closed_at IS NOT NULL', [id])
     .then(data => res.send(data))
     .catch(error => {
