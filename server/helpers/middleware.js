@@ -16,8 +16,7 @@ module.exports = function(app) {
   app.use(morgan('dev'));
   app.use(cors());
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('NODE_ENV is development; starting WebPack'); 
+  if (process.env.NODE_ENV !== 'production') {
     app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
     app.use(webpackHotMiddleware(compiler));
   }
