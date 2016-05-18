@@ -119,11 +119,14 @@ export const signinUser = () => {
         // listen for incoming messages
         socket.on('incoming_request', msg => {
           console.log(msg.msg);
-          checkForFriendRequests(userProfile.id, dispatch);
-          checkForSentRequests(userProfile.id, dispatch);
-          checkForConfirmedRequests(userProfile.id, dispatch);
-          checkForConfirmedRequests2(userProfile.id, dispatch);
-          checkForPastCompetitions(userProfile.id, dispatch);
+          axios.all([
+            checkForFriendRequests(userProfile.id, dispatch),
+            checkForSentRequests(userProfile.id, dispatch),
+            checkForConfirmedRequests(userProfile.id, dispatch),
+            checkForConfirmedRequests2(userProfile.id, dispatch),
+            checkForPastCompetitions(userProfile.id, dispatch)
+          ])
+
         });
 
         // - redirect to the route '/'

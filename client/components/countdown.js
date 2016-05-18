@@ -75,7 +75,7 @@ class Countdown extends Component {
     if (this.state.time <= 0) {
       clearInterval(this.decrement);
       // database update users_users table
-      this.updateDB.bind(this);
+      this.updateDB.apply(this);
     }
 
     var newTime = this.state.time - 1; // minus one sec from initial time

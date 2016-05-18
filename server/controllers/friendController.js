@@ -102,7 +102,8 @@ exports.confirmFriend = function(req, res) {
   var secondaryUserId = req.params.id; 
   // this is the person who sent the invitation to compete
   var primaryUserId = req.body.primaryUserId;
-  const secondaryRepoId = req.body.secondaryRepoId;
+  // 0 is for testing purposes there will normally be a secondary repo id present otherwise it must be an integer type
+  const secondaryRepoId = req.body.secondaryRepoId || 57168943;
   var confirmedAt = pgp.as.date(new Date());
   const lastActive = pgp.as.date(new Date());
   // find user_users connection
@@ -246,7 +247,7 @@ exports.checkPastCompetitions = function(req, res) {
           const primary_user_id = comp.primary_user_id;
           const primary_repo_id = comp.primary_repo_id;
           const secondary_user_id = comp.secondary_user_id;
-          const secondary_repo_id = comp.secondary_repo_id;
+          const secondary_repo_id = comp.secondary_repo_id || 19366327;
           const competition_start = comp.competition_start;
 
           const primaryOptions = {
