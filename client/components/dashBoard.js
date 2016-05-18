@@ -8,7 +8,6 @@ import d3 from 'd3';
 import utils from './../utils/utils';
 import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
-
 class DashBoard extends Component {
   constructor(props) {
     super(props);
@@ -20,29 +19,10 @@ class DashBoard extends Component {
     if (svg) {
       svg.append('text')
         .text('select one of your competitions from My Challenges')
-      //   .classed('commit-to-win', true)
         .attr('x', 200)
         .attr('y', 50)
         .attr('text-anchor', 'middle')
         .style('font-size', '15px');
-
-      // var text = [];
-      // text.push('');
-      // text.push('how to create a new challenge:');
-      // text.push('');
-      // text.push('1: search your competitor');
-      // text.push('2: choose your weapon (repo)');
-      // text.push('3: select start and end dates');
-      // text.push('4: compete to invite by email');
-
-      // var group = svg.append('g')
-      // for (var i = 0; i < text.length; i++) {
-      //   group.append('text')
-      //     .text(text[i])
-      //     .attr('x', 70)
-      //     .attr('y', 80 + 20 * i)
-      //     .style('font-size', '13px');
-      // }
     }
   }
   componentDidUpdate() {

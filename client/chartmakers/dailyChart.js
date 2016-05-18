@@ -6,18 +6,17 @@ module.exports = (data) => {
   var users = [ data[1][0], data[2][0] ];
   var commits = [ data[1][1], data[2][1] ];
 
-  // calculate most commits, for scaling
-  var mostCommitsUser1 = Math.max(...commits[0]);
-  var mostCommitsUser2 = Math.max(...commits[1]);
-  var mostCommits = Math.max(mostCommitsUser1, mostCommitsUser2);
+  var weekMode = false;
 
-  // if the competition has been > 1 week, show weekly view, otherwise daily view
-  if (commits[0].length > 6) {
+  // if the competition has been over a week,
+  // show weekly view, otherwise daily view
+  if (commits[0].length > 6) { // CHANGE THIS TO 7 OR 8
+
+    var weekMode = true;
 
     var numWeeks = Math.ceil(commits[0].length / 7);
 
     // get date strings
-    var numWeeks = 3;
     var now = new Date();
     var weekInMilliseconds = 604800000;
     var timeScale = [];
@@ -27,7 +26,7 @@ module.exports = (data) => {
     }
     timeScale.reverse();
 
-    // bin the data weekly
+    // bin the data by week
     var weeklyDataUser1 = [];
     var weeklyDataUser2 = [];
 
@@ -36,50 +35,31 @@ module.exports = (data) => {
       // sum up weeklyData ending at length-1 - 7*dW, ending at length-7*(dW+1)
       var sumForWeekUser1 = 0;
       var sumForWeekUser2 = 0;
+      var length = commits[0].length;
 
       for (var i = 0; i < 7; i++) {
         var user1 = commits[0][length - 7 * (dataWeek+1) + i];
         var user2 = commits[1][length - 7 * (dataWeek+1) + i];
-        if (!isNaN(user1))   sumForWeekUser1 += user1;
-        if (!isNaN(user2))   sumForWeekUser2 += user2;
+        if (!isNaN(user1))  sumForWeekUser1 += user1;
+        if (!isNaN(user2))  sumForWeekUser2 += user2;
       }
       weeklyDataUser1.push(sumForWeekUser1);
       weeklyDataUser2.push(sumForWeekUser2);
     }
 
-    weeklyDataUser1.reverse();
-    weeklyDataUser2.reverse();
+    commits[0] = weeklyDataUser1.reverse();
+    commits[1] = weeklyDataUser2.reverse();
 
-
-    console.log('weeklyDataUser1, weeklyDataUser2, dateStrings:', weeklyDataUser1, weeklyDataUser2, timeScale);
-
-
-    var daysOfTheWeek = ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    var dayOfTheWeekNow = new Date().getDay(); // var dayOfTheWeekNow = moment().isoWeekday();
-    var timeScale = daysOfTheWeek.slice(dayOfTheWeekNow, 7);
-    timeScale = timeScale.concat(...daysOfTheWeek.slice(0, dayOfTheWeekNow));
-
-
-    // start the # of commits from the right place
-    // this avoids showing leading-zero days (if they have zero commits in the first few days)
-    var leadingZeroDays = 0, i = 0;
-    while (commits[0][i] === 0 && commits[1][i] === 0 && i < 7) {
-      leadingZeroDays++;
-      i++;
-    }
-    timeScale = timeScale.slice(leadingZeroDays, 7);
-    commits[0] = commits[0].slice(leadingZeroDays, 7);
-    commits[1] = commits[1].slice(leadingZeroDays, 7);
-
-
+    console.log('users', users[0], users[1]);
+    console.log('weeklyDataForUser1, weeklyDataForUser2', commits[0], commits[1]);
 
   } else {
+
     // start the ordering of the week based on what day it is right now
     var daysOfTheWeek = ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    var dayOfTheWeekNow = new Date().getDay();//moment().isoWeekday();
+    var dayOfTheWeekNow = new Date().getDay();
     var timeScale = daysOfTheWeek.slice(dayOfTheWeekNow, 7);
     timeScale = timeScale.concat(...daysOfTheWeek.slice(0, dayOfTheWeekNow));
-
 
     // start the # of commits from the right place
     // this avoids showing leading-zero days (if they have zero commits in the first few days)
@@ -92,6 +72,15 @@ module.exports = (data) => {
     commits[0] = commits[0].slice(leadingZeroDays, 7);
     commits[1] = commits[1].slice(leadingZeroDays, 7);
   }
+
+  // calculate most commits, for scaling
+  var mostCommitsUser1 = Math.max(...commits[0]);
+  var mostCommitsUser2 = Math.max(...commits[1]);
+  var mostCommits = Math.max(mostCommitsUser1, mostCommitsUser2);
+
+  /**************************************************
+    Actual D3 stuff
+  **************************************************/
 
   // set dimensions
   // find the actual width of the element, then slice off the 'px' at the end
