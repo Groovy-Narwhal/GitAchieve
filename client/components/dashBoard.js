@@ -63,7 +63,6 @@ class DashBoard extends Component {
     const { actions } = this.props;
 
     if (this.props.auth.authenticated) {
-      console.log('this is this.props.userContributions.length[0]', this.props.userContributions[0])
       // this.makeMainChart();
       return (
         <div className="dashboard">
