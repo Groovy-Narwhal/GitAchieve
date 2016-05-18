@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2016-05-18 01:58:26.012
+-- Last modification date: 2016-05-19 18:31:01.344
 
 -- tables
 -- Table: branches
@@ -59,6 +59,7 @@ CREATE TABLE pull_requests (
     state varchar(10)  NULL,
     diff_url varchar(200)  NULL,
     created_at timestamp  NULL,
+    merged_at timestamp  NULL,
     closed_at timestamp  NULL,
     milestone varchar(100)  NULL,
     base_ref varchar(50)  NULL,
@@ -113,7 +114,9 @@ CREATE TABLE users (
     avatar_url varchar(200)  NULL,
     followers int  NULL,
     following int  NULL,
-    score int  NULL,
+    total_score int  NULL,
+    losses int  NULL,
+    wins int  NULL,
     longest_streak int  NULL,
     current_streak int  NULL,
     contributions_past_year int  NULL,
