@@ -148,7 +148,7 @@ exports.checkForFriendRequests = function(req, res) {
   db.any('Select * from users_users uu ' +
     'WHERE uu.secondary_user_id=($1) ' +
     'AND uu.confirmed_at IS NULL ' +
-    'AND uu.competition_end > NOW()',
+    'AND uu.winner IS NULL',
     [secondaryIdCheck]
   ).then(data => res.send(data))
   .catch(error => {
@@ -166,7 +166,7 @@ exports.checkForSentRequests = function(req, res) {
   db.any('Select * from users_users uu ' +
     'WHERE uu.primary_user_id=($1) ' +
     'AND uu.confirmed_at IS NULL ' +
-    'AND uu.competition_end > NOW()',
+    'AND uu.winner IS NULL',
     [primaryIdCheck]
   ).then(data => res.send(data))
   .catch(error => {
@@ -184,7 +184,7 @@ exports.checkApprovedRequests = function(req, res) {
     db.any('Select * from users_users uu ' +
       'WHERE uu.primary_user_id=($1) ' +
       'AND uu.confirmed_at IS NOT NULL ' +
-      'AND uu.competition_end > NOW()',
+      'AND uu.winner IS NULL',
       [id]
     ).then(data => res.send(data))
     .catch(error => {
@@ -202,7 +202,7 @@ exports.checkApprovedRequests2 = function(req, res) {
   db.any('Select * from users_users uu ' +
     'WHERE uu.secondary_user_id=($1) ' +
     'AND uu.confirmed_at IS NOT NULL ' +
-    'AND uu.competition_end > NOW()',
+    'AND uu.winner IS NULL',
     [id]
   ).then(data => res.send(data))
   .catch(error => {
@@ -211,128 +211,121 @@ exports.checkApprovedRequests2 = function(req, res) {
   })
 }
 
-// retrieve all entries in the user to user table in which competition date is in the past
+// retrieve all entries in the user to user table in which competition date is in the past and update them to have a winner
 // GET at /api/v1/users/:id/pastCompetitions
 exports.checkPastCompetitions = function(req, res) {
   // this is the current users id
   const id = req.params.id;
 
+
   db.any('Select * from users_users uu ' +
-    'WHERE uu.competition_end <= NOW() ' +
-    'AND uu.primary_user_id=($1) OR ' +
+    'WHERE uu.primary_user_id=($1) OR ' +
     'uu.secondary_user_id=($1)', [id])
   .then(data => {
-    console.log('PAST DATA', data)
+    const currentDate = new Date();
     // for each data we want to make sure that they have a winner
-    data.forEach(comp => {
-      const winner = comp.winner;
-      if (!winner) {
-        const primary_user_id = comp.primary_user_id;
-        const primary_repo_id = comp.primary_repo_id;
-        const secondary_user_id = comp.secondary_user_id;
-        const secondary_repo_id = comp.secondary_repo_id || 58960634;
-        const competition_start = comp.competition_start;
-
-        const primaryOptions = {
-          uri: `${CALLBACKHOST}/api/v1/users/${primary_user_id}/commits/start`,
-          method: 'GET',
-          headers: {
-            startdate: competition_start,
-            repoid: primary_repo_id
-          }
-        };
-
-        const secondaryOptions = {
-          uri: `${CALLBACKHOST}/api/v1/users/${secondary_user_id}/commits/start`,
-          method: 'GET',
-          headers: {
-            startdate: competition_start,
-            repoid: secondary_repo_id
-          }
-        };
-
-        rp(primaryOptions)
-          .then(res => {
-            const data = JSON.parse(res);
-            const primaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-            return primaryCommitCount;
-          }).
-          then(primaryCommitCount => {
-            rp(secondaryOptions)
-              .then(res => {
-                const data = JSON.parse(res);
-                const secondaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-                const winner;
-                console.log('1',primaryCommitCount);
-                console.log('2',secondaryCommitCount);
-                if (primaryCommitCount > secondaryCommitCount) {
-                 return primary_user_id;
-                } else if (primaryCommitCount < secondaryCommitCount) {
-                  return secondary_user_id;
-                }
-                return 1;
-              })
-              .then(winner => {
-                console.log('momo', winner);
-                db.oneOrNone(
-                  'SELECT * ' + 
-                  'FROM users_users uu ' +
-                  'WHERE uu.primary_user_id=($1) ' +
-                  'AND uu.secondary_user_id=($2) ' +
-                  'OR uu.primary_user_id=($2) ' +
-                  'AND uu.secondary_user_id=($1)',
-                  [primary_user_id, secondary_user_id])
-                  .then(data => {
-                    console.log('momo', winner);
-                    if (data !== null) {
-                      db.oneOrNone(
-                        'UPDATE users_users ' + 
-                        'SET winner=($1) ' +
-                        'WHERE (users_users.primary_user_id=($2) ' +
-                        'AND users_users.secondary_user_id=($3)) ' +
-                        'RETURNING *', 
-                        [winner, primary_user_id, secondary_user_id])
-                        .then(data => console.log('QQQ',data))
-                        .catch(error => {
-                          console.error(error);
-                          res.status(500).send('Error updating users_users connection');                
-                        });
-                      }
-                  })
-              })
-          })
-          .catch(err => console.error(err));
-
-
-          //   if (data !== null) {
-          //     db.oneOrNone(
-          //       'UPDATE users_users ' + 
-          //       'SET confirmed_at=($1), ' +
-          //       'secondary_repo_id=($2), ' +
-          //       'last_active=($3) ' +
-          //       'WHERE (users_users.primary_user_id=($4) ' +
-          //       'AND users_users.secondary_user_id=($5)) ' +
-          //       'RETURNING *', 
-          //       [confirmedAt, secondaryRepoId, lastActive, primaryUserId, secondaryUserId])
-          //       .then(data => res.send(data))
-          //       .catch(error => {
-          //         console.error(error);
-          //         res.status(500).send('Error updating users_users connection');                
-          //       });
-          //   } else {
-          //     res.status(404).send('Error, users_users connection not found');
-          //   }
-          // })
-          // .catch(error => {
-          //   console.error(error);
-          //   res.status(500).send('Error finding users_users connection');      
-          // });
+    const filteredData = data.map(comp => {
+      if (currentDate > new Date(comp.competition_end)) {
+        return comp;
       }
-      return res.send(data)
+    })
+    var updatedCompetitions = [];
+    const length = filteredData.reduce((acc, curr) => {return (curr !== undefined) ? acc + 1 : acc }, 0);
+    var counter = 0;
+    filteredData.forEach(comp => {
+      if (comp !== undefined) {
+        counter = counter + 1;
+        const winner = comp.winner;
+        if (winner) {
+          updatedCompetitions.push(comp);
+          
+          if (counter === length) {
+            res.send(updatedCompetitions);
+          }
+        } else {
+          const primary_user_id = comp.primary_user_id;
+          const primary_repo_id = comp.primary_repo_id;
+          const secondary_user_id = comp.secondary_user_id;
+          const secondary_repo_id = comp.secondary_repo_id;
+          const competition_start = comp.competition_start;
+
+          const primaryOptions = {
+            uri: `${CALLBACKHOST}/api/v1/users/${primary_user_id}/commits/start`,
+            method: 'GET',
+            headers: {
+              startdate: competition_start,
+              repoid: primary_repo_id
+            }
+          };
+
+          const secondaryOptions = {
+            uri: `${CALLBACKHOST}/api/v1/users/${secondary_user_id}/commits/start`,
+            method: 'GET',
+            headers: {
+              startdate: competition_start,
+              repoid: secondary_repo_id
+            }
+          };
+
+          rp(primaryOptions)
+            .then(res => {
+              const data = JSON.parse(res);
+              const primaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+              return primaryCommitCount;
+            }).
+            then(primaryCommitCount => {
+              rp(secondaryOptions)
+                .then(res => {
+                  const data = JSON.parse(res);
+                  const secondaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+                  const winner;
+                  if (primaryCommitCount > secondaryCommitCount) {
+                   return primary_user_id;
+                  } else if (primaryCommitCount < secondaryCommitCount) {
+                    return secondary_user_id;
+                  }
+                  return 1;
+                })
+                .then(winner => {
+                  db.oneOrNone(
+                    'SELECT * ' + 
+                    'FROM users_users uu ' +
+                    'WHERE uu.primary_user_id=($1) ' +
+                    'AND uu.secondary_user_id=($2) ' +
+                    'OR uu.primary_user_id=($2) ' +
+                    'AND uu.secondary_user_id=($1)',
+                    [primary_user_id, secondary_user_id])
+                    .then(data => {
+                      if (data !== null) {
+                        db.oneOrNone(
+                          'UPDATE users_users ' + 
+                          'SET winner=($1) ' +
+                          'WHERE (users_users.primary_user_id=($2) ' +
+                          'AND users_users.secondary_user_id=($3)) ' +
+                          'RETURNING *', 
+                          [winner, primary_user_id, secondary_user_id])
+                          .then(data => {
+                            updatedCompetitions.push(data);
+                            if (counter === length) {
+                              res.send(updatedCompetitions);
+                            }
+                          })
+                          .catch(error => {
+                            console.error(error);
+                            res.status(500).send('Error updating users_users connection');                
+                          });
+                        }
+                    })
+                })
+            })
+            .catch(err => console.error(err));
+        }
+        
+      }
     })
   })
-  // .catch(error => {
-  //   console.error(error);
-  //   res.status(500).send('Error finding users_users connection');   
-  // });
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  });
 }
