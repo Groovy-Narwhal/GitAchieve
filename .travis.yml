@@ -10,6 +10,7 @@ before_script:
   - npm install -g jasmine-node
   - npm install -g gulp
   - npm install --save-dev gulp
+  - npm install -g gulp-babel
 script: 'gulp test'
 sudo: false
 matrix:
