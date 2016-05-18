@@ -6,17 +6,8 @@ import { browserHistory, Link } from 'react-router';
 import actions from './../actions/ActionCreators';
 import d3 from 'd3';
 import utils from './../utils/utils';
-<<<<<<< ee76c4dc9358929ff00a4aaf3a824208da4202cf
-import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
-
-||||||| merged common ancestors
-import { Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
-
-
-=======
 import { Countdown, Repos, Search, CompetitorsMiniView, CumulativeChart, DailyChart, SentRequest, Request } from './index';
 
->>>>>>> (feat) Implement countdown
 class DashBoard extends Component {
   constructor(props) {
     super(props);
@@ -84,13 +75,6 @@ class DashBoard extends Component {
     const { actions } = this.props;
 
     if (this.props.auth.authenticated) {
-<<<<<<< 0c586997d49a29f936efece51e439e0fe81459e7
-||||||| merged common ancestors
-      // this.makeMainChart();
-=======
-      // this.makeMainChart();
-
->>>>>>> (feat) Add corresponding end date to countdown
       return (
         <div className="dashboard">
           <div className="main-search">

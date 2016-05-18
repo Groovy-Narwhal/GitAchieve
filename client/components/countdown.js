@@ -9,7 +9,8 @@ const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
 class Countdown extends Component {
   constructor(props) {
     super(props);
-    var competitionEndDate = this.props.competitorsData[0][2];
+    console.log('COMPETITORS DATA',this.props.competitorsData);
+    var competitionEndDate = this.props.competitorsData[0][3];
     var formattedDate = new Date(competitionEndDate);
     var time = formattedDate/1000;
     var today = new Date();
@@ -80,7 +81,7 @@ class Countdown extends Component {
 
     var newTime = this.state.time - 1; // minus one sec from initial time
     var today = new Date();
-    var msDiff = new Date(this.props.competitorsData[0][2]) - today;
+    var msDiff = new Date(this.props.competitorsData[0][3]) - today;
     var days = parseInt(msDiff/(24*3600*1000));
     var hours =parseInt(msDiff/(3600*1000)-(days*24));
     var mins = parseInt(msDiff/(60*1000)-(days*24*60)-(hours*60));
