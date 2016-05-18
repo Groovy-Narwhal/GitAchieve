@@ -25,18 +25,7 @@ class SearchResults extends Component {
 
   getResult(result) {
       return (
-        <div className="user-result-container">
-          <img className="user-avatar-1" src={result.avatar_url} />
-          <h2>{result.login}</h2>
-          <input type="button" value="compete" onClick={(e) => { this.compete(e, result) }} />
-        </div>
-      )
-
-  }
-
-  getResult(result) {
-      return (
-        <div className="user-result-container text-centered">
+        <div className="user-result-container text-centered margin-5px">
           <div className="avatar-container">
             <img className="user-avatar-1" src={result.avatar_url} />
           </div>
@@ -44,10 +33,9 @@ class SearchResults extends Component {
           <h3 className="font-dark-gray">{result.login.length <= 10 ? result.login : result.login.slice(0, 10) + '...'}</h3>
           <div className="spacer-2px" />
           <input type="button" value="compete" className="button block centered" onClick={(e) => { this.compete(e, result) }} />
-          <div className="spacer-2px" />
+          <div className="spacer-5px" />
         </div>
-      )
-
+      );
   }
 
   render() {

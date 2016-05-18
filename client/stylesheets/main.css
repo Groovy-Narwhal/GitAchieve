@@ -118,6 +118,9 @@ body {
   margin-bottom: 10px;
   border-radius: 5px; }
 
+.margin-5px {
+  margin: 5px; }
+
 .left-border {
   border-left: 1px solid #fff; }
 
@@ -319,7 +322,7 @@ h3 {
   width: 120px;
   height: 120px;
   background-color: #ddd;
-  background-image: url("static/assets/github-02.svg"); }
+  background-image: url("/static/assets/github-02.svg"); }
 
 .drop-arrow {
   margin-bottom: 5px;
