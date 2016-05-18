@@ -80,9 +80,22 @@ exports.updateCommits = function(req, res) {
             'WHERE $2~ = $3',
             ['commits', 'user_id', userId])
           .then(commits => {
-            // send back the updated commits
-            console.log('Successfully patched commits for userId: ' + userId);
-            res.send(commits);
+            // update the commits_count in the user table
+            db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
+              'VALUES ($6, $7, $8) ' +
+              'ON CONFLICT ($3~) ' +
+              'DO UPDATE SET ($4~) = ($7) ' +
+              'WHERE $2~.$3~ = $6 ' +
+              'RETURNING *',
+              ['users', 'u', 'id', 'commits_count', 'created_ga',
+              queryId, commits.length, dbTimestamp])
+              .then((data) => {
+                res.send(commits);
+              })
+              .catch(error => {
+                console.error('Error updating commit_count: ', error);
+                res.status(500).send;
+              });
           })
           .catch(error => {
             console.error('Error querying commits CC: ', error);
