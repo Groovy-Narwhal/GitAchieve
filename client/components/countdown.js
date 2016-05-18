@@ -30,7 +30,7 @@ class Countdown extends Component {
   }
 
   componentWillUnmount() {
-    // clearInterval(this.decrement);
+    clearInterval(this.decrement);
   }
 
   update() {
@@ -39,7 +39,7 @@ class Countdown extends Component {
       clearInterval(this.decrement);
       console.log('hi', hi)
       // database update users_users table to have winner
-      axios.patch(`${ROOT_URL}/api/v1/users/competitionend`)
+      // axios.patch(`${ROOT_URL}/api/v1/users/competitionend`)
     }
     var newTime = this.state.time - 1; // minus one sec from initial time
     var today = new Date();

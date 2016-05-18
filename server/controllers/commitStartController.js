@@ -22,9 +22,7 @@ exports.retrieveCompetition = function(req, res) {
     .then(commits => {
       // filter out commits that are before the start date
       var filteredCommits = commits.reduce((filtered, commit) => {
-        console.log('commit.date', commit)
         if (new Date(commit.date) - startDate >= 0) {
-          console.log('filtered', filtered)
           filtered.push(commit);
           return filtered;
         } else {

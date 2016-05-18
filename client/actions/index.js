@@ -24,7 +24,7 @@ export const signoutUser = () => {
 const checkForFriendRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/receivedmatches`)
     .then(response => {
-      console.log('RESPONSE', response);
+      console.log('Received requests not accepted', response.data);
       if (response.data.length > 0) {
         dispatch({
           type: types.YES_COMPETITIONS
@@ -40,7 +40,7 @@ const checkForFriendRequests = (id, dispatch) => {
 const checkForSentRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/requestedmatches`)
     .then(response => {
-      console.log('RESPONSE1', response);
+      console.log('Sent requests not accetped', response.data);
       if (response.data.length > 0) {
         dispatch({
           type: types.YES_COMPETITIONS
@@ -56,7 +56,7 @@ const checkForSentRequests = (id, dispatch) => {
 const checkForConfirmedRequests = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches`)
     .then(response => {
-      console.log('RESPONSE2', response);
+      console.log('confirmed request in which logged in user sent the request', response.data);
       if (response.data.length > 0) {
         dispatch({
           type: types.YES_COMPETITIONS
@@ -72,7 +72,7 @@ const checkForConfirmedRequests = (id, dispatch) => {
 const checkForConfirmedRequests2 = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/successmatches2`)
     .then(response => {
-      console.log('RESPONSE3', response);
+      console.log('confirmed request in which logged in received the request', response.data);
       if (response.data.length > 0) {
         dispatch({
           type: types.YES_COMPETITIONS
@@ -88,7 +88,7 @@ const checkForConfirmedRequests2 = (id, dispatch) => {
 const checkForPastCompetitions = (id, dispatch) => {
   return axios.get(`${ROOT_URL}/api/v1/users/${id}/pastcompetitions`)
     .then(response => {
-      console.log('RESPONSE4', response);
+      console.log('past Competitions', response.data);
       dispatch({
         type: types.PAST_COMPETITIONS,
         pastCompetitions: response.data
@@ -131,6 +131,10 @@ export const signinUser = () => {
         return userProfile.id;
       })
       .then((id) => {
+        checkForPastCompetitions(id, dispatch);
+        return id;
+      })
+      .then((id) => {
         checkForFriendRequests(id, dispatch);
         return id;
       })
@@ -145,9 +149,6 @@ export const signinUser = () => {
       .then((id) => {
         checkForConfirmedRequests2(id, dispatch);
         return id;
-      })
-      .then((id) => {
-        checkForPastCompetitions(id, dispatch);
       })
       .catch((err) => {
         console.log('error', err);
