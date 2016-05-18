@@ -6,8 +6,6 @@ module.exports = (data) => {
   var users = [ data[1][0], data[2][0] ];
   var commits = [ data[1][1], data[2][1] ];
 
-  console.log('repos, users, commits:', repos, users, commits);
-
   // get most commits for scaling
   var mostCommits = Math.max(...commits);
 
@@ -102,8 +100,8 @@ module.exports = (data) => {
       .data(commits)
       .enter()
         .append('text')
-        .attr('x', (d, i) => xScale(users[i]) + barWidth/2 + 4)
-        .attr('y', (d) => yScale(d) + 20)
+        .attr('x', (d, i) => xScale(users[i]) + barWidth/2 + barWidth/6)
+        .attr('y', (d) => yScale(d) - 11)
         .text((d) => d > 0 ? d.toString() : '');
 
     // display winner graphic
@@ -120,6 +118,8 @@ module.exports = (data) => {
 
     // add a legend associating usernames with colors on the graph
     // TO DO: also show repo-names
+    var repoLinks = svg.append('g');
+
     for (j = 0; j < users.length; j++) {
       svg.append('rect')
         .attr('fill', () => colors[j])
@@ -127,11 +127,61 @@ module.exports = (data) => {
         .attr('y', h - pad + 25 * (j+1))
       .attr('width', 8)
         .attr('height', 8);
+
       svg.append('text')
-        .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j) + ')')
+        .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j + 3) + ')')
         .text(() => users[j]);
-      svg.append('text')
-        .attr('transform', 'translate(' + (185) + ',' + (h + 25 * j) + ')') //change x value to +50
+
+
+      repoLinks
+        .append('a')
+        .attr('xlink:href', 'http://github.com/' + users[j] + '/' + repos[j])
+          .append('rect')
+          .attr('x', 200)
+          .attr('y', h + 25 * j - 14)
+          .attr('height', 20)
+          .attr('width', 200)
+          .style('fill', '#1d9')
+          .style('border-radius', '5px');
+
+      repoLinks
+        .append('text')
+        .attr('x', 300)
+        .attr('y', h - pad + 25 * (j+1))
+        .style('fill', 'white')
+        .attr('dy', '.35em')
+        .attr('text-anchor', 'middle')
+        .style('pointer-events', 'none')
         .text(() => repos[j].toString());
     }
 };
+
+// .button {
+//   -webkit-appearance:caret;
+//   background-color: #1d9;
+//   border-radius: 5px;
+//   padding: 5px;
+//   color: $white;
+// }
+// <a xlink:href='http://www.gmail.com'>
+// draw a rectangle
+// holder.append("a")
+//     .attr("xlink:href", "http://en.wikipedia.org/wiki/"+word)
+//     .append("rect")
+//     .attr("x", 100)
+//     .attr("y", 50)
+//     .attr("height", 100)
+//     .attr("width", 200)
+//     .style("fill", "lightgreen")
+//     .attr("rx", 10)
+//     .attr("ry", 10);
+// draw text on the screen
+// holder.append("text")
+//     .attr("x", 200)
+//     .attr("y", 100)
+//     .style("fill", "black")
+//     .style("font-size", "20px")
+//     .attr("dy", ".35em")
+//     .attr("text-anchor", "middle")
+//     .style("pointer-events", "none")
+//     .text(word);

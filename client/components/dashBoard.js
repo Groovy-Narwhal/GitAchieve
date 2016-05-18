@@ -28,12 +28,12 @@ class DashBoard extends Component {
 
       var text = [];
       text.push('');
-      text.push('how to create a new challenge...');
+      text.push('how to create a new challenge:');
       text.push('');
-      text.push('1:      search your competitor');
-      text.push('2:      choose your weapon (repo)');
-      text.push('3:      select start and end dates');
-      text.push('4:      compete to invite by email');
+      text.push('1: search your competitor');
+      text.push('2: choose your weapon (repo)');
+      text.push('3: select start and end dates');
+      text.push('4: compete to invite by email');
 
       var group = svg.append('g')
       for (var i = 0; i < text.length; i++) {
@@ -41,7 +41,7 @@ class DashBoard extends Component {
           .text(text[i])
           .attr('x', 70)
           .attr('y', 80 + 20 * i)
-          .style('font-size', '11px');
+          .style('font-size', '13px');
       }
     }
   }
@@ -125,7 +125,6 @@ class DashBoard extends Component {
 
               </div>
 
-              <button onClick={this.addDailyChart.bind(this)} className="button"> See daily breakdown </button>
             </div>
           </div>
         </div>
@@ -139,21 +138,7 @@ class DashBoard extends Component {
   }
 }
 
-// <image xLinkHref="static/assets/trophy.png" x="100" y="100"></image>
-// svg.append('image')
-//   .attr('xlink:href', 'static/assets/trophy.png' )
-//   .attr('x', () => xScale(users[placeOfWinner_x])-11 + barWidth/2)
-//   .attr('y', () => yScale(placeOfWinner_y) - 25)
-//   .attr('height', '25')
-//   .attr('width', '22');
-// x="100" y="100" width="22" height="25"
-// svg.append('image')
-//   .attr('xlink:href', 'static/assets/trophy.png' )
-//   .attr('x', () => xScale(users[placeOfWinner_x])-11 + barWidth/2)
-//   .attr('y', () => yScale(placeOfWinner_y) - 25)
-//   .attr('height', '25')
-//   .attr('width', '22');
-// <text x="10" y="54" text-anchor="middle">Hello!</text>
+// <button onClick={this.addDailyChart.bind(this)} className="button"> See daily breakdown </button>
 
 const mapStateToProps = state => {
   return state;

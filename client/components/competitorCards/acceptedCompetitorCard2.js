@@ -110,20 +110,20 @@ class AcceptedCompetitorCard2 extends Component {
 
           .then(response => {
 
-            userRepo = response.data[0] ? response.data[0].name : 'no repo!';
+            userRepo = response.data[0] ? response.data[0].name : 'repo name not found';
 
             // get repo name for other user's repo
             axios({
               method: 'get',
               url: `/api/v1/users/${c.secondary_user_id}/repo`,
               headers: {
-                repoid: c.secondary_user_id
+                repoid: c.secondary_repo_id
               },
             })
 
             .then(response => {
 
-              competitorRepo = response.data[0] ? response.data[0].name : 'no repo!';
+              competitorRepo = response.data[0] ? response.data[0].name : 'repo name not found';
 
               //update cumulative and daily data with repo names
               data[0].push(userRepo);

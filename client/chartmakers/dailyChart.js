@@ -8,6 +8,8 @@ module.exports = (data, location) => {
   var users = [ data[1][0], data[2][0] ];
   var commits = [ data[1][1], data[2][1] ];
 
+  console.log('repos, users, and commits IN DAILY CHART:', repos, users, commits);
+
   // calculate most commits for scaling
   var mostCommitsUser1 = Math.max(...commits[0]);
   var mostCommitsUser2 = Math.max(...commits[1]);
@@ -133,7 +135,7 @@ module.exports = (data, location) => {
       for (var j = 0; j < users.length; j++) {
         g.append('text')
         .attr('x', (d, i) => xScale(days[i]) + (j * barWidth) + barWidth/2 - 2)
-        .attr('y', (d) => yScale(d[j]) + 20)
+        .attr('y', (d) => yScale(d[j]) + 15)
         .text((d) => d[j] > 0 ? d[j].toString() : '');
       }
 
@@ -174,3 +176,17 @@ module.exports = (data, location) => {
   }
 
 };
+
+// <a xlink:href='http://www.gmail.com'>
+// draw a rectangle
+// holder.append("a")
+//     .attr("xlink:href", "http://en.wikipedia.org/wiki/"+word)
+//     .append("rect")
+//     .attr("x", 100)
+//     .attr("y", 50)
+//     .attr("height", 100)
+//     .attr("width", 200)
+//     .style("fill", "lightgreen")
+//     .attr("rx", 10)
+//     .attr("ry", 10);
+
