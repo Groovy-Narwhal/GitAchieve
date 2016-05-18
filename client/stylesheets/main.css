@@ -121,6 +121,22 @@ body {
 .bottom-border {
   border-bottom: 1px solid #fff; }
 
+.anchor-bottom {
+  position: fixed;
+  bottom: 0px; }
+
+.pos-relative {
+  position: relative; }
+
+.pos-absolute {
+  position: absolute; }
+
+.bottom {
+  bottom: 0; }
+
+.block {
+  display: block; }
+
 svg {
   font: 10px;
   font-weight: 300;
@@ -202,19 +218,25 @@ h3 {
 .font-weight-bold {
   font-weight: 700; }
 
-.fonts-size-light {
+.font-size-lightest {
+  font-size: 4px; }
+
+.font-size-lighter {
+  font-size: 6px; }
+
+.font-size-light {
   font-size: 8px; }
 
-.fonts-size-regular {
+.font-size-regular {
   font-size: 12px; }
 
-.fonts-size-semi-large {
+.font-size-semi-large {
   font-size: 16px; }
 
-.fonts-size-large {
+.font-size-large {
   font-size: 20px; }
 
-.fonts-size-x-large {
+.font-size-x-large {
   font-size: 24px; }
 
 @font-face {
@@ -253,6 +275,13 @@ h3 {
 
 .button:active {
   background-color: #1fb574; }
+
+.button-inactive {
+  -webkit-appearance: caret;
+  background-color: #989898;
+  border-radius: 5px;
+  padding: 5px;
+  color: #fff; }
 
 .signin {
   font-weight: 300;
@@ -312,6 +341,9 @@ h3 {
 
 .search-container {
   white-space: nowrap; }
+
+.spacer-2px {
+  margin: 2px 0; }
 
 .spacer-5px {
   margin: 5px 0; }
@@ -432,7 +464,9 @@ h3 {
 .competitor-card {
   text-align: center;
   margin: 5px;
-  display: inline-block; }
+  display: inline-block;
+  height: 112px;
+  width: 100px; }
 
 .badge {
   display: inline-block; }

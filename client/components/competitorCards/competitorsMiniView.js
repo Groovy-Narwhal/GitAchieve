@@ -15,7 +15,7 @@ class CompetitorsMiniView extends Component {
     } else {
       return (
         <div className="centered">
-          <h2 className="font-white">Find an opponent!</h2>
+          <h3 className="font-white">Find an opponent!</h3>
         </div>
       );
     }
