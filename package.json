@@ -11,6 +11,7 @@
     "test": "tests"
   },
   "scripts": {
+    "gulp": "gulp",
     "serve": "nodemon server/server.js --ignore client/components"
   },
   "author": "Adam Isom, Alex Nitta, Inje Yeo, & Megan Smith",
