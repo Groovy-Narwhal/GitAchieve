@@ -1,19 +1,22 @@
 module.exports = (data) => {
 
-  // get the data in the right 'shape'
+
+  /**************************************************
+    Get the data in the right shape
+  **************************************************/
   data = data[0];
   var repos = [ data[0][0], data[0][1] ];
   var users = [ data[1][0], data[2][0] ];
   var commits = [ data[1][1], data[2][1] ];
 
-
-  // if the competition has been over a week,
-  // show weekly view, otherwise daily view
-  if (commits[0].length > 6) { // CHANGE THIS TO 7 OR 8
-
+  /**************************************************
+    if the competition has been over a week,
+    show weekly view, otherwise daily view
+  **************************************************/
+  if (commits[0].length > 8) {
     var numWeeks = Math.ceil(commits[0].length / 7);
 
-    // get date strings
+    // create time labels
     var now = new Date();
     var weekInMilliseconds = 604800000;
     var timeScale = [];
@@ -23,15 +26,14 @@ module.exports = (data) => {
     }
     timeScale.reverse();
 
-    // bin the data by week
-    var weeklyDataUser1 = [];
-    var weeklyDataUser2 = [];
+    /* bin the data by week
+    */
+    var weeklyDataUser1 = [],
+        weeklyDataUser2 = [];
 
     for (var dataWeek = 0; dataWeek < numWeeks; dataWeek++) {
-
-      // sum up weeklyData ending at length-1 - 7*dW, ending at length-7*(dW+1)
-      var sumForWeekUser1 = 0;
-      var sumForWeekUser2 = 0;
+      var sumForWeekUser1 = 0,
+          sumForWeekUser2 = 0;
       var length = commits[0].length;
 
       for (var i = 0; i < 7; i++) {
@@ -43,41 +45,56 @@ module.exports = (data) => {
       weeklyDataUser1.push(sumForWeekUser1);
       weeklyDataUser2.push(sumForWeekUser2);
     }
-
     commits[0] = weeklyDataUser1.reverse();
     commits[1] = weeklyDataUser2.reverse();
+  }
 
-    console.log('users', users[0], users[1]);
-    console.log('weeklyDataForUser1, weeklyDataForUser2', commits[0], commits[1]);
-
-  } else {
-
-    // start the ordering of the week based on what day it is right now
+  else {
+    /*  daily view
+      create time labels
+      the days array is shifted to start and end correctly
+      this includes chopping off all leading-zero days, days at the beginning with no data
+    */
     var daysOfTheWeek = ['Mon', 'Tues', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     var dayOfTheWeekNow = new Date().getDay();
-    var timeScale = daysOfTheWeek.slice(dayOfTheWeekNow, 7);
+    var length = 7;
+    var timeScale = daysOfTheWeek.slice(dayOfTheWeekNow, length);
     timeScale = timeScale.concat(...daysOfTheWeek.slice(0, dayOfTheWeekNow));
+    /* if commits length is still 8 - an edge case - add one more day to timeScale
+      the default selection is 7 days prior, but we'll get 8 days of data back,
+      at least if it's been >168 hours.
+      The very first graph the user sees should be the daily one, not weekly.
+    */
+    if (commits[0].length === 8) {
+      length = 8;
+      // the space IS necessary for d3's xScale to not cut out the value as a duplicate
+      timeScale.push(daysOfTheWeek[dayOfTheWeekNow] + ' ');
+      console.log('inside if, and also timeScale is now:', timeScale);
+    }
+    var leadingZeroDays = 0,
+      i = 0;
 
-    // start the # of commits from the right place
-    // this avoids showing leading-zero days (if they have zero commits in the first few days)
-    var leadingZeroDays = 0, i = 0;
-    while (commits[0][i] === 0 && commits[1][i] === 0 && i < 7) {
+    while (commits[0][i] === 0 && commits[1][i] === 0 && i < length) {
       leadingZeroDays++;
       i++;
     }
-    timeScale = timeScale.slice(leadingZeroDays, 7);
-    commits[0] = commits[0].slice(leadingZeroDays, 7);
-    commits[1] = commits[1].slice(leadingZeroDays, 7);
+    timeScale = timeScale.slice(leadingZeroDays, length);
+    commits[0] = commits[0].slice(leadingZeroDays, length);
+    commits[1] = commits[1].slice(leadingZeroDays, length);
+
   }
 
-  // calculate most commits, for scaling
+  /* calculate most commits, for scaling
+  */
   var mostCommitsUser1 = Math.max(...commits[0]);
   var mostCommitsUser2 = Math.max(...commits[1]);
   var mostCommits = Math.max(mostCommitsUser1, mostCommitsUser2);
 
-  // commit data comes in sorted by user rather than time,
-  // like [ user1 -> [array with daily data], user 2 -> [...same]],
-  // and we want it to be tuples like [ day1 -> [user1 that day, user2 that day], day2 -> [user1, user2], ...]
+  /* commit data comes in sorted by user rather than time,
+      like [ user1 -> [array with daily data], user 2 -> [...same]],
+      and we want it to be tuples like
+       [ day1 -> [user1 that day, user2 that day], day2 -> [user1, user2], ...]
+  */
   var sortCommitsByTime = (commits) => {
     var reconstructed = [];
     for (var i = 0; i < commits[0].length; i++) {
@@ -86,6 +103,8 @@ module.exports = (data) => {
     return reconstructed;
   };
   commits = sortCommitsByTime(commits);
+
+
 
   /**************************************************
     Actual D3 stuff
@@ -98,6 +117,9 @@ module.exports = (data) => {
   var grabWidth = d3.select("#commit-charts svg").style('width').slice(0, -2);
   var w = parseInt(grabWidth,10) - 2*pad;
   var h = 360 - 2*pad;
+
+  console.log('before barWidth, timeScale.length is', timeScale.length);
+
   var barWidth = Math.floor( (w-3*pad) / (timeScale.length * users.length) );
 
   // grab reference to the right svg
@@ -119,6 +141,8 @@ module.exports = (data) => {
   }
 
   // set the scales
+  console.log('for xScale, timeScale is:', timeScale);
+
   var xScale = d3.scale.ordinal()
     .domain(timeScale)
     .rangeRoundBands( [pad*2, w-pad] );
@@ -155,18 +179,13 @@ module.exports = (data) => {
   var colors = ['#9fb4cc', '#cccc9f'];
 
   // add the bars in the bar graph
-  console.log('commits is:', commits);
-
   var g = svg.selectAll(".bars")
     .data(commits)
     .enter()
       .append("g")
       for (var j = 0; j < users.length; j++) {
         g.append("rect")
-          .attr('fill', (d, i) => {
-            console.log('d, i, j & colors[j] is: ', d, i, j, colors[j]);
-            return colors[j];
-          })
+          .attr('fill', (d, i) => colors[j])
           .attr('x', (d, i) => xScale(timeScale[i]) + (j * barWidth))
           .attr('y', (d, i) => yScale(d[j]))
           .attr('width', () => barWidth)
