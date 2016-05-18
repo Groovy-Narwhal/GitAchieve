@@ -40,7 +40,7 @@ gulp.task('lint', function() {
 // Test Task
 gulp.task('test', shell.task([
   'mocha test/client/.setup.js test/client',
-  'jasmine-node test/server/ --junitreport'
+  'jasmine-node test/server/test_spec.js --junitreport',
 ]));
 
 // Clean out previous dist folder

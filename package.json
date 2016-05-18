@@ -76,6 +76,7 @@
     "gulp-uglify": "^1.5.3",
     "gulp-util": "^3.0.7",
     "immutable": "^3.8.1",
+    "jasmine-node": "^1.14.5",
     "jquery": "^2.2.3",
     "jsdom": "^8.0.1",
     "logger": "0.0.1",
