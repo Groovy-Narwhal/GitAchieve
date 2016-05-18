@@ -86,12 +86,15 @@ gulp.task('watch', function() {
   // gulp.watch('scss/*.scss', ['sass']);
 });
 
-// if the NODE_ENV is not 'production', use the un-minified server file
-// if 'production', use the minified version
-gulp.task('run', ['build'], function() {
+gulp.task('env', function() {
   env({
     file: './server/config/.env.json'
   });
+});
+
+// if the NODE_ENV is not 'production', use the un-minified server file
+// if 'production', use the minified version
+gulp.task('run', ['build', 'env'], function() {
   if (envConfig.NODE_ENV !== 'production') {
     nodemon({
       script: './server/server.js'
