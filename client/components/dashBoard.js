@@ -46,9 +46,15 @@ class DashBoard extends Component {
       DailyChart(this.props.dailyCompetitorsData, 'additional chart');
     }
   }
-
-
-
+  renderContributions(contribs) {
+    if (contribs === 0 || contribs === undefined) {
+      return (<span className="font-active">0</span>);
+    } else if (contribs.length < 10) {
+       return (<span className="font-active">{this.props.userContributions}</span>);
+    } else {
+      return (<span className="font-active">Couldn't get your contributions. Try again in a few seconds</span>);
+    }
+  }
   // <button onClick={this.makeMainChart.bind(this)} className="button"> Tab 1: Total </button>
   // <button onClick={this.makeDailyChart.bind(this)} className="button"> Tab 2: Daily </button>
 
@@ -57,7 +63,7 @@ class DashBoard extends Component {
     const { actions } = this.props;
 
     if (this.props.auth.authenticated) {
-
+      console.log('this is this.props.userContributions.length[0]', this.props.userContributions[0])
       // this.makeMainChart();
       return (
         <div className="dashboard">
@@ -66,7 +72,8 @@ class DashBoard extends Component {
               <h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
               <h1 className="font-white">Search your Git opponent</h1>
               <div className="spacer-5px" />
-              <span className="font-white">Your public contributions: </span><span className="font-active">{this.props.userContributions.length[0] < 10 ? this.props.userContributions : 'Couldn\'t get your contributions. Try again in a few seconds' }</span>
+              <span className="font-white">Your public contributions: </span>
+              {this.renderContributions(this.props.userContributions[0])}
             </div>
             <div className="search-container text-centered">
               <div className="block text-centered">
