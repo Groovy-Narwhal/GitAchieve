@@ -4,8 +4,9 @@ module.exports = (data, location) => {
 
   // get the data in the right 'shape'
   data = data[0];
-  var users = [ data[0][0], data[1][0] ];
-  var commits = [ data[0][1], data[1][1] ];
+  var repos = [ data[0][0], data[0][1] ];
+  var users = [ data[1][0], data[2][0] ];
+  var commits = [ data[1][1], data[2][1] ];
 
   // calculate most commits for scaling
   var mostCommitsUser1 = Math.max(...commits[0]);
@@ -132,38 +133,44 @@ module.exports = (data, location) => {
       for (var j = 0; j < users.length; j++) {
         g.append('text')
         .attr('x', (d, i) => xScale(days[i]) + (j * barWidth) + barWidth/2 - 2)
-        .attr('y', (d) => yScale(d[j]) - 11)
+        .attr('y', (d) => yScale(d[j]) + 20)
         .text((d) => d[j] > 0 ? d[j].toString() : '');
       }
 
   // add text labels for winner placeholder for winner that day
-    svg.append('g')
-    .selectAll('text')
-    .data(commits)
-    .enter()
-      .append('text')
-      .attr('x', (d, i) => {
-        return xScale(days[i]) + 15 + (d[0] > d[1] ? 0 : barWidth);
-      })
-      .attr('y', (d) => {
-        return d[0] > d[1] ? yScale(d[0]) -25 : yScale(d[1]) -25;
-      })
-      .text((d) => {
-        return d[0] > 0 || d[1] > 0 ? 'winner' : '';
-      });
+  // if neither day had a 'winner', show nothing (ternary in xlink:href)
+  svg.append('g')
+  .selectAll('image')
+  .data(commits)
+  .enter()
+    .append('image')
+    .attr('xlink:href', (d) => {
+      return d[0] > 0 || d[1] > 0 ? 'static/assets/trophy.png' : '';
+    })
+    .attr('x', (d, i) => {
+      return xScale(days[i]) + (barWidth/2 - 11) + (d[0] > d[1] ? 0 : barWidth);
+    })
+    .attr('y', (d) => {
+      return d[0] > d[1] ? yScale(d[0]) -25 : yScale(d[1]) -25;
+    })
+    .attr('height', 25)
+    .attr('width', 22);
 
   // add a legend associating usernames with colors on the graph
   // TO DO: also show repo-names
-    for (j = 0; j < users.length; j++) {
-      svg.append('rect')
-        .attr('fill', () => colors[j])
-        .attr('x', 70)
-        .attr('y', h - pad + 25 * (j+1))
-        .attr('width', 8)
-        .attr('height', 8);
-      svg.append('text')
-        .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j) + ')')
-        .text(() => users[j]);
-    }
+  for (j = 0; j < users.length; j++) {
+    svg.append('rect')
+      .attr('fill', () => colors[j])
+      .attr('x', 70)
+      .attr('y', h - pad + 25 * (j+1))
+      .attr('width', 8)
+      .attr('height', 8);
+    svg.append('text')
+      .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j) + ')')
+      .text(() => users[j]);
+    svg.append('text')
+      .attr('transform', 'translate(' + (185) + ',' + (h + 25 * j) + ')') //change x value to +50
+      .text(() => repos[j].toString());
+  }
 
 };

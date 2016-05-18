@@ -103,7 +103,7 @@ module.exports = (data) => {
       .enter()
         .append('text')
         .attr('x', (d, i) => xScale(users[i]) + barWidth/2 + 4)
-        .attr('y', (d) => yScale(d) - 11)
+        .attr('y', (d) => yScale(d) + 20)
         .text((d) => d > 0 ? d.toString() : '');
 
     // display winner graphic
@@ -112,10 +112,11 @@ module.exports = (data) => {
 
     svg.append('image')
       .attr('xlink:href', 'static/assets/trophy.png' )
-      .attr('x', () => xScale(users[placeOfWinner_x]) + barWidth/2 + 40)
-      .attr('y', () => yScale(placeOfWinner_y) - 11)
+      .attr('x', () => xScale(users[placeOfWinner_x])-11 + barWidth/2)
+      .attr('y', () => yScale(placeOfWinner_y) - 25)
       .attr('height', '25')
       .attr('width', '22');
+
 
     // add a legend associating usernames with colors on the graph
     // TO DO: also show repo-names
@@ -129,5 +130,8 @@ module.exports = (data) => {
       svg.append('text')
         .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j) + ')')
         .text(() => users[j]);
+      svg.append('text')
+        .attr('transform', 'translate(' + (185) + ',' + (h + 25 * j) + ')') //change x value to +50
+        .text(() => repos[j].toString());
     }
 };
