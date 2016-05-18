@@ -11,6 +11,13 @@
 .button:active {
   background-color: #1fb574;
 }
+.button-inactive {
+  -webkit-appearance:caret;
+  background-color: #989898;
+  border-radius: 5px;
+  padding: 5px;
+  color: $white;
+}
 .signin {
   font-weight: $light;
   font-size: $semi-large-size;

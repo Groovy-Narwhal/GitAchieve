@@ -59,7 +59,6 @@ class DashBoard extends Component {
     if (this.props.auth.authenticated) {
 
       // this.makeMainChart();
-
       return (
         <div className="dashboard">
           <div className="main-search">
@@ -67,7 +66,7 @@ class DashBoard extends Component {
               <h1 onClick={() => browserHistory.push('/')} className="logo">GitAchieve</h1>
               <h1 className="font-white">Search your Git opponent</h1>
               <div className="spacer-5px" />
-              <span className="font-white">Your public contributions: </span><span className="font-active">{this.props.userContributions}</span>
+              <span className="font-white">Your public contributions: </span><span className="font-active">{this.props.userContributions.length[0] < 10 ? this.props.userContributions : 'Couldn\'t get your contributions. Try again in a few seconds' }</span>
             </div>
             <div className="search-container text-centered">
               <div className="block text-centered">

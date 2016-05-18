@@ -5,6 +5,8 @@ $semi-bold: 600;
 $bold: 700;
 
 // Font Sizes
+$lightest-size: 4px;
+$lighter-size: 6px;
 $light-size: 8px;
 $regular-size: 12px;
 $semi-large-size: 16px;
@@ -114,6 +116,22 @@ body {
 }
 .bottom-border {
   border-bottom: 1px solid #fff;
+}
+.anchor-bottom {
+  position:fixed;
+  bottom:0px;
+}
+.pos-relative {
+  position: relative;
+}
+.pos-absolute {
+  position: absolute;
+}
+.bottom {
+  bottom: 0;
+}
+.block {
+  display: block;
 }
 svg {
   font: 10px;

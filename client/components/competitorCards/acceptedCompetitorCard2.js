@@ -103,12 +103,12 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   render() {
-    return <div className="competitor-card">
+    return <div className="competitor-card data-result-container">
       { !!this.state.avatar ? 
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
-            <h2 className="font-white">{this.state.username}</h2>
-            <button onClick={(e) => {this.handleAccept(this.props.c)}} className="button">COMPETE!</button>
+            <h3 className="font-dark-gray">{this.state.username}</h3>
+            <button onClick={(e) => {this.handleAccept(this.props.c)}} className="button block centered">View</button>
           </div> : <div></div> }
     </div>
   }
