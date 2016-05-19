@@ -31,7 +31,7 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 ### Database Schema
 For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/1GPTzF5Bm_S3_2266Ib4b60NtqnQYp3_9fj6ODiP5INs/edit?usp=sharing)
 
-![Schema](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/server/db/sql/schema.png)
+![Schema](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/architecture/schema.png)
 
 ### API Server Endpoints
 |Endpoint|Request Type|Description|JSON Required|Data Returned|
@@ -39,7 +39,8 @@ For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/
 |/api/v1/users|GET|Get list of all users|none|Array of users|
 |/api/v1/users|POST|Add a user|GitHub username, id and email|Added user|
 |/api/v1/users/:id|GET|Get a user by id|none|User|
-|/api/v1/users/:id|PATCH|Update a user with current GitHub info|none|Updated user|
+|/api/v1/users/:id|PATCH|Update a user manually|Object of updated properties|Updated user|
+|/api/v1/users/:id|PATCH|Update a user automatically with current GitHub info|none|Updated user|
 |/api/v1/users/:id|DELETE|Delete a user by id|none|Deleted user|
 |/api/v1/users/:id/repo|GET|Get a single repo by id for a user|Header for `repoid`|Array containing repo|
 |/api/v1/users/:id/repos|GET|Get a user's repos|none|Array of repos|
