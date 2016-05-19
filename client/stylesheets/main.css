@@ -324,6 +324,11 @@ h3 {
   height: auto;
   border-radius: 5px; }
 
+.user-avatar-med2 {
+  width: 72px;
+  height: 72px;
+  border-radius: 2px; }
+
 .avatar-container {
   width: 120px;
   height: 120px;
@@ -490,5 +495,22 @@ h3 {
 
 .event-title {
   display: inline; }
+
+/*I AM ADDING BELOW I ADDED USER-AVATER-MED2*/
+.history-table td {
+  padding: 4px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.comp-result-container {
+  margin: auto;
+  display: inline-block;
+  padding: 10px;
+}
+
+.comp-user, .history-img {
+  vertical-align: top;
+}
 
 /*# sourceMappingURL=main.css.map */

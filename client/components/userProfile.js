@@ -35,7 +35,6 @@ class UserProfile extends Component {
   }
 
   fetchHistory() {
-    console.log('HELLO', this.props.pastCompetitions[0]);
     var competitions = this.props.pastCompetitions[0].map(comp => {
       var competitor, champion;
       if (comp.primary_user_id === this.props.user.id) {
@@ -57,8 +56,6 @@ class UserProfile extends Component {
       };
     });
 
-    // userRouter.route('/:id')
-    //   .get(userController.retrieveUser)
     var result = [];
     var length = competitions.length;
     competitions.sort((a, b) => (new Date(a.competitionEnd) > new Date(b.competitionEnd)))
@@ -67,7 +64,7 @@ class UserProfile extends Component {
         .then((res, index) => {
           var champion = (res.data.id === comp.champion) ? res.data.username : comp.champion;
           // var newHistory = this.state.history.concat({ champion: champion, compei})
-          result.push({champion, competitor: res.data.username});
+          result.push({champion, competitor: res.data.username, competitorAvatar: res.data.avatar_url});
           if (result.length === length) {
             this.setState({history: result});
           }
@@ -81,6 +78,7 @@ class UserProfile extends Component {
     axios.get(`http://127.0.0.1:8000/api/v1/users/${this.props.user.id}/friends`, this.state.options)
       .then(data => this.setState({friends: data.data}))
   }
+
   fetchEvents() {
     if (window.location.pathname.includes(this.props.user.username)) {
       axios.get(`https://api.github.com/users/${this.props.user.username}/events`, this.state.options)
@@ -120,18 +118,23 @@ class UserProfile extends Component {
 
   renderHistory() {
     return (
-      <div>
+      <table className="child history-table">
+        <tbody>
         {this.state.history.map((comp, ind) =>
-          <div key={ind}>
-            <img src={this.props.user.avatar_url} className="user-avatar-med border-1px-white" />
-            <span>{comp.competitor}</span>
-            <p>Winner: {comp.champion}</p>
-            <div className="data-results-container-flex-clear flex-center">
-              <span className="font-white">{this.props.user.username} <span className="font-dark-gray">vs</span> {this.props.user.username}</span>
-            </div>
-          </div>
+          <tr key={ind}>
+            <td><img src={comp.competitorAvatar} className="user-avatar-med border-1px-white" /></td>
+            <td className="font-size-semi-large">{comp.competitor}</td>
+            {comp.champion === this.props.user.username ?
+              <td>You Won!</td> : <td>You Lost</td>
+            }
+            {comp.champion === this.props.user.username ?
+              <td><img src="./../static/assets/trophy-1-2.png" height="50px" width="50px" className="logo"/></td>
+              : <td><img src="./../static/assets/surrender.png" height="50px" width="50px" className="logo"/></td>
+            }
+          </tr>
         )}
-      </div>
+        </tbody>
+      </table>
     )
   }
 
@@ -175,33 +178,22 @@ class UserProfile extends Component {
     }
   }
 
-
-
-  // <div className="data-results-container">
-  //   <div className="data-results-container-clear">
-  //     <h2 className="font-white bottom-border">Compete</h2>
-  //     <div className="data-results-container-clear text-centered">
-  //       <img src={this.props.user.avatar_url} className="user-avatar-1 border-1px-white" />
-  //       <img src="/static/assets/sword-vs-1-1.png" className="vs-swords" />
-  //       <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1 border-1px-white" />
-  //     </div>
-      // <div className="data-results-container-flex-clear flex-center">
-      //   <span className="font-white">{this.props.user.username} <span className="font-dark-gray">vs</span> {this.props.chosenSearchResult.login}</span>
-      // </div>
-
-
   render() {
+
     return (
       <div className="data-results-container">
         <div className="data-results-container-clear">
-          <h2 className="font-white bottom-border">{this.props.user.username}</h2>
-          <div className="spacer-5px" />
-          <img src={this.props.user.avatar_url} className="user-avatar-1 border-1px-white" />
-          <img src="/static/assets/sword-vs-1-1.png" className="vs-swords" />
-        </div>
-        <div className="data-result-container">
-          <h2>Competition History</h2>
-          {this.renderHistory()}
+          <h2 className="font-white bottom-border">Competition History</h2>
+          <div className="data-result-container-flex full-width add">
+            <div className="comp-result-container history-img">
+              <img src={this.props.user.avatar_url} className="user-avatar-med2 border-1px-white" />
+              <h2>{this.props.user.username}</h2>
+            </div>
+            <img src="/static/assets/sword-vs-1-1.png" className="vs-swords history-img" />
+            <div className="comp-result-container">
+              {this.renderHistory()}
+            </div>
+          </div>
         </div>
         <div className="data-result-container">
           <h2>Friends</h2>
