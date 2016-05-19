@@ -102,9 +102,9 @@ class Countdown extends Component {
   render() {
     return (
       <div className="countdown-container">
-        <h1>Competition Countdown</h1>
+        <h1 className="font-white">Competition Countdown</h1>
         <div className="spacer-10px"/>
-        <p>{this.state.days} days, {this.state.hours} hours, {this.state.mins} minutes, {this.state.secs} seconds</p>
+        <p className="font-white">{this.state.days} days, {this.state.hours} hours, {this.state.mins} minutes, {this.state.secs} seconds</p>
       </div>
     )
   }
