@@ -6,18 +6,17 @@ const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
-// PATCH at '/api/v1/users/orgs/:id/pullrequests'
-
+// PATCH at '/api/v1/users/orgs/:id/pullrequests' to update a user's pull requests by user id
 exports.retrievePullRequests = (req, res) => {
   const dbTimestamp = pgp.as.date(new Date());
   const username = req.body.profile.username;
   const queryId = req.params.id;
-  
+
+  // get the user from the database
   db.one('SELECT * FROM $1~ ' +
     'WHERE $2~ = $3',
     ['users', 'id', queryId])
     .then(user => {
-      console.log('user', user);
       // find all orgs this user is part of
       db.any('SELECT o.id, o.orgname ' + 
         'FROM users_orgs uo ' +
@@ -46,8 +45,9 @@ exports.retrievePullRequests = (req, res) => {
             for (var i = 0; i < orgs.length; i++) {
               orgRepoCombos.push([orgs[i], repos[i]]);
             }
+            // if there are no org / repo combinatinos, send back empty response
             if (orgRepoCombos.length === 0) {
-              res.send('No repos found for this user\'s orgs');
+              res.send([]);
             } else {
               // orgRepoCombos is an array of combos
               // the first element in each combo is the org, the second element is an array of repos
@@ -57,15 +57,37 @@ exports.retrievePullRequests = (req, res) => {
                   if (curr[0].id === curr[1][i].owner_id) {
                     acc.push({repoName: curr[1][i].name, owner: curr[0].orgname});  
                   } else {
+                  // if not, the repo owner is the username
                     acc.push({repoName: curr[1][i].name, owner: user.username});
                   }
                 }
                 return acc;
-                // if not, the repo owner is the username
               }, []);
+              
+              // set up final result and counters 
+              var repoOwnersCount = 0;
+              var totalRepoOwners = repoOwners.length;
+              var updatedPullRequests = []; 
+              // call to send final response
+              const sendUpdatedPullRequests = function() {
+                db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
+                  'VALUES ($6, $7, $8) ' +
+                  'ON CONFLICT ($3~) ' +
+                  'DO UPDATE SET ($4~) = ($7) ' +
+                  'WHERE $2~.$3~ = $6 ' +
+                  'RETURNING *',
+                  ['users', 'u', 'id', 'pull_requests_count', 'created_ga',
+                  queryId, updatedPullRequests.length, dbTimestamp])
+                  .then(user => {
+                    res.send(updatedPullRequests);
+                  })
+                  .catch(error => {
+                    console.error('Error updating pull_requests_count: ', error);
+                    res.status(500).send;
+                  });
+              };
+              
               // get the pull requests from GitHub for each repo (using the owner name)
-              var repoTotal = repoOwners.length;
-              var repoCount = 0;
               repoOwners.forEach(repo => {
                 var options = {
                   uri: `https://api.github.com/repos/${repo.owner}/${repo.repoName}/pulls?state=all`,
@@ -80,9 +102,12 @@ exports.retrievePullRequests = (req, res) => {
                 };
                 rp(options)
                   .then(pullRequests => {
-                  // save all pull requests to DB that have the user as the head : user
+                  // save all pull requests to DB that have the user id as the head.user.id
                     if (pullRequests.length === 0) {
-                      repoCount++;
+                      repoOwnersCount++;
+                      if (repoOwnersCount === totalRepoOwners) {
+                        sendUpdatedPullRequests();
+                      }
                     } else {
                       var filteredPullRequests = [];
                       pullRequests.forEach((pr) => {
@@ -90,20 +115,38 @@ exports.retrievePullRequests = (req, res) => {
                           filteredPullRequests.push(pr);
                         }
                       });
-                      
-                      if (filteredPullRequests.length > 0) {
-                        filteredPullRequests.forEach({
-                          // START HERE: with the filtered pull requests, save each one to db
-                          // once all have been added, increment repoCount to make sure res is sent
-                          // at the end
+                      db.tx(t => {
+                        var queries = filteredPullRequests.map(pr => {
+                          return t.any('INSERT INTO $1~ as $2~ ($3~, $4~, $5~, $6~, $7~, $8~, ' +
+                            '$9~, $10~, $11~, $12~, $13~, $14~) ' +
+                            'VALUES ($15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26) ' +
+                            'ON CONFLICT ($3~) ' +
+                            'DO UPDATE SET ($4~, $5~, $6~, $7~, $8~, ' +
+                            '$9~, $10~, $11~, $12~, $13~, $14~) = ' +
+                            '($16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26) ' +
+                            'WHERE $2~.$3~ = $15 ' +
+                            'RETURNING *',
+                            ['pull_requests', 'pr', 'id', 'updated_ga', 'user_id', 'state', 
+                            'diff_url', 'created_at', 'merged_at', 'closed_at', 'milestone', 
+                            'base_ref', 'base_repo_watchers_count', 'base_repo_stargazers_count',
+                            pr.id, dbTimestamp, pr.head.user.id, pr.state,
+                            pr.diff_url, pr.created_at, pr.merged_at, pr.closed_at, pr.milestone, 
+                            pr.base.ref, pr.base.repo.watchers_count, pr.base.repo.stargazers_count]);
                         });
-                      }
-                    }
-                    
-                    if (repoCount === repoTotal) {
-                      res.send('success');
-                    }
-                        
+                        return t.batch(queries);
+                      })
+                      .then(prs => {
+                        updatedPullRequests.push(prs);
+                        repoOwnersCount++;
+                        if (repoOwnersCount === totalRepoOwners) {
+                          sendUpdatedPullRequests();
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error updating pull requests: ', error);
+                        res.status(500).send;
+                      });
+                    } // end of else block
                   })  
                   .catch(error => {
                     console.error('Error getting pull requests from GitHub: ', error);
@@ -124,212 +167,6 @@ exports.retrievePullRequests = (req, res) => {
     });
 };
 
-
-exports.retrievePullRequests2 = (req, res) => {
-  const dbTimestamp = pgp.as.date(new Date());
-  const username = req.body.profile.username;
-  const id = req.params.id;
-  var orgCount = 0;
-  var totalOrgs = 0;
-  // helper functions
-  const addPR = (prs, totalRepos, repoCount) => {
-    
-    var pullRequestsTotal = prs.length;
-    var pullRequestsCount = 0;
-    
-    var resCreator = function() {
-      pullRequestsCount++;
-      if (pullRequestsCount === pullRequestsTotal) {
-        repoCount++;
-      }
-      if (repoCount === totalRepos) {
-        orgCount++;
-        console.log('pullRequestsCount', pullRequestsCount);
-        console.log('pullRequestsTotal', pullRequestsTotal);
-        console.log('repo count: ', repoCount);
-        console.log('total repos: ', totalRepos);
-        console.log('orgs count: ', orgCount);
-        console.log('total orgs: ', totalOrgs);
-        console.log('---------');
-      }
-      if (orgCount === totalOrgs) {
-        res.send('success');
-      }
-    };
-    
-    if (pullRequestsTotal === 0 && totalRepos === 0) {
-      orgCount++;
-    } else if (pullRequestsTotal === 0) {
-      repoCount++;
-      if (repoCount === totalRepos) {
-        orgCount++;
-      }
-      if (orgCount === totalOrgs) {
-        res.send('success');
-      }
-    } else {
-      prs.forEach((pr, index) => {
-        db.any('SELECT * FROM users WHERE users.id = ($1)', [pr.user.id])
-          .then((users) => {
-            db.any('SELECT COUNT(*) FROM users WHERE users.id = ($1)', [pr.user.id])
-              .then((data) => {
-                if (data[0].count === '0') {
-                  resCreator();
-                } else if (data[0].count === '1') {
-                  db.any('INSERT INTO pull_requests AS pr (id, created_at, updated_ga, user_id, ' +
-                    'state,diff_url, closed_at, milestone, base_ref, base_repo_watchers_count, ' + 
-                    'base_repo_stargazers_count) ' +
-                    'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) ' +
-                    'ON CONFLICT (id) ' +
-                    'DO UPDATE SET (updated_ga, user_id, state, diff_url, closed_at, milestone, ' +
-                    'base_ref, base_repo_watchers_count, base_repo_stargazers_count) = ' +
-                    '($3, $4, $5, $6, $7, $8, $9, $10, $11) ' +
-                    'WHERE pr.id = ($1) ' +
-                    'RETURNING *',
-                    [pr.id, dbTimestamp, dbTimestamp, pr.user.id, pr.state, pr.diff_url, pr.merged_at,
-                    pr.milestone, pr.base.ref, pr.base.repo.watchers_count,
-                    pr.base.repo.stargazers_count])
-                    .then(pullRequest => {
-                      resCreator();
-                    })
-                    .catch(error => {
-                      console.error('Error in inserting pull requests: ', error);
-                    });
-                } 
-              });
-          })
-          .catch(error => {
-            console.error('ERROR:', error);
-          });
-      }); // end of prs.forEach
-    }
-  };
-
-
-  const gotAllRepos = (data, owner, addPRCB) => {
-    var totalRepos = data.length;
-    var repoCount = 0;
-    
-    if (totalRepos === 0) {
-      addPRCB([], totalRepos, repoCount);
-    } else {
-      data.forEach(repo => {
-        var repoOptions = {
-          url: `https://api.github.com/repos/${owner}/${repo.name}/pulls?state=all`,
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': username,
-            'Authorization': `token ${req.body.token}`
-          }
-        };
-        request(repoOptions, (error, response, body) => {
-          if (error) {
-            console.error('ERROR:', error);
-          } else {
-            var data = JSON.parse(body);
-            addPRCB(data, totalRepos, repoCount);
-          }
-        });
-      });
-    }
-  };
-
-
-  const requestRepos = (orgname, gotAllReposCB) => {
-    var options = {
-      url: `https://api.github.com/orgs/${orgname}/repos`,
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': username,
-        'Authorization': `token ${req.body.token}`
-      }
-    };
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error('error2: ', error);
-      } else {
-        var data = JSON.parse(body);
-        // console.log('data.length', data.length);
-        gotAllReposCB(data, orgname, addPR);
-      }
-    });
-  };
-
-
-  const addMembers = (memberData, orgname, requestReposCB) => {
-    db.tx(task => {
-      var queries = [];
-      if (memberData.length > 0) {
-        queries = memberData.map(member => {
-          return task.any('INSERT INTO users AS u (id, username, email, created_ga, updated_ga, signed_up, avatar_url, followers, following) ' +
-          'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ' +
-          'ON CONFLICT (id) ' +
-          'DO UPDATE SET (updated_ga) = ($4) ' +
-          'WHERE u.id = $1',
-          [member.id, member.login, null, dbTimestamp, null, false, member.avatar_url, null, null]);
-        });
-      }
-      return task.batch(queries);
-    })
-    .then(() => {
-      requestReposCB(orgname, gotAllRepos);
-    })
-    .catch(error => {
-      console.log('did not successfully add users');
-      console.error('ERROR:', error);
-    });
-  };
-
-
-  const requestMembers = (orgData, addMembersCB) => {
-    orgData.forEach(org => {
-      var membersOptions = {
-        url: `https://api.github.com/orgs/${org.orgname}/members`,
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': username,
-          'Authorization': `token ${req.body.token}`
-        }
-      };
-      request(membersOptions, (error, response, body) => {
-        if (error) {
-          console.error('ERROR:', error);
-        } else {
-          const memberData = JSON.parse(body);
-          // console.log('orgname: ', org.orgname);
-          // console.log('memberData.length: ', memberData.length);
-          addMembersCB(memberData, org.orgname, requestRepos);
-        }
-      });
-    });
-  };
-
-
-  const selectOrg = (requestMembersCB, statusCB) => {
-    console.log('in selectOrg');
-    db.any('SELECT * FROM orgs AS o INNER JOIN users_orgs AS uo ON ' +
-    '(o.id=uo.org_id) INNER JOIN users AS u ON (uo.user_id=u.id) WHERE u.username=($1)', [username])
-    .then(data => {
-      // set the totalOrgs counter, to be used in addPRCB to send response when all orgs are processed
-      totalOrgs = data.length;
-      if (totalOrgs === 0) {
-        res.send('No orgs found');
-      } else {
-        requestMembersCB(data, addMembers);
-      }
-    })
-    .catch(error => {
-      console.error('ERROR:', error);
-      res.status(500).send('Error querying pull request table');
-    });
-  };
-
-  selectOrg(requestMembers);
-
-};
 
 // /api/v1/users/orgs/:id/pullrequests
 exports.retrieveAllPRSForUser = function(req, res) {
