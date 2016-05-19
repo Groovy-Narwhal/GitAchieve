@@ -22,68 +22,33 @@ var sendEmail = (competitorEmail) => {
   db.any(
     'SELECT uu.last_email_invite ' +
     'FROM users_users uu ' +
-    'WHERE uu.primary_user_id = $1 OR uu.secondary_user_id = $1',
+    'WHERE uu.secondary_user_id = $1',
     competitor_id
   )
   .then(data => {
-    console.log('users_users response:', data); // may need [0].last... or just .last_email_invite
-
-  });
-
-  // var email = new sendgrid.Email({
-  //   to: competitorEmail,
-  //   from: 'gitachieve@gmail.com',
-  //   subject: `${user} wants to compete with you on GitAchieve`,
-  //   html: `<h2>You\'ve received a challenge on GitAchieve!</h2><p>Github user ${user} wants to compete with you. Select one repo and make more commits within the time limit to win! </p><p><a>Create an account</a> at gitachieve.com in seconds with Github login.</p>`
-  // });
-
-  // sendgrid.send(email, function (err, json) {
-  //   if (err) {
-  //     console.error('sendGrid error:', err);
-  //   }
-  //   console.log('sendGrid sent an email (in invitationSender.js) with:', json);
-  // });
-}
-
-// updates the database (if getEmail is called) with competitor's email
-var patchDatabase = (competitor, email) => {
-  var options = {
-    url: `${CALLBACKHOST}/api/v1/users/${competitor_id}`,
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'username': competitor
-    }
-  };
-  return request(options, (error, response, body) => {
-    if (error) {
-      console.error('Error in invitationSender.js:', error);
-    } else {
-      console.log('Success in invitationSender.js:');
-      sendEmail(email);
-    }
-  });
-};
-
-// gets competitor's email if it's not in the db
-var getEmail = (competitor, user) => {
-  var options = {
-    url: `https://api.github.com/users/${competitor}`,
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': user
-    }
-  };
-  return request(options, (error, response, body) => {
-    if (error) {
-      console.error('error fetching competitor email from Github, in invitationSender.js: ', error);
-    } else {
-      competitorEmail = JSON.parse(body).email;
-      // and update the database if email exists
-      if (!!competitorEmail) {
-        patchDatabase(user, competitorEmail);
-      }
+    var emailLastSent = data[0].last_email_invite
+    if (emailLastSent === null) {
+      var now = new Date();
+      db.oneOrNone('UPDATE users_users ' +
+      'SET last_email_invite=($1) ' +
+      'WHERE users_users.secondary_user_id=($2) ' +
+      'RETURNING *',
+      [now, competitor_id]
+      )
+      .then(data => {
+        var email = new sendgrid.Email({
+          to: competitorEmail,
+          from: 'gitachieve@gmail.com',
+          subject: `${user} wants to compete with you on GitAchieve`,
+          html: `<h2>You\'ve received a challenge on GitAchieve!</h2><p>Github user ${user} wants to compete with you. Select one repo and make more commits within the time limit to win! </p><p><a>Create an account</a> at gitachieve.com in seconds with Github login.</p>`
+        });
+        sendgrid.send(email, function (err, json) {
+          if (err) {
+            console.error('sendGrid error:', err);
+          }
+          console.log('sendGrid sent an email (in invitationSender.js) with:', json);
+        });
+      });
     }
   });
 };
@@ -103,12 +68,7 @@ module.exports = (app) => {
     )
     .then(data => {
       competitorEmail = data.email;
-      // if competitor's email is not in the database, get it
-      if (!competitorEmail) {
-        getEmail(competitor, user);
-      }
-      // otherwise send email immediately
-      else {
+      if (competitorEmail) {
         sendEmail(competitorEmail);
       }
     })
