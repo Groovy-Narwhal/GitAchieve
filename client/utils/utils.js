@@ -21,6 +21,6 @@ module.exports = {
     };
     return fetch(configSettings.CALLBACKHOST + `/gh-fetch?username=${user}&id=${id}`)
       .then((res) => res.text())
-      .then((data) => JSON.parse(data));
+      // .then((data) => JSON.parse(data));
   }
 };
