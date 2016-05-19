@@ -38,8 +38,26 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       // requests, stats, and commits
       // we are sending true as the last argument to run the requests sequentially - if any of
       // them fail, the rest will fail
-      if (massiveFetch(id, username, accessToken, profile, true)) {
-        console.log('MF: All user info successfully updated from GitHub');
+      var body = massiveFetch(id, username, accessToken, profile, true);
+      if (body !== false) {
+        // var contributions_past_year = body.slice(body.indexOf('<div class="boxed-group flush">'));
+        // var longest_streak = body.slice(body.indexOf('<span class="text-muted">Longest streak</span>') + 90, body.indexOf(' days</span>'));
+        // var current_streak = body.slice(body.indexOf('Current streak</span>') + 65, body.indexOf('Current streak</span>') + 70);
+        // var real_current_streak = '';
+        // for (var i = 0; i < current_streak.length; i++) {
+        //   if (parseInt(current_streak[i])) {
+        //     real_current_streak += current_streak[i];
+        //   } else {
+        //     break;
+        //   }
+        // }
+        // var obj = {
+        //   contributions_past_year: contributions_past_year,
+        //   longest_streak: longest_streak,
+        //   current_streak: real_current_streak
+        // };
+        // console.log('LONGEST STREAK', obj.longest_streak);
+        // console.log('MF: All user info successfully updated from GitHub');
       } else {
         console.error('MF: errors in updating user info from GitHub');
       }     
