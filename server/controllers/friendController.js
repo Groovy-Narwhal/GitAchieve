@@ -346,7 +346,6 @@ exports.checkPastCompetitions = function(req, res) {
                 .then(res => {
                   const data = JSON.parse(res);
                   const secondaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-                  const winner;
                   if (primaryCommitCount > secondaryCommitCount) {
                    return primary_user_id;
                   } else if (primaryCommitCount < secondaryCommitCount) {
