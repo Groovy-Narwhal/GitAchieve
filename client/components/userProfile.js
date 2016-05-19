@@ -59,12 +59,21 @@ class UserProfile extends Component {
 
     // userRouter.route('/:id')
     //   .get(userController.retrieveUser)
-    competitions.forEach((comp) => {
-      console.log('COMPCOMPETITOR', comp.competitior)
+    var result = [];
+    var length = competitions.length;
+    competitions.sort((a, b) => (new Date(a.competitionEnd) > new Date(b.competitionEnd)))
+    .forEach((comp) => {
       axios.get(`${ROOT_URL}/api/v1/users/${comp.competitor}`)
-        .then(res => console.log('RES', res));
-    })
-    // competitions.sort((a, b) => (new Date(a.competitionEnd) > new Date(b.competitionEnd)));
+        .then((res, index) => {
+          var champion = (res.data.id === comp.champion) ? res.data.username : comp.champion;
+          // var newHistory = this.state.history.concat({ champion: champion, compei})
+          result.push({champion, competitor: res.data.username});
+          if (result.length === length) {
+            this.setState({history: result});
+          }
+        });
+    });
+
     
   }
 
@@ -110,9 +119,19 @@ class UserProfile extends Component {
   }
 
   renderHistory() {
-    console.log('THE PAST', this.props.pastCompetitions);
     return (
-      <div>Hello</div>
+      <div>
+        {this.state.history.map((comp, ind) =>
+          <div key={ind}>
+            <img src={this.props.user.avatar_url} className="user-avatar-med border-1px-white" />
+            <span>{comp.competitor}</span>
+            <p>Winner: {comp.champion}</p>
+            <div className="data-results-container-flex-clear flex-center">
+              <span className="font-white">{this.props.user.username} <span className="font-dark-gray">vs</span> {this.props.user.username}</span>
+            </div>
+          </div>
+        )}
+      </div>
     )
   }
 
@@ -155,12 +174,30 @@ class UserProfile extends Component {
       ))
     }
   }
+
+
+
+  // <div className="data-results-container">
+  //   <div className="data-results-container-clear">
+  //     <h2 className="font-white bottom-border">Compete</h2>
+  //     <div className="data-results-container-clear text-centered">
+  //       <img src={this.props.user.avatar_url} className="user-avatar-1 border-1px-white" />
+  //       <img src="/static/assets/sword-vs-1-1.png" className="vs-swords" />
+  //       <img src={this.props.chosenSearchResult.avatar_url} className="user-avatar-1 border-1px-white" />
+  //     </div>
+      // <div className="data-results-container-flex-clear flex-center">
+      //   <span className="font-white">{this.props.user.username} <span className="font-dark-gray">vs</span> {this.props.chosenSearchResult.login}</span>
+      // </div>
+
+
   render() {
     return (
       <div className="data-results-container">
-        <div className="data-result-container">
-          <img src={this.props.user.avatar_url} className="user-avatar-1" />
-          <h2 className="profile-username">{this.props.user.username}</h2>
+        <div className="data-results-container-clear">
+          <h2 className="font-white bottom-border">{this.props.user.username}</h2>
+          <div className="spacer-5px" />
+          <img src={this.props.user.avatar_url} className="user-avatar-1 border-1px-white" />
+          <img src="/static/assets/sword-vs-1-1.png" className="vs-swords" />
         </div>
         <div className="data-result-container">
           <h2>Competition History</h2>
