@@ -60,12 +60,12 @@ exports.retrieveCompetition = function(req, res) {
 
       // sort the history by date and return
       var sortedHistory = unsortedHistory.sort((a, b) => a.day - b.day);
-      console.log('SORTED HISTORY', sortedHistory)
+      console.log('SORTED HISTORY', sortedHistory);
       res.send(sortedHistory);
 
     })
     .catch(error => {
-      console.error('Error querying commits CSC: ', error);
-      res.status(500).send;
+      console.error('Error querying commits: ', error);
+      res.status(500).send('Error querying commits');
     });
 };

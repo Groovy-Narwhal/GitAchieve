@@ -130,7 +130,7 @@ exports.updateRepos = function(req, res) {
           })
           .catch(error => {
             console.error('Error updating repos_count: ', error);
-            res.status(500).send;
+            res.status(500).send('Error updating repos_count');
           });
       })
       .catch((error) => {

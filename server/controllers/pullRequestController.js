@@ -83,7 +83,7 @@ exports.retrievePullRequests = (req, res) => {
                   })
                   .catch(error => {
                     console.error('Error updating pull_requests_count: ', error);
-                    res.status(500).send;
+                    res.status(500).send('Error updating pull_requests_count');
                   });
               };
               
@@ -144,26 +144,30 @@ exports.retrievePullRequests = (req, res) => {
                       })
                       .catch(error => {
                         console.error('Error updating pull requests: ', error);
-                        res.status(500).send;
+                        res.status(500).send('Error updating pull requests');
                       });
                     } // end of else block
                   })  
                   .catch(error => {
                     console.error('Error getting pull requests from GitHub: ', error);
+                    res.status(500).send('Error getting pull requests from GitHub');
                   });
               });  
             } 
           })
           .catch(error => {
             console.error('Error in selecting repos: ', error);
+            res.status(500).send('Error in selecting repos');
           });
         })
         .catch(error => {
           console.error('Error in selecting orgs: ', error);
+          res.status(500).send('Error in selecting orgs');
         });
     })
     .catch(error => {
       console.error('Error in selecting user: ', error);
+      res.status(500).send('Error in selecting user');
     });
 };
 
