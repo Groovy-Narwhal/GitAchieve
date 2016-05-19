@@ -104,7 +104,6 @@ const getContribs = (username, id, dispatch) => {
         type: types.GET_USER_CONTRIBS,
         contribs
       })
-    // this.props.actions.getUserContribs(numContribs);
   }
   getContribs.call(this);
 }
@@ -170,6 +169,7 @@ export const signinUser = () => {
         return obj;
       })
       .then((obj) => {
+        // get contribs from database 
         getContribs(obj.username, obj.id, dispatch);
         return obj;
       })

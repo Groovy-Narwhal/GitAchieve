@@ -29,9 +29,6 @@ class DashBoard extends Component {
     }
   }
   componentDidUpdate() {
-    // if (this.props.auth.authenticated && this.props.userContributions[0].contributions_past_year === 0) {
-      // this.getUserContribs();
-    // }
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
     }
@@ -39,14 +36,7 @@ class DashBoard extends Component {
       DailyChart(this.props.dailyCompetitorsData);
     }
   }
-  getUserContribs() {
-    // GET USER CONTRIBUTIONS FROM DATABASE INSTEAD
-    // async function getContribs() {
-    //   var numContribs = await utils.fetchLastYearGHContribs(this.props.user.username, this.props.user.id);
-    //   this.props.actions.getUserContribs(numContribs);
-    // }
-    // getContribs.call(this);
-  }
+
   makeMainChart() {
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
