@@ -98,10 +98,14 @@ class DashBoard extends Component {
             <div className="data-results-container full-width">
 
               <div id="commit-charts">
-                { this.props.competitorsData.length > 0 ? <Countdown /> : <div></div> }
+                <div className="text-centered">
+                  { this.props.competitorsData.length > 0 ? <Countdown /> : <div></div> }
+                </div>
+                <h3 className="font-white">Overall contributions</h3>
                 <svg height={360}>
                 </svg>
                 <div id="second-chart">
+                  <h3 className="font-white">Daily contributions</h3>
                   <svg height={360}>
                   </svg>
                 </div>

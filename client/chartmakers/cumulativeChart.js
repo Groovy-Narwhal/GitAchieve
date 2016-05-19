@@ -58,7 +58,7 @@ module.exports = (data) => {
     .attr("transform", "translate(0, " + (h-2*pad) + ")")
     .style({
       fill: 'none',
-      stroke: '#333'
+      stroke: '#777'
     })
     .call(xAxis);
   svg.append("g")
@@ -66,7 +66,7 @@ module.exports = (data) => {
     .attr("transform", "translate(" + (pad+10) + ", 0)")
     .style({
       fill: 'none',
-      stroke: '#333'
+      stroke: '#777'
     })
     .call(yAxis);
 
@@ -104,16 +104,20 @@ module.exports = (data) => {
       .data(commits)
       .enter()
         .append('text')
-        .attr('x', (d, i) => xScale(users[i]) + barWidth/2 + barWidth/6)
-        .attr('y', (d) => yScale(d) - 11)
-        .text((d) => d > 0 ? d.toString() : '');
+        .attr('x', (d, i) => xScale(users[i]) + barWidth/2)
+        .attr('y', (d) => yScale(d) + 16)
+        .attr('text-anchor', 'middle')
+        .text((d) => d > 0 ? d.toString() : '')
+        .attr('font-weight', '100')
+        .attr('font-size', '14px')
+        .attr('fill', 'white');
 
     // display winner graphic
     var placeOfWinner_x = commits[0]===mostCommits ? 0 : 1;
     var placeOfWinner_y = commits[placeOfWinner_x];
 
     svg.append('image')
-      .attr('xlink:href', 'static/assets/trophy.png' )
+      .attr('xlink:href', 'static/assets/trophy-1-2.png' )
       .attr('x', () => xScale(users[placeOfWinner_x])-11 + barWidth/2)
       .attr('y', () => yScale(placeOfWinner_y) - 25)
       .attr('height', '25')
@@ -134,7 +138,8 @@ module.exports = (data) => {
 
       svg.append('text')
         .attr('transform', 'translate(' + (85) + ',' + (h + 25 * j + 3) + ')')
-        .text(() => users[j]);
+        .text(() => users[j])
+        .attr('color', '#777');
 
 
       repoLinks
