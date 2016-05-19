@@ -83,7 +83,7 @@ class Countdown extends Component {
     var today = new Date();
     var msDiff = new Date(this.props.competitorsData[0][3]) - today;
     var days = parseInt(msDiff/(24*3600*1000));
-    var hours =parseInt(msDiff/(3600*1000)-(days*24));
+    var hours = parseInt(msDiff/(3600*1000)-(days*24));
     var mins = parseInt(msDiff/(60*1000)-(days*24*60)-(hours*60));
     var secs = parseInt(msDiff/(1000)-(mins*60)-(days*24*60*60)-(hours*60*60));
     this.setState({
