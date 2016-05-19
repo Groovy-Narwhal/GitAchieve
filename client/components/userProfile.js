@@ -6,10 +6,13 @@ import actions from './../actions/ActionCreators';
 import axios from 'axios';
 import moment from 'moment';
 
+const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
+
 class UserProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      history: [],
       friends: [],
       userEvents: [],
       options: {
@@ -28,7 +31,43 @@ class UserProfile extends Component {
   componentWillMount() {
     this.fetchFriends();
     this.fetchEvents.call(this)
+    this.fetchHistory()
   }
+
+  fetchHistory() {
+    console.log('HELLO', this.props.pastCompetitions[0]);
+    var competitions = this.props.pastCompetitions[0].map(comp => {
+      var competitor, champion;
+      if (comp.primary_user_id === this.props.user.id) {
+        competitor = comp.secondary_user_id;
+      } else {
+        competitor = comp.primary_user_id;
+      }
+      if (comp.winner === 1) {
+        champion = 'Tie';
+      } else if (comp.winner === this.props.user.id) {
+        champion = this.props.user.username;
+      } else {
+        champion = comp.secondary_user_id;
+      }
+      return {
+        competitionEnd: comp.competition_end,
+        competitor,
+        champion
+      };
+    });
+
+    // userRouter.route('/:id')
+    //   .get(userController.retrieveUser)
+    competitions.forEach((comp) => {
+      console.log('COMPCOMPETITOR', comp.competitior)
+      axios.get(`${ROOT_URL}/api/v1/users/${comp.competitor}`)
+        .then(res => console.log('RES', res));
+    })
+    // competitions.sort((a, b) => (new Date(a.competitionEnd) > new Date(b.competitionEnd)));
+    
+  }
+
   fetchFriends() {
     axios.get(`http://127.0.0.1:8000/api/v1/users/${this.props.user.id}/friends`, this.state.options)
       .then(data => this.setState({friends: data.data}))
@@ -44,6 +83,7 @@ class UserProfile extends Component {
         .then(response => this.setState({userEvents: response.data}))
     }
   }
+
   eventTypeFilter(event) {
     switch (event.type) {
       case 'PushEvent':
@@ -68,6 +108,14 @@ class UserProfile extends Component {
         return (<div></div>);
     }
   }
+
+  renderHistory() {
+    console.log('THE PAST', this.props.pastCompetitions);
+    return (
+      <div>Hello</div>
+    )
+  }
+
   renderEvents() {
     if (this.props.searchUserEvents.length > 0) {
       return this.props.searchUserEvents.map((event, index) => {
@@ -98,14 +146,14 @@ class UserProfile extends Component {
     }
   }
   renderFriends() {
-  if (this.state.friends.length !== 0) {
-    return this.state.friends.map(friend => (
-      <div key={friend.id} className="data-result-container">
-        <img src={friend.avatar_url} className="user-avatar-med" />
-        <p><Link to={`/${friend.username}/profile`}>{friend.username}</Link></p>
-      </div>
-    ))
-  }
+    if (this.state.friends.length !== 0) {
+      return this.state.friends.map(friend => (
+        <div key={friend.id} className="data-result-container">
+          <img src={friend.avatar_url} className="user-avatar-med" />
+          <p><Link to={`/${friend.username}/profile`}>{friend.username}</Link></p>
+        </div>
+      ))
+    }
   }
   render() {
     return (
@@ -113,6 +161,10 @@ class UserProfile extends Component {
         <div className="data-result-container">
           <img src={this.props.user.avatar_url} className="user-avatar-1" />
           <h2 className="profile-username">{this.props.user.username}</h2>
+        </div>
+        <div className="data-result-container">
+          <h2>Competition History</h2>
+          {this.renderHistory()}
         </div>
         <div className="data-result-container">
           <h2>Friends</h2>
