@@ -34,7 +34,8 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 |/api/v1/users|GET|Get list of all users|none|Array of users|
 |/api/v1/users|POST|Add a user|GitHub username, id and email|Added user|
 |/api/v1/users/:id|GET|Get a user by id|none|User|
-|/api/v1/users/:id|PATCH|Update a user with current GitHub info|none|Updated user|
+|/api/v1/users/:id|PATCH|Update a user manually|Object of updated properties|Updated user|
+|/api/v1/users/:id|PATCH|Update a user automatically with current GitHub info|none|Updated user|
 |/api/v1/users/:id|DELETE|Delete a user by id|none|Deleted user|
 |/api/v1/users/:id/repo|GET|Get a single repo by id for a user|Header for `repoid`|Array containing repo|
 |/api/v1/users/:id/repos|GET|Get a user's repos|none|Array of repos|
