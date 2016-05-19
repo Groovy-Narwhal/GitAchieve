@@ -35,7 +35,7 @@ app.get('*', function (req, res) {
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
 server.listen(port);
-console.log('Server listening in on ', port);
+console.log('GitAchieve server listening on port ' + port + ' in ' + process.env.NODE_ENV + ' mode');
 
 // socket.io
 var io = require('socket.io')(server);
