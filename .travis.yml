@@ -22,7 +22,10 @@ before_script:
   - npm install gulp-uglify
   - npm install gulp-util
   - npm install webpack-stream
-  - echo '{"NODE_ENV":"production"}'> ./server/config/.env.json
+  - echo '{"NODE_ENV":"production","PORT": 8000}' > ./server/config/.env.json
+  - echo 'exports.PORT = process.env.PORT || 8000; exports.CALLBACKHOST = (exports.PORT === 8000) ? "http://127.0.0.1:8000" : "http://gitachieve.com"; exports.HOST = (exports.PORT === 8000) ? "127.0.0.1" : "gitachieve.com";' > ./server/config/config-settings.js
+  - echo ' ' > ./server/config/github.config.js
+  - echo ' ' > ./server/config/sendGridKey.js
   - npm run serve
   
 script: 'gulp test'
