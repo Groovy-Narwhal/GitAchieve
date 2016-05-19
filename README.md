@@ -1,4 +1,4 @@
-# GitAchieve [![Build Status](https://travis-ci.org/Groovy-Narwhal/GitAchieve.svg?branch=master)](https://travis-ci.org/Groovy-Narwhal/GitAchieve)(https://david-dm.org/Groovy-Narwhal/GitAchieve.svg)[![Dependency Status](https://david-dm.org/Groovy-Narwhal/GitAchieve.svg?style=flat)](https://david-dm.org/Groovy-Narwhal/GitAchieve)
+# GitAchieve [![Build Status](https://travis-ci.org/Groovy-Narwhal/GitAchieve.svg?branch=master)](https://travis-ci.org/Groovy-Narwhal/GitAchieve) [![Dependency Status](https://david-dm.org/Groovy-Narwhal/GitAchieve.svg?style=flat)](https://david-dm.org/Groovy-Narwhal/GitAchieve)
 A webapp to promote positive Git behavior through friendly competition.
 See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 
@@ -71,11 +71,11 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 |/achievements/:id|Users achievement profile|?|
 
 ### System Architecture
-![System Architecture](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/architecture/systemArchitecture.png)
+![System Architecture](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/docs/systemArchitecture.png)
 ### Database Schema
 For full details, see this [spreadsheet](https://docs.google.com/spreadsheets/d/1GPTzF5Bm_S3_2266Ib4b60NtqnQYp3_9fj6ODiP5INs/edit?usp=sharing)
 
-![Schema](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/architecture/schema.png)
+![Schema](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/docs/schema.png)
 
 
 ## Technologies
