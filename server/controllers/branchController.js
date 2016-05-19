@@ -41,12 +41,12 @@ exports.retrieveBranches = (req, res) => {
       })
       .catch(error => {
         console.error('Error in querying branches: ', error);
-        res.status(500).send;
+        res.status(500).send('Error in querying branches');
       });
     })
     .catch(error => {
       console.error('Error in querying repos: ', error);
-      res.status(500).send;
+      res.status(500).send('Error in querying repos');
     });
   
 };
@@ -128,12 +128,12 @@ exports.updateBranches = (req, res) => {
               })
               .catch(error => {
                 console.error('Error in querying branches: ', error);
-                res.status(500).send;
+                res.status(500).send('Error in querying branches');
               });
           })
           .catch(error => {
             console.error('Error in insert branches: ', error);
-            res.status(500).send;
+            res.status(500).send('Error in insert branches');
           });
         })
         .catch(error => {
@@ -149,7 +149,7 @@ exports.updateBranches = (req, res) => {
             }
           } else {
             console.error('Error in GET from GitHub: ', error);
-            res.status(500).send;
+            res.status(500).send('Error in GET from GitHub');
           }
         });
     });

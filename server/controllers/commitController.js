@@ -19,7 +19,7 @@ exports.retrieveCommits = function(req, res) {
     })
     .catch(error => {
       console.error('Error querying commits: ', error);
-      res.status(500).send;
+      res.status(500).send();
     }); 
 };
 
@@ -80,24 +80,38 @@ exports.updateCommits = function(req, res) {
             'WHERE $2~ = $3',
             ['commits', 'user_id', userId])
           .then(commits => {
-            // send back the updated commits
-            console.log('Successfully patched commits for userId: ' + userId);
-            res.send(commits);
+            // update the commits_count in the user table
+            db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
+              'VALUES ($6, $7, $8) ' +
+              'ON CONFLICT ($3~) ' +
+              'DO UPDATE SET ($4~) = ($7) ' +
+              'WHERE $2~.$3~ = $6 ' +
+              'RETURNING *',
+              ['users', 'u', 'id', 'commits_count', 'created_ga',
+              queryId, commits.length, dbTimestamp])
+              .then((data) => {
+                // send the server response
+                res.send(commits);
+              })
+              .catch(error => {
+                console.error('Error updating commits_count: ', error);
+                res.status(500).send('Error updating commits_count');
+              });
           })
           .catch(error => {
-            console.error('Error querying commits CC: ', error);
-            res.status(500).send;
+            console.error('Error querying commits: ', error);
+            res.status(500).send('Error querying commits');
           }); 
         }
       })
       .catch(error => {
         console.error('Error adding joins: ', error);
-        res.status(500).send;
+        res.status(500).send('Error adding joins');
       }); 
     })
     .catch(error => {
       console.error('Error adding commits: ', error);
-      res.status(500).send;
+      res.status(500).send('Error adding commits');
     }); 
   };            
   
@@ -167,7 +181,7 @@ exports.updateCommits = function(req, res) {
                   })
                   .catch(error => {
                     console.error('Error adding commit authors: ', error);
-                    res.status(500).send;
+                    res.status(500).send('Error adding commit authors');
                   });
                 })
               .catch(error => {
@@ -175,11 +189,11 @@ exports.updateCommits = function(req, res) {
                   repoCountGetCommits++;
                   console.log('Error in getCommitsFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
                   if (repoCountGetCommits === totalRepos) {
-                    res.status(500).send();
+                    res.status(500).send('Error in getCommitsFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
                   }
                 } else {
                   console.error('Error in GET from GitHub: ', error);
-                  res.status(500).send;
+                  res.status(500).send('Error in GET from GitHub');
                 }
               });
             }); // END OF BRANCHES FOREACH
@@ -187,7 +201,7 @@ exports.updateCommits = function(req, res) {
         }) 
         .catch(error => {
           console.error('Error adding commit authors: ', error);
-          res.status(500).send;
+          res.status(500).send('Error adding commit authors');
         });      
     }); // END OF REPOOWNERS FOREACH
       

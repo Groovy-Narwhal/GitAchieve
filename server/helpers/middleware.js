@@ -15,6 +15,9 @@ module.exports = function(app) {
   app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
   app.use(morgan('dev'));
   app.use(cors());
-  app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
-  app.use(webpackHotMiddleware(compiler));
-}
+  
+  if (process.env.NODE_ENV !== 'production') {
+    app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+    app.use(webpackHotMiddleware(compiler));
+  }
+};

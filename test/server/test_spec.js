@@ -1,5 +1,5 @@
-// var frisby = require('frisby');
-// const CALLBACKHOST = require('../../server/config/config-settings').CALLBACKHOST;
+var frisby = require('frisby');
+const CALLBACKHOST = require('../../server/config/config-settings').CALLBACKHOST;
 
 // frisby.create('Get Users')
 //   .get(`${CALLBACKHOST}/api/v1/users`)

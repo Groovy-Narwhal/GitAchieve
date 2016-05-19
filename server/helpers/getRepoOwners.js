@@ -57,17 +57,17 @@ module.exports = (queryId, callback) => {
               })  
               .catch(error => {
                 console.error('Error selecting orgs: ', error);
-                res.status(500).send;
+                res.status(500).send('Error selecting orgs');
               });
           });
         })  
         .catch(error => {
           console.error('Error selecting repos: ', error);
-          res.status(500).send;
+          res.status(500).send('Error selecting repos');
         });       
     })
     .catch(error => {
       console.error('Error selecting user: ', error);
-      res.status(500).send;
+      res.status(500).send('Error selecting user');
     });
 };

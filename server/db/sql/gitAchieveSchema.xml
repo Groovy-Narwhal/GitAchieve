@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+gitAchieveSchema<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <DatabaseModel VersionId="2.3">
     <Name>GitAchieve</Name>
     <Description></Description>
@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>192</Value>
+            <Value>195</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -174,7 +174,25 @@
                     <Properties/>
                 </Column>
                 <Column Id="c122">
-                    <Name>score</Name>
+                    <Name>total_score</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c193">
+                    <Name>losses</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c194">
+                    <Name>wins</Name>
                     <Type>int</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
@@ -301,6 +319,15 @@
                 </Column>
                 <Column Id="c42">
                     <Name>created_at</Name>
+                    <Type>timestamp</Type>
+                    <Description></Description>
+                    <Nullable>true</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c195">
+                    <Name>merged_at</Name>
                     <Type>timestamp</Type>
                     <Description></Description>
                     <Nullable>true</Nullable>
@@ -1561,10 +1588,10 @@
     <Texts/>
     <TableDisplays>
         <TableDisplay Id="td6">
-            <X>3897.5</X>
-            <Y>4308.5</Y>
-            <Width>236.0</Width>
-            <Height>260.0</Height>
+            <X>3905.5</X>
+            <Y>4282.5</Y>
+            <Width>251.0</Width>
+            <Height>289.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t7</Table>
@@ -1573,7 +1600,7 @@
         <TableDisplay Id="td7">
             <X>4247.5</X>
             <Y>4318.5</Y>
-            <Width>264.0</Width>
+            <Width>279.0</Width>
             <Height>202.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
@@ -1698,12 +1725,12 @@
             <Type>Horizontal_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4083.5</X>
-                    <Y>4399.5</Y>
+                    <X>4091.5</X>
+                    <Y>4373.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4236.5</X>
-                    <Y>4399.5</Y>
+                    <Y>4373.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4236.5</X>
@@ -1723,11 +1750,11 @@
             <Type>Vertical_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4083.5</X>
-                    <Y>4337.5</Y>
+                    <X>4091.5</X>
+                    <Y>4311.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>4083.5</X>
+                    <X>4091.5</X>
                     <Y>4412.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1773,12 +1800,12 @@
             <Type>Cross_3CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>4083.5</X>
-                    <Y>4461.5</Y>
+                    <X>4091.5</X>
+                    <Y>4435.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4191.5</X>
-                    <Y>4461.5</Y>
+                    <Y>4435.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4191.5</X>
@@ -1840,11 +1867,11 @@
             <Type>Vertical_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>3915.5</X>
-                    <Y>4460.5</Y>
+                    <X>3923.5</X>
+                    <Y>4434.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>3915.5</X>
+                    <X>3923.5</X>
                     <Y>4700.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1891,7 +1918,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4004.5</X>
-                    <Y>4485.5</Y>
+                    <Y>4459.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4004.5</X>
@@ -1908,7 +1935,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>4113.5</X>
-                    <Y>4495.5</Y>
+                    <Y>4469.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>4113.5</X>
@@ -1970,11 +1997,11 @@
             <Type>Cross_3CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>3907.5</X>
-                    <Y>4507.5</Y>
+                    <X>3915.5</X>
+                    <Y>4481.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>3907.5</X>
+                    <X>3915.5</X>
                     <Y>5138.5</Y>
                 </ControlPoint>
                 <ControlPoint>

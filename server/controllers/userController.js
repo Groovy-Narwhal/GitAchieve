@@ -41,7 +41,7 @@ exports.retrieveUser = function(req, res) {
 };
 
 // PATCH at '/api/v1/users/:id' to update user with current GitHub data
-exports.updateUser = function(req, res) {
+exports.patchUser = function(req, res) {
   var queryId = req.params.id;
   var username = req.body.username;
   var competitorUsername = req.body.competitorUsername;
@@ -95,6 +95,46 @@ exports.updateUser = function(req, res) {
   // CALL HELPERS
   getUserFromGitHub(getUserFromGitHub);
 };
+
+// PUT at '/api/v1/users/:id' to update user manually
+// send the parameters to be updated in the request body
+exports.updateUser = function(req, res) {
+  var queryId = req.params.id;
+  var update = req.body;
+  var dbTimestamp = pgp.as.date(new Date());
+  
+  db.one('SELECT * FROM users WHERE id=$1', queryId)
+    .then(user => {
+      for (var key in update) {
+        user[key] = update[key];
+      }
+      db.one('UPDATE $1~ SET ($2~, $3~, $4~, $5~, $6~, $7~, $8~, $9~, $10~, $11~, $12~, $13~, $14~, ' +
+        '$15~, $16~, $17~) = ' +
+        '($18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33) ' +
+        'WHERE $34~ = $35 ' +
+        'RETURNING *',
+        ['users', 'updated_ga', 'signed_up', 'username', 'email', 'avatar_url', 'followers', 
+        'following', 'total_score', 'losses', 'wins', 'longest_streak', 'current_streak', 
+        'contributions_past_year', 'commits_count', 'repos_count', 'pull_requests_count',
+        dbTimestamp, user.signed_up, user.username, user.email, user.avatar_url, user.followers,
+        user.following, user.total_score, user.losses, user.wins, user.longest_streak, 
+        user.current_streak, user.contributions_past_year, user.commits_count, user.repos_count,
+        user.pull_requests_count, 'id', queryId])
+        .then(updatedUser => {
+          res.send(updatedUser);
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error updating user');
+        });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error searching database for user');
+    });
+  
+};
+
 
 // DELETE at '/api/v1/users/:id'
 exports.deleteUser = function(req, res) {
