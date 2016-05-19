@@ -10,13 +10,11 @@ class HeaderUserButton extends Component {
     this.state = {
       open: false
     }
-    console.log('Initial open state: ', this.state.open);
   }
 
   /* Only have the click events enabled when the menu is open */
   componentDidUpdate(prevProps, prevState) {
     if(this.props.open && !prevProps.open) {
-      console.log('previous open: ', prevProps.open, 'current open: ', this.props.open)
       window.addEventListener('click', this.handleClickOutside.bind(this));
     } else if(!this.props.open && prevProps.open) {
       window.removeEventListener('click', this.handleClickOutside.bind(this));

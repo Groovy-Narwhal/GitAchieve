@@ -19,19 +19,19 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(window.interval);
+    // clearInterval(window.interval);
   }
 
   competitionUpdateInterval(c) {
-    clearInterval(window.interval);
-    window.interval = setInterval(() => {
-      console.log('primary user id2', c.primary_user_id);
-      console.log('secondary_user_id2', c.secondary_user_id);
-      axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
-        token: localStorage.token
-      }).then(this.handleAccept.bind(this, c))
-      this.setState({toggleUpdate: !this.state.toggleUpdate})
-    }, 10000);
+    // clearInterval(window.interval);
+    // window.interval = setInterval(() => {
+    //   console.log('primary user id2', c.primary_user_id);
+    //   console.log('secondary_user_id2', c.secondary_user_id);
+    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
+    //     token: localStorage.token
+    //   }).then(this.handleAccept.bind(this, c))
+    //   this.setState({toggleUpdate: !this.state.toggleUpdate})
+    // }, 10000);
   }
 
 
@@ -40,12 +40,10 @@ class AcceptedCompetitorCard2 extends Component {
       - both repo ids
       - both user ids
       - competition start date
-
       This information is stored in users_users, the competitions table.
       For now at least, repo name info is not stored in users_users.
       This function makes two calls to /users/:id/commits/start to grab commit
       info, one per user, and similarly two calls to grab just the repo name.
-
       Four axios calls, so buckle up. (May be refactored with axios.all)
     */
     var user = this.props.user.username;
@@ -80,18 +78,19 @@ class AcceptedCompetitorCard2 extends Component {
           repoid: c.primary_repo_id
         },
       })
-        .then(response => {
+      .then(response => {
 
-          // update commit data for other user
-          totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
-          dailyCompetitorData = response.data.map( (item) => item.commits.length);
+        // update commit data for other user
+        totalCommitsForComp = response.data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+        dailyCompetitorData = response.data.map( (item) => item.commits.length);
 
-          // update the cumulative data and the daily data
-          // the repo name data will be added after the next two axios.get's
-          data = [
+        // update the cumulative data and the daily data
+        // the repo name data will be added after the next two axios.get's
+        data = [
             [], // add the repo names after getting them
             [user, totalCommitsForUser],
-            [competitor, totalCommitsForComp]
+            [competitor, totalCommitsForComp],
+            [c.competition_end]
           ];
           dailyData = [
             [],
@@ -139,7 +138,7 @@ class AcceptedCompetitorCard2 extends Component {
           });
 
         });
-    });
+      });
   }
 
   componentWillMount() {

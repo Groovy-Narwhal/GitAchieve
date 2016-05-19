@@ -89,6 +89,12 @@ export default {
       confirmedRequests2: friends
     }
   },
+  pastCompetitions: competitions => {
+    return {
+      type: types.PAST_COMPETITIONS,
+      pastCompetitions: competitions
+    }
+  },
   yesCompetitions: () => {
     return {
       type: types.YES_COMPETITIONS

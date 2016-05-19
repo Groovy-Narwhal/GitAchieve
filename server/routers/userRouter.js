@@ -61,6 +61,9 @@ userRouter.route('/:id/successmatches')
 userRouter.route('/:id/successmatches2')
   .get(friendController.checkApprovedRequests2); // using
 
+userRouter.route('/:id/pastcompetitions')
+  .get(friendController.checkPastCompetitions); // using
+
 // WORKER
 userRouter.route('/:primaryid/:secondaryid/update')
   .patch(update.updateCompetition);

@@ -22,9 +22,7 @@ exports.retrieveCompetition = function(req, res) {
     .then(commits => {
       // filter out commits that are before the start date
       var filteredCommits = commits.reduce((filtered, commit) => {
-        console.log('commit.date', commit)
         if (new Date(commit.date) - startDate >= 0) {
-          console.log('filtered', filtered)
           filtered.push(commit);
           return filtered;
         } else {
@@ -39,7 +37,6 @@ exports.retrieveCompetition = function(req, res) {
       // add each filtered commit to an object with the start of the day as the key
         // set the value to an empty array to hold the commits
       var days = endMoment.diff(startMoment, 'days');
-      console.log('days', days)
       var commitHistory = {};
       for (var i = 0; i < days + 1; i++) {
         var dayStart = moment(startMoment).add(i, 'days').toString();
@@ -49,7 +46,6 @@ exports.retrieveCompetition = function(req, res) {
       // add each commit to the correct day in the history
       filteredCommits.forEach(commit => {
         var commitDay = moment(commit.date).startOf('day');
-        console.log('COMMIT DAY', commitDay);
         if (commitHistory[commitDay] !== undefined) {
           commitHistory[commitDay].push(commit);
         }
@@ -69,7 +65,7 @@ exports.retrieveCompetition = function(req, res) {
 
     })
     .catch(error => {
-      console.error('Error querying commits: ', error);
+      console.error('Error querying commits CSC: ', error);
       res.status(500).send;
     });
 };
