@@ -72,6 +72,8 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
 
 
 
+
+
   // if async is false or undefined, run each PATCH request independently
   if (!async) {
     rp(updateRepos)
