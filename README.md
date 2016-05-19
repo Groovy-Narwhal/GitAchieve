@@ -1,4 +1,4 @@
-# GitAchieve [![Build Status](https://travis-ci.org/Groovy-Narwhal/GitAchieve.svg?branch=master)](https://travis-ci.org/Groovy-Narwhal/GitAchieve)
+# GitAchieve [![Build Status](https://travis-ci.org/Groovy-Narwhal/GitAchieve.svg?branch=master)](https://travis-ci.org/Groovy-Narwhal/GitAchieve)(https://david-dm.org/Groovy-Narwhal/GitAchieve.svg)
 A webapp to promote positive Git behavior through friendly competition.
 See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 
