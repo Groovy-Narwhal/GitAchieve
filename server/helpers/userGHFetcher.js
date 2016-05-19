@@ -31,6 +31,7 @@ module.exports = (app) => {
           longest_streak: longest_streak,
           current_streak: real_current_streak
         }
+        // UPDATE DATABASE
         res.send(obj);
       }
     });
