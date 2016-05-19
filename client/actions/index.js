@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
 import * as types from './actionTypes';
-
+import utils from './../utils/utils.js'
 const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
 
 export const signoutUser = () => {
@@ -96,6 +96,19 @@ const checkForPastCompetitions = (id, dispatch) => {
     });
 };
 
+const getContribs = (username, id, dispatch) => {
+  async function getContribs() {
+    var contribs = await utils.fetchLastYearGHContribs(username, id);
+    console.log('CONTRIBS', contribs)
+      dispatch({
+        type: types.GET_USER_CONTRIBS,
+        contribs
+      })
+    // this.props.actions.getUserContribs(numContribs);
+  }
+  getContribs.call(this);
+}
+
 export const signinUser = () => {
   return dispatch => {
     // - Update state to indicate user is authenticated
@@ -131,27 +144,34 @@ export const signinUser = () => {
 
         // - redirect to the route '/'
         browserHistory.push('/');
-        return userProfile.id;
+        return {
+          username: userProfile.username,
+          id: userProfile.id
+        }
       })
-      .then((id) => {
-        checkForPastCompetitions(id, dispatch);
-        return id;
+      .then((obj) => {
+        checkForPastCompetitions(obj.id, dispatch);
+        return obj;
       })
-      .then((id) => {
-        checkForFriendRequests(id, dispatch);
-        return id;
+      .then((obj) => {
+        checkForFriendRequests(obj.id, dispatch);
+        return obj;
       })
-      .then((id) => {
-        checkForSentRequests(id, dispatch);
-        return id;
+      .then((obj) => {
+        checkForSentRequests(obj.id, dispatch);
+        return obj;
       })
-      .then((id) => {
-        checkForConfirmedRequests(id, dispatch);
-        return id;
+      .then((obj) => {
+        checkForConfirmedRequests(obj.id, dispatch);
+        return obj;
       })
-      .then((id) => {
-        checkForConfirmedRequests2(id, dispatch);
-        return id;
+      .then((obj) => {
+        checkForConfirmedRequests2(obj.id, dispatch);
+        return obj;
+      })
+      .then((obj) => {
+        getContribs(obj.username, obj.id, dispatch);
+        return obj;
       })
       .catch((err) => {
         console.log('error', err);

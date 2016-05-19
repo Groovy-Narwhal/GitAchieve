@@ -182,14 +182,13 @@ class UserProfile extends Component {
 
     return (
       <div className="data-results-container">
-        <div className="data-results-container-clear">
-          <h2 className="font-white bottom-border">Competition History</h2>
-          <div className="data-result-container-flex full-width add">
+        <div className="data-result-container full-width">
+          <h2>Competition History</h2>
+          <div>
             <div className="comp-result-container history-img">
               <img src={this.props.user.avatar_url} className="user-avatar-med2 border-1px-white" />
               <h2>{this.props.user.username}</h2>
             </div>
-            <img src="/static/assets/sword-vs-1-1.png" className="vs-swords history-img" />
             <div className="comp-result-container">
               {this.renderHistory()}
             </div>
