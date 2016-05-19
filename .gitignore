@@ -3,6 +3,7 @@ gitSpy/*
 
 # Server data
 server/logs/*
+server/config/dbConfig.js
 server/config/github.config.js
 server/config/sendGridKey.js
 

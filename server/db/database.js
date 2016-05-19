@@ -7,9 +7,10 @@ const sql = require('./sql/sql');
 const PORT = require('../config/config-settings').PORT;
 const HOST = require('../config/config-settings').HOST;
 const diag = require('./diagnostics');
+const DB_DEPLOY_CONFIG = require('../config/dbConfig').DB_DEPLOY_CONFIG;
 diag.init(options);
 
-const config = {
+const DB_LOCAL_CONFIG = {
   host: HOST, // server name or IP address;
   port: 5432,
   database: 'gitachieve',
@@ -17,7 +18,7 @@ const config = {
   password: ''
 };
 
-const db = pgp(config);
+const db = pgp(DB_LOCAL_CONFIG);
 
 db.tx(t=> t.one(sql.test)
   .then((data) => {
