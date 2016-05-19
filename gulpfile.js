@@ -37,11 +37,7 @@ gulp.task('lint', function() {
     .on('error', util.log);
 });
 
-// Test Task
-gulp.task('test', shell.task([
-  'mocha test/client/.setup.js test/client',
-  'jasmine-node test/server/test_spec.js --junitreport',
-]));
+
 
 // Clean out previous dist folder
 gulp.task('clean', function () {  
@@ -92,8 +88,8 @@ gulp.task('env', function() {
   });
 });
 
-// if the NODE_ENV is not 'production', use the un-minified server file
-// if 'production', use the minified version
+// if the NODE_ENV is not 'production', use the non-uglified server file
+// if 'production', use the uglified version
 gulp.task('run', ['build', 'env'], function() {
   if (envConfig.NODE_ENV !== 'production') {
     nodemon({
@@ -106,13 +102,24 @@ gulp.task('run', ['build', 'env'], function() {
   }
 });
 
+// Test Task
+gulp.task('runTests', ['run'], shell.task([
+  'mocha test/client/.setup.js test/client',
+  'jasmine-node test/server/test_spec.js --junitreport',
+]));
 
 // Default Task
 gulp.task('default', ['lint', 'test', 'watch']);
 
+// Concatenate / Minify
 gulp.task('build', ['clean', 'build-client', 'build-server']);
 
+// Start Nodemon and run tests
+gulp.task('test', ['run', 'runTests']);
+
+// Build and start Nodemon
 gulp.task('start', ['build', 'run']);
+
 
 // Compile Our Sass // Commented out for now since Sass is not integrated yet.
 // gulp.task('sass', function() {
