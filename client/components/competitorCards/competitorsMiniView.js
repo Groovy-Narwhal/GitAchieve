@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../../actions/ActionCreators';
-import ReceivedCompetitorCard from './ReceivedCompetitorCard';
+import ReceivedCompetitorCard from './receivedCompetitorCard';
 import SentCompetitorCard from './sentCompetitorCard';
 import AcceptedCompetitorCard from './acceptedCompetitorCard';
 import AcceptedCompetitorCard2 from './acceptedCompetitorCard2';
