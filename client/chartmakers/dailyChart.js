@@ -163,7 +163,7 @@ module.exports = (data) => {
     .attr("transform", "translate(0, " + (h-2*pad) + ")")
     .style({
       fill: 'none',
-      stroke: '#333'
+      stroke: '#777'
     })
     .call(xAxis);
   svg.append("g")
@@ -171,7 +171,7 @@ module.exports = (data) => {
     .attr("transform", "translate(" + (pad+10) + ", 0)")
     .style({
       fill: 'none',
-      stroke: '#333'
+      stroke: '#777'
     })
     .call(yAxis);
 
@@ -202,8 +202,9 @@ module.exports = (data) => {
         g.append('text')
         .attr('x', (d, i) => xScale(timeScale[i]) + (j * barWidth) + barWidth/2 - 4)
         .attr('y', (d) => {
-          return yScale(d[j]) + (d[j] > 1 ? 15 : 0)
+          return yScale(d[j]) + (d[j] > 0 ? 15 : 0)
         })
+        .attr('fill', 'white')
         .text((d) => d[j] > 0 ? d[j].toString() : '');
       }
 
@@ -215,7 +216,7 @@ module.exports = (data) => {
   .enter()
     .append('image')
     .attr('xlink:href', (d) => {
-      return d[0] > 0 || d[1] > 0 ? 'static/assets/trophy.png' : '';
+      return d[0] > 0 || d[1] > 0 ? 'static/assets/trophy-1-2.png' : '';
     })
     .attr('x', (d, i) => {
       return xScale(timeScale[i]) + (barWidth/2 - 11) + (d[0] > d[1] ? 0 : barWidth);
