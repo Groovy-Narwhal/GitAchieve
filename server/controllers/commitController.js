@@ -386,7 +386,7 @@ exports.updateCommits = function(req, res) {
               // configure a GitHub GET request get retrieve the commits for each branch of this repo
               var options = {
                 uri: 'https://api.github.com/repos/' + ownerName + '/' + repoOwner.repoName + 
-                '/commits?sha=' + branch.sha,
+                '/commits?sha=' + branch.name,
                 headers: {
                   'User-Agent': repoOwner.userName,
                   // Uncomment this line to make GET requests from within the site (not with Postman)

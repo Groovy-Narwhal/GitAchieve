@@ -39,42 +39,32 @@ class AcceptedCompetitorCard extends Component {
   }
 
   competitionUpdateInterval(c) {
-    clearInterval(window.interval);
+    // these variables are set up differently between acceptedCompetitorCard and
+    // acceptedCompetitorCard2 to ensure that the right user is assigned to primary vs. secondary
     var primaryUsername = this.props.user.username;
     var primaryUserId = c.primary_user_id;
     var primaryRepoId = c.primary_repo_id;
     var secondaryUsername = this.state.username;
     var secondaryUserId = c.secondary_user_id;
     var secondaryRepoId = c.secondary_repo_id;
+    
+    clearInterval(window.interval);
     window.interval = setInterval(() => {
-      console.log('RUNNING INTERVAL FOR COMPETITOR CARD 1');
-      console.log('c = ', c);
-      console.log('primaryUsername: ' + primaryUsername);
-      console.log('primaryUserId: ' + primaryUserId);
-      console.log('secondaryUsername: ' + secondaryUsername);
-      console.log('secondaryUserId: ' + secondaryUserId);
       
+      // /:primaryid/:secondaryid/update
       axios.put(
-        `${ROOT_URL}/api/v1/users/${primaryUserId}/commits`,
+        `${ROOT_URL}/api/v1/users/${primaryUserId}/${secondaryUserId}/update`,
         {
           token: localStorage.token,
-          repoid: primaryRepoId
+          primaryrepoid: primaryRepoId,
+          secondaryrepoid: secondaryRepoId
         })
-        .then(primaryCommits => {
-          console.log('competition update results for user 1: ', primaryCommits);
-          axios.put(
-            `${ROOT_URL}/api/v1/users/${secondaryUserId}/commits`,
-            {
-              token: localStorage.token,
-              repoid: secondaryRepoId 
-            })
-            .then(secondaryCommits => {
-              console.log('competition update results for user 2: ', secondaryCommits);
-            })
+        .then(results => {
+            console.log('competition update results: ', results);
         })
         .catch(error => {
           console.log('error in competition update interval for user 1: ', error);
-        })
+        });
       
       this.setState({toggleUpdate: !this.state.toggleUpdate});
     }, 10000);

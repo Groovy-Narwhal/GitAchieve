@@ -6,7 +6,7 @@ var statController = require('./../controllers/statController.js');
 var commitController = require('./../controllers/commitController.js');
 var commitStartController = require('./../controllers/commitStartController.js');
 var branchController = require('./../controllers/branchController.js');
-var update = require('./../helpers/competitionUpdate.js');
+var competitionUpdate = require('./../helpers/competitionUpdate.js');
 
 // the following routes start from /api/v1/users
 userRouter.route('/')

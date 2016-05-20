@@ -23,21 +23,17 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   competitionUpdateInterval(c) {
-    clearInterval(window.interval);
+    // these variables are set up differently between acceptedCompetitorCard and
+    // acceptedCompetitorCard2 to ensure that the right user is assigned to primary vs. secondary
     var primaryUsername = this.state.username;
     var primaryUserId = c.primary_user_id;
     var primaryRepoId = c.primary_repo_id;
     var secondaryUsername = this.props.user.username;
     var secondaryUserId = c.secondary_user_id;
     var secondaryRepoId = c.secondary_repo_id;
+    
+    clearInterval(window.interval);
     window.interval = setInterval(() => {
-      console.log('RUNNING INTERVAL FOR COMPETITOR CARD 2');
-      console.log('c = ', c);
-      console.log('primaryUsername: ' + primaryUsername);
-      console.log('primaryUserId: ' + primaryUserId);
-      console.log('secondaryUsername: ' + secondaryUsername);
-      console.log('secondaryUserId: ' + secondaryUserId);
-      
       axios.put(
         `${ROOT_URL}/api/v1/users/${secondaryUserId}/commits`,
         {

@@ -4,35 +4,28 @@ var massiveFetch = require('./massiveFetch');
 
 exports.updateCompetition = (req, res) => {
   var primaryid = req.params.primaryid;
-  var primaryUsername = req.body.primaryUsername;
+  var primaryRepoId = req.body.primaryrepoid;
   var secondaryid = req.params.secondaryid;
-  var secondaryUsername = req.body.secondaryUsername;
+  var secondaryRepoId = req.body.secondaryrepoid;
   var token = req.body.token;
-  var primaryProfile = {username: primaryUsername};
-  var secondaryProfile = {username: secondaryUsername};
-
-  console.log('updateCompetition primaryid', primaryid);
-  console.log('updateCompetition primaryUsername', primaryUsername);
-  console.log('updateCompetition secondaryid', secondaryid);
-  console.log('updateCompetition secondaryUsername', secondaryUsername);
-  
-  console.log('Competition Update, primaryUsername: ' + primaryUsername + ', secondaryUsername: ' + secondaryUsername);
   
   var primaryUserOptions = {
     uri: CALLBACKHOST + '/api/v1/users/' + primaryid + '/commits',
-    method: 'PATCH',
+    method: 'PUT',
     json: true,
     body: {
-      token: token
+      token: token,
+      repoid: primaryRepoId
     }
   };
   
   var secondaryUserOptions = {
     uri: CALLBACKHOST + '/api/v1/users/' + secondaryid + '/commits',
-    method: 'PATCH',
+    method: 'PUT',
     json: true,
     body: {
-      token: token
+      token: token,
+      repoid: secondaryRepoId
     }
   };
   
