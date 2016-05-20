@@ -27,7 +27,7 @@ userRouter.route('/:id/repo')
 userRouter.route('/:id/repos')
   .get(repoController.retrieveRepos)
   .post(repoController.addRepo)
-  .patch(repoController.updateRepos);
+  .patch(repoController.updateRepos); //
 
 userRouter.route('/:id/repos/branches')
   .get(branchController.retrieveBranches)
