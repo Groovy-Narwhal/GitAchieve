@@ -16,7 +16,7 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      // 'User-Agent': username
+      'User-Agent': username
     }
   };
 
@@ -27,7 +27,7 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      // 'User-Agent': username
+      'User-Agent': username
     }
   };
 
@@ -37,7 +37,7 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      // 'User-Agent': username
+      'User-Agent': username
     }
   };
 
