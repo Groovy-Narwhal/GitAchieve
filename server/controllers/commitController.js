@@ -5,87 +5,7 @@ var token = require('../config/github.config').token;
 var rp = require('request-promise');
 var getRepoOwners = require('../helpers/getRepoOwners');
 
-var saveCommitsAndJoins = (queryId, commits, repoId, totalRepos, repoCount, userId, branchSha, res) => {
-  var dbTimestamp = pgp.as.date(new Date());
-  // repoCount should be a variable defined in the parent scope that this function can mutate
-  
-  // save commits to database, using SHA as unique id
-  db.tx(t => {
-    var queries = [];
-    if (commits.length > 0) {
-      queries = commits.map(commit => {
-        if (!!commit.author) {
-          return t.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $13~) ' +
-            'VALUES ($8, $9, $10, $11, $12, $14) ' +
-            'ON CONFLICT ($3~) ' + 
-            'DO UPDATE SET ($4~, $5~, $6~, $7~, $13~) = ($9, $10, $11, $12, $14) ' +
-            'WHERE $2~.$3~ = $8',
-            ['commits', 'c', 'sha', 'updated_ga', 'date', 'user_id', 'commit_message',
-            commit.sha, dbTimestamp, pgp.as.date(new Date(commit.commit.author.date)), 
-            commit.author.id, commit.commit.message,
-            'branch_sha', branchSha]);  
-        }
-      });
-    }
-    return t.batch(queries);
-  })
-  .then(data => {
-    // save joins to database, associating each commit with a repo
-    db.tx(t => {
-      var queries = [];
-      if (commits.length > 0) {
-        queries = commits.map(commit => {
-          // only add a join row if it doesn't exist already
-          if (!!commit.author) {
-            return t.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
-              'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
-              '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7)',
-              ['commits_repos', 'created_ga', 'repo_id', 'commit_sha',
-              dbTimestamp, repoId, commit.sha]);
-          }
-        });
-      }
-      return t.batch(queries);
-    }) 
-    .then(data => {
-      repoCount++;
-      // once all commits from all repos have been added,
-      if (repoCount === totalRepos) {
-        // query the database for this user's commits
-        db.any('SELECT * FROM $1~ ' +
-          'WHERE $2~ = $3',
-          ['commits', 'user_id', userId])
-        .then(commits => {
-          // update the commits_count in the user table
-          db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
-            'VALUES ($6, $7, $8) ' +
-            'ON CONFLICT ($3~) ' +
-            'DO UPDATE SET ($4~) = ($7) ' +
-            'WHERE $2~.$3~ = $6 ' +
-            'RETURNING *',
-            ['users', 'u', 'id', 'commits_count', 'created_ga',
-            queryId, commits.length, dbTimestamp])
-            .then((data) => {
-              // send the server response
-              res.send(commits);
-            })
-            .catch(error => {
-              console.error('Error updating commits_count: ', error);
-            });
-        })
-        .catch(error => {
-          console.error('Error querying commits: ', error);
-        }); 
-      }
-    })
-    .catch(error => {
-      console.error('Error adding joins: ', error);
-    }); 
-  })
-  .catch(error => {
-    console.error('Error adding commits: ', error);
-  }); 
-}; 
+
 
 
 // GET at '/api/v1/users/:id/commits'
@@ -107,25 +27,121 @@ exports.retrieveCommits = function(req, res) {
 };
 
 
-
 // PUT at '/api/v1/users/:id/commits' to update commits for a specific repo, useful when
 // updating the current competition
 // request body must include repoid to update
 exports.updateCompetition = function(req, res) {
+  
   var dbTimestamp = pgp.as.date(new Date());
   var queryId = req.params.id;
   var repoId = req.body.repoid;
   var repoCountUpdateCompetition = 0;
+  var branchCount = 0;
+  var branchTotal;
   
+  // HELFPER FUNCTIONS 
+  
+  // will be called once for each branch to save commits and joins
+  var saveCommitsAndJoinsUpdateCompetition = (queryId, commits, repoId, userId, branchSha, callback) => {
+    // save commits to database, using SHA as unique id
+    db.tx(t => {
+      var queries = [];
+      if (commits.length > 0) {
+        queries = commits.map(commit => {
+          if (!!commit.author) {
+            return t.any('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~, $6~, $7~, $13~) ' +
+              'VALUES ($8, $9, $10, $11, $12, $14) ' +
+              'ON CONFLICT ($3~) ' + 
+              'DO UPDATE SET ($4~, $5~, $6~, $7~, $13~) = ($9, $10, $11, $12, $14) ' +
+              'WHERE $2~.$3~ = $8 ' +
+              'RETURNING *',
+              ['commits', 'c', 'sha', 'updated_ga', 'date', 'user_id', 'commit_message',
+              commit.sha, dbTimestamp, pgp.as.date(new Date(commit.commit.author.date)), 
+              commit.author.id, commit.commit.message,
+              'branch_sha', branchSha]);  
+          }
+        });
+      }
+      return t.batch(queries);
+    })
+    .then(data => {
+      // save joins to database, associating each commit with a repo
+      db.tx(t => {
+        var queries = [];
+        if (commits.length > 0) {
+          queries = commits.map(commit => {
+            // only add a join row if it doesn't exist already
+            if (!!commit.author) {
+              return t.any('INSERT INTO $1~ ($2~, $3~, $4~) ' +
+                'SELECT $5, $6, $7 WHERE NOT EXISTS ' +
+                '(SELECT * FROM $1~ WHERE $3~ = $6 AND $4~ = $7) ' +
+                'RETURNING *',
+                ['commits_repos', 'created_ga', 'repo_id', 'commit_sha',
+                dbTimestamp, repoId, commit.sha]);
+            }
+          });
+        }
+        return t.batch(queries);
+      }) 
+      .then(data => {
+        callback(queryId);
+      })
+      .catch(error => {
+        console.error('Error adding joins **: ', error);
+      }); 
+    })
+    .catch(error => {
+      console.error('Error adding commits: ', error);
+    }); 
+  }; 
+  
+  // will be called once a branch is processed
+  var sendUpdatedCommits = function (queryId) {
+    branchCount++;
+    // once all commits from all repos have been added,
+    if (branchCount === branchTotal) {
+      // query the database for this user's commits
+      db.any('SELECT * FROM $1~ ' +
+        'WHERE $2~ = $3',
+        ['commits', 'user_id', queryId])
+      .then(commits => {
+        // update the commits_count in the user table
+        db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
+          'VALUES ($6, $7, $8) ' +
+          'ON CONFLICT ($3~) ' +
+          'DO UPDATE SET ($4~) = ($7) ' +
+          'WHERE $2~.$3~ = $6 ' +
+          'RETURNING *',
+          ['users', 'u', 'id', 'commits_count', 'created_ga',
+          queryId, commits.length, dbTimestamp])
+          .then((data) => {
+            // send the server response
+            res.send(commits);
+          })
+          .catch(error => {
+            console.error('Error updating commits_count: ', error);
+          });
+      })
+      .catch(error => {
+        console.error('Error querying commits: ', error);
+      }); 
+    }
+  };
+  
+  
+  // business logic for PUT request - uses helper functions defined above
+  
+  // find the user
   db.one('SELECT * from $1~ ' +
     'WHERE $2~=$3',
     ['users', 'id', queryId])
     .then(user => {
+      // find the repo
       db.one('SELECT * from $1~ ' +
         'WHERE $2~=$3',
         ['repos', 'id', repoId])
         .then(repo => {
-          
+          // find orgs for this repo, if there are any
           db.oneOrNone('SELECT * FROM $1~ ' +
             'WHERE $2~=$3',
             ['orgs', 'id', repo.owner_id])
@@ -156,6 +172,7 @@ exports.updateCompetition = function(req, res) {
               return repoOwner;
             })
             .then(repoOwner => {
+              // once we have the repo ownership info, find the branches for this repo
               db.any('SELECT b.sha, b.updated_ga, b.name ' + 
                 'FROM repos_branches rb ' +
                 'INNER JOIN branches b ' +
@@ -169,8 +186,7 @@ exports.updateCompetition = function(req, res) {
                   } else {
                     ownerName = repoOwner.orgName;
                   }
-                  var branchTotal = branches.length;
-                  var branchCount = 0;
+                  branchTotal = branches.length;
                   // if there are no branches, send empty response
                   if (branchTotal === 0) {
                     res.send([]);
@@ -180,7 +196,7 @@ exports.updateCompetition = function(req, res) {
                       // configure a GitHub GET request get retrieve the commits for each branch of this repo
                       var options = {
                         uri: 'https://api.github.com/repos/' + ownerName + '/' + repoOwner.repoName + 
-                        '/commits?sha=' + branch.sha,
+                        '/commits?sha=' + branch.name,
                         headers: {
                           'User-Agent': repoOwner.userName,
                           // Uncomment this line to make GET requests from within the site (not with Postman)
@@ -193,6 +209,9 @@ exports.updateCompetition = function(req, res) {
                       // invoke the GET request
                       rp(options)
                         .then(commits => {
+                          console.log('sent GET to GitHub with uri: ', options.uri);
+                          console.log('branch name', branch.name);
+                          console.log('GitHub response length', commits.length);
                           db.tx(t => {
                             // insert each commit's author as a user if they don't exist in users table
                             var queries = [];
@@ -211,8 +230,7 @@ exports.updateCompetition = function(req, res) {
                             return t.batch(queries);
                           })
                           .then(data => {
-                            branchCount++;
-                            saveCommitsAndJoins(queryId, commits, repoOwner.repoId, 1, repoCountUpdateCompetition, repoOwner.userId, branch.sha, res);
+                            saveCommitsAndJoinsUpdateCompetition(queryId, commits, repoOwner.repoId, repoOwner.userId, branch.sha, sendUpdatedCommits);
                           })
                           .catch(error => {
                             console.error('Error adding commit authors: ', error);
@@ -220,11 +238,9 @@ exports.updateCompetition = function(req, res) {
                         })
                       .catch(error => {
                         if (error.statusCode !== 500) {
-                          branchCount++;
                           console.log('Error in getCommitsFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
-                          if (branchCount === totalBranches) {
-                            res.status(500).send('Error in getCommitsFromGitHub - repo: "' + repoOwner.repoName + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
-                          }
+                          // if there is a non-500 error for a branch, count it toward the total
+                          sendUpdatedCommits(queryId);
                         } else {
                           console.error('Error in GET from GitHub: ', error);
                         }
@@ -252,7 +268,7 @@ exports.updateCompetition = function(req, res) {
   
 };
 
-// PATCH at '/api/v1/users/:id/commits' to update all commits for a user automatically
+// PATCH at '/api/v1/users/:id/commits'
 exports.updateCommits = function(req, res) {
   var queryId = req.params.id;
   var dbTimestamp = pgp.as.date(new Date());
@@ -261,7 +277,7 @@ exports.updateCommits = function(req, res) {
   // ** HELPER FUNCTIONS **
   
   // to be used once each commit's author has been added to the users table
-  var saveCommitsAndJoins2 = (commits, repoId, totalRepos, repoCount, userId, branchSha) => {
+  var saveCommitsAndJoins = (commits, repoId, totalRepos, userId, branchSha) => {
     // save commits to database, using SHA as unique id
     db.tx(t => {
       var queries = [];
@@ -301,9 +317,9 @@ exports.updateCommits = function(req, res) {
         return t.batch(queries);
       }) 
       .then(data => {
-        repoCount++;
+        repoCountUpdateCommits++;
         // once all commits from all repos have been added,
-        if (repoCount === totalRepos) {
+        if (repoCountUpdateCommits === totalRepos) {
           // query the database for this user's commits
           db.any('SELECT * FROM $1~ ' +
             'WHERE $2~ = $3',
@@ -402,7 +418,7 @@ exports.updateCommits = function(req, res) {
                   })
                   .then(data => {
                     repoCountGetCommits++;
-                    saveCommitsAndJoins(queryId, commits, repoOwner.repoId, totalRepos, repoCountUpdateCommits, repoOwner.userId, branch.sha, res);
+                    saveCommitsAndJoins(commits, repoOwner.repoId, totalRepos, repoOwner.userId, branch.sha);
                   })
                   .catch(error => {
                     console.error('Error adding commit authors: ', error);
@@ -419,17 +435,18 @@ exports.updateCommits = function(req, res) {
                   console.error('Error in GET from GitHub: ', error);
                 }
               });
-            }); // end of branches.forEach
+            }); // END OF BRANCHES FOREACH
           } 
         }) 
         .catch(error => {
           console.error('Error adding commit authors: ', error);
         });      
-    }); // end of repoOwners.forEach
+    }); // END OF REPOOWNERS FOREACH
       
   };
   
   // CALL HELPER FUNCTIONS
+  console.log('in commitController, queryId', queryId);
   getRepoOwners(queryId, getCommitsFromGitHub);
   
 };
