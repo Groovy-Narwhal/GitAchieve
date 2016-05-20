@@ -1,7 +1,7 @@
-const request = require('request');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const token = require('../config/github.config').token;
+var request = require('request');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var token = require('../config/github.config').token;
 
 // GET at '/api/v1/users/:id/repo' to get a single repo for a user id by a repo id
 // header for 'repoid' must be included in the request

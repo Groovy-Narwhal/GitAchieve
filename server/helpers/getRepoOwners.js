@@ -1,4 +1,4 @@
-const db = require('../db/database.js').db;
+var db = require('../db/database.js').db;
 
 // get the owner information for each repo
 // this will allow us to set up the GitHub GET requests in commitController and branchController
@@ -56,18 +56,18 @@ module.exports = (queryId, callback) => {
                 }
               })  
               .catch(error => {
-                console.error('Error selecting orgs: ', error);
-                res.status(500).send('Error selecting orgs');
+                console.error('Error selecting orgs: ');
+                // res.status(500).send('Error selecting orgs');
               });
           });
         })  
         .catch(error => {
-          console.error('Error selecting repos: ', error);
-          res.status(500).send('Error selecting repos');
+          console.error('Error selecting repos: ');
+          // res.status(500).send('Error selecting repos');
         });       
     })
     .catch(error => {
-      console.error('Error selecting user: ', error);
-      res.status(500).send('Error selecting user');
+      console.error('Error selecting user: ');
+      // res.status(500).send('Error selecting user');
     });
 };

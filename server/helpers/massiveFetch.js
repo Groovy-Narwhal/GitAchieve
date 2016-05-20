@@ -1,17 +1,17 @@
-const rp = require('request-promise');
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
-const cookieParser = require('cookie-parser');
-const keys = require('./../config/github.config.js');
-const session = require('express-session');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
+var rp = require('request-promise');
+var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+var cookieParser = require('cookie-parser');
+var keys = require('./../config/github.config.js');
+var session = require('express-session');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
 
 
-const massiveFetch = function (id, username, accessToken, profile, async) {
+var massiveFetch = function (id, username, accessToken, profile, async, callback) {
   console.log('In massiveFetch, username: ' + username + ', id: ' + id);
   
   // update the user's repos in our database   
-  const updateRepos = {
+  var updateRepos = {
     uri: CALLBACKHOST + '/api/v1/users/' + id + '/repos',
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
@@ -32,7 +32,7 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     }
   };
 
-  const updatePullRequests = {
+  var updatePullRequests = {
     uri: CALLBACKHOST + '/api/v1/orgs/' + id + '/pullrequests',
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
@@ -43,7 +43,7 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
   };
 
 
-  const updateStats = {
+  var updateStats = {
     uri: CALLBACKHOST + '/api/v1/users/' + id + '/stats',
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
@@ -53,7 +53,7 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     }
   };
 
-  const updateBranches = {
+  var updateBranches = {
     uri: CALLBACKHOST + '/api/v1/users/' + id + '/repos/branches',
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
@@ -63,7 +63,7 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     }
   };
 
-  const updateCommits = {
+  var updateCommits = {
     uri: CALLBACKHOST + '/api/v1/users/' + id + '/commits',
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
@@ -138,37 +138,38 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
                         console.log('MF 5: Success in updateBranches');
                         rp(updateCommits)
                           .then(branches => {
-                            console.log('MF 6: Success in updateCommits');
-                            return true;
+                            console.log('MF 6: Success in in updateCommits');
+                            // if all PATCH requests were successful, return true
+                            callback(true);
                           })
                           .catch(error => {
-                            console.error('MF 6: Error in updateCommits: ', error);
-                            return false;
+                            console.error('MF 6: Error in in updateCommits: ', error);
+                            callback(false);
                           });
                       })
                       .catch(error =>{
                         console.error('MF 5: Error in updateBranches: ', error);
-                        return false;
+                        callback(false);
                       });
                   })
                   .catch(error =>{
                     console.error('MF 4: Error in updateStats: ', error);
-                    return false; 
+                    callback(false); 
                   });
               })
               .catch(error =>{
                 console.error('MF 3: Error in updatePullRequests: ', error);
-                return false;
+                callback(false);
               });
           })
           .catch(error => {
             console.error('MF 2: Error in updateOrgs: ', error);
-            return false;
+            callback(false);
           });
       })
       .catch(error => {
         console.error('MF 1: Error in updateRepos: ', error);
-        return false;
+        callback(false);
       });
   }
 };

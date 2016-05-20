@@ -9,7 +9,7 @@ var helmet = require('helmet')
 
 module.exports = function(app) {
   // Compile Webpack and middleware
-  const compiler = webpack(config);
+  var compiler = webpack(config);
 
   // Middleware
   app.use(helmet({

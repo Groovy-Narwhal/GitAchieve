@@ -1,9 +1,9 @@
-const request = require('request');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const token = require('../config/github.config').token;
-const rp = require('request-promise');
-const getRepoOwners = require('../helpers/getRepoOwners');
+var request = require('request');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var token = require('../config/github.config').token;
+var rp = require('request-promise');
+var getRepoOwners = require('../helpers/getRepoOwners');
 
 // GET at '/api/v1/users/:id/commits'
 exports.retrieveCommits = function(req, res) {

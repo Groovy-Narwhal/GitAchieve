@@ -1,7 +1,7 @@
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
-const request = require('request');
-const Promise = require('bluebird');
-const massiveFetch = require('./massiveFetch');
+var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+var request = require('request');
+var Promise = require('bluebird');
+var massiveFetch = require('./massiveFetch');
 
 exports.updateCompetition = (req, res) => {
   var primaryid = req.params.primaryid;

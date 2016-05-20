@@ -1,16 +1,16 @@
-const promise = require('bluebird');
-const options = {
+var promise = require('bluebird');
+var options = {
   promiseLib: promise
 };
-const pgp = require('pg-promise')(options);
-const sql = require('./sql/sql');
-const PORT = require('../config/config-settings').PORT;
-const HOST = require('../config/config-settings').HOST;
-const diag = require('./diagnostics');
-const DB_DEPLOY_CONFIG = require('../config/dbConfig').DB_DEPLOY_CONFIG;
+var pgp = require('pg-promise')(options);
+var sql = require('./sql/sql');
+var PORT = require('../config/config-settings').PORT;
+var HOST = require('../config/config-settings').HOST;
+var diag = require('./diagnostics');
+var DB_DEPLOY_CONFIG = require('../config/dbConfig').DB_DEPLOY_CONFIG;
 diag.init(options);
 
-const DB_LOCAL_CONFIG = {
+var DB_LOCAL_CONFIG = {
   host: HOST, // server name or IP address;
   port: 5432,
   database: 'gitachieve',
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV !== 'production') {
   dbConfig = DB_DEPLOY_CONFIG;
 }
 
-const db = pgp(dbConfig);
+var db = pgp(dbConfig);
 
 db.tx(t=> t.one(sql.test)
   .then((data) => {

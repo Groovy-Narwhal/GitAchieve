@@ -1,7 +1,7 @@
-const request = require('request');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const token = require('../config/github.config').token;
+var request = require('request');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var token = require('../config/github.config').token;
 
 
 // GET at '/api/v1/users/:id/stats' to get a user's stats
@@ -124,7 +124,7 @@ exports.updateStats = function(req, res) {
     'WHERE $3~=$4',
     ['username', 'users', 'id', queryId])
     .then(user => {
-      const username = user.username;
+      var username = user.username;
       // select all of this user's orgs
       db.any('SELECT o.id, o.updated_ga, o.orgname, o.avatar_url, o.followers, o.following, o.score ' + 
         'FROM users_orgs uo ' +

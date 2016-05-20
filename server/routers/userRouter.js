@@ -1,12 +1,12 @@
-const userRouter = require('express').Router();
-const userController = require('./../controllers/userController.js');
-const repoController = require('./../controllers/repoController.js');
-const friendController = require('./../controllers/friendController.js');
-const statController = require('./../controllers/statController.js');
-const commitController = require('./../controllers/commitController.js');
-const commitStartController = require('./../controllers/commitStartController.js');
-const branchController = require('./../controllers/branchController.js');
-const update = require('./../helpers/competitionUpdate.js');
+var userRouter = require('express').Router();
+var userController = require('./../controllers/userController.js');
+var repoController = require('./../controllers/repoController.js');
+var friendController = require('./../controllers/friendController.js');
+var statController = require('./../controllers/statController.js');
+var commitController = require('./../controllers/commitController.js');
+var commitStartController = require('./../controllers/commitStartController.js');
+var branchController = require('./../controllers/branchController.js');
+var update = require('./../helpers/competitionUpdate.js');
 
 // the following routes start from /api/v1/users
 userRouter.route('/')
