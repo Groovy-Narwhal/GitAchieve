@@ -1,13 +1,13 @@
-const request = require('request');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const PORT = require('../config/config-settings').PORT;
-const HOST = require('../config/config-settings').HOST;
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+var request = require('request');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var PORT = require('../config/config-settings').PORT;
+var HOST = require('../config/config-settings').HOST;
+var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 // GET at /api/v1/users to retrieve all users
 exports.retrieveAllUsers = function(req, res) {
-  db.query('SELECT * FROM users')
+  db.any('SELECT * FROM users')
     .then((data) => res.send(data))
     .catch((error) => {
       console.error(error);

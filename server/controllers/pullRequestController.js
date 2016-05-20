@@ -1,16 +1,16 @@
-const request = require('request');
-const rp = require('request-promise');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const PORT = require('../config/config-settings').PORT;
-const HOST = require('../config/config-settings').HOST;
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+var request = require('request');
+var rp = require('request-promise');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var PORT = require('../config/config-settings').PORT;
+var HOST = require('../config/config-settings').HOST;
+var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 // PATCH at '/api/v1/users/orgs/:id/pullrequests' to update a user's pull requests by user id
 exports.retrievePullRequests = (req, res) => {
-  const dbTimestamp = pgp.as.date(new Date());
-  const username = req.body.profile.username;
-  const queryId = req.params.id;
+  var dbTimestamp = pgp.as.date(new Date());
+  var username = req.body.profile.username;
+  var queryId = req.params.id;
 
   // get the user from the database
   db.one('SELECT * FROM $1~ ' +
@@ -69,7 +69,7 @@ exports.retrievePullRequests = (req, res) => {
               var totalRepoOwners = repoOwners.length;
               var updatedPullRequests = []; 
               // call to send final response
-              const sendUpdatedPullRequests = function() {
+              var sendUpdatedPullRequests = function() {
                 db.one('INSERT INTO $1~ AS $2~ ($3~, $4~, $5~) ' +
                   'VALUES ($6, $7, $8) ' +
                   'ON CONFLICT ($3~) ' +
@@ -82,8 +82,8 @@ exports.retrievePullRequests = (req, res) => {
                     res.send(updatedPullRequests);
                   })
                   .catch(error => {
-                    console.error('Error updating pull_requests_count: ', error);
-                    res.status(500).send('Error updating pull_requests_count');
+                    console.error('Error updating pull_requests_count: ');
+                    // res.status(500).send('Error updating pull_requests_count');
                   });
               };
               
@@ -143,43 +143,43 @@ exports.retrievePullRequests = (req, res) => {
                         }
                       })
                       .catch(error => {
-                        console.error('Error updating pull requests: ', error);
-                        res.status(500).send('Error updating pull requests');
+                        console.error('Error updating pull requests: ');
+                        // res.status(500).send('Error updating pull requests');
                       });
                     } // end of else block
                   })  
                   .catch(error => {
-                    console.error('Error getting pull requests from GitHub: ', error);
-                    res.status(500).send('Error getting pull requests from GitHub');
+                    console.error('Error getting pull requests from GitHub: ');
+                    // res.status(500).send('Error getting pull requests from GitHub');
                   });
               });  
             } 
           })
           .catch(error => {
-            console.error('Error in selecting repos: ', error);
-            res.status(500).send('Error in selecting repos');
+            console.error('Error in selecting repos: ');
+            // res.status(500).send('Error in selecting repos');
           });
         })
         .catch(error => {
-          console.error('Error in selecting orgs: ', error);
-          res.status(500).send('Error in selecting orgs');
+          console.error('Error in selecting orgs: ');
+          // res.status(500).send('Error in selecting orgs');
         });
     })
     .catch(error => {
-      console.error('Error in selecting user: ', error);
-      res.status(500).send('Error in selecting user');
+      console.error('Error in selecting user: ');
+      // res.status(500).send('Error in selecting user');
     });
 };
 
 
 // /api/v1/users/orgs/:id/pullrequests
 exports.retrieveAllPRSForUser = function(req, res) {
-  const id = req.params.id;
+  var id = req.params.id;
   console.log('id', id);
   db.any('SELECT * FROM pull_requests WHERE pull_requests.user_id=$1 AND pull_requests.closed_at IS NOT NULL', [id])
     .then(data => res.send(data))
     .catch(error => {
-      console.error(error);
-      res.status(500).send('Error reading pull_requests table');
+      console.error('Error reading pull_requests table:');
+      // res.status(500).send('Error reading pull_requests table');
     });
 };

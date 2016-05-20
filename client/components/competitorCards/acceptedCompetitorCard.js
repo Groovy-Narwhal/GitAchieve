@@ -35,19 +35,38 @@ class AcceptedCompetitorCard extends Component {
   }
 
   componentWillUnmount() {
-    // clearInterval(window.interval);
+    clearInterval(window.interval);
   }
 
   competitionUpdateInterval(c) {
-    // clearInterval(window.interval);
-    // window.interval = setInterval(() => {
-    //   console.log('primary user id2', c.primary_user_id);
-    //   console.log('secondary_user_id2', c.secondary_user_id);
-    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
-    //     token: localStorage.token
-    //   });
-    //   this.setState({toggleUpdate: !this.state.toggleUpdate});
-    // }, 10000);
+    // these variables are set up differently between acceptedCompetitorCard and
+    // acceptedCompetitorCard2 to ensure that the right user is assigned to primary vs. secondary
+    var primaryUsername = this.props.user.username;
+    var primaryUserId = c.primary_user_id;
+    var primaryRepoId = c.primary_repo_id;
+    var secondaryUsername = this.state.username;
+    var secondaryUserId = c.secondary_user_id;
+    var secondaryRepoId = c.secondary_repo_id;
+    
+    clearInterval(window.interval);
+    window.interval = setInterval(() => {
+      
+      axios.put(
+        `${ROOT_URL}/api/v1/users/${primaryUserId}/${secondaryUserId}/update`,
+        {
+          token: localStorage.token,
+          primaryrepoid: primaryRepoId,
+          secondaryrepoid: secondaryRepoId
+        })
+        .then(results => {
+            console.log('competition update results: ', results);
+        })
+        .catch(error => {
+          console.log('error in competition update interval for user 1: ', error);
+        });
+      
+      this.setState({toggleUpdate: !this.state.toggleUpdate});
+    }, 10000);
   }
 
   handleAccept(c) {
@@ -71,6 +90,8 @@ class AcceptedCompetitorCard extends Component {
     var userRepo, competitorRepo;
     var data, totalCommitsForUser, totalCommitsForComp;
     var dailyData, dailyUserData, dailyCompetitorData;
+
+    this.competitionUpdateInterval(c);
 
     axios({
       method: 'get',

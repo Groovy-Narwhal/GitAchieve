@@ -1,58 +1,83 @@
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
-const request = require('request');
-const Promise = require('bluebird');
+var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+var rp = require('request-promise');
+var massiveFetch = require('./massiveFetch');
 
 exports.updateCompetition = (req, res) => {
   var primaryid = req.params.primaryid;
+  var primaryRepoId = req.body.primaryrepoid;
   var secondaryid = req.params.secondaryid;
+  var secondaryRepoId = req.body.secondaryrepoid;
   var token = req.body.token;
-
-  const updateCommits = (id) => {
-    var options = {
-      url: CALLBACKHOST + '/api/v1/users/' + id + '/commits',
-      method: 'PATCH',
-      form: { token: token },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }
-    };
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error('ERROR:', error);
-      } else {
-        console.log('Success in Worker Updating Commits');
-      }
-    });
+  
+  var primaryUserCommitsUpdate = {
+    uri: CALLBACKHOST + '/api/v1/users/' + primaryid + '/commits',
+    method: 'PUT',
+    json: true,
+    body: {
+      token: token,
+      repoid: primaryRepoId
+    }
   };
-
-  const updateStats = (id) => {
-    console.log('FIRST THEN')
-    var options = {
-      url: CALLBACKHOST + '/api/v1/users/' + id + '/stats',
-      method: 'PATCH',
-      form: { token: token },
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      }
-    };
-    request(options, (error, response, body) => {
-      if (error) {
-        console.error('ERROR:', error);
-      } else {
-        console.log('Success in Worker Updating Stats');
-        updateCommits(id);
-      }
-    });
+  
+  var secondaryUserCommitsUpdate = {
+    uri: CALLBACKHOST + '/api/v1/users/' + secondaryid + '/commits',
+    method: 'PUT',
+    json: true,
+    body: {
+      token: token,
+      repoid: secondaryRepoId
+    }
   };
-
-  function updateStatsAsync(userid) {
-    console.log('USERID', userid)
-    return new Promise((resolve, reject) => {
-      updateStats(userid, resolve, reject);
+  
+  var primaryUserBranchesUpdate = {
+    uri: CALLBACKHOST + '/api/v1/users/' + primaryid + '/repos/branches',
+    method: 'PATCH',
+    json: true,
+    body: {
+      token: token,
+      repoid: secondaryRepoId
+    }
+  };
+  
+  var secondaryUserBranchesUpdate = {
+    uri: CALLBACKHOST + '/api/v1/users/' + secondaryid + '/repos/branches',
+    method: 'PATCH',
+    json: true,
+    body: {
+      token: token,
+      repoid: secondaryRepoId
+    }
+  };
+  
+  
+  var results = {};
+  
+  rp(primaryUserBranchesUpdate)
+    .then(primaryUserBranches => {
+      rp(secondaryUserBranchesUpdate)
+        .then(secondaryUserBranches => {
+          rp(primaryUserCommitsUpdate)
+            .then(primaryUserCommits => {
+              results.primaryUserCommits = primaryUserCommits;
+              rp(secondaryUserCommitsUpdate)
+              .then(secondaryUserCommits => {
+                results.secondaryUserCommits = secondaryUserCommits;
+                res.send(results);
+              })
+              .catch(error => {
+                res.send(error);
+              });
+            })
+            .catch(error => {
+              res.send(error);
+            });
+        })
+        .catch(error => {
+          res.send(error);
+        });
     })
-  }
-
-  updateStatsAsync(primaryid).then(updateStatsAsync(secondaryid))
-
-}
+    .catch(error => {
+      res.send(error);
+    });
+};
 

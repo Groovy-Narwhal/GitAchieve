@@ -1,6 +1,6 @@
-const orgRouter = require('express').Router();
-const orgController = require('../controllers/orgController.js');
-const pullRequestController = require('../controllers/pullRequestController.js');
+var orgRouter = require('express').Router();
+var orgController = require('../controllers/orgController.js');
+var pullRequestController = require('../controllers/pullRequestController.js');
 
 // the following routes start from /api/v1/orgs
 orgRouter.route('/:id/orgs')

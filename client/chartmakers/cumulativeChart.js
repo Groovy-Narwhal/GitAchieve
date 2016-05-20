@@ -105,7 +105,9 @@ module.exports = (data) => {
       .enter()
         .append('text')
         .attr('x', (d, i) => xScale(users[i]) + barWidth/2)
-        .attr('y', (d) => yScale(d) + 16)
+        .attr('y', (d) => {
+          return d < mostCommits/20 ? yScale(d) - 11 : yScale(d) + 16;
+        })
         .attr('text-anchor', 'middle')
         .text((d) => d > 0 ? d.toString() : '')
         .attr('font-weight', '100')

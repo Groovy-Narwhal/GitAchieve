@@ -1,8 +1,8 @@
-const request = require('request');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const rp = require('request-promise');
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+var request = require('request');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var rp = require('request-promise');
+var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 
 // GET at '/api/v1/users/:id/friends'
@@ -47,15 +47,15 @@ exports.retrieveFriends = function(req, res) {
 // POST at '/api/v1/users/:id/friends'
 exports.addFriend = function(req, res) {
   // this is the person sending the invitation to compete
-  const primaryUserId = req.params.id; 
+  var primaryUserId = req.params.id; 
   // this is the person receiving the invitation to compete
-  const secondaryUserId = req.body.secondaryUserId;
-  const secondaryUsername = req.body.secondaryUsername;
-  const secondaryUserEmail = req.body.secondaryUserEmail;
-  const primaryRepoId = req.body.primaryRepoId;
-  const competitionStart = pgp.as.date(new Date(req.body.competitionStart));
-  const competitionEnd = pgp.as.date(new Date(req.body.competitionEnd));
-  const dbTimestamp = pgp.as.date(new Date());
+  var secondaryUserId = req.body.secondaryUserId;
+  var secondaryUsername = req.body.secondaryUsername;
+  var secondaryUserEmail = req.body.secondaryUserEmail;
+  var primaryRepoId = req.body.primaryRepoId;
+  var competitionStart = pgp.as.date(new Date(req.body.competitionStart));
+  var competitionEnd = pgp.as.date(new Date(req.body.competitionEnd));
+  var dbTimestamp = pgp.as.date(new Date());
   // check if the secondary user exists
   db.one('SELECT * FROM users WHERE id=($1)',
     secondaryUserId)
@@ -103,9 +103,9 @@ exports.confirmFriend = function(req, res) {
   // this is the person who sent the invitation to compete
   var primaryUserId = req.body.primaryUserId;
   // 0 is for testing purposes there will normally be a secondary repo id present otherwise it must be an integer type
-  const secondaryRepoId = req.body.secondaryRepoId || 57168943;
+  var secondaryRepoId = req.body.secondaryRepoId || 57168943;
   var confirmedAt = pgp.as.date(new Date());
-  const lastActive = pgp.as.date(new Date());
+  var lastActive = pgp.as.date(new Date());
   // find user_users connection
   db.oneOrNone(
     'SELECT * ' + 
@@ -126,7 +126,7 @@ exports.confirmFriend = function(req, res) {
           [confirmedAt, secondaryRepoId, lastActive, primaryUserId, secondaryUserId])
           .then(data => {
             console.log('data', data);
-            res.send(data)
+            res.send(data);
           })
           .catch(error => {
             console.error(error);
@@ -155,7 +155,7 @@ exports.checkForFriendRequests = function(req, res) {
     'AND uu.winner IS NULL',
     [secondaryIdCheck]
   ).then(data => {
-    const currentDate = new Date();
+    var currentDate = new Date();
     // for each data we want to make sure that they have a winner
     var filteredData = data.map(comp => {
       if (currentDate < new Date(comp.competition_end)) {
@@ -165,7 +165,6 @@ exports.checkForFriendRequests = function(req, res) {
     if (filteredData.length === 0) {
       res.send([]);
     } else {
-      console.log('WHAT UP')
       res.send(filteredData.reduce((acc, curr) => {
         return (curr !== undefined) ? acc.concat(curr) : acc;
       }, []));
@@ -174,8 +173,8 @@ exports.checkForFriendRequests = function(req, res) {
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
-  })
-}
+  });
+};
 
 // retrieve all entries in the user to user table in which you sent a request to compete and they have not yet accepted the match
 // GET at /api/v1/users/:id/requestedmatches
@@ -189,7 +188,7 @@ exports.checkForSentRequests = function(req, res) {
     'AND uu.winner IS NULL',
     [primaryIdCheck]
   ).then(data => {
-    const currentDate = new Date();
+    var currentDate = new Date();
     // for each data we want to make sure that they have a winner
     var filteredData = data.map(comp => {
       if (currentDate < new Date(comp.competition_end)) {
@@ -207,41 +206,41 @@ exports.checkForSentRequests = function(req, res) {
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
-  })
-}
+  });
+};
 
 // retrieve all entries in the user to user table in which confirmed at is not null
 // GET at /api/v1/users/:id/successmatches
 exports.checkApprovedRequests = function(req, res) {
-   // this is the current users id
-    var id = req.params.id;
+ // this is the current users id
+  var id = req.params.id;
 
-    db.any('Select * from users_users uu ' +
-      'WHERE uu.primary_user_id=($1) ' +
-      'AND uu.confirmed_at IS NOT NULL ' +
-      'AND uu.winner IS NULL',
-      [id]
-    ).then(data => {
-      const currentDate = new Date();
-      // for each data we want to make sure that they have a winner
-      var filteredData = data.map(comp => {
-        if (currentDate < new Date(comp.competition_end)) {
-          return comp;
-        }
-      });
-      if (filteredData.length === 0) {
-        res.send([]);
-      } else {
-        res.send(filteredData.reduce((acc, curr) => {
-          return (curr !== undefined) ? acc.concat(curr) : acc;
-        }, []));
+  db.any('Select * from users_users uu ' +
+    'WHERE uu.primary_user_id=($1) ' +
+    'AND uu.confirmed_at IS NOT NULL ' +
+    'AND uu.winner IS NULL',
+    [id]
+  ).then(data => {
+    var currentDate = new Date();
+    // for each data we want to make sure that they have a winner
+    var filteredData = data.map(comp => {
+      if (currentDate < new Date(comp.competition_end)) {
+        return comp;
       }
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).send('Error finding users_users connection');   
-    })
-  }
+    });
+    if (filteredData.length === 0) {
+      res.send([]);
+    } else {
+      res.send(filteredData.reduce((acc, curr) => {
+        return (curr !== undefined) ? acc.concat(curr) : acc;
+      }, []));
+    }
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  });
+};
 
 // retrieve all entries in the user to user table in which confirmed at is not null
 // GET at /api/v1/users/:id/successmatches
@@ -255,7 +254,7 @@ exports.checkApprovedRequests2 = function(req, res) {
     'AND uu.winner IS NULL',
     [id]
   ).then(data => {
-    const currentDate = new Date();
+    var currentDate = new Date();
     // for each data we want to make sure that they have a winner
     var filteredData = data.map(comp => {
       if (currentDate < new Date(comp.competition_end)) {
@@ -273,29 +272,29 @@ exports.checkApprovedRequests2 = function(req, res) {
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
-  })
-}
+  });
+};
 
 // retrieve all entries in the user to user table in which competition date is in the past and update them to have a winner
 // GET at /api/v1/users/:id/pastCompetitions
 exports.checkPastCompetitions = function(req, res) {
   // this is the current users id
-  const id = req.params.id;
+  var id = req.params.id;
 
 
   db.any('Select * from users_users uu ' +
     'WHERE uu.primary_user_id=($1) OR ' +
     'uu.secondary_user_id=($1)', [id])
   .then(data => {
-    const currentDate = new Date();
+    var currentDate = new Date();
     // for each data we want to make sure that they have a winner
-    const filteredData = data.map(comp => {
+    var filteredData = data.map(comp => {
       if (currentDate > new Date(comp.competition_end)) {
         return comp;
       }
     });
     var updatedCompetitions = [];
-    const length = filteredData.reduce((acc, curr) => {return (curr !== undefined) ? acc + 1 : acc }, 0);
+    var length = filteredData.reduce((acc, curr) => {return (curr !== undefined) ? acc + 1 : acc }, 0);
     var counter = 0;
     if (length === 0) {
       res.send([]);
@@ -303,7 +302,7 @@ exports.checkPastCompetitions = function(req, res) {
     filteredData.forEach(comp => {
       if (comp !== undefined) {
         counter = counter + 1;
-        const winner = comp.winner;
+        var winner = comp.winner;
         if (winner) {
           updatedCompetitions.push(comp);
           
@@ -311,13 +310,13 @@ exports.checkPastCompetitions = function(req, res) {
             res.send(updatedCompetitions);
           }
         } else {
-          const primary_user_id = comp.primary_user_id;
-          const primary_repo_id = comp.primary_repo_id;
-          const secondary_user_id = comp.secondary_user_id;
-          const secondary_repo_id = comp.secondary_repo_id || 19366327;
-          const competition_start = comp.competition_start;
+          var primary_user_id = comp.primary_user_id;
+          var primary_repo_id = comp.primary_repo_id;
+          var secondary_user_id = comp.secondary_user_id;
+          var secondary_repo_id = comp.secondary_repo_id || 19366327;
+          var competition_start = comp.competition_start;
 
-          const primaryOptions = {
+          var primaryOptions = {
             uri: `${CALLBACKHOST}/api/v1/users/${primary_user_id}/commits/start`,
             method: 'GET',
             headers: {
@@ -326,7 +325,7 @@ exports.checkPastCompetitions = function(req, res) {
             }
           };
 
-          const secondaryOptions = {
+          var secondaryOptions = {
             uri: `${CALLBACKHOST}/api/v1/users/${secondary_user_id}/commits/start`,
             method: 'GET',
             headers: {
@@ -337,15 +336,15 @@ exports.checkPastCompetitions = function(req, res) {
 
           rp(primaryOptions)
             .then(res => {
-              const data = JSON.parse(res);
-              const primaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+              var data = JSON.parse(res);
+              var primaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
               return primaryCommitCount;
             }).
             then(primaryCommitCount => {
               rp(secondaryOptions)
                 .then(res => {
-                  const data = JSON.parse(res);
-                  const secondaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
+                  var data = JSON.parse(res);
+                  var secondaryCommitCount = data.reduce( (acc, cur) => acc + cur.commits.length, 0);
                   if (primaryCommitCount > secondaryCommitCount) {
                    return primary_user_id;
                   } else if (primaryCommitCount < secondaryCommitCount) {
@@ -381,18 +380,26 @@ exports.checkPastCompetitions = function(req, res) {
                             console.error(error);
                             res.status(500).send('Error updating users_users connection');                
                           });
-                        }
+                      }
                     })
+                    .catch(error => {
+                      console.error(error);
+                    });
                 })
+                .catch(error => {
+                  console.error(error);
+                });
             })
-            .catch(err => console.error(err));
+            .catch(error => {
+              console.error(error);
+            });
         }
         
       }
-    })
+    });
   })
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
   });
-}
+};

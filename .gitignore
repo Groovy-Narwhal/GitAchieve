@@ -10,9 +10,6 @@ server/config/sendGridKey.js
 # SendGrid key
 server/config/sendGridKey.js
 
-# Concatenated and minified code
-dist/*
-
 .DS_Store
 
 # Dependency directories

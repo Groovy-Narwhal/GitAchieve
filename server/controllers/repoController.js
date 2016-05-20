@@ -1,7 +1,7 @@
-const request = require('request');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const token = require('../config/github.config').token;
+var request = require('request');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var token = require('../config/github.config').token;
 
 // GET at '/api/v1/users/:id/repo' to get a single repo for a user id by a repo id
 // header for 'repoid' must be included in the request
@@ -43,9 +43,8 @@ exports.retrieveRepos = function(req, res) {
 // PATCH at '/api/v1/users/:id/repos' to update a user's repos from GitHub by user id
 exports.updateRepos = function(req, res) {
   var queryId = req.params.id;
-  var queryUsername = req.body.profile.username;
   var dbTimestamp = pgp.as.date(new Date());
-  
+
   // ** HELPER FUNCTIONS **
   
   // add an array of repos to our repos table
@@ -169,7 +168,14 @@ exports.updateRepos = function(req, res) {
   };
   
   // CALL HELPER FUNCTIONS
-  getReposFromGitHub(queryUsername, handleGitHubData);
+  db.one('SELECT * FROM users WHERE id=$1', queryId)
+    .then((data) => {
+      getReposFromGitHub(data.username, handleGitHubData);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Error searching database for user');
+    });
   
 };  
 

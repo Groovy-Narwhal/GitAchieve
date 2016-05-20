@@ -1,17 +1,17 @@
-const request = require('request');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const PORT = require('../config/config-settings').PORT;
-const HOST = require('../config/config-settings').HOST;
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+var request = require('request');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var PORT = require('../config/config-settings').PORT;
+var HOST = require('../config/config-settings').HOST;
+var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 // PATCH at /api/v1/orgs/:id/orgs to add all of a user's orgs, each org's users, 
 // and each org's repos to our database
 exports.retrieveOrgs = (req, res) => {
-  const queryId = req.params.id;
-  const username = req.body.profile.username;
-  const token = req.body.token;
-  const dbTimestamp = pgp.as.date(new Date());
+  var queryId = req.params.id;
+  var username = req.body.profile.username;
+  var token = req.body.token;
+  var dbTimestamp = pgp.as.date(new Date());
   var orgCount = 0;
   var orgsSoFar = 0; 
   // *** HELPER FUNCTIONS ***
@@ -37,7 +37,7 @@ exports.retrieveOrgs = (req, res) => {
     });
   };
   
-  const addOrgsToDb = (orgs, callback) => {
+  var addOrgsToDb = (orgs, callback) => {
     db.tx(task => {
       var queries = [];  
       if (orgs.length > 0) {
@@ -115,7 +115,7 @@ exports.retrieveOrgs = (req, res) => {
     }
   };  
   
-  const addReposToDb = (repos, org) => {
+  var addReposToDb = (repos, org) => {
     db.tx(task => {
       var queries = [];
       if (repos.length > 0) {
@@ -184,7 +184,7 @@ exports.retrieveOrgs = (req, res) => {
   };
   
   // *** CALL HELPER FUNCTIONS ***
-  const handleGitHubData = (username, orgs) => {
+  var handleGitHubData = (username, orgs) => {
     
     addOrgsToDb(orgs, 
       addUserOrgJoins.bind(null, orgs, 

@@ -1,11 +1,11 @@
-const express = require('express');
-const path = require('path');
-const http = require('http');
-const router = express.Router();
-const db = require('./db/database.js');
+var express = require('express');
+var path = require('path');
+var http = require('http');
+var router = express.Router();
+var db = require('./db/database.js');
 
 // Initiate server
-const app = express();
+var app = express();
 
 // Passport Authentication and Middleware
 require('./helpers/middleware.js')(app);
@@ -14,8 +14,8 @@ require('./helpers/userGHFetcher')(app);
 require('./helpers/invitationSender')(app);
 
 // Routers
-const userRouter = require('./routers/userRouter.js');
-const orgRouter = require('./routers/orgRouter.js');
+var userRouter = require('./routers/userRouter.js');
+var orgRouter = require('./routers/orgRouter.js');
 
 // Use routers for specific paths
 app.use('/api/v1/users', userRouter);
@@ -32,10 +32,10 @@ app.get('/*', function (req, res) {
 });
 
 // Run server listening on the local environment
-const port = process.env.PORT || 8000;
-const server = http.createServer(app);
+var port = process.env.PORT || 8000;
+var server = http.createServer(app);
 server.listen(port);
-console.log('Server listening in on ', port);
+console.log('GitAchieve server listening on port ' + port + ' in ' + process.env.NODE_ENV + ' mode');
 
 // socket.io
 var io = require('socket.io')(server);

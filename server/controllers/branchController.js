@@ -1,16 +1,16 @@
-const rp = require('request-promise');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const getRepoOwners = require('../helpers/getRepoOwners');
-const token = require('../config/github.config').token;
+var rp = require('request-promise');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var getRepoOwners = require('../helpers/getRepoOwners');
+var token = require('../config/github.config').token;
 
 
 // GET at /api/v1/users/:id/repos/branches to get a repo's branches by user id and repo id
 // headers must include 'repoid'
 exports.retrieveBranches = (req, res) => {
-  const queryId = req.params.id;
-  const repoId = req.headers.repoid;
-  const dbTimestamp = pgp.as.date(new Date());
+  var queryId = req.params.id;
+  var repoId = req.headers.repoid;
+  var dbTimestamp = pgp.as.date(new Date());
   
   db.any(('SELECT r.id, r.updated_ga, r.created_at, r.name, r.owner_id, r.watchers_count, ' +
     'r.stargazers_count, r.forks_count, r.org_commit_activity ' + 
@@ -53,10 +53,10 @@ exports.retrieveBranches = (req, res) => {
 
 // PATCH at /api/v1/users/:id/repos/branches to update all of the branches for all of a user's repos
 exports.updateBranches = (req, res) => {
-  const queryId = req.params.id;
-  const dbTimestamp = pgp.as.date(new Date());
+  var queryId = req.params.id;
+  var dbTimestamp = pgp.as.date(new Date());
 
-  const getAndSaveBranchesFromGitHub = repoOwners => {
+  var getAndSaveBranchesFromGitHub = repoOwners => {
     var totalRepos = repoOwners.length;
     var repoCountGetBranches = 0;
     var updatedBranches = [];
@@ -128,23 +128,21 @@ exports.updateBranches = (req, res) => {
               })
               .catch(error => {
                 console.error('Error in querying branches: ', error);
-                res.status(500).send('Error in querying branches');
               });
           })
           .catch(error => {
             console.error('Error in insert branches: ', error);
-            res.status(500).send('Error in insert branches');
           });
         })
         .catch(error => {
           // if the GitHub request results in a non-500 status code, it may mean a repo has been
           // deleted - keep processing the rest, and increment count
           if (error.statusCode !== 500) {
-            repoCountGetCommits++;
+            repoCountGetBranches++;
             console.log('Error in getBranchesFromGitHub - repo: "' + repoOwner.repoName 
             + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
             // if all repos have been added, send the server response
-            if (repoCountGetCommits === totalRepos) {
+            if (repoCountGetBranches === totalRepos) {
               res.status(500).send();
             }
           } else {

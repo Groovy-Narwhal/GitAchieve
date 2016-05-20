@@ -1,14 +1,12 @@
-const userRouter = require('express').Router();
-const userController = require('./../controllers/userController.js');
-const repoController = require('./../controllers/repoController.js');
-const friendController = require('./../controllers/friendController.js');
-const statController = require('./../controllers/statController.js');
-const commitController = require('./../controllers/commitController.js');
-const commitStartController = require('./../controllers/commitStartController.js');
-const branchController = require('./../controllers/branchController.js');
-
-
-const update = require('./../helpers/competitionUpdate.js');
+var userRouter = require('express').Router();
+var userController = require('./../controllers/userController.js');
+var repoController = require('./../controllers/repoController.js');
+var friendController = require('./../controllers/friendController.js');
+var statController = require('./../controllers/statController.js');
+var commitController = require('./../controllers/commitController.js');
+var commitStartController = require('./../controllers/commitStartController.js');
+var branchController = require('./../controllers/branchController.js');
+var competitionUpdate = require('./../helpers/competitionUpdate.js');
 
 // the following routes start from /api/v1/users
 userRouter.route('/')
@@ -39,7 +37,8 @@ userRouter.route('/:id/stats')
   
 userRouter.route('/:id/commits')
   .get(commitController.retrieveCommits)
-  .patch(commitController.updateCommits);
+  .patch(commitController.updateCommits)
+  .put(commitController.updateCompetition);
 
 userRouter.route('/:id/commits/start')
   .get(commitStartController.retrieveCompetition); 
@@ -66,6 +65,6 @@ userRouter.route('/:id/pastcompetitions')
 
 // WORKER
 userRouter.route('/:primaryid/:secondaryid/update')
-  .patch(update.updateCompetition);
+  .put(competitionUpdate.updateCompetition);
   
 module.exports = userRouter;

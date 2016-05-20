@@ -1,9 +1,9 @@
-const request = require('request');
-const db = require('../db/database.js').db;
-const pgp = require('../db/database.js').pgp;
-const SEND_GRID_API = require('./../../server/config/sendGridKey');
-const sendgrid  = require('sendgrid')(SEND_GRID_API.key);
-const CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
+var request = require('request');
+var db = require('../db/database.js').db;
+var pgp = require('../db/database.js').pgp;
+var SEND_GRID_API = require('./../../server/config/sendGridKey');
+var sendgrid  = require('sendgrid')(SEND_GRID_API.key);
+var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 var competitorEmail;
 var competitor; //competitor's username
@@ -20,7 +20,7 @@ var sendEmail = (competitorEmail) => {
     competitor_id
   )
   .then(data => {
-    var emailLastSent = data[0].last_email_invite
+    var emailLastSent = data[0].last_email_invite;
     if (emailLastSent === null) {
       var now = new Date();
       db.oneOrNone('UPDATE users_users ' +
