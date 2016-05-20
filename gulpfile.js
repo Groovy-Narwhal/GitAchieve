@@ -2,16 +2,21 @@
 var gulp = require('gulp');
 
 // Include Our Plugins
-var jshint = require('gulp-jshint');
-var sass = require('gulp-sass');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var rename = require('gulp-rename');
-var mocha = require('gulp-mocha');
-var util = require('gulp-util');
-var shell = require('gulp-shell');
-var webpack = require('webpack-stream');
-var mochaPhantomJs = require('gulp-mocha-phantomjs');
+const babel = require('gulp-babel');
+const clean = require('gulp-clean');
+const env = require('gulp-env');
+const eslint = require('gulp-eslint');
+const sass = require('gulp-sass');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
+const mocha = require('gulp-mocha');
+const nodemon = require('gulp-nodemon');
+const util = require('gulp-util');
+const shell = require('gulp-shell');
+const webpack = require('webpack-stream');
+const webpackOptions = require('./webpack.config.production.js');
+const mochaPhantomJs = require('gulp-mocha-phantomjs');
 
 // Lint Task
 gulp.task('lint', function() {
@@ -26,11 +31,62 @@ gulp.task('test', shell.task([
   'jasmine-node test/server/ --junitreport'
 ]));
 
-// Build Task
-gulp.task('build', function() {
+// Set the NODE_ENV from a config JSON file
+gulp.task('env', function() {
+  env({
+    file: './server/config/.env.json'
+  });
+});
+
+// Clean out previous dist folder
+gulp.task('clean-dist', function () {  
+  return gulp.src('dist', {read: false})
+    .pipe(clean());
+});
+
+// Clean out concatenated server file
+gulp.task('clean-server1', function () {
+  return gulp.src('server/server-all.js', {read: false})
+    .pipe(clean());
+});
+
+// Clean out concatenated & uglified server file
+gulp.task('clean-server2', function () {
+  return gulp.src('server/server-all.min.js', {read: false})
+    .pipe(clean());
+});
+
+gulp.task('clean', ['clean-dist', 'clean-server1', 'clean-server2']);
+
+// Concatenate & Uglify client-side JS
+  // 'clean' must finish before this will start
+gulp.task('build-client', ['clean'], function() {
   return gulp.src('client/index.js')
-    .pipe(webpack())
-    .pipe(gulp.dest('dist/'));
+    .pipe(webpack(webpackOptions))
+    .pipe(rename('bundle.big.js'))
+    .pipe(gulp.dest('dist'))
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(rename('bundle.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('dist'))
+    .on('error', util.log);
+});
+
+// Concatenate & Uglify server-side JS
+  // 'clean' must finish before this will start
+gulp.task('build-server', ['clean'], function() {
+  return gulp.src('server/**/*.js')
+    .pipe(babel({
+      presets: ['es2015']
+    }))
+    .pipe(concat('server-all.js'))
+    .pipe(gulp.dest('server'))
+    .pipe(rename('server-all.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('server'))
+    .on('error', util.log);
 });
 
 // Concatenate & Minify JS Task
@@ -51,6 +107,9 @@ gulp.task('watch', function() {
 
 // Default Task
 gulp.task('default', ['lint', 'test', 'watch']);
+
+// Clean / Concatenate / Minify
+gulp.task('build', ['env', 'clean', 'build-client']);
 
 
 // Compile Our Sass // Commented out for now since Sass is not integrated yet.
