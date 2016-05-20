@@ -56,7 +56,7 @@ class DashBoard extends Component {
     if (!!contribs) {
       return (
         <div>
-          <span className="font-white">Your public contributions: <span className="font-active">{contribs.contributions_past_year}</span></span>
+          <span className="font-white">Your public contributions: <span className="font-active">0</span></span>
         </div>);
     } else {
       return (<div></div>);
