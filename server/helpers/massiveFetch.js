@@ -16,8 +16,7 @@ var massiveFetch = function (id, username, accessToken, profile, async, callback
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
 
@@ -27,8 +26,7 @@ var massiveFetch = function (id, username, accessToken, profile, async, callback
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
 
@@ -37,8 +35,7 @@ var massiveFetch = function (id, username, accessToken, profile, async, callback
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
 
@@ -48,8 +45,7 @@ var massiveFetch = function (id, username, accessToken, profile, async, callback
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
 
@@ -58,8 +54,7 @@ var massiveFetch = function (id, username, accessToken, profile, async, callback
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
 
@@ -68,8 +63,7 @@ var massiveFetch = function (id, username, accessToken, profile, async, callback
     method: 'PATCH',
     form: { profile: profile, token: accessToken },
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
 
@@ -138,12 +132,12 @@ var massiveFetch = function (id, username, accessToken, profile, async, callback
                         console.log('MF 5: Success in updateBranches');
                         rp(updateCommits)
                           .then(branches => {
-                            console.log('MF 6: Success in in updateCommits');
-                            // if all PATCH requests were successful, return true
+                            console.log('MF 6: Success in updateCommits');
+                            // if all PATCH requests were successful, run callback (true)
                             callback(true);
                           })
                           .catch(error => {
-                            console.error('MF 6: Error in in updateCommits: ', error);
+                            console.error('MF 6: Error in updateCommits: ', error);
                             callback(false);
                           });
                       })
