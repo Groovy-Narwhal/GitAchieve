@@ -18,6 +18,7 @@ exports.retrieveStats = function(req, res) {
     })
     .catch(error => {
       console.error('Error selecting stats: ', error);
+      res.status(500).send(error);
     });
 };
 

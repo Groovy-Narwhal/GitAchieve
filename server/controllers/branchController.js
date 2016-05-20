@@ -128,12 +128,10 @@ exports.updateBranches = (req, res) => {
               })
               .catch(error => {
                 console.error('Error in querying branches: ', error);
-                res.status(500).send('Error in querying branches');
               });
           })
           .catch(error => {
             console.error('Error in insert branches: ', error);
-            res.status(500).send('Error in insert branches');
           });
         })
         .catch(error => {

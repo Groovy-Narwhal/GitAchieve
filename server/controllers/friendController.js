@@ -126,7 +126,7 @@ exports.confirmFriend = function(req, res) {
           [confirmedAt, secondaryRepoId, lastActive, primaryUserId, secondaryUserId])
           .then(data => {
             console.log('data', data);
-            res.send(data)
+            res.send(data);
           })
           .catch(error => {
             console.error(error);
@@ -165,7 +165,6 @@ exports.checkForFriendRequests = function(req, res) {
     if (filteredData.length === 0) {
       res.send([]);
     } else {
-      console.log('WHAT UP')
       res.send(filteredData.reduce((acc, curr) => {
         return (curr !== undefined) ? acc.concat(curr) : acc;
       }, []));
@@ -174,8 +173,8 @@ exports.checkForFriendRequests = function(req, res) {
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
-  })
-}
+  });
+};
 
 // retrieve all entries in the user to user table in which you sent a request to compete and they have not yet accepted the match
 // GET at /api/v1/users/:id/requestedmatches
@@ -207,41 +206,41 @@ exports.checkForSentRequests = function(req, res) {
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
-  })
-}
+  });
+};
 
 // retrieve all entries in the user to user table in which confirmed at is not null
 // GET at /api/v1/users/:id/successmatches
 exports.checkApprovedRequests = function(req, res) {
-   // this is the current users id
-    var id = req.params.id;
+ // this is the current users id
+  var id = req.params.id;
 
-    db.any('Select * from users_users uu ' +
-      'WHERE uu.primary_user_id=($1) ' +
-      'AND uu.confirmed_at IS NOT NULL ' +
-      'AND uu.winner IS NULL',
-      [id]
-    ).then(data => {
-      var currentDate = new Date();
-      // for each data we want to make sure that they have a winner
-      var filteredData = data.map(comp => {
-        if (currentDate < new Date(comp.competition_end)) {
-          return comp;
-        }
-      });
-      if (filteredData.length === 0) {
-        res.send([]);
-      } else {
-        res.send(filteredData.reduce((acc, curr) => {
-          return (curr !== undefined) ? acc.concat(curr) : acc;
-        }, []));
+  db.any('Select * from users_users uu ' +
+    'WHERE uu.primary_user_id=($1) ' +
+    'AND uu.confirmed_at IS NOT NULL ' +
+    'AND uu.winner IS NULL',
+    [id]
+  ).then(data => {
+    var currentDate = new Date();
+    // for each data we want to make sure that they have a winner
+    var filteredData = data.map(comp => {
+      if (currentDate < new Date(comp.competition_end)) {
+        return comp;
       }
-    })
-    .catch(error => {
-      console.error(error);
-      res.status(500).send('Error finding users_users connection');   
-    })
-  }
+    });
+    if (filteredData.length === 0) {
+      res.send([]);
+    } else {
+      res.send(filteredData.reduce((acc, curr) => {
+        return (curr !== undefined) ? acc.concat(curr) : acc;
+      }, []));
+    }
+  })
+  .catch(error => {
+    console.error(error);
+    res.status(500).send('Error finding users_users connection');   
+  });
+};
 
 // retrieve all entries in the user to user table in which confirmed at is not null
 // GET at /api/v1/users/:id/successmatches
@@ -273,8 +272,8 @@ exports.checkApprovedRequests2 = function(req, res) {
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
-  })
-}
+  });
+};
 
 // retrieve all entries in the user to user table in which competition date is in the past and update them to have a winner
 // GET at /api/v1/users/:id/pastCompetitions
@@ -381,18 +380,26 @@ exports.checkPastCompetitions = function(req, res) {
                             console.error(error);
                             res.status(500).send('Error updating users_users connection');                
                           });
-                        }
+                      }
                     })
+                    .catch(error => {
+                      console.error(error);
+                    });
                 })
+                .catch(error => {
+                  console.error(error);
+                });
             })
-            .catch(err => console.error(err));
+            .catch(error => {
+              console.error(error);
+            });
         }
         
       }
-    })
+    });
   })
   .catch(error => {
     console.error(error);
     res.status(500).send('Error finding users_users connection');   
   });
-}
+};
