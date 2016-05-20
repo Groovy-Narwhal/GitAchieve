@@ -15,21 +15,20 @@ module.exports = (app) => {
       if (error) {
         console.log('Error in userGHFetcher: ', error);
       } else {
-        var arr = body.slice(body.indexOf('<div class="boxed-group flush">') + 25);
-        var contributions_past_year = arr.slice(body.indexOf('<div class="boxed-group flush">'));
-        // var real_current_streak = '';
-        // for (var i = 0; i < current_streak.length; i++) {
-        //   if (parseInt(current_streak[i])) {
-        //     real_current_streak += current_streak[i];
-        //   } else {
-        //     break;
-        //   }
-        // }
+        var arr = body.slice(0, body.indexOf(' contributions in the last year'));
+        var contributions_past_year = '';
+        for (var i = arr.length - 1; i > 0 ; i--) {
+          if (parseInt(arr[i])) {
+            contributions_past_year += arr[i]
+          } else {
+            break;
+          }
+        }
+        contributions_past_year = contributions_past_year.split('').reverse().join('');
         var obj = {
-          contributions_past_year: 0,
+          contributions_past_year: contributions_past_year,
         };
         // UPDATE DATABASE
-        console.log('LONG', arr);
         res.send(obj);
       }
     });

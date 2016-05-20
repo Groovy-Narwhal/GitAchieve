@@ -28,6 +28,7 @@ class DashBoard extends Component {
         .style('font-size', '15px');
     }
   }
+
   componentDidUpdate() {
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
@@ -42,21 +43,24 @@ class DashBoard extends Component {
       CumulativeChart(this.props.competitorsData);
     }
   }
+
   makeDailyChart() {
     if (this.props.dailyCompetitorsData.length > 0) {
       DailyChart(this.props.dailyCompetitorsData, 'same chart');
     }
   }
+
   addDailyChart() {
     if (this.props.dailyCompetitorsData.length > 0) {
       DailyChart(this.props.dailyCompetitorsData, 'additional chart');
     }
   }
+
   renderContributions(contribs) {
-    if (!!contribs) {
+    if (parseInt(contribs)) {
       return (
         <div>
-          <span className="font-white">Your public contributions: <span className="font-active">0</span></span>
+          <span className="font-white">Your public contributions: <span className="font-active">{contribs}</span></span>
         </div>);
     } else {
       return (<div></div>);
@@ -89,7 +93,6 @@ class DashBoard extends Component {
           <div className="data-results-container-clear">
             <h2 className="font-white">Achievement Charts</h2>
             <div className="data-results-container full-width">
-
               <div id="commit-charts">
                 <div className="text-centered">
                   { this.props.competitorsData.length > 0 ? <Countdown /> : <div></div> }
