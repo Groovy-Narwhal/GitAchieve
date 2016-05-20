@@ -107,9 +107,15 @@ gulp.task('watch', function() {
   // gulp.watch('scss/*.scss', ['sass']);
 });
 
-gulp.task('forever', ['build'], shell.task([
+gulp.task('forever', ['env', 'webpack'], shell.task([
   'forever ./forever/development.json'
 ]));
+
+gulp.task('webpack', shell.task([
+  'webpack -p'
+]));
+
+gulp.task('start', ['env', 'webpack', 'forever']);
 
 // Default Task
 gulp.task('default', ['lint', 'test', 'watch']);
