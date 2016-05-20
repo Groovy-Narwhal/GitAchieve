@@ -9,8 +9,16 @@ exports.updateCompetition = (req, res) => {
   var secondaryid = req.params.secondaryid;
   var secondaryUserName = req.body.secondaryUsername;
   var token = req.body.token;
+  var primaryProfile = {username: primaryUserName};
+  var secondaryProfile = {username: secondaryUserName};
 
-  massiveFetch(primaryid, primaryUserName, token, null, false);
-  massiveFetch(secondaryid, secondaryUserName, token, null, false);
+  console.log('updateCompetition primaryid', primaryid);
+  console.log('updateCompetition primaryUserName', primaryUserName);
+  console.log('updateCompetition secondaryid', secondaryid);
+  console.log('updateCompetition secondaryUserName', secondaryUserName);
+  
+
+  // massiveFetch(primaryid, primaryUserName, token, primaryProfile, false);
+  massiveFetch(secondaryid, secondaryUserName, token, secondaryProfile, false);
 };
 

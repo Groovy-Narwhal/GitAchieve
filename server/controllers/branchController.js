@@ -140,11 +140,11 @@ exports.updateBranches = (req, res) => {
           // if the GitHub request results in a non-500 status code, it may mean a repo has been
           // deleted - keep processing the rest, and increment count
           if (error.statusCode !== 500) {
-            repoCountGetCommits++;
+            repoCountGetBranches++;
             console.log('Error in getBranchesFromGitHub - repo: "' + repoOwner.repoName 
             + '"" for user: "' + repoOwner.userName + '"" not found in GitHub');
             // if all repos have been added, send the server response
-            if (repoCountGetCommits === totalRepos) {
+            if (repoCountGetBranches === totalRepos) {
               res.status(500).send();
             }
           } else {
