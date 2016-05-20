@@ -56,9 +56,7 @@ class DashBoard extends Component {
     if (!!contribs) {
       return (
         <div>
-          <span className="font-white">Your public contributions: <span className="font-active">{contribs.contributions_past_year}</span> </span>
-          <span className="font-white">Longest Day Streak: <span className="font-active">{contribs.longest_streak}</span> </span>
-          <span className="font-white">Current Day Streak: <span className="font-active">{contribs.current_streak}</span></span>
+          <span className="font-white">Your public contributions: <span className="font-active">{contribs.contributions_past_year}</span></span>
         </div>);
     } else {
       return (<div></div>);
