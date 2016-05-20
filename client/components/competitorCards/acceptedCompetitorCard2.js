@@ -34,27 +34,20 @@ class AcceptedCompetitorCard2 extends Component {
     
     clearInterval(window.interval);
     window.interval = setInterval(() => {
+
       axios.put(
-        `${ROOT_URL}/api/v1/users/${secondaryUserId}/commits`,
+        `${ROOT_URL}/api/v1/users/${primaryUserId}/${secondaryUserId}/update`,
         {
           token: localStorage.token,
-          repoid: secondaryRepoId 
+          primaryrepoid: primaryRepoId,
+          secondaryrepoid: secondaryRepoId
         })
-        .then(secondaryCommits => {
-          console.log('competition update results for user 2: ', secondaryCommits);
-          axios.put(
-            `${ROOT_URL}/api/v1/users/${primaryUserId}/commits`,
-            {
-              token: localStorage.token,
-              repoid: primaryRepoId 
-            })
-            .then(primaryCommits => {
-              console.log('competition update results for user 1: ', primaryCommits);
-            })
+        .then(results => {
+            console.log('competition update results: ', results);
         })
         .catch(error => {
           console.log('error in competition update interval for user 2: ', error);
-        })
+        });
       
       this.setState({toggleUpdate: !this.state.toggleUpdate});
     }, 10000);

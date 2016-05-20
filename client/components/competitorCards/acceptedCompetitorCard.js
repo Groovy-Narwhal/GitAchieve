@@ -51,7 +51,6 @@ class AcceptedCompetitorCard extends Component {
     clearInterval(window.interval);
     window.interval = setInterval(() => {
       
-      // /:primaryid/:secondaryid/update
       axios.put(
         `${ROOT_URL}/api/v1/users/${primaryUserId}/${secondaryUserId}/update`,
         {
