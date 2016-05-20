@@ -39,7 +39,7 @@ class ReceivedCompetitorCard extends Component {
       { !!this.state.avatar ? 
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
-            <h3 className="font-dark-gray">{this.state.username}</h3>
+            <h3 className="font-dark-gray">{this.state.username.length <= 10 ? this.state.username : this.state.username.slice(0, 10) + '...'}</h3>
             <span className="font-light-gray font-size-regular">Pending...</span>
             <div className="spacer-2px" />
             <button onClick={(e) => {this.handleAccept(e, this.props.req)}} className="button block centered">Accept</button>

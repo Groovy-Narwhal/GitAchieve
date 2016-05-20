@@ -74,18 +74,18 @@ class UserProfile extends Component {
   }
 
   fetchFriends() {
-    axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/friends`, this.state.options)
+    axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/friends`)
       .then(data => this.setState({friends: data.data}))
   }
 
   fetchEvents() {
     if (window.location.pathname.includes(this.props.user.username)) {
-      axios.get(`https://api.github.com/users/${this.props.user.username}/events`, this.state.options)
+      axios.get(`https://api.github.com/users/${this.props.user.username}/events`, this.state.options.headers)
         .then(response => this.setState({userEvents: response.data}))
     } else {
       let slicedName = window.location.pathname.slice(1);
       let username = slicedName.slice(0, slicedName.indexOf('/'))
-      axios.get(`https://api.github.com/users/${username}/events`, this.state.options)
+      axios.get(`https://api.github.com/users/${username}/events`, this.state.options.headers)
         .then(response => this.setState({userEvents: response.data}))
     }
   }
@@ -113,28 +113,6 @@ class UserProfile extends Component {
       default:
         return (<div></div>);
     }
-  }
-
-  renderHistory() {
-    return (
-      <table className="child history-table">
-        <tbody>
-        {this.state.history.map((comp, ind) =>
-          <tr key={ind}>
-            <td><img src={comp.competitorAvatar} className="user-avatar-med border-1px-white" /></td>
-            <td className="font-size-semi-large">{comp.competitor}</td>
-            {comp.champion === this.props.user.username ?
-              <td>You Won!</td> : <td>You Lost</td>
-            }
-            {comp.champion === this.props.user.username ?
-              <td><img src="./../static/assets/trophy-1-2.png" height="50px" width="50px" className="logo"/></td>
-              : <td><img src="./../static/assets/surrender.png" height="50px" width="50px" className="logo"/></td>
-            }
-          </tr>
-        )}
-        </tbody>
-      </table>
-    )
   }
 
   renderEvents() {
@@ -167,12 +145,35 @@ class UserProfile extends Component {
     }
   }
 
+  renderHistory() {
+    return (
+      <table className="child history-table">
+        <tbody>
+        {this.state.history.map((comp, ind) =>
+          <tr key={ind}>
+            <td><img src={comp.competitorAvatar} className="user-avatar-med" /><span className="block">{comp.competitor}</span></td>
+
+            {comp.champion === this.props.user.username ?
+              <td><img src="./../static/assets/trophy-1-3.png" height="50px" width="44px" className="logo"/></td>
+              : <td><img src="./../static/assets/surrender.png" height="50px" width="50px" className="logo"/></td>
+            }
+            {comp.champion === this.props.user.username ?
+              <td>You Won!</td> : <td>You Lost</td>
+            }
+          </tr>
+        )}
+        </tbody>
+      </table>
+    )
+  }
+
   renderFriends() {
+    console.log('FRIENDS', this.state.friends)
     if (this.state.friends.length !== 0) {
       return this.state.friends.map(friend => (
-        <div key={friend.id} className="data-result-container">
+        <div key={friend.id} className="competitor-card data-result-container">
           <img src={friend.avatar_url} className="user-avatar-med" />
-          <p><Link to={`/${friend.username}/profile`}>{friend.username}</Link></p>
+          <h3 className="font-dark-gray">{friend.username}</h3>
         </div>
       ));
     }
@@ -181,14 +182,14 @@ class UserProfile extends Component {
   render() {
     return (
       <div className="data-results-container">
-        <div className="data-result-container full-width">
+        <div className="data-result-container">
           <h2>Competition History</h2>
           <div>
             <div className="comp-result-container history-img">
               <img src={this.props.user.avatar_url} className="user-avatar-med2 border-1px-white" />
-              <h2>{this.props.user.username}</h2>
+              <h3>{this.props.user.username}</h3>
             </div>
-            <div className="comp-result-container">
+            <div className="comp-result-container comp-history">
               {this.renderHistory()}
             </div>
           </div>
@@ -197,7 +198,7 @@ class UserProfile extends Component {
           <h2>Friends</h2>
           {this.renderFriends()}
         </div>
-        <div className="data-results-container full-width">
+        <div className="comp-result-container full-width">
           {this.renderEvents()}
         </div>
       </div>

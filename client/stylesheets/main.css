@@ -497,7 +497,7 @@ h3 {
   display: inline; }
 
 .history-table td {
-  padding: 4px;
+  padding: 25px;
   vertical-align: middle;
   text-align: center;
 }
@@ -505,11 +505,13 @@ h3 {
 .comp-result-container {
   margin: auto;
   display: inline-block;
-  padding: 10px;
 }
 
 .comp-user, .history-img {
   vertical-align: top;
 }
 
+.comp-history {
+  float: right;
+}
 /*# sourceMappingURL=main.css.map */
