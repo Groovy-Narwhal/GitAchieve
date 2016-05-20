@@ -97,13 +97,11 @@ const checkForPastCompetitions = (id, dispatch) => {
 };
 
 const getContribs = (username, id, dispatch) => {
-  console.log('HELLO')
   async function getContribs() {
     var contribs = await utils.fetchLastYearGHContribs(username, id);
-    console.log('CONTRIBS', contribs);
       dispatch({
         type: types.GET_USER_CONTRIBS,
-        contribs
+        contribs: contribs.contributions_past_year
       })
   }
   getContribs.call(this);
@@ -170,7 +168,6 @@ export const signinUser = () => {
         return obj;
       })
       .then((obj) => {
-        // get contribs from database 
         getContribs(obj.username, obj.id, dispatch);
         return obj;
       })

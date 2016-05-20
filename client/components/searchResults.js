@@ -16,11 +16,8 @@ class SearchResults extends Component {
 
   compete(e, result) {
     e.preventDefault();
-
     this.props.actions.chooseSearchResult(result);
-
     browserHistory.push(`compete/choose-repo/${result.login}`);
-
   }
 
   getResult(result) {

@@ -25,9 +25,11 @@ class UserProfile extends Component {
       }
     };
   }
+  
   componentWillUnmount() {
     this.props.actions.searchUserEvents([]);
   }
+
   componentWillMount() {
     this.fetchFriends();
     this.fetchEvents.call(this)
@@ -55,7 +57,6 @@ class UserProfile extends Component {
         champion
       };
     });
-
     var result = [];
     var length = competitions.length;
     competitions.sort((a, b) => (new Date(a.competitionEnd) > new Date(b.competitionEnd)))
@@ -70,8 +71,6 @@ class UserProfile extends Component {
           }
         });
     });
-
-    
   }
 
   fetchFriends() {
@@ -167,6 +166,7 @@ class UserProfile extends Component {
       });
     }
   }
+
   renderFriends() {
     if (this.state.friends.length !== 0) {
       return this.state.friends.map(friend => (
@@ -174,12 +174,11 @@ class UserProfile extends Component {
           <img src={friend.avatar_url} className="user-avatar-med" />
           <p><Link to={`/${friend.username}/profile`}>{friend.username}</Link></p>
         </div>
-      ))
+      ));
     }
   }
 
   render() {
-
     return (
       <div className="data-results-container">
         <div className="data-result-container full-width">
@@ -205,26 +204,7 @@ class UserProfile extends Component {
     )
   }
 }
-/*
-{event.payload.commits.map((commit, index) => (
-  <div key={index}>
-    <p>author: {commit.author.name}</p>
-    <p>commit message: {commit.message}</p>
-  </div>
-))}
-render() {
-  return (
-    <div className="data-results-container">
-      <img src={this.props.user.avatar_url} className="user-avatar-1" />
-      <h2 className="font-white">{this.props.user.username}</h2>
-      <div>
-        <h2>Friends</h2>
-        {this.state.friends.length !== 0 ? this.state.friends.map(friend => (<div key={friend.id}><p>{friend.username}</p></div>)) : <div></div>}
-      </div>
-    </div>
-  )
-}
-*/
+
 const mapStateToProps = (state) => {
   return state;
 }
