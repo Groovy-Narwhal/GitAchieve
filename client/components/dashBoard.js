@@ -28,10 +28,8 @@ class DashBoard extends Component {
         .style('font-size', '15px');
     }
   }
+
   componentDidUpdate() {
-    if (this.props.auth.authenticated && this.props.userContributions[0] === 0) {
-      this.getUserContribs();
-    }
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
     }
@@ -39,35 +37,30 @@ class DashBoard extends Component {
       DailyChart(this.props.dailyCompetitorsData);
     }
   }
-  getUserContribs() {
-    async function getContribs() {
-      var numContribs = await utils.fetchLastYearGHContribs(this.props.user.username);
-      this.props.actions.getUserContribs(numContribs);
-    }
-    getContribs.call(this);
-  }
+
   makeMainChart() {
     if (this.props.competitorsData.length > 0){
       CumulativeChart(this.props.competitorsData);
     }
   }
+
   makeDailyChart() {
     if (this.props.dailyCompetitorsData.length > 0) {
       DailyChart(this.props.dailyCompetitorsData, 'same chart');
     }
   }
+
   addDailyChart() {
     if (this.props.dailyCompetitorsData.length > 0) {
       DailyChart(this.props.dailyCompetitorsData, 'additional chart');
     }
   }
+
   renderContributions(contribs) {
-    if (contribs === 0 || contribs === undefined) {
-      return (<span className="font-active">0</span>);
-    } else if (contribs.length < 10) {
-       return (<span className="font-active">{this.props.userContributions}</span>);
+    if (!parseInt(contribs)) {
+      return (<span className="font-active"> 0</span>);
     } else {
-      return (<span className="font-active">'Couldn\'t get your contributions. Try again in a few seconds'</span>);
+      return (<span className="font-active"> {contribs}</span>);
     }
   }
 
@@ -80,10 +73,12 @@ class DashBoard extends Component {
           <div className="main-search">
             <div className="dash-header-text text-centered">
               <h1 className="logo">GitAchieve</h1>
-              <h1 className="font-white">Search your Git opponent</h1>
-              <div className="spacer-5px" />
-              <span className="font-white">Your public contributions: </span>
-              {this.renderContributions(this.props.userContributions[0])}
+              <div className="spacer-10px" />
+              <h2 className="font-white">Your public contributions: 
+              {this.renderContributions(this.props.userContributions[0])}</h2>
+              <div className="spacer-10px" />
+              <h3 className="font-white">Search your Git opponent</h3>
+              <div className="spacer-10px" />
             </div>
             <div className="search-container text-centered">
               <div className="block text-centered">
@@ -96,7 +91,6 @@ class DashBoard extends Component {
           <div className="data-results-container-clear">
             <h2 className="font-white">Achievement Charts</h2>
             <div className="data-results-container full-width">
-
               <div id="commit-charts">
                 <div className="text-centered">
                   { this.props.competitorsData.length > 0 ? <Countdown /> : <div></div> }

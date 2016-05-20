@@ -7,7 +7,6 @@ export Search from './search';
 export SearchResults from './searchResults';
 export UserProfile from './userProfile';
 export Repos from './repos';
-export RepoProfile from './repoProfile';
 export CumulativeChart from './../chartmakers/cumulativeChart';
 export DailyChart from './../chartmakers/dailyChart';
 export UserAchievements from './userAchievements';

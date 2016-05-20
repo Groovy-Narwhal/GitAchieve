@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import actions from './../actions/ActionCreators';
-import Repo1 from './repo1';
 import axios from 'axios';
 
 const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;

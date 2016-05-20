@@ -6,10 +6,13 @@ import actions from './../actions/ActionCreators';
 import axios from 'axios';
 import moment from 'moment';
 
+const ROOT_URL = require('../../server/config/config-settings').CALLBACKHOST;
+
 class UserProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      history: [],
       friends: [],
       userEvents: [],
       options: {
@@ -22,28 +25,71 @@ class UserProfile extends Component {
       }
     };
   }
+  
   componentWillUnmount() {
     this.props.actions.searchUserEvents([]);
   }
+
   componentWillMount() {
     this.fetchFriends();
     this.fetchEvents.call(this)
+    this.fetchHistory()
   }
+
+  fetchHistory() {
+    var competitions = this.props.pastCompetitions[0].map(comp => {
+      var competitor, champion;
+      if (comp.primary_user_id === this.props.user.id) {
+        competitor = comp.secondary_user_id;
+      } else {
+        competitor = comp.primary_user_id;
+      }
+      if (comp.winner === 1) {
+        champion = 'Tie';
+      } else if (comp.winner === this.props.user.id) {
+        champion = this.props.user.username;
+      } else {
+        champion = comp.secondary_user_id;
+      }
+      return {
+        competitionEnd: comp.competition_end,
+        competitor,
+        champion
+      };
+    });
+    var result = [];
+    var length = competitions.length;
+    competitions.sort((a, b) => (new Date(a.competitionEnd) > new Date(b.competitionEnd)))
+    .forEach((comp) => {
+      axios.get(`${ROOT_URL}/api/v1/users/${comp.competitor}`)
+        .then((res, index) => {
+          var champion = (res.data.id === comp.champion) ? res.data.username : comp.champion;
+          // var newHistory = this.state.history.concat({ champion: champion, compei})
+          result.push({champion, competitor: res.data.username, competitorAvatar: res.data.avatar_url});
+          if (result.length === length) {
+            this.setState({history: result});
+          }
+        });
+    });
+  }
+
   fetchFriends() {
-    axios.get(`http://127.0.0.1:8000/api/v1/users/${this.props.user.id}/friends`, this.state.options)
+    axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/friends`)
       .then(data => this.setState({friends: data.data}))
   }
+
   fetchEvents() {
     if (window.location.pathname.includes(this.props.user.username)) {
-      axios.get(`https://api.github.com/users/${this.props.user.username}/events`, this.state.options)
+      axios.get(`https://api.github.com/users/${this.props.user.username}/events`, this.state.options.headers)
         .then(response => this.setState({userEvents: response.data}))
     } else {
       let slicedName = window.location.pathname.slice(1);
       let username = slicedName.slice(0, slicedName.indexOf('/'))
-      axios.get(`https://api.github.com/users/${username}/events`, this.state.options)
+      axios.get(`https://api.github.com/users/${username}/events`, this.state.options.headers)
         .then(response => this.setState({userEvents: response.data}))
     }
   }
+
   eventTypeFilter(event) {
     switch (event.type) {
       case 'PushEvent':
@@ -68,6 +114,7 @@ class UserProfile extends Component {
         return (<div></div>);
     }
   }
+
   renderEvents() {
     if (this.props.searchUserEvents.length > 0) {
       return this.props.searchUserEvents.map((event, index) => {
@@ -97,54 +144,67 @@ class UserProfile extends Component {
       });
     }
   }
+
+  renderHistory() {
+    return (
+      <table className="child history-table">
+        <tbody>
+        {this.state.history.map((comp, ind) =>
+          <tr key={ind}>
+            <td><img src={comp.competitorAvatar} className="user-avatar-med" /><span className="block">{comp.competitor}</span></td>
+
+            {comp.champion === this.props.user.username ?
+              <td><img src="./../static/assets/trophy-1-3.png" height="50px" width="44px" className="logo"/></td>
+              : <td><img src="./../static/assets/surrender.png" height="50px" width="50px" className="logo"/></td>
+            }
+            {comp.champion === this.props.user.username ?
+              <td>You Won!</td> : <td>You Lost</td>
+            }
+          </tr>
+        )}
+        </tbody>
+      </table>
+    )
+  }
+
   renderFriends() {
-  if (this.state.friends.length !== 0) {
-    return this.state.friends.map(friend => (
-      <div key={friend.id} className="data-result-container">
-        <img src={friend.avatar_url} className="user-avatar-med" />
-        <p><Link to={`/${friend.username}/profile`}>{friend.username}</Link></p>
-      </div>
-    ))
+    if (this.state.friends.length !== 0) {
+      return this.state.friends.map(friend => (
+        <div key={friend.id} className="competitor-card data-result-container">
+          <img src={friend.avatar_url} className="user-avatar-med" />
+          <h3 className="font-dark-gray">{friend.username}</h3>
+        </div>
+      ));
+    }
   }
-  }
+
   render() {
     return (
       <div className="data-results-container">
         <div className="data-result-container">
-          <img src={this.props.user.avatar_url} className="user-avatar-1" />
-          <h2 className="profile-username">{this.props.user.username}</h2>
+          <h2>Competition History</h2>
+          <div>
+            <div className="comp-result-container history-img">
+              <img src={this.props.user.avatar_url} className="user-avatar-med2 border-1px-white" />
+              <h3>{this.props.user.username}</h3>
+            </div>
+            <div className="comp-result-container comp-history">
+              {this.renderHistory()}
+            </div>
+          </div>
         </div>
         <div className="data-result-container">
           <h2>Friends</h2>
           {this.renderFriends()}
         </div>
-        <div className="data-results-container full-width">
+        <div className="comp-result-container full-width">
           {this.renderEvents()}
         </div>
       </div>
     )
   }
 }
-/*
-{event.payload.commits.map((commit, index) => (
-  <div key={index}>
-    <p>author: {commit.author.name}</p>
-    <p>commit message: {commit.message}</p>
-  </div>
-))}
-render() {
-  return (
-    <div className="data-results-container">
-      <img src={this.props.user.avatar_url} className="user-avatar-1" />
-      <h2 className="font-white">{this.props.user.username}</h2>
-      <div>
-        <h2>Friends</h2>
-        {this.state.friends.length !== 0 ? this.state.friends.map(friend => (<div key={friend.id}><p>{friend.username}</p></div>)) : <div></div>}
-      </div>
-    </div>
-  )
-}
-*/
+
 const mapStateToProps = (state) => {
   return state;
 }

@@ -11,13 +11,12 @@ const branchController = require('./../controllers/branchController.js');
 const update = require('./../helpers/competitionUpdate.js');
 
 // the following routes start from /api/v1/users
-
 userRouter.route('/')
   .get(userController.retrieveAllUsers)
   .post(userController.addUser);
 
 userRouter.route('/:id')
-  .get(userController.retrieveUser) // using
+  .get(userController.retrieveUser)
   .patch(userController.patchUser)
   .put(userController.updateUser)
   .delete(userController.deleteUser);
@@ -28,7 +27,7 @@ userRouter.route('/:id/repo')
 userRouter.route('/:id/repos')
   .get(repoController.retrieveRepos)
   .post(repoController.addRepo)
-  .patch(repoController.updateRepos);
+  .patch(repoController.updateRepos); //
 
 userRouter.route('/:id/repos/branches')
   .get(branchController.retrieveBranches)
@@ -47,30 +46,26 @@ userRouter.route('/:id/commits/start')
 
 userRouter.route('/:id/friends')
   .get(friendController.retrieveFriends)
-  .post(friendController.addFriend) // using
-  .patch(friendController.confirmFriend); // using
+  .post(friendController.addFriend)
+  .patch(friendController.confirmFriend);
 
 userRouter.route('/:id/receivedmatches')
-  .get(friendController.checkForFriendRequests); // using
+  .get(friendController.checkForFriendRequests);
 
 userRouter.route('/:id/requestedmatches')
-  .get(friendController.checkForSentRequests); // using
+  .get(friendController.checkForSentRequests);
 
 userRouter.route('/:id/successmatches')
-  .get(friendController.checkApprovedRequests); // using
+  .get(friendController.checkApprovedRequests);
 
 userRouter.route('/:id/successmatches2')
-  .get(friendController.checkApprovedRequests2); // using
+  .get(friendController.checkApprovedRequests2);
 
 userRouter.route('/:id/pastcompetitions')
-  .get(friendController.checkPastCompetitions); // using
+  .get(friendController.checkPastCompetitions);
 
 // WORKER
 userRouter.route('/:primaryid/:secondaryid/update')
   .patch(update.updateCompetition);
-
-// userRouter.route('/:id/achievements')
-//   .get(userController.retrieveAchievements)
-//   .post(userController.addAchievements);
   
 module.exports = userRouter;

@@ -7,7 +7,6 @@ export const sentRequests = (requests = [], action) => {
   }
 };
 
-
 export const receivedRequests = (requests = [], action) => {
   switch (action.type) {
     case 'RECEIVED_FR':

@@ -5,12 +5,18 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
+var helmet = require('helmet')
 
 module.exports = function(app) {
   // Compile Webpack and middleware
   const compiler = webpack(config);
 
   // Middleware
+  app.use(helmet({
+    frameguard: {
+      action: 'sameorigin'
+    }
+  }));
   app.use(bodyParser.json()); // for parsing application/json
   app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
   app.use(morgan('dev'));
