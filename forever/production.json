@@ -1,0 +1,7 @@
+{
+    "uid": "GitAchieve",
+    "append": true,
+    "watch": true,
+    "script": "server/server.js",
+    "sourceDir": "/home/ubuntu/gitAchieve"
+}
