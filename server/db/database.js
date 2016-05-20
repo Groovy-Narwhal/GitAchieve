@@ -18,7 +18,15 @@ const DB_LOCAL_CONFIG = {
   password: ''
 };
 
-const db = pgp(DB_LOCAL_CONFIG);
+var dbConfig;
+
+if (process.env.NODE_ENV !== 'production') {
+  dbConfig = DB_LOCAL_CONFIG;
+} else {
+  dbConfig = DB_DEPLOY_CONFIG;
+}
+
+const db = pgp(dbConfig);
 
 db.tx(t=> t.one(sql.test)
   .then((data) => {
