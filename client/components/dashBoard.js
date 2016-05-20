@@ -57,13 +57,10 @@ class DashBoard extends Component {
   }
 
   renderContributions(contribs) {
-    if (parseInt(contribs)) {
-      return (
-        <div>
-          <span className="font-white">Your public contributions: <span className="font-active">{contribs}</span></span>
-        </div>);
+    if (!parseInt(contribs)) {
+      return (<span className="font-active"> 0</span>);
     } else {
-      return (<div></div>);
+      return (<span className="font-active"> {contribs}</span>);
     }
   }
 
@@ -77,9 +74,10 @@ class DashBoard extends Component {
             <div className="dash-header-text text-centered">
               <h1 className="logo">GitAchieve</h1>
               <div className="spacer-10px" />
-              {this.renderContributions(this.props.userContributions[0])}
+              <h2 className="font-white">Your public contributions: 
+              {this.renderContributions(this.props.userContributions[0])}</h2>
               <div className="spacer-10px" />
-              <h1 className="font-white">Search your Git opponent</h1>
+              <h3 className="font-white">Search your Git opponent</h3>
               <div className="spacer-10px" />
             </div>
             <div className="search-container text-centered">
