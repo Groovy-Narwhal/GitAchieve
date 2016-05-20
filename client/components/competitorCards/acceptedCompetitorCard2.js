@@ -19,21 +19,24 @@ class AcceptedCompetitorCard2 extends Component {
   }
 
   componentWillUnmount() {
-    // clearInterval(window.interval);
+    clearInterval(window.interval);
   }
 
   competitionUpdateInterval(c) {
-    // clearInterval(window.interval);
-    // window.interval = setInterval(() => {
-    //   console.log('primary user id2', c.primary_user_id);
-    //   console.log('secondary_user_id2', c.secondary_user_id);
-    //   axios.patch(`${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, {
-    //     token: localStorage.token
-    //   }).then(this.handleAccept.bind(this, c))
-    //   this.setState({toggleUpdate: !this.state.toggleUpdate})
-    // }, 10000);
+    clearInterval(window.interval);
+    window.interval = setInterval(() => {
+      console.log('RUNNING INTERVAL');
+      axios.patch(
+        `${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, 
+        {
+          token: localStorage.token, 
+          primaryUsername: this.props.user.username,
+          secondaryUsername: this.state.username
+      });
+      
+      this.setState({toggleUpdate: !this.state.toggleUpdate});
+    }, 30000);
   }
-
 
   handleAccept(c) {
     /* handleAccept uses data from the competitor clicked as this.props.c, which has
@@ -54,6 +57,8 @@ class AcceptedCompetitorCard2 extends Component {
     var userRepo, competitorRepo;
     var data, totalCommitsForUser, totalCommitsForComp;
     var dailyData, dailyUserData, dailyCompetitorData;
+    
+    this.competitionUpdateInterval(c);
 
     axios({
       method: 'get',

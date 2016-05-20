@@ -8,6 +8,7 @@ const pgp = require('../db/database.js').pgp;
 
 
 const massiveFetch = function (id, username, accessToken, profile, async) {
+  console.log('In massiveFetch, username: ' + username + ', id: ' + id);
   
   // update the user's repos in our database   
   const updateRepos = {
@@ -16,7 +17,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
     }
   };
 
@@ -27,7 +27,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
     }
   };
 
@@ -37,7 +36,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     form: { profile: profile, token: accessToken },
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'User-Agent': username
     }
   };
 
@@ -68,9 +66,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
       'Content-Type': 'application/x-www-form-urlencoded',
     }
   };
-
-
-
 
   // if async is false or undefined, run each PATCH request independently
   if (!async) {
