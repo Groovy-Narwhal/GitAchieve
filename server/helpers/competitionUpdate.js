@@ -19,6 +19,6 @@ exports.updateCompetition = (req, res) => {
   
 
   // massiveFetch(primaryid, primaryUserName, token, primaryProfile, false);
-  massiveFetch(secondaryid, secondaryUserName, token, secondaryProfile, false);
+  // massiveFetch(secondaryid, secondaryUserName, token, secondaryProfile, false);
 };
 
