@@ -60,7 +60,6 @@ exports.retrieveCompetition = function(req, res) {
 
       // sort the history by date and return
       var sortedHistory = unsortedHistory.sort((a, b) => a.day - b.day);
-      console.log('SORTED HISTORY', sortedHistory);
       res.send(sortedHistory);
 
     })

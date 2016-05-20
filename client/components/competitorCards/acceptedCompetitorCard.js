@@ -41,8 +41,7 @@ class AcceptedCompetitorCard extends Component {
   competitionUpdateInterval(c) {
     clearInterval(window.interval);
     window.interval = setInterval(() => {
-      // console.log('primary user id2', c.primary_user_id);
-      // console.log('secondary_user_id2', c.secondary_user_id);
+      console.log('RUNNING INTERVAL');
       axios.patch(
         `${ROOT_URL}/api/v1/users/${c.primary_user_id}/${c.secondary_user_id}/update`, 
         {
