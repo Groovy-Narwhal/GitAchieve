@@ -13,12 +13,6 @@ var user; // logged in user's username; used in the text of the sent email
 // sends email with SendGrid
 var sendEmail = (competitorEmail) => {
 
-  /* There's a bug where 2 or 3 emails are often sent in quick succession
-    instead of just one.
-    Work-around for now is to check the database for email-last-sent
-    at /api/v1/users/:id/friends and finding the specific competitor
-    In addition, we add that field with the current date when it doesn't exist.
-  */
   db.any(
     'SELECT uu.last_email_invite ' +
     'FROM users_users uu ' +
