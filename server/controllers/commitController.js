@@ -209,9 +209,6 @@ exports.updateCompetition = function(req, res) {
                       // invoke the GET request
                       rp(options)
                         .then(commits => {
-                          console.log('sent GET to GitHub with uri: ', options.uri);
-                          console.log('branch name', branch.name);
-                          console.log('GitHub response length', commits.length);
                           db.tx(t => {
                             // insert each commit's author as a user if they don't exist in users table
                             var queries = [];
