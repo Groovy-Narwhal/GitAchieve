@@ -93,11 +93,13 @@ gulp.task('env', function() {
 gulp.task('run', ['build', 'env'], function() {
   if (envConfig.NODE_ENV !== 'production') {
     nodemon({
-      script: './server/server.js'
+      script: './server/server.js',
+      quiet: true
     });
   } else {
     nodemon({
-      script: './dist/server-all.min.js'
+      script: './dist/server-all.min.js',
+      quiet: true
     });
   }
 });
