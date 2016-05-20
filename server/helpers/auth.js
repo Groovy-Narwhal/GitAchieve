@@ -37,8 +37,7 @@ const getOrAddUser = function(accessToken, refreshToken, profile, callback) {
       // requests, stats, and commits
       // we are sending true as the last argument to run the requests sequentially - if any of
       // them fail, the rest will fail
-      var body = massiveFetch(id, username, accessToken, profile, true);
-      if (body !== false) {
+      if (massiveFetch(id, username, accessToken, profile, true)) {
         console.log('MF: All user info successfully updated from GitHub');
       } else {
         console.error('MF: errors in updating user info from GitHub');
