@@ -84,15 +84,14 @@ module.exports = function(app) {
   // GITHUB LOGIN
   app.get('/auth/github_oauth',
     passport.authenticate('github',
-      { scope: ['admin:gpg_key', 'admin:org', 'admin:org_hook', 'admin:public_key', 'admin:repo_hook', 'delete_repo', 'gist', 'notifications', 'repo', 'user']
+      { scope: ['admin:org', 'notifications', 'repo', 'user']
     }));
 
   app.get('/auth/github_oauth/callback',
     passport.authenticate('github', {
-      successRedirect: '/',
       failureRedirect: '/github/failure'
     }), function(req, res, next) {
-      res.redirect('/');
+      res.redirect('/signin');
     });
 
   app.get('/github/profile', checkAuth, function(req, res) {
