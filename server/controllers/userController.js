@@ -7,7 +7,7 @@ var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
 
 // GET at /api/v1/users to retrieve all users
 exports.retrieveAllUsers = function(req, res) {
-  db.query('SELECT * FROM users')
+  db.one('SELECT * FROM users')
     .then((data) => res.send(data))
     .catch((error) => {
       console.error(error);

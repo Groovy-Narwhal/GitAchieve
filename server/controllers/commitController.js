@@ -201,7 +201,7 @@ exports.updateCommits = function(req, res) {
   };
   
   // CALL HELPER FUNCTIONS
-  
+  console.log('in commitController, queryId', queryId);
   getRepoOwners(queryId, getCommitsFromGitHub);
   
 };

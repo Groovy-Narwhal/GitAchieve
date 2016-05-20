@@ -1,24 +1,57 @@
 var CALLBACKHOST = require('../config/config-settings').CALLBACKHOST;
-var request = require('request');
-var Promise = require('bluebird');
+var rp = require('request-promise');
 var massiveFetch = require('./massiveFetch');
 
 exports.updateCompetition = (req, res) => {
   var primaryid = req.params.primaryid;
-  var primaryUserName = req.body.primaryUsername;
+  var primaryUsername = req.body.primaryUsername;
   var secondaryid = req.params.secondaryid;
-  var secondaryUserName = req.body.secondaryUsername;
+  var secondaryUsername = req.body.secondaryUsername;
   var token = req.body.token;
-  var primaryProfile = {username: primaryUserName};
-  var secondaryProfile = {username: secondaryUserName};
+  var primaryProfile = {username: primaryUsername};
+  var secondaryProfile = {username: secondaryUsername};
 
   console.log('updateCompetition primaryid', primaryid);
-  console.log('updateCompetition primaryUserName', primaryUserName);
+  console.log('updateCompetition primaryUsername', primaryUsername);
   console.log('updateCompetition secondaryid', secondaryid);
-  console.log('updateCompetition secondaryUserName', secondaryUserName);
+  console.log('updateCompetition secondaryUsername', secondaryUsername);
   
-
-  // massiveFetch(primaryid, primaryUserName, token, primaryProfile, false);
-  // massiveFetch(secondaryid, secondaryUserName, token, secondaryProfile, false);
+  console.log('Competition Update, primaryUsername: ' + primaryUsername + ', secondaryUsername: ' + secondaryUsername);
+  
+  var primaryUserOptions = {
+    uri: CALLBACKHOST + '/api/v1/users/' + primaryid + '/commits',
+    method: 'PATCH',
+    json: true,
+    body: {
+      token: token
+    }
+  };
+  
+  var secondaryUserOptions = {
+    uri: CALLBACKHOST + '/api/v1/users/' + secondaryid + '/commits',
+    method: 'PATCH',
+    json: true,
+    body: {
+      token: token
+    }
+  };
+  
+  var results = {};
+  
+  rp(primaryUserOptions)
+    .then(primaryUserCommits => {
+      results.primaryUserCommits = primaryUserCommits;
+      rp(secondaryUserOptions)
+      .then(secondaryUserCommits => {
+        results.secondaryUserCommits = secondaryUserCommits;
+        res.send(results);
+      })
+      .catch(error => {
+        res.send(error);
+      });
+    })
+    .catch(error => {
+      res.send(error);
+    });
 };
 
