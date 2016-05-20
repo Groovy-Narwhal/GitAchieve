@@ -168,7 +168,6 @@ class UserProfile extends Component {
   }
 
   renderFriends() {
-    console.log('FRIENDS', this.state.friends)
     if (this.state.friends.length !== 0) {
       return this.state.friends.map(friend => (
         <div key={friend.id} className="competitor-card data-result-container">
