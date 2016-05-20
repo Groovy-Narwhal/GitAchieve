@@ -144,8 +144,6 @@ class AcceptedCompetitorCard extends Component {
               competitorRepo = response.data[0] ? response.data[0].name : 'repo name not found';
 
               //update cumulative and daily data with repo names
-              console.log('USERREPO1', userRepo);
-              console.log('COMPREPO1', competitorRepo);
               data[0].push(userRepo);
               data[0].push(competitorRepo);
               dailyData[0].push(userRepo);
