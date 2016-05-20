@@ -1,6 +1,7 @@
 import configSettings from './../../server/config/config-settings';
 
 module.exports = {
+
   debounce: function(func, wait, immediate) {
   var timeout;
   return function() {
@@ -15,12 +16,15 @@ module.exports = {
       if (callNow) func.apply(context, args);
     };
   },
-  fetchLastYearGHContribs: function(user) {
+
+  fetchLastYearGHContribs: function(user, id) {
     var options = {
       username: user
     };
-    return fetch(configSettings.CALLBACKHOST + `/gh-fetch?username=${user}`)
+    return fetch(configSettings.CALLBACKHOST + `/gh-fetch?username=${user}&id=${id}`)
       .then((res) => res.text())
-      .then((data) => data.slice(data.indexOf('<span class="contrib-number">') + 29, data.indexOf('total</span>')));
+      .then((data) => JSON.parse(data))
+      .catch(err => {console.error('ERROR', err)});
   }
+
 };

@@ -324,6 +324,11 @@ h3 {
   height: auto;
   border-radius: 5px; }
 
+.user-avatar-med2 {
+  width: 72px;
+  height: 72px;
+  border-radius: 2px; }
+
 .avatar-container {
   width: 120px;
   height: 120px;
@@ -491,4 +496,22 @@ h3 {
 .event-title {
   display: inline; }
 
+.history-table td {
+  padding: 25px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.comp-result-container {
+  margin: auto;
+  display: inline-block;
+}
+
+.comp-user, .history-img {
+  vertical-align: top;
+}
+
+.comp-history {
+  float: right;
+}
 /*# sourceMappingURL=main.css.map */

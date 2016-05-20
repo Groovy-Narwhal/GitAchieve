@@ -43,7 +43,9 @@ class ChooseSecondWeapon extends Component {
     return (
       <div className="data-results-container-clear">
         <h2>Choose Your Weapon // Repos</h2>
-        <Repos />
+        <div className="data-results-container full-width">
+          <Repos />
+        </div>
         <div className="spacer-10px"></div>
         <div className="block text-centered">
           <input type="submit" value="COMPETE" className="button compete" onClick={this.compete.bind(this)} />

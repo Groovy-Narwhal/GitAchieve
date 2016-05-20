@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
 export default class Login extends Component {
-
   render() {
     return (
       <div>

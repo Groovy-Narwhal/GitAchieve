@@ -69,9 +69,6 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
     }
   };
 
-
-
-
   // if async is false or undefined, run each PATCH request independently
   if (!async) {
     rp(updateRepos)
@@ -115,7 +112,8 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
       })
       .catch(error => {
         console.error('MF 6: Error in updateCommits: ', error);
-      });            
+      });
+
   } else {
   // if async is true, run each PATCH request one after the other\
   // if any of them fail, the rest will not run
@@ -136,12 +134,11 @@ const massiveFetch = function (id, username, accessToken, profile, async) {
                         console.log('MF 5: Success in updateBranches');
                         rp(updateCommits)
                           .then(branches => {
-                            console.log('MF 6: Success in in updateCommits');
-                            // if all PATCH requests were successful, return true
+                            console.log('MF 6: Success in updateCommits');
                             return true;
                           })
                           .catch(error => {
-                            console.error('MF 6: Error in in updateCommits: ', error);
+                            console.error('MF 6: Error in updateCommits: ', error);
                             return false;
                           });
                       })

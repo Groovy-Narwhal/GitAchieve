@@ -69,7 +69,7 @@ class Countdown extends Component {
           this.props.actions.confirmedFriendRequests2(response.data);
         });
     }
-    axios.all([pastCompetitions.apply(this), checkForFriendRequests.apply(this), checkForSentRequests.apply(this), checkForConfirmedRequests.apply(this), checkForConfirmedRequests2.apply(this)])
+    axios.all([pastCompetitions.apply(this), checkForFriendRequests.apply(this), checkForSentRequests.apply(this), checkForConfirmedRequests.apply(this), checkForConfirmedRequests2.apply(this)]);
   }
 
   update() {
