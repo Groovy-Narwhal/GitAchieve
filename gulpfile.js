@@ -18,6 +18,8 @@ const webpack = require('webpack-stream');
 const webpackOptions = require('./webpack.config.production.js');
 const mochaPhantomJs = require('gulp-mocha-phantomjs');
 
+
+
 // Lint Task
 gulp.task('lint', function() {
   return gulp.src(['./client/**/*.js', './server/**/*.js'], {base: '.'})
@@ -105,12 +107,18 @@ gulp.task('watch', function() {
   // gulp.watch('scss/*.scss', ['sass']);
 });
 
+gulp.task('forever', ['build'], shell.task([
+  'forever ./forever/development.json'
+]));
+
 // Default Task
 gulp.task('default', ['lint', 'test', 'watch']);
 
 // Clean / Concatenate / Minify
 gulp.task('build', ['env', 'clean', 'build-client']);
 
+// Build client files and start deployed server
+gulp.task('run', ['build', 'forever']);
 
 // Compile Our Sass // Commented out for now since Sass is not integrated yet.
 // gulp.task('sass', function() {
