@@ -1,12 +1,12 @@
 var frisby = require('frisby');
 const CALLBACKHOST = require('../../server/config/config-settings').CALLBACKHOST;
 
-frisby.create('Get Users')
-  .get(`${CALLBACKHOST}/api/v1/users`)
-  .expectStatus(200)
-  .expectHeader('Content-Type', 'application/json; charset=utf-8')
+// frisby.create('Get Users')
+//   .get(`${CALLBACKHOST}/api/v1/users`)
+//   .expectStatus(200)
+//   .expectHeader('Content-Type', 'application/json; charset=utf-8')
 
-.toss();
+// .toss();
 
 // frisby.create('Get User By id')
 //   .get(`${CALLBACKHOST}/api/v1/users/15220759`)

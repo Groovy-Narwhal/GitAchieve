@@ -65,6 +65,6 @@ userRouter.route('/:id/pastcompetitions')
 
 // WORKER
 userRouter.route('/:primaryid/:secondaryid/update')
-  .put(update.updateCompetition);
+  .put(competitionUpdate.updateCompetition);
   
 module.exports = userRouter;
