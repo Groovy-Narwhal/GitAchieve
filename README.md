@@ -40,8 +40,14 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 |/api/v1/users/:id/repo|GET|Get a single repo by id for a user|Header for `repoid`|Array containing repo|
 |/api/v1/users/:id/repos|GET|Get a user's repos|none|Array of repos|
 |/api/v1/users/:id/repos|POST|Add a repo for a user|Object containing 'profile', an object of all updated values|Added repo, added join|
+|/api/v1/users/:id/repos|PATCH|Update a user's repos from GitHub by user id|none|Array of repos|
 |/api/v1/users/:id/repos/branches|GET|Get a repo's branches by user id and repo id|Header for `repoid`|Array of branches|
 |/api/v1/users/:id/repos/branches|PATCH|Update branches for a user's repos from GitHub|none|Array of branches updated|
+|/api/v1/users/:id/stats|GET|Get stats for a user by org and repo|Headers for `orgid` and `repoid`|Array containing stat object|
+|/api/v1/users/:id/stats|PATCH|Update stats for a user from GitHub |none|Array of stats updated - each has user_id, org_id and repo_id|
+|/api/v1/users/:id/commits|GET|Get commits for a user by repo|Header for `repoid`|Array containing commits, sorted by most recent first|
+|/api/v1/users/:id/commits|PATCH|Update commits for a user from GitHub|none|Array of commits updated|
+|/api/v1/users/:id/commits/start|GET|Get commits for a user by repo from start date|Header for `repoid` and `startdate`|Array of objects containing date and commits for each day|
 |/api/v1/users/:id/friends|GET|Get a user's friends|none|Array of friends|
 |/api/v1/users/:id/friends|POST|Primary user requests friendship with secondary user|primary user id, secondary user id, username and email|Array containing join row in users_users|
 |/api/v1/users/:id/friends|PATCH|Confirm a friend request or remove a friendship|remove:true to remove friendship|Array containing join row in users_users|
@@ -49,11 +55,7 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 |/api/v1/users/:id/requestedmatches|GET|Retrieve all friendships in which you requested to compete with someone|none|Array of users_users|
 |/api/v1/users/:id/successmatches|GET|Retrieve all friendships that have been accepted in which you sent the request|none|Array of users_users|
 |/api/v1/users/:id/successmatches2|GET|Retrieve all friendships that have been accepted in which you were sent the request|none|Array of users_users|
-|/api/v1/users/:id/stats|GET|Get stats for a user by org and repo|Headers for `orgid` and `repoid`|Array containing stat object|
-|/api/v1/users/:id/stats|PATCH|Update stats for a user from GitHub |none|Array of stats updated - each has user_id, org_id and repo_id|
-|/api/v1/users/:id/commits|GET|Get commits for a user by repo|Header for `repoid`|Array containing commits, sorted by most recent first|
-|/api/v1/users/:id/commits|PATCH|Update commits for a user from GitHub|none|Array of commits updated|
-|/api/v1/users/:id/commits/start|GET|Get commits for a user by repo from start date|Header for `repoid` and `startdate`|Array of objects containing date and commits for each day|
+|/api/v1/users/:id/pastcompetitions|GET|Retrieve all competitions that have passed|none|Array of users_users|
 |/api/v1/orgs/:id/orgs|PATCH|Update organizations for user|none|Array of organizations|
 |/api/v1/orgs/:id/pullrequests|PATCH|Update pull requests for user|none|Array of pull request data for user|
 |/api/v1/orgs/:username/orgs|GET|Get all of users organizations|none|Array of organizations data|
