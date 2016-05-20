@@ -60,16 +60,16 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 |/api/v1/orgs/:username/pullrequests|GET|Get all of users pull requests|none|Array of pullrequest data|
 
 ### Client Side Routes
-|Route|Description|Related Server Endpoints|
-|---|---|---|
+|Route|Description|
+|---|---|
+|/|Index route displaying search for opponent, achievement chart, competitor challenges |
 |/signin|Login page with logo, tagline, and GitHub login button|Handled via passport in auth.js|
-|/about|About page with info on what GitAchieve is and the team|None|
-|/|Index route displaying search for opponent, achievement chart, competitor challenges |?|
-|/search-results|List of users search results|?|
-|/compete/choose-repo/:username|Dropdown for first user to select repo and start time of competition|?|
-|/compete/choose-second-repo/:id|Dropdown for second user to select repo|?|
-|/:username/profile|Users profile page|?|
-|/achievements/:id|Users achievement profile|?|
+|/about|About page with info on what GitAchieve is and the team|
+|/search-results|List of users search results|
+|/:username/profile|Users profile page|
+|/:username/achievements|Users achievement profile|
+|/compete/choose-repo/:username|Dropdown for first user to select repo and start time of competition|
+|/compete/choose-second-repo/:id|Dropdown for second user to select repo|
 
 ### System Architecture
 ![System Architecture](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/docs/systemArchitecture.png)
