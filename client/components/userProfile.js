@@ -75,7 +75,7 @@ class UserProfile extends Component {
   }
 
   fetchFriends() {
-    axios.get(`http://127.0.0.1:8000/api/v1/users/${this.props.user.id}/friends`, this.state.options)
+    axios.get(`${ROOT_URL}/api/v1/users/${this.props.user.id}/friends`, this.state.options)
       .then(data => this.setState({friends: data.data}))
   }
 
