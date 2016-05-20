@@ -18,7 +18,7 @@ module.exports = (app) => {
         var arr = body.slice(0, body.indexOf(' contributions in the last year'));
         var contributions_past_year = '';
         for (var i = arr.length - 1; i > 0 ; i--) {
-          if (parseInt(arr[i])) {
+          if (parseInt(arr[i]) || parseInt(arr[i]) === 0) {
             contributions_past_year += arr[i]
           } else {
             break;
