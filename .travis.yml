@@ -2,17 +2,12 @@ language: node_js
 node_js:
   - "6"
   - "5"
+  - "4"
   - "iojs"
 before_script:
-  - echo '{"NODE_ENV":"production"}' > ./server/config/.env.json
-  - echo ' ' > ./server/config/github.config.js
-  - echo ' ' > ./server/config/sendGridKey.js
-  - echo ' ' > ./server/config/dbConfig.js
-  - npm run serve
-  
-script:
-  - mocha test/client/.setup.js test/client
-  - jasmine-node test/server/test_spec.js --junitreport
+  - npm install -g jasmine-node
+  - npm install -g gulp
+script: 'gulp test'
 sudo: false
 matrix:
   fast_finish: true
