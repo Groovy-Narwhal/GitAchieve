@@ -165,7 +165,7 @@ class AcceptedCompetitorCard extends Component {
       { !!this.state.avatar ?
           <div>
             <img className="user-avatar-med" src={this.state.avatar} />
-            <h3 className="font-dark-gray">{this.state.username}</h3>
+            <h3 className="font-dark-gray">{this.state.username.length <= 10 ? this.state.username : this.state.username.slice(0, 10) + '...'}</h3>
             <div className="spacer-2px" />
             <p className="font-lighter-gray font-size-regular">Competing</p>
             <div className="spacer-2px"/>
