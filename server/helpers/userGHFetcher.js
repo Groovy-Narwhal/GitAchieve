@@ -25,11 +25,8 @@ module.exports = (app) => {
           }
         }
         contributions_past_year = contributions_past_year.split('').reverse().join('');
-        var obj = {
-          contributions_past_year: contributions_past_year,
-        };
-        // UPDATE DATABASE
-        res.send(obj);
+        // TODO UPDATE DATABASE
+        res.send(contributions_past_year);
       }
     });
   });

@@ -101,7 +101,7 @@ const getContribs = (username, id, dispatch) => {
     var contribs = await utils.fetchLastYearGHContribs(username, id);
       dispatch({
         type: types.GET_USER_CONTRIBS,
-        contribs: contribs.contributions_past_year
+        contribs: contribs
       })
   }
   getContribs.call(this);
