@@ -100,11 +100,11 @@ const getContribs = (username, id, dispatch) => {
   console.log('HELLO')
   async function getContribs() {
     var contribs = await utils.fetchLastYearGHContribs(username, id);
-    console.log('CONTRIBS', contribs)
-      // dispatch({
-      //   type: types.GET_USER_CONTRIBS,
-      //   contribs
-      // })
+    console.log('CONTRIBS', contribs);
+      dispatch({
+        type: types.GET_USER_CONTRIBS,
+        contribs
+      })
   }
   getContribs.call(this);
 }
@@ -171,7 +171,6 @@ export const signinUser = () => {
       })
       .then((obj) => {
         // get contribs from database 
-        console.log('2213', obj)
         getContribs(obj.username, obj.id, dispatch);
         return obj;
       })
