@@ -2,6 +2,7 @@
 A webapp to promote positive Git behavior through friendly competition.
 See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 
+![Demo](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/docs/GA-demo-1-1.gif)
 
 ## Team
 - <img src="https://avatars.githubusercontent.com/u/4149515?v=3" width="64"> [**Inje Yeo**] (https://github.com/byeo630)
