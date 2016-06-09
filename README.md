@@ -7,7 +7,7 @@ See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 ## Team
 - <img src="https://avatars.githubusercontent.com/u/4149515?v=3" width="64"> [**Inje Yeo - Scrum Master**] (https://github.com/byeo630)
 
-- <img src="https://avatars.githubusercontent.com/u/15864056?v=3" width="64"> [**Alex Nitta - Product Owner **](https://github.com/alexnitta)
+- <img src="https://avatars.githubusercontent.com/u/15864056?v=3" width="64"> [**Alex Nitta - Product Owner**](https://github.com/alexnitta)
 
 - <img src="https://avatars.githubusercontent.com/u/10492144?v=3" width="64"> [**Adam Isom**](https://github.com/adamrgisom)
 
