@@ -4,7 +4,7 @@ A webapp to promote positive Git behavior through friendly competition.
 ![Demo](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/docs/GA-demo-1-1.gif)
 
 ## Team
-- <img src="https://avatars.githubusercontent.com/u/4149515?v=3" width="64"> [**Inje Yeo - Scrum Master**] (https://github.com/byeo630)
+- <img src="https://avatars.githubusercontent.com/u/4149515?v=3" width="64"> [**Inje Yeo - Scrum Master**](https://github.com/byeo630)
 
 - <img src="https://avatars.githubusercontent.com/u/15864056?v=3" width="64"> [**Alex Nitta - Product Owner**](https://github.com/alexnitta)
 
