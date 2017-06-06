@@ -1,6 +1,5 @@
 # GitAchieve [![Build Status](https://travis-ci.org/Groovy-Narwhal/GitAchieve.svg?branch=master)](https://travis-ci.org/Groovy-Narwhal/GitAchieve) [![Dependency Status](https://david-dm.org/Groovy-Narwhal/GitAchieve.svg?style=flat)](https://david-dm.org/Groovy-Narwhal/GitAchieve)
 A webapp to promote positive Git behavior through friendly competition.
-See GitAchieve in action at [**www.gitachieve.com**](http://www.gitachieve.com)
 
 ![Demo](https://github.com/Groovy-Narwhal/GitAchieve/blob/master/docs/GA-demo-1-1.gif)
 
